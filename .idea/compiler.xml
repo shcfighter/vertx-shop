@@ -23,15 +23,16 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
-      <module name="shop-account" target="1.8" />
-      <module name="shop-common" target="1.8" />
-      <module name="shop-geteway" target="1.8" />
+      <module name="shop-account" target="UTF-8" />
+      <module name="shop-common" target="1.5" />
+      <module name="shop-config" target="1.5" />
+      <module name="shop-geteway" target="1.5" />
       <module name="shop-login" target="1.8" />
-      <module name="shop-order" target="1.8" />
-      <module name="shop-pay" target="1.8" />
-      <module name="shop-search" target="1.8" />
-      <module name="shopping-cart" target="1.8" />
-      <module name="vertx-shop" target="1.8" />
+      <module name="shop-order" target="1.5" />
+      <module name="shop-pay" target="1.5" />
+      <module name="shop-search" target="1.5" />
+      <module name="shopping-cart" target="1.5" />
+      <module name="vertx-shop" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
