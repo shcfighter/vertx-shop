@@ -1,0 +1,95 @@
+package com.ecit.common.db;
+
+import io.reactivex.Single;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.ResultSet;
+import io.vertx.ext.sql.UpdateResult;
+import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.ext.jdbc.JDBCClient;
+import io.vertx.reactivex.ext.sql.SQLConnection;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Helper and wrapper class for JDBC repository services.
+ */
+public class JdbcRepositoryWrapper {
+
+  protected final JDBCClient client;
+
+  public JdbcRepositoryWrapper(Vertx vertx, JsonObject config) {
+    this.client = JDBCClient.createNonShared(vertx, config);
+  }
+
+  /**
+   * Suitable for `add`, `exists` operation.
+   *
+   * @param params        query params
+   * @param sql           sql
+   */
+  protected Single<Object> executeNoResult(JsonArray params, String sql) {
+    return client.rxGetConnection().flatMap(conn -> conn.rxUpdateWithParams(sql, params).map(rs -> null).doAfterTerminate(conn::close));
+  }
+
+  protected void execute(JsonArray params, String sql) {
+    this.getConnection()
+            .flatMap(conn -> conn.rxUpdateWithParams(sql, params)
+                    .map(UpdateResult::getUpdated).doAfterTerminate(conn::close));
+  }
+
+  protected Single<Optional<JsonObject>> retrieveOne(Object param, String sql) {
+    return this.getConnection()
+            .flatMap(conn -> conn.rxQueryWithParams(sql, new JsonArray().add(param)).map(rs -> {
+              List<JsonObject> resList = rs.getRows();
+              if (resList == null || resList.isEmpty()) {
+                return Optional.<JsonObject>empty();
+              } else {
+                return Optional.of(resList.get(0));
+              }
+            }).doAfterTerminate(conn::close));
+
+  }
+
+  protected int calcPage(int page, int limit) {
+    if (page <= 0)
+      return 0;
+    return limit * (page - 1);
+  }
+
+  protected Single<List<JsonObject>> retrieveByPage(int page, int limit, String sql) {
+    return this.getConnection()
+            .flatMap(conn -> conn.rxQueryWithParams(sql, new JsonArray().add(calcPage(page, limit)).add(limit))
+                    .map(ResultSet::getRows).doAfterTerminate(conn::close));
+  }
+
+  protected Single<List<JsonObject>> retrieveMany(JsonArray param, String sql) {
+    return this.getConnection()
+            .flatMap(conn -> conn.rxQueryWithParams(sql, param)
+                    .map(ResultSet::getRows).doAfterTerminate(conn::close));
+  }
+
+  protected Single<List<JsonObject>> retrieveAll(String sql) {
+    return this.getConnection()
+            .flatMap(conn -> conn.rxQuery(sql)
+                    .map(ResultSet::getRows).doAfterTerminate(conn::close));
+  }
+
+  protected Single<Integer> removeOne(Object id, String sql) {
+    return this.getConnection()
+            .flatMap(conn -> conn.rxUpdateWithParams(sql, new JsonArray().add(id))
+                    .map(UpdateResult::getUpdated).doAfterTerminate(conn::close));
+  }
+
+  protected Single<Integer> removeAll(String sql) {
+    return this.getConnection()
+            .flatMap(conn -> conn.rxUpdate(sql).map(UpdateResult::getUpdated)
+                    .doAfterTerminate(conn::close));
+  }
+
+  protected Single<SQLConnection> getConnection() {
+    return client.rxGetConnection();
+  }
+
+}

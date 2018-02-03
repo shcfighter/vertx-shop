@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="shop-account" />
+        <module name="shop-common" />
+        <module name="shop-geteway" />
+        <module name="shop-order" />
+        <module name="shop-pay" />
+        <module name="shop-search" />
+        <module name="shopping-cart" />
+      </profile>
+      <profile name="Annotation profile for vertx-shop" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
+        <module name="shop-login" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="1.8">
+      <module name="shop-account" target="1.8" />
+      <module name="shop-common" target="1.8" />
+      <module name="shop-geteway" target="1.8" />
+      <module name="shop-login" target="1.8" />
+      <module name="shop-order" target="1.8" />
+      <module name="shop-pay" target="1.8" />
+      <module name="shop-search" target="1.8" />
+      <module name="shopping-cart" target="1.8" />
+      <module name="vertx-shop" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
