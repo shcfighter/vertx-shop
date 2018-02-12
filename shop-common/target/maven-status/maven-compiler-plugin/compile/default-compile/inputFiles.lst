@@ -1,0 +1,7 @@
+D:\IdeaProjects\vertx-shop\shop-common\src\main\java\com\ecit\common\result\ResultItems.java
+D:\IdeaProjects\vertx-shop\shop-common\src\main\java\com\ecit\common\BaseMicroserviceVerticle.java
+D:\IdeaProjects\vertx-shop\shop-common\src\main\java\com\ecit\common\db\JdbcRepositoryWrapper.java
+D:\IdeaProjects\vertx-shop\shop-common\src\main\java\com\ecit\common\id\IdWorker.java
+D:\IdeaProjects\vertx-shop\shop-common\src\main\java\com\ecit\common\rx\BaseMicroserviceRxVerticle.java
+D:\IdeaProjects\vertx-shop\shop-common\src\main\java\com\ecit\common\RestAPIVerticle.java
+D:\IdeaProjects\vertx-shop\shop-common\src\main\java\com\ecit\common\rx\RestAPIRxVerticle.java

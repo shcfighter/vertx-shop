@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class BaseMicroserviceRxVerticle extends AbstractVerticle {
 
-  private static final Logger logger = LoggerFactory.getLogger(BaseMicroserviceRxVerticle.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BaseMicroserviceRxVerticle.class);
 
   protected ServiceDiscovery discovery;
   protected CircuitBreaker circuitBreaker;
@@ -46,35 +46,40 @@ public class BaseMicroserviceRxVerticle extends AbstractVerticle {
     );
   }
 
-  protected Single<Void> publishHttpEndpoint(String name, String host, int port) {
+  protected Single<Integer> publishHttpEndpoint(String name, String host, int port) {
     Record record = HttpEndpoint.createRecord(name, host, port, "/",
       new JsonObject().put("api.name", config().getString("api.name", ""))
     );
     return publish(record);
   }
 
-  protected Single<Void> publishMessageSource(String name, String address) {
+  protected Single<Integer> publishApiGateway(String host, int port) {
+    Record record = HttpEndpoint.createRecord("api-gateway", true, host, port, "/", null)
+            .setType("api-gateway");
+    return publish(record);
+  }
+
+  protected Single<Integer> publishMessageSource(String name, String address) {
     Record record = MessageSource.createRecord(name, address);
     return publish(record);
   }
 
-  protected Single<Void> publishJDBCDataSource(String name, JsonObject location) {
+  protected Single<Integer> publishJDBCDataSource(String name, JsonObject location) {
     Record record = JDBCDataSource.createRecord(name, location, new JsonObject());
     return publish(record);
   }
 
-  protected Single<Void> publishEventBusService(String name, String address, Class serviceClass) {
+  protected Single<Integer> publishEventBusService(String name, String address, Class serviceClass) {
     Record record = EventBusService.createRecord(name, address, serviceClass);
     return publish(record);
   }
 
-  private Single<Void> publish(Record record) {
-    return discovery.rxPublish(record)
-      .doOnSuccess(rec -> {
-        registeredRecords.add(record);
-        logger.info("Service <" + rec.getName() + "> published");
-      })
-      .map(r -> null);
+  private Single<Integer> publish(Record record) {
+    return discovery.rxPublish(record).map(r -> {
+      registeredRecords.add(r);
+      LOGGER.info("Service <" + r.getName() + "> published");
+      return 1;
+    });
   }
 
   @Override

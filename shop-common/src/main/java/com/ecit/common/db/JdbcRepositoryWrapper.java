@@ -6,21 +6,21 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.ext.jdbc.JDBCClient;
+import io.vertx.reactivex.ext.asyncsql.PostgreSQLClient;
+import io.vertx.reactivex.ext.sql.SQLClient;
 import io.vertx.reactivex.ext.sql.SQLConnection;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Helper and wrapper class for JDBC repository services.
  */
 public class JdbcRepositoryWrapper {
 
-  protected final JDBCClient client;
+  protected final SQLClient postgreSQLClient;
 
   public JdbcRepositoryWrapper(Vertx vertx, JsonObject config) {
-    this.client = JDBCClient.createNonShared(vertx, config);
+    this.postgreSQLClient = PostgreSQLClient.createNonShared(vertx, config);
   }
 
   /**
@@ -29,24 +29,26 @@ public class JdbcRepositoryWrapper {
    * @param params        query params
    * @param sql           sql
    */
-  protected Single<Object> executeNoResult(JsonArray params, String sql) {
-    return client.rxGetConnection().flatMap(conn -> conn.rxUpdateWithParams(sql, params).map(rs -> null).doAfterTerminate(conn::close));
-  }
-
-  protected void execute(JsonArray params, String sql) {
-    this.getConnection()
+  protected Single<Integer> executeNoResult(JsonArray params, String sql) {
+    return this.getConnection()
             .flatMap(conn -> conn.rxUpdateWithParams(sql, params)
                     .map(UpdateResult::getUpdated).doAfterTerminate(conn::close));
   }
 
-  protected Single<Optional<JsonObject>> retrieveOne(Object param, String sql) {
+  protected Single<Integer> execute(JsonArray params, String sql) {
+    return this.getConnection()
+            .flatMap(conn -> conn.rxUpdateWithParams(sql, params)
+                    .map(UpdateResult::getUpdated).doAfterTerminate(conn::close));
+  }
+
+  protected Single<JsonObject> retrieveOne(Object param, String sql) {
     return this.getConnection()
             .flatMap(conn -> conn.rxQueryWithParams(sql, new JsonArray().add(param)).map(rs -> {
               List<JsonObject> resList = rs.getRows();
               if (resList == null || resList.isEmpty()) {
-                return Optional.<JsonObject>empty();
+                return new JsonObject();
               } else {
-                return Optional.of(resList.get(0));
+                return resList.get(0);
               }
             }).doAfterTerminate(conn::close));
 
@@ -89,7 +91,7 @@ public class JdbcRepositoryWrapper {
   }
 
   protected Single<SQLConnection> getConnection() {
-    return client.rxGetConnection();
+    return postgreSQLClient.rxGetConnection();
   }
 
 }

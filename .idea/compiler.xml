@@ -7,31 +7,32 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="shop-account" />
-        <module name="shop-common" />
+        <module name="shop-gateway" />
         <module name="shop-geteway" />
-        <module name="shop-order" />
-        <module name="shop-pay" />
-        <module name="shop-search" />
-        <module name="shopping-cart" />
       </profile>
       <profile name="Annotation profile for vertx-shop" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
+        <module name="shop-common" />
         <module name="shop-login" />
+        <module name="shop-order" />
+        <module name="shop-pay" />
+        <module name="shop-search" />
+        <module name="shop-user" />
+        <module name="shopping-cart" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
-      <module name="shop-account" target="UTF-8" />
-      <module name="shop-common" target="1.5" />
-      <module name="shop-config" target="1.5" />
-      <module name="shop-geteway" target="1.5" />
-      <module name="shop-login" target="1.8" />
-      <module name="shop-order" target="1.5" />
-      <module name="shop-pay" target="1.5" />
-      <module name="shop-search" target="1.5" />
-      <module name="shopping-cart" target="1.5" />
+      <module name="shop-account" target="1.8" />
+      <module name="shop-common" target="1.8" />
+      <module name="shop-gateway" target="1.8" />
+      <module name="shop-order" target="1.8" />
+      <module name="shop-pay" target="1.8" />
+      <module name="shop-search" target="1.8" />
+      <module name="shop-user" target="1.8" />
+      <module name="shopping-cart" target="1.8" />
       <module name="vertx-shop" target="1.5" />
     </bytecodeTargetLevel>
   </component>

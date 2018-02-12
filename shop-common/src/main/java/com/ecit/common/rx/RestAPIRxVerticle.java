@@ -1,6 +1,9 @@
 package com.ecit.common.rx;
 
+import com.ecit.common.result.ResultItems;
 import io.reactivex.Single;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.http.HttpServer;
@@ -17,6 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * An abstract base rx-fied verticle that provides
@@ -124,4 +128,181 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
       .end(new JsonObject().put("error", cause).encodePrettily());
   }
 
+  protected void Ok(RoutingContext context, ResultItems items) {
+    context.response().setStatusCode(200)
+            .putHeader("content-type", "application/json")
+            .end(ResultItems.getJsonObject(items).encodePrettily());
+  }
+
+  /**
+   * This method generates handler for async methods in REST APIs.
+   */
+  protected <T> Handler<AsyncResult<T>> resultHandler(RoutingContext context, Handler<T> handler) {
+    return res -> {
+      if (res.succeeded()) {
+        handler.handle(res.result());
+      } else {
+        internalError(context, res.cause());
+        res.cause().printStackTrace();
+      }
+    };
+  }
+
+  /**
+   * This method generates handler for async methods in REST APIs.
+   * Use the result directly and invoke `toString` as the response. The content type is JSON.
+   */
+  protected <T> Handler<AsyncResult<T>> resultHandler(RoutingContext context) {
+    return ar -> {
+      if (ar.succeeded()) {
+        T res = ar.result();
+        context.response()
+                .putHeader("content-type", "application/json")
+                .end(res == null ? "{}" : res.toString());
+      } else {
+        internalError(context, ar.cause());
+        ar.cause().printStackTrace();
+      }
+    };
+  }
+
+  /**
+   * This method generates handler for async methods in REST APIs.
+   * Use the result directly and use given {@code converter} to convert result to string
+   * as the response. The content type is JSON.
+   *
+   * @param context   routing context instance
+   * @param converter a converter that converts result to a string
+   * @param <T>       result type
+   * @return generated handler
+   */
+  protected <T> Handler<AsyncResult<T>> resultHandler(RoutingContext context, Function<T, String> converter) {
+    return ar -> {
+      if (ar.succeeded()) {
+        T res = ar.result();
+        if (res == null) {
+          serviceUnavailable(context, "invalid_result");
+        } else {
+          context.response()
+                  .putHeader("content-type", "application/json")
+                  .end(converter.apply(res));
+        }
+      } else {
+        internalError(context, ar.cause());
+        ar.cause().printStackTrace();
+      }
+    };
+  }
+
+  /**
+   * This method generates handler for async methods in REST APIs.
+   * The result requires non-empty. If empty, return <em>404 Not Found</em> status.
+   * The content type is JSON.
+   *
+   * @param context routing context instance
+   * @param <T>     result type
+   * @return generated handler
+   */
+  protected <T> Handler<AsyncResult<T>> resultHandlerNonEmpty(RoutingContext context) {
+    return ar -> {
+      if (ar.succeeded()) {
+        T res = ar.result();
+        if (res == null) {
+          notFound(context);
+        } else {
+          context.response()
+                  .putHeader("content-type", "application/json")
+                  .end(res.toString());
+        }
+      } else {
+        internalError(context, ar.cause());
+        ar.cause().printStackTrace();
+      }
+    };
+  }
+
+  /**
+   * This method generates handler for async methods in REST APIs.
+   * The content type is originally raw text.
+   *
+   * @param context routing context instance
+   * @param <T>     result type
+   * @return generated handler
+   */
+  protected <T> Handler<AsyncResult<T>> rawResultHandler(RoutingContext context) {
+    return ar -> {
+      if (ar.succeeded()) {
+        T res = ar.result();
+        context.response()
+                .end(res == null ? "" : res.toString());
+      } else {
+        internalError(context, ar.cause());
+        ar.cause().printStackTrace();
+      }
+    };
+  }
+
+  protected Handler<AsyncResult<Void>> resultVoidHandler(RoutingContext context, JsonObject result) {
+    return resultVoidHandler(context, result, 200);
+  }
+
+  /**
+   * This method generates handler for async methods in REST APIs.
+   * The result is not needed. Only the state of the async result is required.
+   *
+   * @param context routing context instance
+   * @param result  result content
+   * @param status  status code
+   * @return generated handler
+   */
+  protected Handler<AsyncResult<Void>> resultVoidHandler(RoutingContext context, JsonObject result, int status) {
+    return ar -> {
+      if (ar.succeeded()) {
+        context.response()
+                .setStatusCode(status == 0 ? 200 : status)
+                .putHeader("content-type", "application/json")
+                .end(result.encodePrettily());
+      } else {
+        internalError(context, ar.cause());
+        ar.cause().printStackTrace();
+      }
+    };
+  }
+
+  protected Handler<AsyncResult<Void>> resultVoidHandler(RoutingContext context, int status) {
+    return ar -> {
+      if (ar.succeeded()) {
+        context.response()
+                .setStatusCode(status == 0 ? 200 : status)
+                .putHeader("content-type", "application/json")
+                .end();
+      } else {
+        internalError(context, ar.cause());
+        ar.cause().printStackTrace();
+      }
+    };
+  }
+
+  /**
+   * This method generates handler for async methods in REST DELETE APIs.
+   * Return format in JSON (successful status = 204):
+   * <code>
+   * {"message": "delete_success"}
+   * </code>
+   *
+   * @param context routing context instance
+   * @return generated handler
+   */
+  protected Handler<AsyncResult<Void>> deleteResultHandler(RoutingContext context) {
+    return res -> {
+      if (res.succeeded()) {
+        context.response().setStatusCode(204)
+                .putHeader("content-type", "application/json")
+                .end(new JsonObject().put("message", "delete_success").encodePrettily());
+      } else {
+        internalError(context, res.cause());
+        res.cause().printStackTrace();
+      }
+    };
+  }
 }

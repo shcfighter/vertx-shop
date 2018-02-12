@@ -308,7 +308,6 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
   }
 
   protected void badGateway(Throwable ex, RoutingContext context) {
-    ex.printStackTrace();
     context.response()
       .setStatusCode(502)
       .putHeader("content-type", "application/json")
@@ -331,5 +330,13 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
     context.response().setStatusCode(503)
       .putHeader("content-type", "application/json")
       .end(new JsonObject().put("error", cause).encodePrettily());
+  }
+
+  protected void returnWithMessage(RoutingContext context, String message) {
+    context.response()
+            .setStatusCode(200)
+            .putHeader("content-type", "application/json")
+            .end(new JsonObject().put("message", message)
+                    .encodePrettily());
   }
 }
