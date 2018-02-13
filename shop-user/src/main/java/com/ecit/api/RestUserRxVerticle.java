@@ -27,8 +27,6 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.route().handler(BodyHandler.create());
         // API route handler
         router.post("/register").handler(this::registerHandler);
-        router.post("/login").handler(this::loginHandler);
-        this.enableCorsSupport(router);
 
         // get HTTP host and port from configuration, or use default value
         String host = config().getString("product.http.address", "localhost");
@@ -62,22 +60,5 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                     }
                 });
     }
-    public void loginHandler(RoutingContext routingContext){
-        ServiceProxyBuilder builder = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IUserService.USER_SERVICE_ADDRESS);
-        IUserService userService = builder.build(IUserService.class);
-        JsonObject params = routingContext.getBodyAsJson();
-        userService.login(params.getString("loginName"),
-                params.getString("pwd"),
-                handler -> {
-                    if(handler.succeeded()){
-                        if(null != handler.result()) {
-                            this.Ok(routingContext, ResultItems.getReturnItemsSuccess("注册成功"));
-                        } else {
-                            this.Ok(routingContext, ResultItems.getReturnItemsSuccess("注册失败"));
-                        }
-                    } else {
-                        this.internalError(routingContext, handler.cause());
-                    }
-                });
-    }
+
 }

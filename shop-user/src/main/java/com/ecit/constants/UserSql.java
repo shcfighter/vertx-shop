@@ -12,6 +12,6 @@ public interface UserSql {
             "(user_id, password, status, is_lock, mobile, email, salt,  create_time, update_time) " +
             "values(?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-    public static final String LOGIN_SQL = "select user_id, password pwd from t_user where status = ? and is_lock = ? " +
+    public static final String LOGIN_SQL = "select user_id, password pwd, salt from t_user where status = ? and is_lock = ? " +
             "and (mobile = ? or email = ? or login_name = ?)";
 }

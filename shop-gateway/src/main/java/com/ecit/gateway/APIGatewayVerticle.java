@@ -249,7 +249,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                         if(Objects.isNull(userObject) || userObject.isEmpty()){
                             this.returnWithMessage(context, "用户名或密码错误");
                         } else {
-                            if(StringUtils.equals(jdbcAuth.computeHash(params.getString("pwd"), jdbcAuth.generateSalt()), userObject.getString("pwd"))){
+                            if(StringUtils.equals(jdbcAuth.computeHash(params.getString("pwd"), userObject.getString("salt")), userObject.getString("pwd"))){
                                 this.returnWithMessage(context, "登录成功");
                             } else {
                                 this.returnWithMessage(context, "用户名或密码错误");

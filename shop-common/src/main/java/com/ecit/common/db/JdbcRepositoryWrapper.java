@@ -41,9 +41,9 @@ public class JdbcRepositoryWrapper {
                     .map(UpdateResult::getUpdated).doAfterTerminate(conn::close));
   }
 
-  protected Single<JsonObject> retrieveOne(Object param, String sql) {
+  protected Single<JsonObject> retrieveOne(JsonArray param, String sql) {
     return this.getConnection()
-            .flatMap(conn -> conn.rxQueryWithParams(sql, new JsonArray().add(param)).map(rs -> {
+            .flatMap(conn -> conn.rxQueryWithParams(sql, param).map(rs -> {
               List<JsonObject> resList = rs.getRows();
               if (resList == null || resList.isEmpty()) {
                 return new JsonObject();
