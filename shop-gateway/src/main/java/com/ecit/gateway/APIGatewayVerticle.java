@@ -9,7 +9,6 @@ import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
@@ -90,8 +89,9 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         // version handler
         router.get("/api/v").handler(this::apiVersion);
-        router.post("/api/user/register").handler(context -> registerHandler(context, jdbcAuth));
-        router.post("/api/user/login").handler(context -> loginEntryHandler(context, jdbcAuth));
+        router.route("/api/*").handler(this::formatContentTypeHandler);
+        router.post("/api/user/register").handler(this::registerHandler);
+        router.post("/api/user/login").handler(this::loginEntryHandler);
         router.get("/uaa").handler(this::authUaaHandler);
         router.post("/logout").handler(this::logoutHandler);
         // api dispatcher
@@ -121,11 +121,11 @@ public class APIGatewayVerticle extends RestAPIVerticle {
             notFound(context);
             return;
         }
-        if(!StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
+        /*if(!StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
             LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
             badRequest(context ,null);
             return;
-        }
+        }*/
         String prefix = (path.substring(initialOffset).split("/"))[0];
         // generate new relative path
         String newPath = path.substring(initialOffset + prefix.length());
@@ -180,31 +180,33 @@ public class APIGatewayVerticle extends RestAPIVerticle {
     }
 
     /**
-     * Get all REST endpoints from the service discovery infrastructure.
-     *
-     * @return async result
+     * 校验请求格式
+     * @param context
      */
-    private Future<List<Record>> getAllEndpoints() {
-        Future<List<Record>> future = Future.future();
-        discovery.getRecords(record -> record.getType().equals(HttpEndpoint.TYPE),
-                future.completer());
-        return future;
+    private void formatContentTypeHandler(RoutingContext context) {
+        if(!StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
+            LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
+            badRequest(context, new Throwable("请求方式【Content-Type】错误"));
+            return;
+        }
+        context.next();
     }
 
     /**
      * 注册
-     * @param context
-     * @param jdbcAuth
+     * @param context 上下文
      */
-    private void registerHandler(RoutingContext context, JDBCAuth jdbcAuth) {
-        if(!StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
+    private void registerHandler(RoutingContext context) {
+        /*if(!StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
             LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
             badRequest(context, null);
             return;
-        }
-        context.setBody(context.getBodyAsJson()
-                .put("pwd", jdbcAuth.computeHash(context.request().getParam("pwd"), jdbcAuth.generateSalt()))
-                .put("salt", jdbcAuth.generateSalt()).toBuffer());
+        }*/
+        final String salt = jdbcAuth.generateSalt();
+        JsonObject params = context.getBodyAsJson();
+        context.setBody(params
+                .put("pwd", jdbcAuth.computeHash(params.getString("pwd"), salt))
+                .put("salt", salt).toBuffer());
         this.dispatchRequests(context);
     }
 
@@ -238,7 +240,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * 登录
      * @param context
      */
-    private void loginEntryHandler(RoutingContext context, JDBCAuth jdbcAuth) {
+    private void loginEntryHandler(RoutingContext context) {
         EventBusService.getProxy(discovery, IUserService.class, resultHandler -> {
             if (resultHandler.succeeded()) {
                 final IUserService userService = resultHandler.result();

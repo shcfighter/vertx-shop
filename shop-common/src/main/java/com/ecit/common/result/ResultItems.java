@@ -56,4 +56,8 @@ public class ResultItems<T> {
 	public static JsonObject getJsonObject(ResultItems items) {
 		return JsonObject.mapFrom(items);
 	}
+
+	public static String getEncodePrettily(ResultItems items){
+		return getJsonObject(items).encodePrettily();
+	}
 }
