@@ -1,6 +1,9 @@
 package com.ecit.gateway;
 
 import com.ecit.common.RestAPIVerticle;
+import com.ecit.constants.UserSql;
+import com.ecit.enmu.UserLock;
+import com.ecit.enmu.UserStatus;
 import com.ecit.service.IUserService;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
@@ -12,7 +15,9 @@ import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
+import io.vertx.ext.auth.User;
 import io.vertx.ext.auth.jdbc.JDBCAuth;
+import io.vertx.ext.auth.jdbc.impl.JDBCUser;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -20,7 +25,6 @@ import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.UserSessionHandler;
-import io.vertx.servicediscovery.Record;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.types.EventBusService;
 import io.vertx.servicediscovery.types.HttpEndpoint;
@@ -29,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,7 +49,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
     private static final Logger LOGGER = LogManager.getLogger(APIGatewayVerticle.class);
 
-    private JDBCAuth jdbcAuth;
+    private JDBCAuth jdbcAuthProvider;
     private JDBCClient jdbcClient;
 
     public static void main(String[] args) {
@@ -72,7 +75,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         super.start();
 
         jdbcClient = JDBCClient.createNonShared(vertx, this.config());
-        jdbcAuth = JDBCAuth.create(vertx, jdbcClient);
+        jdbcAuthProvider = JDBCAuth.create(vertx, jdbcClient);
 
         // get HTTP host and port from configuration, or use default value
         String host = config().getString("api.gateway.http.address", "localhost");
@@ -85,7 +88,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         // body handler
         router.route().handler(BodyHandler.create());
-        router.route().handler(UserSessionHandler.create(jdbcAuth));
+        router.route().handler(UserSessionHandler.create(jdbcAuthProvider));
 
         // version handler
         router.get("/api/v").handler(this::apiVersion);
@@ -121,11 +124,6 @@ public class APIGatewayVerticle extends RestAPIVerticle {
             notFound(context);
             return;
         }
-        /*if(!StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
-            LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
-            badRequest(context ,null);
-            return;
-        }*/
         String prefix = (path.substring(initialOffset).split("/"))[0];
         // generate new relative path
         String newPath = path.substring(initialOffset + prefix.length());
@@ -197,15 +195,10 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param context 上下文
      */
     private void registerHandler(RoutingContext context) {
-        /*if(!StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
-            LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
-            badRequest(context, null);
-            return;
-        }*/
-        final String salt = jdbcAuth.generateSalt();
+        final String salt = jdbcAuthProvider.generateSalt();
         JsonObject params = context.getBodyAsJson();
         context.setBody(params
-                .put("pwd", jdbcAuth.computeHash(params.getString("pwd"), salt))
+                .put("pwd", jdbcAuthProvider.computeHash(params.getString("pwd"), salt))
                 .put("salt", salt).toBuffer());
         this.dispatchRequests(context);
     }
@@ -241,19 +234,46 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param context
      */
     private void loginEntryHandler(RoutingContext context) {
+        /*JsonObject params = context.getBodyAsJson();
+        final String loginName = params.getString("loginName");
+        LOGGER.info("用户【】登录系统", loginName);
+        jdbcAuthProvider.setAuthenticationQuery(UserSql.LOGIN_SQL);
+        jdbcAuthProvider.authenticate(new JsonObject().put("status", UserStatus.ACTIVATION.getStatus())
+                .put("is_lock", UserLock.PUBLISH.getLock()).put("mobile", loginName)
+                .put("email", loginName).put("login_name", loginName), handler -> {
+            if (handler.succeeded()) {
+                JDBCUser userSession = (JDBCUser) handler.result();
+                if(Objects.isNull(userSession)){
+                    LOGGER.info("用户【{}】登录，用户不存在", loginName);
+                    this.returnWithMessage(context, "用户名或密码错误");
+                } else {
+                    LOGGER.info("用户【{}】登录成功", userSession.principal());
+                    this.returnWithMessage(context, "登录成功");
+                }
+            } else {
+                LOGGER.error("调用远程登录方法错误！", handler.cause());
+                this.badGateway(handler.cause(), context);
+            }
+        });*/
         EventBusService.getProxy(discovery, IUserService.class, resultHandler -> {
             if (resultHandler.succeeded()) {
                 final IUserService userService = resultHandler.result();
                 JsonObject params = context.getBodyAsJson();
-                userService.login(params.getString("loginName"), params.getString("pwd"), handler -> {
+                final String loginName = params.getString("loginName");
+                LOGGER.info("用户【】登录系统", loginName);
+                userService.login(loginName, params.getString("pwd"), handler -> {
                     if (handler.succeeded()) {
                         JsonObject userObject = handler.result();
                         if(Objects.isNull(userObject) || userObject.isEmpty()){
+                            LOGGER.info("用户【{}】登录，用户不存在", loginName);
                             this.returnWithMessage(context, "用户名或密码错误");
                         } else {
-                            if(StringUtils.equals(jdbcAuth.computeHash(params.getString("pwd"), userObject.getString("salt")), userObject.getString("pwd"))){
+                            if(StringUtils.equals(jdbcAuthProvider.computeHash(params.getString("pwd"), userObject.getString("salt")), userObject.getString("pwd"))){
+                                LOGGER.info("用户id【】登录成功", userObject.getString("userId"));
+                                //JDBCUser user = new JDBCUser("",jdbcAuthProvider, "");
                                 this.returnWithMessage(context, "登录成功");
                             } else {
+                                LOGGER.info("用户id【】登录密码错误", userObject.getString("userId"));
                                 this.returnWithMessage(context, "用户名或密码错误");
                             }
 
