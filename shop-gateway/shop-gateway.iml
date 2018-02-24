@@ -18,6 +18,7 @@
     <orderEntry type="library" name="Maven: com.mchange:c3p0:0.9.5.2" level="project" />
     <orderEntry type="library" name="Maven: com.mchange:mchange-commons-java:0.2.11" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-auth-jdbc:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-auth-common:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.2.1" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-core:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.15.Final" level="project" />
@@ -63,7 +64,6 @@
     <orderEntry type="library" name="Maven: io.vertx:vertx-config-yaml:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
-    <orderEntry type="library" name="Maven: io.vertx:vertx-auth-common:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-web-client:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-web-common:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-mysql-postgresql-client:3.5.0" level="project" />

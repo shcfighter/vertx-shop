@@ -2,9 +2,9 @@ package com.ecit.gateway;
 
 import com.ecit.common.RestAPIVerticle;
 import com.ecit.constants.UserSql;
-import com.ecit.enmu.UserLock;
 import com.ecit.enmu.UserStatus;
-import com.ecit.service.IUserService;
+import com.ecit.gateway.auth.ShopAuth;
+import com.ecit.gateway.auth.impl.ShopUser;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import io.vertx.core.DeploymentOptions;
@@ -15,18 +15,15 @@ import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
-import io.vertx.ext.auth.User;
-import io.vertx.ext.auth.jdbc.JDBCAuth;
-import io.vertx.ext.auth.jdbc.impl.JDBCUser;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.handler.AuthHandler;
+import io.vertx.ext.web.handler.BasicAuthHandler;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.UserSessionHandler;
-import io.vertx.servicediscovery.ServiceDiscovery;
-import io.vertx.servicediscovery.types.EventBusService;
 import io.vertx.servicediscovery.types.HttpEndpoint;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.apache.commons.lang3.StringUtils;
@@ -49,8 +46,10 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
     private static final Logger LOGGER = LogManager.getLogger(APIGatewayVerticle.class);
 
-    private JDBCAuth jdbcAuthProvider;
+    private ShopAuth shopAuthProvider;
     private JDBCClient jdbcClient;
+
+    private AuthHandler basicAuthHandler;
 
     public static void main(String[] args) {
         Config cfg = new Config();
@@ -75,7 +74,8 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         super.start();
 
         jdbcClient = JDBCClient.createNonShared(vertx, this.config());
-        jdbcAuthProvider = JDBCAuth.create(vertx, jdbcClient);
+        shopAuthProvider = ShopAuth.create(vertx, jdbcClient);
+        basicAuthHandler = BasicAuthHandler.create(shopAuthProvider);
 
         // get HTTP host and port from configuration, or use default value
         String host = config().getString("api.gateway.http.address", "localhost");
@@ -88,7 +88,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         // body handler
         router.route().handler(BodyHandler.create());
-        router.route().handler(UserSessionHandler.create(jdbcAuthProvider));
+        router.route().handler(UserSessionHandler.create(shopAuthProvider));
 
         // version handler
         router.get("/api/v").handler(this::apiVersion);
@@ -195,10 +195,10 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param context 上下文
      */
     private void registerHandler(RoutingContext context) {
-        final String salt = jdbcAuthProvider.generateSalt();
+        final String salt = shopAuthProvider.generateSalt();
         JsonObject params = context.getBodyAsJson();
         context.setBody(params
-                .put("pwd", jdbcAuthProvider.computeHash(params.getString("pwd"), salt))
+                .put("pwd", shopAuthProvider.computeHash(params.getString("pwd"), salt))
                 .put("salt", salt).toBuffer());
         this.dispatchRequests(context);
     }
@@ -234,15 +234,14 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param context
      */
     private void loginEntryHandler(RoutingContext context) {
-        /*JsonObject params = context.getBodyAsJson();
+        JsonObject params = context.getBodyAsJson();
         final String loginName = params.getString("loginName");
-        LOGGER.info("用户【】登录系统", loginName);
-        jdbcAuthProvider.setAuthenticationQuery(UserSql.LOGIN_SQL);
-        jdbcAuthProvider.authenticate(new JsonObject().put("status", UserStatus.ACTIVATION.getStatus())
-                .put("is_lock", UserLock.PUBLISH.getLock()).put("mobile", loginName)
-                .put("email", loginName).put("login_name", loginName), handler -> {
+        LOGGER.info("用户【{}】登录系统", loginName);
+        shopAuthProvider.setAuthenticationQuery(UserSql.LOGIN_SQL);
+        shopAuthProvider.authenticate(new JsonObject().put("status", UserStatus.ACTIVATION.getStatus())
+                .put("loginName", loginName).put("password", params.getString("pwd")), handler -> {
             if (handler.succeeded()) {
-                JDBCUser userSession = (JDBCUser) handler.result();
+                ShopUser userSession = (ShopUser) handler.result();
                 if(Objects.isNull(userSession)){
                     LOGGER.info("用户【{}】登录，用户不存在", loginName);
                     this.returnWithMessage(context, "用户名或密码错误");
@@ -254,8 +253,8 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                 LOGGER.error("调用远程登录方法错误！", handler.cause());
                 this.badGateway(handler.cause(), context);
             }
-        });*/
-        EventBusService.getProxy(discovery, IUserService.class, resultHandler -> {
+        });
+        /*EventBusService.getProxy(discovery, IUserService.class, resultHandler -> {
             if (resultHandler.succeeded()) {
                 final IUserService userService = resultHandler.result();
                 JsonObject params = context.getBodyAsJson();
@@ -268,7 +267,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                             LOGGER.info("用户【{}】登录，用户不存在", loginName);
                             this.returnWithMessage(context, "用户名或密码错误");
                         } else {
-                            if(StringUtils.equals(jdbcAuthProvider.computeHash(params.getString("pwd"), userObject.getString("salt")), userObject.getString("pwd"))){
+                            if(StringUtils.equals(shopAuthProvider.computeHash(params.getString("pwd"), userObject.getString("salt")), userObject.getString("pwd"))){
                                 LOGGER.info("用户id【】登录成功", userObject.getString("userId"));
                                 //JDBCUser user = new JDBCUser("",jdbcAuthProvider, "");
                                 this.returnWithMessage(context, "登录成功");
@@ -288,7 +287,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                 LOGGER.error("远程调用登录接口失败！", resultHandler.cause());
                 this.badGateway(resultHandler.cause(), context);
             }
-        });
+        });*/
     }
 
     private void logoutHandler(RoutingContext context) {

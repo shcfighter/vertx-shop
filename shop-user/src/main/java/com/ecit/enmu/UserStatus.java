@@ -5,13 +5,17 @@ package com.ecit.enmu;
  */
 public enum UserStatus {
     /**
-     * 0=禁用
+     * 0=未激活
      */
-    DISABLED(0, "禁用"),
+    INACTIVATED(0, "未激活"),
     /**
      *1=激活
      */
     ACTIVATION(1, "激活"),
+    /**
+     * 0=禁用
+     */
+    DISABLED(0, "禁用"),
     /**
      *-1=删除
      */

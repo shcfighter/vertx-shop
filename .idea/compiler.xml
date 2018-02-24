@@ -33,7 +33,7 @@
       <module name="shop-search" target="1.8" />
       <module name="shop-user" target="1.8" />
       <module name="shopping-cart" target="1.8" />
-      <module name="vertx-shop" target="1.5" />
+      <module name="vertx-shop" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
