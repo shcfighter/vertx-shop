@@ -1,13 +1,13 @@
 {
   "api.name": "user",
-  "product.http.address": "localhost",
+  "product.http.address": "192.168.101.147",
   "product.http.port": 8080,
-  "host" : "localhost",
+  "host" : "192.168.101.147",
   "port" : 5432,
   "maxPoolSize" : 50,
   "username" : "postgres",
   "password" : "123456",
-  "database" : "vertx_shop",
+  "database" : "postgres",
   "charset" : "UTF-8",
   "queryTimeout" : 10000
 }

@@ -3,9 +3,10 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.ecit.gateway.auth;
+package com.ecit.common.utils.salt;
 
 import io.vertx.core.json.JsonArray;
+
 import java.util.List;
 
 public interface ShopHashStrategy {
