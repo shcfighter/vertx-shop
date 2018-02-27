@@ -102,9 +102,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
     if (principal.isPresent()) {
       biHandler.accept(context, principal.get());
     } else {
-      context.response()
-        .setStatusCode(401)
-        .end(new JsonObject().put("message", "need_auth").encode());
+      this.noAuth(context);
     }
   }
 
@@ -284,6 +282,11 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
 
   // helper method dealing with failure
 
+  protected void noAuth(RoutingContext context) {
+    context.response().setStatusCode(401)
+            .putHeader("content-type", "application/json")
+            .end(ResultItems.getEncodePrettily(ResultItems.getReturnItemsFailure("no_auth")));
+  }
   protected void badRequest(RoutingContext context, Throwable ex) {
     context.response().setStatusCode(400)
       .putHeader("content-type", "application/json")

@@ -72,10 +72,14 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
     if (principal.isPresent()) {
       biHandler.accept(context, principal.get());
     } else {
-      context.response()
-        .setStatusCode(401)
-        .end(new JsonObject().put("message", "need_auth").encode());
+      this.noAuth(context);
     }
+  }
+
+  protected void noAuth(RoutingContext context) {
+    context.response().setStatusCode(401)
+            .putHeader("content-type", "application/json")
+            .end(ResultItems.getEncodePrettily(ResultItems.getReturnItemsFailure("no_auth")));
   }
 
   protected void badRequest(RoutingContext context, Throwable ex) {
