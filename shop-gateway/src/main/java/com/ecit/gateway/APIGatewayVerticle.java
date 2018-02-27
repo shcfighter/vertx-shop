@@ -7,6 +7,7 @@ import com.ecit.gateway.auth.ShopAuth;
 import com.ecit.gateway.auth.impl.ShopUser;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
+import com.hazelcast.util.CollectionUtil;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
@@ -24,14 +25,18 @@ import io.vertx.ext.web.handler.AuthHandler;
 import io.vertx.ext.web.handler.BasicAuthHandler;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.UserSessionHandler;
+import io.vertx.servicediscovery.Record;
 import io.vertx.servicediscovery.types.HttpEndpoint;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * A verticle for global API gateway.
@@ -129,14 +134,34 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         // run with circuit breaker in order to deal with failure
         circuitBreaker.execute(future -> {
-            HttpEndpoint.getWebClient(discovery, new JsonObject().put("api.name", prefix), handler -> {
+            getAllEndpoints().setHandler(ar -> {
+                if (ar.succeeded()) {
+                    List<Record> recordList = ar.result();
+                    List<Record> records = recordList.stream()
+                            .filter(record -> record.getMetadata().getString("api.name") != null)
+                            .filter(record -> record.getMetadata().getString("api.name").equals(prefix))
+                            .collect(Collectors.toList());
+                    //负载均衡策略：随机
+                    Optional<Record> client = Optional.ofNullable(CollectionUtil.isEmpty(records) ? null : records.get(new Random().nextInt(records.size())));
+                    if (client.isPresent()) {
+                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(WebClient.class), future);
+                    } else {
+                        notFound(context);
+                        future.complete();
+                    }
+                } else {
+                    future.fail(ar.cause());
+                }
+            });
+
+            /*HttpEndpoint.getWebClient(discovery, new JsonObject().put("api.name", prefix), handler -> {
                 if(handler.succeeded()){
                     doDispatch(context, newPath, handler.result(), future);
                 } else {
                     LOGGER.error("获取webclient【{}】失败！", prefix);
                     future.fail(handler.cause());
                 }
-            });
+            });*/
         }).setHandler(ar -> {
             if (ar.failed()) {
                 badGateway(ar.cause(), context);
@@ -172,6 +197,18 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                     .end(bodyBuffer);
             cbFuture.complete();
         });
+    }
+
+    /**
+     * Get all REST endpoints from the service discovery infrastructure.
+     *
+     * @return async result
+     */
+    private Future<List<Record>> getAllEndpoints() {
+        Future<List<Record>> future = Future.future();
+        discovery.getRecords(record -> record.getType().equals(HttpEndpoint.TYPE),
+                future.completer());
+        return future;
     }
 
     private void apiVersion(RoutingContext context) {
