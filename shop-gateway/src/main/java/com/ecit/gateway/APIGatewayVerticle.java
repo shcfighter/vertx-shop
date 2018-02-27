@@ -26,6 +26,7 @@ import io.vertx.ext.web.handler.BasicAuthHandler;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.UserSessionHandler;
 import io.vertx.servicediscovery.Record;
+import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.types.HttpEndpoint;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.apache.commons.lang3.StringUtils;
@@ -134,13 +135,9 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         // run with circuit breaker in order to deal with failure
         circuitBreaker.execute(future -> {
-            getAllEndpoints().setHandler(ar -> {
+            getAllEndpoints(prefix).setHandler(ar -> {
                 if (ar.succeeded()) {
-                    List<Record> recordList = ar.result();
-                    List<Record> records = recordList.stream()
-                            .filter(record -> record.getMetadata().getString("api.name") != null)
-                            .filter(record -> record.getMetadata().getString("api.name").equals(prefix))
-                            .collect(Collectors.toList());
+                    List<Record> records = ar.result();
                     //负载均衡策略：随机
                     Optional<Record> client = Optional.ofNullable(CollectionUtil.isEmpty(records) ? null : records.get(new Random().nextInt(records.size())));
                     if (client.isPresent()) {
@@ -196,6 +193,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                     .putHeader("content-type", "application/json")
                     .end(bodyBuffer);
             cbFuture.complete();
+            ServiceDiscovery.releaseServiceObject(discovery, client);
         });
     }
 
@@ -204,9 +202,10 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      *
      * @return async result
      */
-    private Future<List<Record>> getAllEndpoints() {
+    private Future<List<Record>> getAllEndpoints(String prefix) {
         Future<List<Record>> future = Future.future();
-        discovery.getRecords(record -> record.getType().equals(HttpEndpoint.TYPE),
+        discovery.getRecords(record -> record.getType().equals(HttpEndpoint.TYPE)
+                        && StringUtils.equals(record.getMetadata().getString("api.name"), prefix),
                 future.completer());
         return future;
     }
