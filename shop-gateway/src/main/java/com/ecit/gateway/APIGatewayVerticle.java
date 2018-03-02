@@ -84,7 +84,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         basicAuthHandler = BasicAuthHandler.create(shopAuthProvider);
 
         // get HTTP host and port from configuration, or use default value
-        String host = config().getString("api.gateway.http.address", "localhost");
+        String host = config().getString("api.gateway.http.address", "192.168.197.227");
         int port = config().getInteger("api.gateway.http.port", DEFAULT_PORT);
 
         Router router = Router.router(vertx);
@@ -230,25 +230,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
     private void authUaaHandler(RoutingContext context) {
         if (context.user() != null) {
-            JsonObject principal = context.user().principal();
-            String username = null;  // TODO: Only for demo. Complete this in next version.
-            //String username = KeycloakHelper.preferredUsername(principal);
-            if (username == null) {
-                context.response()
-                        .putHeader("content-type", "application/json")
-                        .end(/*new Account().setId("TEST666").setUsername("Eric").toString()*/); // TODO: no username should be an error
-            } else {
-                /*Future<AccountService> future = Future.future();
-                EventBusService.getProxy(discovery, AccountService.class, future.completer());
-                future.compose(accountService -> {
-                    Future<Account> accountFuture = Future.future();
-                    accountService.retrieveByUsername(username, accountFuture.completer());
-                    return accountFuture.map(a -> {
-                        io.vertx.servicediscovery.ServiceDiscovery.releaseServiceObject(discovery, accountService);
-                        return a;
-                    });
-                }).setHandler(resultHandlerNonEmpty(context));*/ // if user does not exist, should return 404
-            }
+            this.returnWithSuccessMessage(context, context.user().principal().encodePrettily());
         } else {
             context.fail(401);
         }
@@ -270,10 +252,10 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                 context.setUser(userSession);
                 if(Objects.isNull(userSession)){
                     LOGGER.info("用户【{}】登录，用户不存在", loginName);
-                    this.returnWithMessage(context, "用户名或密码错误");
+                    this.returnWithFailureMessage(context, "用户名或密码错误");
                 } else {
                     LOGGER.info("用户【{}】登录成功", userSession.principal());
-                    this.returnWithMessage(context, "登录成功");
+                    this.returnWithSuccessMessage(context, "登录成功");
                 }
             } else {
                 LOGGER.error("调用远程登录方法错误！", handler.cause());

@@ -17,6 +17,7 @@
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-common" />
         <module name="shop-login" />
+        <module name="shop-message" />
         <module name="shop-order" />
         <module name="shop-pay" />
         <module name="shop-search" />
@@ -28,6 +29,7 @@
       <module name="shop-account" target="1.8" />
       <module name="shop-common" target="1.8" />
       <module name="shop-gateway" target="1.8" />
+      <module name="shop-message" target="1.8" />
       <module name="shop-order" target="1.8" />
       <module name="shop-pay" target="1.8" />
       <module name="shop-search" target="1.8" />

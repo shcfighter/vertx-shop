@@ -335,10 +335,17 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
       .end(ResultItems.getEncodePrettily(ResultItems.getReturnItemsFailure(cause)));
   }
 
-  protected void returnWithMessage(RoutingContext context, String message) {
-    context.response()
-            .setStatusCode(200)
+  protected void returnWithSuccessMessage(RoutingContext context, String message) {
+    this.Ok(context, ResultItems.getReturnItemsSuccess(message));
+  }
+
+  protected void returnWithFailureMessage(RoutingContext context, String message) {
+    this.Ok(context, ResultItems.getReturnItemsFailure(message));
+  }
+
+  protected void Ok(RoutingContext context, ResultItems items) {
+    context.response().setStatusCode(200)
             .putHeader("content-type", "application/json")
-            .end(ResultItems.getEncodePrettily(ResultItems.getReturnItemsSuccess(message)));
+            .end(ResultItems.getJsonObject(items).encodePrettily());
   }
 }

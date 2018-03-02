@@ -17,6 +17,7 @@
         <module>shop-search</module>
         <module>shop-gateway</module>
         <module>shop-user</module>
+        <module>shop-message</module>
     </modules>
 
     <properties>

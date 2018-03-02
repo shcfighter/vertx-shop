@@ -23,14 +23,14 @@ public class ResultItems<T> {
 	/**
 	 * 查询结果集
 	 */
-	private List<T> items;
+	private T items;
 
 	private String message;
 
 	public ResultItems() {
 	}
 
-	public ResultItems(int status, int total, List<T> items) {
+	public ResultItems(int status, int total, T items) {
 		this.status = status;
 		this.total = total;
 		this.items = items;
@@ -47,6 +47,10 @@ public class ResultItems<T> {
 
 	public static ResultItems getReturnItemsSuccess(String message){
 		return new ResultItems(0, message);
+	}
+
+	public static ResultItems getReturnItemsSuccess(int total, Object items){
+		return new ResultItems(0, total, items);
 	}
 
 	public static ResultItems getReturnItemsFailure(String message){

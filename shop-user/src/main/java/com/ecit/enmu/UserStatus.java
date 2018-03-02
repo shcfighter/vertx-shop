@@ -13,9 +13,9 @@ public enum UserStatus {
      */
     ACTIVATION(1, "激活"),
     /**
-     * 0=禁用
+     * 2=禁用
      */
-    DISABLED(0, "禁用"),
+    DISABLED(2, "禁用"),
     /**
      *-1=删除
      */
