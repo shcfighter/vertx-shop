@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>com.ecit</groupId>
-            <artifactId>shop-user</artifactId>
+            <artifactId>shop-user-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -238,7 +238,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
     /**
      * 登录
-     * @param context
+     * @param context 上下文
      */
     private void loginEntryHandler(RoutingContext context) {
         JsonObject params = context.getBodyAsJson();

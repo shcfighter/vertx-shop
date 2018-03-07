@@ -12,7 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shop-common" />
-    <orderEntry type="module" module-name="shop-user" />
+    <orderEntry type="module" module-name="shop-user-interface" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-jdbc-client:3.5.1" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-sql-common:3.5.1" level="project" />
     <orderEntry type="library" name="Maven: com.mchange:c3p0:0.9.5.2" level="project" />

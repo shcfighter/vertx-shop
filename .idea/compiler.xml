@@ -9,6 +9,8 @@
         <module name="shop-account" />
         <module name="shop-gateway" />
         <module name="shop-geteway" />
+        <module name="shop-message" />
+        <module name="shop-user" />
       </profile>
       <profile name="Annotation profile for vertx-shop" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -17,11 +19,11 @@
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-common" />
         <module name="shop-login" />
-        <module name="shop-message" />
+        <module name="shop-message-interface" />
         <module name="shop-order" />
         <module name="shop-pay" />
         <module name="shop-search" />
-        <module name="shop-user" />
+        <module name="shop-user-interface" />
         <module name="shopping-cart" />
       </profile>
     </annotationProcessing>
@@ -30,10 +32,14 @@
       <module name="shop-common" target="1.8" />
       <module name="shop-gateway" target="1.8" />
       <module name="shop-message" target="1.8" />
+      <module name="shop-message-interface" target="1.8" />
+      <module name="shop-message-module" target="1.5" />
       <module name="shop-order" target="1.8" />
       <module name="shop-pay" target="1.8" />
       <module name="shop-search" target="1.8" />
       <module name="shop-user" target="1.8" />
+      <module name="shop-user-interface" target="1.8" />
+      <module name="shop-user-module" target="1.8" />
       <module name="shopping-cart" target="1.8" />
       <module name="vertx-shop" target="1.5" />
     </bytecodeTargetLevel>

@@ -16,8 +16,10 @@
         <module>shop-pay</module>
         <module>shop-search</module>
         <module>shop-gateway</module>
-        <module>shop-user</module>
-        <module>shop-message</module>
+        <module>shop-user-module/shop-user</module>
+        <module>shop-user-module/shop-user-interface</module>
+        <module>shop-message-module/shop-message-interface</module>
+        <module>shop-message-module/shop-message</module>
     </modules>
 
     <properties>
