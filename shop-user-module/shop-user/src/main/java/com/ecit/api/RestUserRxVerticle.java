@@ -5,6 +5,7 @@ import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.salt.DefaultHashStrategy;
 import com.ecit.common.utils.salt.ShopHashStrategy;
+import com.ecit.service.IMessageService;
 import com.ecit.service.IUserService;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.http.HttpServerRequest;
@@ -41,11 +42,14 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.route().handler(BodyHandler.create());
         // API route handler
         router.post("/register").handler(this::registerHandler);
+        router.get("/activate/:loginName/:code").handler(this::activateHandler);
         router.put("/changepwd").handler(context -> this.requireLogin(context, this::changePwdHandler));
+        //全局异常处理
+        this.globalVerticle(router);
 
         // get HTTP host and port from configuration, or use default value
-        String host = config().getString("product.http.address", "localhost");
-        int port = config().getInteger("product.http.port", 8080);
+        String host = config().getString("user.http.address", "localhost");
+        int port = config().getInteger("user.http.port", 8080);
 
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {
@@ -69,29 +73,79 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             return ;
         }
 
+        final String loginName = request.getParam("loginName");
+        final String password = request.getParam("password");
         final String salt = hashStrategy.generateSalt();
         final String type = Optional.ofNullable(request.getParam("type")).orElse(RegisterType.loginName.name());
         //如果为手机注册验证手机验证码
-        if(StringUtils.equals(type, RegisterType.mobile.name())){
-            new ServiceProxyBuilder(vertx.getDelegate()).setAddress("database-service-address");
-
+        IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+        if(StringUtils.equals(type, RegisterType.mobile.name())) {
+            messageService.findMessage(loginName, RegisterType.mobile, handler -> {
+                if (handler.succeeded()) {
+                    final JsonObject message = handler.result();
+                    if (Objects.nonNull(message)
+                            && StringUtils.endsWithIgnoreCase(message.getString("code"), request.getParam("code"))) {
+                        this.register(context, type, loginName, salt, password);
+                        messageService.updateMessage(loginName, RegisterType.mobile, deleteHandler -> {
+                            if (deleteHandler.succeeded()) {
+                                LOGGER.info("数据删除成功！");
+                            } else {
+                                LOGGER.info("数据删除失败！", deleteHandler.cause());
+                            }
+                        });
+                    } else {
+                        LOGGER.info("验证码不匹配！");
+                        this.returnWithFailureMessage(context, "验证码错误");
+                        return ;
+                    }
+                } else {
+                    LOGGER.info("查询验证码失败", handler.cause());
+                    this.returnWithFailureMessage(context, "验证码错误");
+                    return ;
+                }
+            });
+        } else if(StringUtils.equals(type, RegisterType.email.name())){
+            this.register(context, type, loginName, salt, password);
+            messageService.registerEmailMessage(loginName, emailSendMessage -> {});
         }
-        userService.register(StringUtils.equals(type, RegisterType.loginName.name()) ? request.getParam("loginName") : null,
-                StringUtils.equals(type, RegisterType.mobile.name()) ? request.getParam("loginName") : null,
-                StringUtils.equals(type, RegisterType.email.name()) ? request.getParam("loginName") : null,
-                hashStrategy.computeHash(request.getParam("password"), salt, -1),
+
+    }
+
+    /**
+     * 注册逻辑
+     * @param context
+     * @param type
+     * @param loginName
+     * @param salt
+     * @param password
+     */
+    private void register(RoutingContext context, String type, String loginName, String salt, String password){
+        userService.register(StringUtils.equals(type, RegisterType.loginName.name()) ? loginName : null,
+                StringUtils.equals(type, RegisterType.mobile.name()) ? loginName : null,
+                StringUtils.equals(type, RegisterType.email.name()) ? loginName : null,
+                hashStrategy.computeHash(password, salt, -1),
                 salt,
-                handler -> {
-                    if(handler.succeeded()){
-                        if(handler.result() >= 1) {
+                registerHandler -> {
+                    if (registerHandler.succeeded()) {
+                        if (registerHandler.result() >= 1) {
                             this.Ok(context, ResultItems.getReturnItemsSuccess("注册成功"));
                         } else {
                             this.Ok(context, ResultItems.getReturnItemsFailure("注册失败"));
                         }
                     } else {
-                        this.internalError(context, handler.cause());
+                        this.internalError(context, registerHandler.cause());
                     }
                 });
+    }
+
+    private void activateHandler(RoutingContext context) {
+        HttpServerRequest request = context.request();
+        LOGGER.info("{}, {}", request.getParam("loginName"), request.getParam("code"));
+        context.response()
+                .putHeader("Location", "http://111.231.132.168/index.html")
+                //.putHeader("content-type", "text/html; charset=utf-8")
+                .setStatusCode(302)
+                .end();
     }
 
     /**

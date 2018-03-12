@@ -28,4 +28,10 @@ public interface IMessageService {
 
     @Fluent
     IMessageService updateMessage(String destination, RegisterType type, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);
+
+    @Fluent
+    IMessageService registerEmailMessage(String destination, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);
+
+    @Fluent
+    IMessageService registerMobileMessage(String destination, String code, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);
 }

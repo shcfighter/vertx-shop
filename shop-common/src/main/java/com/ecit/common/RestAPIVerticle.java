@@ -348,4 +348,12 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
             .putHeader("content-type", "application/json")
             .end(ResultItems.getJsonObject(items).encodePrettily());
   }
+
+  protected void globalVerticle(Router router){
+    router.route().last().handler(context -> {
+      this.returnWithFailureMessage(context, "404");
+    }).failureHandler(context -> {
+      this.returnWithFailureMessage(context, "服务器异常");
+    });
+  }
 }

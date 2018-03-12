@@ -29,6 +29,7 @@
                 <configuration>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <annotationProcessors>
                         <annotationProcessor>io.vertx.serviceproxy.ServiceProxyProcessor</annotationProcessor>
                     </annotationProcessors>

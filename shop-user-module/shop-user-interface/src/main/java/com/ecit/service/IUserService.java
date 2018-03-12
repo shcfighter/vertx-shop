@@ -27,4 +27,7 @@ public interface IUserService {
 
     @Fluent
     IUserService getMemberById(long userId, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    @Fluent
+    IUserService activateEmailUser(String loginName, Handler<AsyncResult<Integer>> resultHandler);
 }

@@ -26,5 +26,15 @@ public interface UserSql {
     /**
      * 通过id获取用户信息
      */
-    public static final String GET_USER_BY_ID = "select * from t_user where user_id = ? and is_deleted = ?";
+    public static final String GET_USER_BY_ID_SQL = "select * from t_user where user_id = ? and is_deleted = ?";
+
+    /**
+     * 查询激活账户
+     */
+    public static final String SELECT_ACTIVATE_EMAIL_USER_SQL = "select * from t_user where email = ? and status = 0 and is_deleted = 0";
+
+    /**
+     *  激活账户
+     */
+    public static final String ACTIVATE_EMAIL_USER_SQL = "select * from t_user where email = ? and status = 0 and is_deleted = 0";
 }

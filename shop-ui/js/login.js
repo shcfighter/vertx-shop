@@ -5,7 +5,7 @@ $(function() {
     /**
      * 登录
      */
-    $(".am-btn").click(function() {
+    $(".login").click(function() {
         var data = {
             loginName: $("input[name='loginName']").val(),
             pwd: $("input[name='pwd']").val()
@@ -16,7 +16,7 @@ $(function() {
             url: domain + "api/user/login",
             data: JSON.stringify(data),
             success: function(result){
-                window.location.href = "index.html";
+                //window.location.href = "index.html";
             },
             error: function () {
                 
@@ -27,22 +27,50 @@ $(function() {
     /**
      * 注册
      */
-    $("input[type='submit']").click(function() {
+    $(".register").click(function() {
         var registerDiv = $(this).closest(".am-tab-panel");
-
+        var type = $(this).attr("name");
         var data = {
-            type: $(this).attr("name"),
+            type: type,
             loginName: registerDiv.find("input[name='loginName']").val(),
             password: registerDiv.find("input[name='password']").val(),
-            passwordConfirm: registerDiv.find("input[name='passwordConfirm']").val(),
+            passwordConfirm: registerDiv.find("input[name='passwordConfirm']").val()
         }
+        if(type == "mobile"){
+            data["code"] = registerDiv.find("input[name='code']").val();
+        }
+        console.log(data);
         $.ajax({
             type: 'POST',
             contentType: "application/json;",
             url: domain + "api/user/register",
             data: JSON.stringify(data),
             success: function(result){
-                window.location.href = "index.html";
+                //window.location.href = "index.html";
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+    //手机注册验证码
+    $("#sendMobileCode").click(function() {
+        var registerDiv = $(this).closest(".am-tab-panel");
+        var data = {
+            destination: registerDiv.find("input[name='loginName']").val()
+        }
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json;",
+            url: domain + "api/message/insertMessage",
+            data: JSON.stringify(data),
+            success: function(result){
+                if (result.status == 0) {
+                    alert("发送成功");
+                } else {
+                    alert("发送失败");
+                }
             },
             error: function () {
 

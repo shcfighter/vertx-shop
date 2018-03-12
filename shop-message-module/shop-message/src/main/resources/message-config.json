@@ -4,7 +4,7 @@
   "api.message.http.address": "0.0.0.0",
 
   // Single Cluster Settings
-  "host" : "192.168.101.154", // string
+  "host" : "111.231.132.168", // string
   "port" : 27017,      // int
 
   // Multiple Cluster Settings
@@ -33,7 +33,7 @@
 
   // Credentials / Auth
   "username"   : "shop_user",     // string
-  "password"   : "123456", // string
+  "password"   : "h123456", // string
   "db_name": "shop_message",
   "authSource" : "shop_message",   // string
   // Auth mechanism

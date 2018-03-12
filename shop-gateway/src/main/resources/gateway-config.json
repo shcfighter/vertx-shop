@@ -1,15 +1,14 @@
 {
   "api.gateway.http.port": 8787,
   "api.gateway.http.address": "0.0.0.0",
-  "api.gateway.http.address.external": "192.168.101.137",
   "circuit-breaker": {
     "name": "api-gateway-cb",
     "timeout": 10000,
     "max-failures": 5
   },
-  "url": "jdbc:postgresql://localhost:5432/postgres",
+  "url": "jdbc:postgresql://localhost:5432/vertx_shop",
   "driver_class": "org.postgresql.Driver",
   "max_pool_size": 50,
   "user": "postgres",
-  "password": "123456"
+  "password": "h123456"
 }

@@ -12,6 +12,7 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
@@ -84,7 +85,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         basicAuthHandler = BasicAuthHandler.create(shopAuthProvider);
 
         // get HTTP host and port from configuration, or use default value
-        String host = config().getString("api.gateway.http.address", "192.168.197.227");
+        String host = config().getString("api.gateway.http.address", "localhost");
         int port = config().getInteger("api.gateway.http.port", DEFAULT_PORT);
 
         Router router = Router.router(vertx);
@@ -104,6 +105,8 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         router.post("/logout").handler(this::logoutHandler);
         // api dispatcher
         router.route("/api/*").handler(this::dispatchRequests);
+        //全局异常处理
+        this.globalVerticle(router);
 
         // enable HTTPS
         HttpServerOptions httpServerOptions = new HttpServerOptions()
@@ -154,13 +157,14 @@ public class APIGatewayVerticle extends RestAPIVerticle {
             /*HttpEndpoint.getWebClient(discovery, new JsonObject().put("api.name", prefix), handler -> {
                 if(handler.succeeded()){
                     doDispatch(context, newPath, handler.result(), future);
-                } else {
+                } else {s
                     LOGGER.error("获取webclient【{}】失败！", prefix);
                     future.fail(handler.cause());
                 }
             });*/
         }).setHandler(ar -> {
             if (ar.failed()) {
+                LOGGER.error("gateway调用失败！", ar.cause());
                 badGateway(ar.cause(), context);
             }
         });
@@ -175,7 +179,10 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      */
     private void doDispatch(RoutingContext context, String path, WebClient client, Future<Object> cbFuture) {
         final HttpRequest<Buffer> request = client.request(context.request().method(), path);
-        Optional.ofNullable(context.getBodyAsJson()).orElse(new JsonObject()).getMap().forEach((k, v) -> request.addQueryParam(k, String.valueOf(v)));
+        if(context.request().method().compareTo(HttpMethod.POST) == 0
+                || context.request().method().compareTo(HttpMethod.PUT) == 0){
+            Optional.ofNullable(context.getBodyAsJson()).orElse(new JsonObject()).getMap().forEach((k, v) -> request.addQueryParam(k, String.valueOf(v)));
+        }
         if (context.user() != null) {
             request.putHeader("user-principal", context.user().principal().encode());
         }
@@ -220,7 +227,9 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param context
      */
     private void formatContentTypeHandler(RoutingContext context) {
-        if(!StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
+        if(context.request().method().compareTo(HttpMethod.POST) == 0
+                && context.request().method().compareTo(HttpMethod.PUT) == 0
+                && !StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
             LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
             badRequest(context, new Throwable("请求方式【Content-Type】错误"));
             return;

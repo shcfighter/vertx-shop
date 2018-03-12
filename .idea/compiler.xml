@@ -10,7 +10,6 @@
         <module name="shop-gateway" />
         <module name="shop-geteway" />
         <module name="shop-message" />
-        <module name="shop-user" />
       </profile>
       <profile name="Annotation profile for vertx-shop" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -23,6 +22,7 @@
         <module name="shop-order" />
         <module name="shop-pay" />
         <module name="shop-search" />
+        <module name="shop-user" />
         <module name="shop-user-interface" />
         <module name="shopping-cart" />
       </profile>

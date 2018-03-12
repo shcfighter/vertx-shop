@@ -139,6 +139,34 @@ public class IMessageServiceVertxProxyHandler extends ProxyHandler {
          });
           break;
         }
+        case "registerEmailMessage": {
+          service.registerEmailMessage((java.lang.String)json.getValue("destination"), res -> {
+            if (res.failed()) {
+              if (res.cause() instanceof ServiceException) {
+                msg.reply(res.cause());
+              } else {
+                msg.reply(new ServiceException(-1, res.cause().getMessage()));
+              }
+            } else {
+              msg.reply(res.result() == null ? null : res.result().toJson());
+            }
+         });
+          break;
+        }
+        case "registerMobileMessage": {
+          service.registerMobileMessage((java.lang.String)json.getValue("destination"), (java.lang.String)json.getValue("code"), res -> {
+            if (res.failed()) {
+              if (res.cause() instanceof ServiceException) {
+                msg.reply(res.cause());
+              } else {
+                msg.reply(new ServiceException(-1, res.cause().getMessage()));
+              }
+            } else {
+              msg.reply(res.result() == null ? null : res.result().toJson());
+            }
+         });
+          break;
+        }
         default: {
           throw new IllegalStateException("Invalid action: " + action);
         }

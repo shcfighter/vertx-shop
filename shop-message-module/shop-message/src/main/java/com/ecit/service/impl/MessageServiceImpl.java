@@ -5,10 +5,14 @@ import com.ecit.service.IMessageService;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mail.MailConfig;
+import io.vertx.ext.mail.MailMessage;
+import io.vertx.ext.mail.StartTLSOptions;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.ext.mongo.UpdateOptions;
 import io.vertx.reactivex.core.Future;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.ext.mail.MailClient;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,22 +27,38 @@ public class MessageServiceImpl implements IMessageService{
 
     private static final Logger LOGGER = LogManager.getLogger(MessageServiceImpl.class);
     private static MongoClient mongoClient;
+    private static MailClient mailClient = null;
 
     public MessageServiceImpl(Vertx vertx, JsonObject config) {
         mongoClient = MongoClient.createShared(vertx, config, "message");
+        MailConfig emailConfig = new MailConfig();
+        emailConfig.setHostname("smtp.mail.com");
+        emailConfig.setPort(25);
+        emailConfig.setStarttls(StartTLSOptions.REQUIRED);
+        emailConfig.setUsername("shc_fighter@mail.com");
+        emailConfig.setPassword("1234567890a");
+        mailClient = MailClient.createNonShared(vertx, emailConfig);
     }
 
     @Override
     public IMessageService saveMessage(String destination, RegisterType type, Handler<AsyncResult<String>> resultHandler) {
+        final String code = (int)((Math.random()*9+1)*100000) + "";
         JsonObject document = new JsonObject()
                 .put("type", type.name())
                 .put("destination", destination)
-                .put("code", (int) ((Math.random()*9+1)*100000))
+                .put("code", code)
                 .put("status", 0)
                 .put("createTime", new Date().getTime());
 
         Future<String> future = Future.future();
-        mongoClient.rxInsert(MONGODB_COLLECTION, document).subscribe(future::complete, future::fail);
+        //mongoClient.rxInsert(MONGODB_COLLECTION, document).subscribe(future::complete, future::fail);
+        mongoClient.insert(MONGODB_COLLECTION, document, handler -> {
+            if(handler.succeeded()){
+                future.complete(code);
+            } else {
+                future.fail(handler.cause());
+            }
+        });
         future.setHandler(resultHandler);
         return this;
     }
@@ -72,6 +92,37 @@ public class MessageServiceImpl implements IMessageService{
                 .setMulti(true))
                 .subscribe(future::complete, future::fail);
         future.setHandler(resultHandler);
+        return this;
+    }
+
+    @Override
+    public IMessageService registerEmailMessage(String destination, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
+        this.saveMessage(destination, RegisterType.mobile, handler -> {
+            if(handler.succeeded()){
+                final String code = handler.result();
+                MailMessage message = new MailMessage();
+                message.setFrom("shc_fighter@mail.com");
+                message.setTo(destination);
+                message.setText("注册激活");
+                message.setHtml("<a href=\"http://111.231.132.168//api/user/activate/" + destination + "/" + code + "\">验证码：" + code + "</a>");
+                mailClient.sendMail(message, result -> {
+                    if (result.succeeded()) {
+                        LOGGER.info("邮件【{}】发送成功！", destination);
+                    } else {
+                        LOGGER.info("邮件【{}】发送失败", destination, result.cause());
+                    }
+                });
+            } else {
+                LOGGER.info("生成邮件验证code失败！", handler.cause());
+            }
+        });
+        return this;
+    }
+
+    @Override
+    public IMessageService registerMobileMessage(String destination, String code, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
+        //todo 调用短信发送平台
+        LOGGER.info("短信【{}】发送成功！", destination);
         return this;
     }
 }

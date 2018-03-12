@@ -34,10 +34,12 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
         router.route().handler(BodyHandler.create());
         // API route handler
         router.post("/insertMessage").handler(this::insertMessageHandler);
-        router.post("/findMessage").handler(this::findMessageHandler);
+        //router.post("/findMessage").handler(this::findMessageHandler);
+        //全局异常处理
+        this.globalVerticle(router);
 
         // get HTTP host and port from configuration, or use default value
-        String host = config().getString("api.message.http.address", "192.168.197.227");
+        String host = config().getString("api.message.http.address", "localhost");
         int port = config().getInteger("api.message.http.port", 8081);
 
         // create HTTP server and publish REST service
@@ -57,7 +59,7 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
         HttpServerRequest request = context.request();
         messageService.saveMessage(request.getParam("destination"), RegisterType.mobile, handler ->{
             if(handler.succeeded()){
-                LOGGER.info("插入成功，id{}", handler.result());
+                LOGGER.info("插入成功，code:{}", handler.result());
                 this.returnWithSuccessMessage(context, "插入成功");
             } else {
                 LOGGER.info("插入失败", handler.cause());
@@ -66,7 +68,7 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
         });
     }
 
-    private void findMessageHandler(RoutingContext context){
+    /*private void findMessageHandler(RoutingContext context){
         HttpServerRequest request = context.request();
         messageService.findMessage(request.getParam("destination"), RegisterType.mobile, handler ->{
             if(handler.succeeded()){
@@ -84,6 +86,6 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
                 this.returnWithFailureMessage(context, "查询失败");
             }
         });
-    }
+    }*/
 
 }
