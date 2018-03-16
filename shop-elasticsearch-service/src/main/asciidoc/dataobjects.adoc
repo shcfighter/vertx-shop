@@ -1,0 +1,885 @@
+= Cheatsheets
+
+[[Aggregation]]
+== Aggregation
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[score]]`score`|`Number (Float)`|-
+|[[source]]`source`|`Json object`|-
+|[[type]]`type`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|===
+
+[[AggregationOption]]
+== AggregationOption
+
+++++
+ Aggregation option
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[definition]]`definition`|`Json object`|-
+|[[name]]`name`|`String`|-
+|[[subAggregations]]`subAggregations`|`Array of link:dataobjects.html#AggregationOption[AggregationOption]`|-
+|[[type]]`type`|`link:enums.html#AggregationType[AggregationType]`|-
+|===
+
+[[BulkDeleteOptions]]
+== BulkDeleteOptions
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[deleteOptions]]`deleteOptions`|`link:dataobjects.html#DeleteOptions[DeleteOptions]`|-
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[source]]`source`|`String`|-
+|[[type]]`type`|`String`|-
+|===
+
+[[BulkIndexOptions]]
+== BulkIndexOptions
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[index]]`index`|`String`|-
+|[[indexOptions]]`indexOptions`|`link:dataobjects.html#IndexOptions[IndexOptions]`|-
+|[[source]]`source`|`Json object`|-
+|[[type]]`type`|`String`|-
+|===
+
+[[BulkOptions]]
+== BulkOptions
+
+++++
+ Index operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[parent]]`parent`|`String`|-
+|[[refresh]]`refresh`|`link:enums.html#RefreshPolicy[RefreshPolicy]`|-
+|[[refreshPolicy]]`refreshPolicy`|`link:enums.html#RefreshPolicy[RefreshPolicy]`|-
+|[[routing]]`routing`|`String`|-
+|[[timeout]]`timeout`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|[[versionType]]`versionType`|`link:enums.html#VersionType[VersionType]`|-
+|[[waitForActiveShard]]`waitForActiveShard`|`Number (Integer)`|-
+|===
+
+[[BulkResponse]]
+== BulkResponse
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[rawResponse]]`rawResponse`|`Json object`|-
+|[[responses]]`responses`|`Array of link:dataobjects.html#BulkResponseItem[BulkResponseItem]`|-
+|[[tookInMillis]]`tookInMillis`|`Number (Long)`|-
+|===
+
+[[BulkResponseItem]]
+== BulkResponseItem
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[failure]]`failure`|`Json object`|-
+|[[failureMessage]]`failureMessage`|`String`|-
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[opType]]`opType`|`link:enums.html#OpType[OpType]`|-
+|[[shards]]`shards`|`link:dataobjects.html#Shards[Shards]`|-
+|[[type]]`type`|`String`|-
+|===
+
+[[BulkUpdateOptions]]
+== BulkUpdateOptions
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[source]]`source`|`String`|-
+|[[type]]`type`|`String`|-
+|[[updateOptions]]`updateOptions`|`link:dataobjects.html#UpdateOptions[UpdateOptions]`|-
+|===
+
+[[CompletionSuggestOption]]
+== CompletionSuggestOption
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[field]]`field`|`String`|-
+|[[size]]`size`|`Number (Integer)`|-
+|[[suggestionType]]`suggestionType`|`link:enums.html#SuggestionType[SuggestionType]`|-
+|[[text]]`text`|`String`|-
+|===
+
+[[CreateIndexOptions]]
+== CreateIndexOptions
+
+++++
+ Options for admin create index operations
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|===
+
+[[DeleteByQueryOptions]]
+== DeleteByQueryOptions
+
+++++
+ Delete by query operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[aggregations]]`aggregations`|`Array of link:dataobjects.html#AggregationOption[AggregationOption]`|-
+|[[conflicts]]`conflicts`|`link:enums.html#Conflicts[Conflicts]`|-
+|[[explain]]`explain`|`Boolean`|-
+|[[fetchSource]]`fetchSource`|`Boolean`|-
+|[[from]]`from`|`Number (Integer)`|-
+|[[indicesOptions]]`indicesOptions`|`link:dataobjects.html#IndicesOptions[IndicesOptions]`|-
+|[[maxRetries]]`maxRetries`|`Number (Integer)`|-
+|[[minScore]]`minScore`|`Number (Float)`|-
+|[[postFilter]]`postFilter`|`Json object`|-
+|[[preference]]`preference`|`String`|-
+|[[query]]`query`|`Json object`|-
+|[[requestsPerSecond]]`requestsPerSecond`|`Number (Float)`|-
+|[[routing]]`routing`|`String`|-
+|[[scriptFields]]`scriptFields`|`link:dataobjects.html#ScriptFieldOption[ScriptFieldOption]`|-
+|[[scroll]]`scroll`|`String`|-
+|[[searchType]]`searchType`|`link:enums.html#SearchType[SearchType]`|-
+|[[size]]`size`|`Number (Integer)`|-
+|[[slices]]`slices`|`Number (Integer)`|-
+|[[sourceExcludes]]`sourceExcludes`|`Array of String`|-
+|[[sourceIncludes]]`sourceIncludes`|`Array of String`|-
+|[[storedFields]]`storedFields`|`Array of String`|-
+|[[terminateAfter]]`terminateAfter`|`Number (Integer)`|-
+|[[timeoutInMillis]]`timeoutInMillis`|`Number (Long)`|-
+|[[trackScores]]`trackScores`|`Boolean`|-
+|[[types]]`types`|`Array of String`|-
+|[[version]]`version`|`Boolean`|-
+|[[waitForActiveShards]]`waitForActiveShards`|`Number (Integer)`|-
+|===
+
+[[DeleteByQueryResponse]]
+== DeleteByQueryResponse
+
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[batches]]`batches`|`Number (Integer)`|-
+|[[deleted]]`deleted`|`Number (Long)`|-
+|[[failures]]`failures`|`Json array`|-
+|[[rawResponse]]`rawResponse`|`Json object`|-
+|[[requestsPerSecond]]`requestsPerSecond`|`Number (Float)`|-
+|[[retries]]`retries`|`link:dataobjects.html#Retries[Retries]`|-
+|[[throttledMillis]]`throttledMillis`|`Number (Long)`|-
+|[[throttledUntilMillis]]`throttledUntilMillis`|`Number (Long)`|-
+|[[timedOut]]`timedOut`|`Boolean`|-
+|[[tookMillis]]`tookMillis`|`Number (Long)`|-
+|[[total]]`total`|`Number (Long)`|-
+|[[versionConflicts]]`versionConflicts`|`Number (Long)`|-
+|===
+
+[[DeleteIndexOptions]]
+== DeleteIndexOptions
+
+++++
+ Options for admin delete index operations
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|===
+
+[[DeleteOptions]]
+== DeleteOptions
+
+++++
+ Delete operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[parent]]`parent`|`String`|-
+|[[refresh]]`refresh`|`link:enums.html#RefreshPolicy[RefreshPolicy]`|-
+|[[refreshPolicy]]`refreshPolicy`|`link:enums.html#RefreshPolicy[RefreshPolicy]`|-
+|[[routing]]`routing`|`String`|-
+|[[timeout]]`timeout`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|[[versionType]]`versionType`|`link:enums.html#VersionType[VersionType]`|-
+|[[waitForActiveShard]]`waitForActiveShard`|`Number (Integer)`|-
+|===
+
+[[DeleteResponse]]
+== DeleteResponse
+
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[deleted]]`deleted`|`Boolean`|-
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[shards]]`shards`|`link:dataobjects.html#Shards[Shards]`|-
+|[[type]]`type`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|===
+
+[[Field]]
+== Field
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[name]]`name`|`String`|-
+|===
+
+[[FieldSortOption]]
+== FieldSortOption
+
+++++
+ Sort option
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[field]]`field`|`String`|-
+|[[order]]`order`|`link:enums.html#SortOrder[SortOrder]`|-
+|[[sortType]]`sortType`|`link:enums.html#SortType[SortType]`|-
+|===
+
+[[GetOptions]]
+== GetOptions
+
+++++
+ Get operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[fetchSource]]`fetchSource`|`Boolean`|-
+|[[fetchSourceExcludes]]`fetchSourceExcludes`|`Array of String`|-
+|[[fetchSourceIncludes]]`fetchSourceIncludes`|`Array of String`|-
+|[[fields]]`fields`|`Array of String`|-
+|[[parent]]`parent`|`String`|-
+|[[preference]]`preference`|`String`|-
+|[[realtime]]`realtime`|`Boolean`|-
+|[[refresh]]`refresh`|`Boolean`|-
+|[[routing]]`routing`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|[[versionType]]`versionType`|`link:enums.html#VersionType[VersionType]`|-
+|===
+
+[[GetResponse]]
+== GetResponse
+
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[rawResponse]]`rawResponse`|`Json object`|-
+|[[result]]`result`|`link:dataobjects.html#GetResult[GetResult]`|-
+|===
+
+[[GetResult]]
+== GetResult
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[exists]]`exists`|`Boolean`|-
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[source]]`source`|`Json object`|-
+|[[type]]`type`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|===
+
+[[Hit]]
+== Hit
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[score]]`score`|`Number (Float)`|-
+|[[source]]`source`|`Json object`|-
+|[[type]]`type`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|===
+
+[[Hits]]
+== Hits
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[hits]]`hits`|`Array of link:dataobjects.html#Hit[Hit]`|-
+|[[maxScore]]`maxScore`|`Number (Float)`|-
+|[[total]]`total`|`Number (Long)`|-
+|===
+
+[[IndexOptions]]
+== IndexOptions
+
+++++
+ Index operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[id]]`id`|`String`|-
+|[[opType]]`opType`|`link:enums.html#OpType[OpType]`|-
+|[[parent]]`parent`|`String`|-
+|[[refresh]]`refresh`|`link:enums.html#RefreshPolicy[RefreshPolicy]`|-
+|[[refreshPolicy]]`refreshPolicy`|`link:enums.html#RefreshPolicy[RefreshPolicy]`|-
+|[[routing]]`routing`|`String`|-
+|[[timeout]]`timeout`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|[[versionType]]`versionType`|`link:enums.html#VersionType[VersionType]`|-
+|[[waitForActiveShard]]`waitForActiveShard`|`Number (Integer)`|-
+|===
+
+[[IndexResponse]]
+== IndexResponse
+
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[created]]`created`|`Boolean`|-
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[shards]]`shards`|`link:dataobjects.html#Shards[Shards]`|-
+|[[type]]`type`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|===
+
+[[IndicesOptions]]
+== IndicesOptions
+
+++++
+ Multisearch operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[allowAliasesToMultipleIndices]]`allowAliasesToMultipleIndices`|`Boolean`|-
+|[[allowNoIndices]]`allowNoIndices`|`Boolean`|-
+|[[expandToClosedIndices]]`expandToClosedIndices`|`Boolean`|-
+|[[expandToOpenIndices]]`expandToOpenIndices`|`Boolean`|-
+|[[forbidClosedIndices]]`forbidClosedIndices`|`Boolean`|-
+|[[ignoreAliases]]`ignoreAliases`|`Boolean`|-
+|[[ignoreUnavailable]]`ignoreUnavailable`|`Boolean`|-
+|===
+
+[[MappingOptions]]
+== MappingOptions
+
+++++
+ Options for admin put mapping operations
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|===
+
+[[MultiGetOptions]]
+== MultiGetOptions
+
+++++
+ MultiGet operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[preference]]`preference`|`String`|-
+|[[realtime]]`realtime`|`Boolean`|-
+|[[refresh]]`refresh`|`Boolean`|-
+|===
+
+[[MultiGetQueryOptions]]
+== MultiGetQueryOptions
+
+++++
+ MultiGet operation query options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[fetchSource]]`fetchSource`|`Boolean`|-
+|[[fetchSourceExcludes]]`fetchSourceExcludes`|`Array of String`|-
+|[[fetchSourceIncludes]]`fetchSourceIncludes`|`Array of String`|-
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[parent]]`parent`|`String`|-
+|[[routing]]`routing`|`String`|-
+|[[storedFields]]`storedFields`|`Array of String`|-
+|[[type]]`type`|`String`|-
+|===
+
+[[MultiGetResponse]]
+== MultiGetResponse
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[rawResponse]]`rawResponse`|`Json object`|-
+|[[responses]]`responses`|`Array of link:dataobjects.html#MultiGetResponseItem[MultiGetResponseItem]`|-
+|===
+
+[[MultiGetResponseItem]]
+== MultiGetResponseItem
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[failureMessage]]`failureMessage`|`String`|-
+|[[getResult]]`getResult`|`link:dataobjects.html#GetResult[GetResult]`|-
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[type]]`type`|`String`|-
+|===
+
+[[MultiSearchOptions]]
+== MultiSearchOptions
+
+++++
+ Multisearch operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[indicesOptions]]`indicesOptions`|`link:dataobjects.html#IndicesOptions[IndicesOptions]`|-
+|[[maxConcurrentSearchRequests]]`maxConcurrentSearchRequests`|`Number (Integer)`|-
+|===
+
+[[MultiSearchQueryOptions]]
+== MultiSearchQueryOptions
+
+++++
+ Multisearch operation query options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[indices]]`indices`|`Array of String`|-
+|[[searchOptions]]`searchOptions`|`link:dataobjects.html#SearchOptions[SearchOptions]`|-
+|===
+
+[[MultiSearchResponse]]
+== MultiSearchResponse
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[rawResponse]]`rawResponse`|`Json object`|-
+|[[responses]]`responses`|`Array of link:dataobjects.html#MultiSearchResponseItem[MultiSearchResponseItem]`|-
+|===
+
+[[MultiSearchResponseItem]]
+== MultiSearchResponseItem
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[failureMessage]]`failureMessage`|`String`|-
+|[[searchResponse]]`searchResponse`|`link:dataobjects.html#SearchResponse[SearchResponse]`|-
+|===
+
+[[Retries]]
+== Retries
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[bulk]]`bulk`|`Number (Long)`|-
+|[[search]]`search`|`Number (Long)`|-
+|===
+
+[[ScriptFieldOption]]
+== ScriptFieldOption
+
+++++
+ Sort option
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[lang]]`lang`|`String`|-
+|[[params]]`params`|`Json object`|-
+|[[script]]`script`|`String`|-
+|[[scriptType]]`scriptType`|`link:enums.html#ScriptType[ScriptType]`|-
+|===
+
+[[ScriptSortOption]]
+== ScriptSortOption
+
+++++
+ Sort option
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[lang]]`lang`|`String`|-
+|[[order]]`order`|`link:enums.html#SortOrder[SortOrder]`|-
+|[[params]]`params`|`Json object`|-
+|[[script]]`script`|`String`|-
+|[[scriptType]]`scriptType`|`link:enums.html#ScriptType[ScriptType]`|-
+|[[sortType]]`sortType`|`link:enums.html#SortType[SortType]`|-
+|[[type]]`type`|`link:enums.html#Type[Type]`|-
+|===
+
+[[SearchOptions]]
+== SearchOptions
+
+++++
+ Search operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[aggregations]]`aggregations`|`Array of link:dataobjects.html#AggregationOption[AggregationOption]`|-
+|[[explain]]`explain`|`Boolean`|-
+|[[fetchSource]]`fetchSource`|`Boolean`|-
+|[[from]]`from`|`Number (Integer)`|-
+|[[indicesOptions]]`indicesOptions`|`link:dataobjects.html#IndicesOptions[IndicesOptions]`|-
+|[[minScore]]`minScore`|`Number (Float)`|-
+|[[postFilter]]`postFilter`|`Json object`|-
+|[[preference]]`preference`|`String`|-
+|[[query]]`query`|`Json object`|-
+|[[routing]]`routing`|`String`|-
+|[[scriptFields]]`scriptFields`|`link:dataobjects.html#ScriptFieldOption[ScriptFieldOption]`|-
+|[[scroll]]`scroll`|`String`|-
+|[[searchType]]`searchType`|`link:enums.html#SearchType[SearchType]`|-
+|[[size]]`size`|`Number (Integer)`|-
+|[[sourceExcludes]]`sourceExcludes`|`Array of String`|-
+|[[sourceIncludes]]`sourceIncludes`|`Array of String`|-
+|[[storedFields]]`storedFields`|`Array of String`|-
+|[[terminateAfter]]`terminateAfter`|`Number (Integer)`|-
+|[[timeoutInMillis]]`timeoutInMillis`|`Number (Long)`|-
+|[[trackScores]]`trackScores`|`Boolean`|-
+|[[types]]`types`|`Array of String`|-
+|[[version]]`version`|`Boolean`|-
+|===
+
+[[SearchResponse]]
+== SearchResponse
+
+++++
+ Search operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[aggregations]]`aggregations`|`Json object`|-
+|[[hits]]`hits`|`link:dataobjects.html#Hits[Hits]`|-
+|[[rawResponse]]`rawResponse`|`Json object`|-
+|[[scrollId]]`scrollId`|`String`|-
+|[[shards]]`shards`|`link:dataobjects.html#Shards[Shards]`|-
+|[[suggestions]]`suggestions`|`link:dataobjects.html#Suggestion[Suggestion]`|-
+|[[timedOut]]`timedOut`|`Boolean`|-
+|[[took]]`took`|`Number (Long)`|-
+|===
+
+[[SearchScrollOptions]]
+== SearchScrollOptions
+
+++++
+ Search scroll options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[scroll]]`scroll`|`String`|-
+|===
+
+[[Shards]]
+== Shards
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[failed]]`failed`|`Number (Integer)`|-
+|[[successful]]`successful`|`Number (Integer)`|-
+|[[total]]`total`|`Number (Integer)`|-
+|===
+
+[[Suggestion]]
+== Suggestion
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[entries]]`entries`|`Array of link:dataobjects.html#SuggestionEntry[SuggestionEntry]`|-
+|[[name]]`name`|`String`|-
+|[[size]]`size`|`Number (Integer)`|-
+|[[suggestionType]]`suggestionType`|`link:enums.html#SuggestionType[SuggestionType]`|-
+|===
+
+[[SuggestionEntry]]
+== SuggestionEntry
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[length]]`length`|`Number (Integer)`|-
+|[[offset]]`offset`|`Number (Integer)`|-
+|[[options]]`options`|`Array of link:dataobjects.html#SuggestionEntryOption[SuggestionEntryOption]`|-
+|[[text]]`text`|`String`|-
+|===
+
+[[SuggestionEntryOption]]
+== SuggestionEntryOption
+
+++++
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[highlight]]`highlight`|`String`|-
+|[[score]]`score`|`Number (Float)`|-
+|[[text]]`text`|`String`|-
+|===
+
+[[TemplateOptions]]
+== TemplateOptions
+
+++++
+ Options for admin put template operations
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|===
+
+[[UpdateOptions]]
+== UpdateOptions
+
+++++
+ Update operation options
+++++
+'''
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[detectNoop]]`detectNoop`|`Boolean`|-
+|[[doc]]`doc`|`Json object`|-
+|[[docAsUpsert]]`docAsUpsert`|`Boolean`|-
+|[[fields]]`fields`|`Array of String`|-
+|[[parent]]`parent`|`String`|-
+|[[refresh]]`refresh`|`link:enums.html#RefreshPolicy[RefreshPolicy]`|-
+|[[refreshPolicy]]`refreshPolicy`|`link:enums.html#RefreshPolicy[RefreshPolicy]`|-
+|[[retryOnConflict]]`retryOnConflict`|`Number (Integer)`|-
+|[[routing]]`routing`|`String`|-
+|[[script]]`script`|`String`|-
+|[[scriptLang]]`scriptLang`|`String`|-
+|[[scriptParams]]`scriptParams`|`Json object`|-
+|[[scriptType]]`scriptType`|`link:enums.html#ScriptType[ScriptType]`|-
+|[[scriptedUpsert]]`scriptedUpsert`|`Boolean`|-
+|[[timeout]]`timeout`|`String`|-
+|[[upsert]]`upsert`|`Json object`|-
+|[[version]]`version`|`Number (Long)`|-
+|[[versionType]]`versionType`|`link:enums.html#VersionType[VersionType]`|-
+|[[waitForActiveShard]]`waitForActiveShard`|`Number (Integer)`|-
+|===
+
+[[UpdateResponse]]
+== UpdateResponse
+
+
+[cols=">25%,^25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[created]]`created`|`Boolean`|-
+|[[id]]`id`|`String`|-
+|[[index]]`index`|`String`|-
+|[[result]]`result`|`link:dataobjects.html#GetResult[GetResult]`|-
+|[[shards]]`shards`|`link:dataobjects.html#Shards[Shards]`|-
+|[[type]]`type`|`String`|-
+|[[version]]`version`|`Number (Long)`|-
+|===
+

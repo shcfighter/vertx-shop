@@ -19,7 +19,7 @@ import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
  */
 public class UserVerticle extends BaseMicroserviceRxVerticle{
 
-    private static final String SERVICE_LOGIN_USER_SERVICE_NAME = "service_login_user_service_api_name";
+    private static final String USER_SERVICE_NAME = "user_service_name";
 
     @Override
     public void start() throws Exception {
@@ -28,7 +28,7 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
         new ServiceBinder(vertx.getDelegate())
                 .setAddress(IUserService.USER_SERVICE_ADDRESS)
                 .register(IUserService.class, userService);
-        this.publishEventBusService(SERVICE_LOGIN_USER_SERVICE_NAME, IUserService.USER_SERVICE_ADDRESS, IUserService.class).subscribe();
+        this.publishEventBusService(USER_SERVICE_NAME, IUserService.USER_SERVICE_ADDRESS, IUserService.class).subscribe();
         vertx.getDelegate().deployVerticle(new RestUserRxVerticle(userService), new DeploymentOptions().setConfig(this.config()));
     }
 

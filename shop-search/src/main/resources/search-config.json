@@ -1,0 +1,9 @@
+{
+  "api.name": "search",
+  "user.http.address": "0.0.0.0",
+  "user.http.port": 8082,
+  "address": "eb.elasticsearch",
+  "transportAddresses": [ { "hostname": "111.231.132.168", "port": 9300 }],
+  "cluster_name": "vertx_shop",
+  "client_transport_sniff": true
+}

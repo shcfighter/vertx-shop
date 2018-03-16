@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/shop-account/shop-account.iml" filepath="$PROJECT_DIR$/shop-account/shop-account.iml" />
       <module fileurl="file://$PROJECT_DIR$/shop-common/shop-common.iml" filepath="$PROJECT_DIR$/shop-common/shop-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-elasticsearch-service/shop-elasticsearch-service.iml" filepath="$PROJECT_DIR$/shop-elasticsearch-service/shop-elasticsearch-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/shop-gateway/shop-gateway.iml" filepath="$PROJECT_DIR$/shop-gateway/shop-gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/shop-message-module/shop-message/shop-message.iml" filepath="$PROJECT_DIR$/shop-message-module/shop-message/shop-message.iml" />
       <module fileurl="file://$PROJECT_DIR$/shop-message-module/shop-message-interface/shop-message-interface.iml" filepath="$PROJECT_DIR$/shop-message-module/shop-message-interface/shop-message-interface.iml" />

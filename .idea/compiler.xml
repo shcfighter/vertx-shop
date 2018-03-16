@@ -26,10 +26,27 @@
         <module name="shop-user-interface" />
         <module name="shopping-cart" />
       </profile>
+      <profile name="Annotation profile for vertx-elasticsearch-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <option name="outputDirectory" value="D:\IdeaProjects\vertx-shop\shop-elasticsearch-service/src/main" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="vertx-elasticsearch-service" />
+      </profile>
+      <profile name="Annotation profile for shop-elasticsearch-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <option name="outputDirectory" value="D:\IdeaProjects\vertx-shop\shop-elasticsearch-service/src/main" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-elasticsearch-service" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
       <module name="shop-account" target="1.8" />
       <module name="shop-common" target="1.8" />
+      <module name="shop-elasticsearch-service" target="1.8" />
       <module name="shop-gateway" target="1.8" />
       <module name="shop-message" target="1.8" />
       <module name="shop-message-interface" target="1.8" />
@@ -41,6 +58,7 @@
       <module name="shop-user-interface" target="1.8" />
       <module name="shop-user-module" target="1.8" />
       <module name="shopping-cart" target="1.8" />
+      <module name="vertx-elasticsearch-service" target="1.8" />
       <module name="vertx-shop" target="1.5" />
     </bytecodeTargetLevel>
   </component>

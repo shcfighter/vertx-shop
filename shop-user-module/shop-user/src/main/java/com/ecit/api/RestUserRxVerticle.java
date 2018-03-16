@@ -140,12 +140,19 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
 
     private void activateHandler(RoutingContext context) {
         HttpServerRequest request = context.request();
-        LOGGER.info("{}, {}", request.getParam("loginName"), request.getParam("code"));
-        context.response()
-                .putHeader("Location", "http://111.231.132.168/index.html")
-                //.putHeader("content-type", "text/html; charset=utf-8")
-                .setStatusCode(302)
-                .end();
+        final String loginName = request.getParam("loginName");
+        LOGGER.info("邮箱激活账号：{}, 验证码：{}", loginName, request.getParam("code"));
+        userService.activateEmailUser(loginName, handler -> {
+            if(handler.failed()){
+                LOGGER.error("邮箱激活失败", handler.cause());
+                this.internalError(context, handler.cause());
+                return ;
+            }
+            if(StringUtils.equals(handler.result(), request.getParam("code"))){
+                IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+                messageService.updateMessage(loginName, RegisterType.email, messageHandler -> {});
+            }
+        });
     }
 
     /**

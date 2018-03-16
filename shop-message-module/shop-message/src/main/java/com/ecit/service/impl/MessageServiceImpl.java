@@ -97,14 +97,14 @@ public class MessageServiceImpl implements IMessageService{
 
     @Override
     public IMessageService registerEmailMessage(String destination, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
-        this.saveMessage(destination, RegisterType.mobile, handler -> {
+        this.saveMessage(destination, RegisterType.email, handler -> {
             if(handler.succeeded()){
                 final String code = handler.result();
                 MailMessage message = new MailMessage();
                 message.setFrom("shc_fighter@mail.com");
                 message.setTo(destination);
                 message.setText("注册激活");
-                message.setHtml("<a href=\"http://111.231.132.168//api/user/activate/" + destination + "/" + code + "\">验证码：" + code + "</a>");
+                message.setHtml("<a href=\"http://111.231.132.168/api/user/activate/" + destination + "/" + code + "\">验证码：" + code + "</a>");
                 mailClient.sendMail(message, result -> {
                     if (result.succeeded()) {
                         LOGGER.info("邮件【{}】发送成功！", destination);

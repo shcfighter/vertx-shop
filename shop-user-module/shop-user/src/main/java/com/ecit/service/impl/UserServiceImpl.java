@@ -2,8 +2,10 @@ package com.ecit.service.impl;
 
 import com.ecit.common.db.JdbcRepositoryWrapper;
 import com.ecit.common.enmu.IsDeleted;
+import com.ecit.common.enmu.RegisterType;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.UserStatus;
+import com.ecit.service.IMessageService;
 import com.ecit.service.IUserService;
 import com.ecit.service.IdBuilder;
 import io.vertx.core.AsyncResult;
@@ -12,7 +14,10 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
@@ -21,9 +26,11 @@ import java.util.Objects;
  */
 public class UserServiceImpl extends JdbcRepositoryWrapper implements IUserService{
 
-
+    private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
+    private static Vertx VERTX;
     public UserServiceImpl(Vertx vertx, JsonObject config) {
         super(vertx, config);
+        VERTX = vertx;
     }
 
     @Override
@@ -68,18 +75,37 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements IUserServi
     }
 
     @Override
-    public IUserService activateEmailUser(String loginName, Handler<AsyncResult<Integer>> resultHandler) {
-        Future<JsonObject> selectFuture = Future.future();
+    public IUserService activateEmailUser(String loginName, Handler<AsyncResult<String>> resultHandler) {
+        Future<JsonObject> userFuture = Future.future();
         this.retrieveOne(new JsonArray().add(loginName), UserSql.SELECT_ACTIVATE_EMAIL_USER_SQL)
-                .subscribe(selectFuture::complete, selectFuture::fail);
-        if(selectFuture.succeeded()){
-            //todo
-        } else {
-            //todo
-        }
-        Future<Integer> future = Future.future();
+                .subscribe(userFuture::complete, userFuture::fail);
+
+        Future<String> future = userFuture.compose(emailUser ->
+                getMessageByEmailUser(emailUser.getString("email"))
+                        .compose(message -> {
+                            if(Objects.isNull(message)){
+                                return Future.failedFuture("验证码信息不存在!");
+                            }
+                            return Future.succeededFuture(message.getString("code"));
+                        }));
 
         future.setHandler(resultHandler);
         return this;
+    }
+
+    private Future<JsonObject> getMessageByEmailUser(String email){
+        Future<JsonObject> messageFuture = Future.future();
+        IMessageService messageService = new ServiceProxyBuilder(VERTX.getDelegate()).setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+        //messageService.findMessage(email, RegisterType.email, messageFuture.completer());
+        messageService.findMessage(email, RegisterType.email, handler -> {
+            if(handler.failed()){
+                LOGGER.error("调用短信验证码信息错误，", handler.cause());
+            } else {
+                System.out.println(handler.result());
+                messageFuture.complete(handler.result());
+                messageFuture.succeeded();
+            }
+        });
+        return messageFuture;
     }
 }

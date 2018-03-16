@@ -20,6 +20,7 @@
         <module>shop-user-module/shop-user-interface</module>
         <module>shop-message-module/shop-message-interface</module>
         <module>shop-message-module/shop-message</module>
+        <module>shop-elasticsearch-service</module>
     </modules>
 
     <properties>

@@ -1,0 +1,206 @@
+/**
+ * Copyright (C) 2016 Etaia AS (oss@hubrick.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.hubrick.vertx.elasticsearch.model;
+
+import io.vertx.codegen.annotations.DataObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Update operation options
+ */
+@DataObject
+public class UpdateOptions extends AbstractWriteOptions<UpdateOptions> {
+
+    private String script;
+    private ScriptType scriptType;
+    private String scriptLang;
+    private JsonObject scriptParams = new JsonObject();
+    private List<String> fields = new ArrayList<>();
+    private Integer retryOnConflict;
+    private JsonObject doc;
+    private JsonObject upsert;
+    private Boolean docAsUpsert;
+    private Boolean detectNoop;
+    private Boolean scriptedUpsert;
+
+    public static final String FIELD_SCRIPT = "script";
+    public static final String FIELD_SCRIPT_TYPE = "scriptType";
+    public static final String FIELD_SCRIPT_LANG = "scriptLang";
+    public static final String FIELD_SCRIPT_PARAMS = "scriptParams";
+    public static final String FIELD_FIELDS = "fields";
+    public static final String FIELD_RETRY_ON_CONFLICT = "retryOnConflict";
+    public static final String FIELD_DOC = "doc";
+    public static final String FIELD_UPSERT = "upsert";
+    public static final String FIELD_DOC_AS_UPSERT = "docAsUpsert";
+    public static final String FIELD_DETECT_NOOP = "detectNoop";
+    public static final String FIELD_SCRIPTED_UPSERT = "scriptedUpsert";
+
+    public UpdateOptions() {
+    }
+
+    public UpdateOptions(UpdateOptions other) {
+        super(other);
+
+        script = other.getScript();
+        scriptType = other.getScriptType();
+        scriptLang = other.getScriptLang();
+        scriptParams = other.getScriptParams();
+        fields.addAll(other.getFields());
+        retryOnConflict = other.getRetryOnConflict();
+        doc = other.getDoc();
+        upsert = other.getUpsert();
+        docAsUpsert = other.getDocAsUpsert();
+        detectNoop = other.getDetectNoop();
+        scriptedUpsert = other.getScriptedUpsert();
+    }
+
+    @SuppressWarnings("unchecked")
+    public UpdateOptions(JsonObject json) {
+        super(json);
+
+        script = json.getString(FIELD_SCRIPT);
+        scriptLang = json.getString(FIELD_SCRIPT_LANG);
+        scriptParams = json.getJsonObject(FIELD_SCRIPT_PARAMS);
+        //noinspection unchecked
+        fields = json.getJsonArray(FIELD_FIELDS, new JsonArray()).getList();
+        retryOnConflict = json.getInteger(FIELD_RETRY_ON_CONFLICT);
+        doc = json.getJsonObject(FIELD_DOC);
+        upsert = json.getJsonObject(FIELD_UPSERT);
+        docAsUpsert = json.getBoolean(FIELD_DOC_AS_UPSERT);
+        detectNoop = json.getBoolean(FIELD_DETECT_NOOP);
+        scriptedUpsert = json.getBoolean(FIELD_SCRIPTED_UPSERT);
+        scriptType = Optional.ofNullable(json.getString(FIELD_SCRIPT_TYPE)).map(ScriptType::valueOf).orElse(null);
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    public UpdateOptions setScript(String script, ScriptType scriptType) {
+        this.script = script;
+        this.scriptType = scriptType;
+        return this;
+    }
+
+    public ScriptType getScriptType() {
+        return scriptType;
+    }
+
+    public String getScriptLang() {
+        return scriptLang;
+    }
+
+    public UpdateOptions setScriptLang(String scriptLang) {
+        this.scriptLang = scriptLang;
+        return this;
+    }
+
+    public JsonObject getScriptParams() {
+        return scriptParams;
+    }
+
+    public UpdateOptions setScriptParams(JsonObject scriptParams) {
+        this.scriptParams = scriptParams;
+        return this;
+    }
+
+    public List<String> getFields() {
+        return fields;
+    }
+
+    public UpdateOptions addField(String field) {
+        fields.add(field);
+        return this;
+    }
+
+    public Integer getRetryOnConflict() {
+        return retryOnConflict;
+    }
+
+    public UpdateOptions setRetryOnConflict(Integer retryOnConflict) {
+        this.retryOnConflict = retryOnConflict;
+        return this;
+    }
+
+    public JsonObject getDoc() {
+        return doc;
+    }
+
+    public UpdateOptions setDoc(JsonObject doc) {
+        this.doc = doc;
+        return this;
+    }
+
+    public JsonObject getUpsert() {
+        return upsert;
+    }
+
+    public UpdateOptions setUpsert(JsonObject upsert) {
+        this.upsert = upsert;
+        return this;
+    }
+
+    public Boolean getDocAsUpsert() {
+        return docAsUpsert;
+    }
+
+    public UpdateOptions setDocAsUpsert(Boolean docAsUpsert) {
+        this.docAsUpsert = docAsUpsert;
+        return this;
+    }
+
+    public Boolean getDetectNoop() {
+        return detectNoop;
+    }
+
+    public UpdateOptions setDetectNoop(Boolean detectNoop) {
+        this.detectNoop = detectNoop;
+        return this;
+    }
+
+    public Boolean getScriptedUpsert() {
+        return scriptedUpsert;
+    }
+
+    public UpdateOptions setScriptedUpsert(Boolean scriptedUpsert) {
+        this.scriptedUpsert = scriptedUpsert;
+        return this;
+    }
+
+    @Override
+    public JsonObject toJson() {
+        final JsonObject json = super.toJson();
+
+        if (getScript() != null) json.put(FIELD_SCRIPT, getScript());
+        if (getScriptLang() != null) json.put(FIELD_SCRIPT_LANG, getScriptLang());
+        if (getScriptParams() != null) json.put(FIELD_SCRIPT_PARAMS, getScriptParams());
+        if (!getFields().isEmpty()) json.put(FIELD_FIELDS, new JsonArray(getFields()));
+        if (getRetryOnConflict() != null) json.put(FIELD_RETRY_ON_CONFLICT, getRetryOnConflict());
+        if (getDoc() != null) json.put(FIELD_DOC, getDoc());
+        if (getUpsert() != null) json.put(FIELD_UPSERT, getUpsert());
+        if (getDocAsUpsert() != null) json.put(FIELD_DOC_AS_UPSERT, getDocAsUpsert());
+        if (getDetectNoop() != null) json.put(FIELD_DETECT_NOOP, getDetectNoop());
+        if (getScriptedUpsert() != null) json.put(FIELD_SCRIPTED_UPSERT, getScriptedUpsert());
+        if (getScriptType() != null) json.put(FIELD_SCRIPT_TYPE, getScriptType().name());
+
+        return json;
+    }
+}
