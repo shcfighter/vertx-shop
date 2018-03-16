@@ -23,19 +23,21 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ServiceBinder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.inject.Inject;
 
 /**
  * ElasticSearch event bus service verticle
  */
 public class ElasticSearchServiceVerticle extends AbstractVerticle {
 
+    private static final Logger LOGGER = LogManager.getLogger(ElasticSearchServiceVerticle.class);
+
     private final ElasticSearchService service;
     private final ElasticSearchAdminService adminService;
 
-    @Inject
-    public ElasticSearchServiceVerticle(ElasticSearchAdminService adminService) {
+    public ElasticSearchServiceVerticle() {
         JsonObject oonfig = new JsonObject()
                 .put("api.name", "search")
                 .put("address", "eb.elasticsearch")
@@ -68,7 +70,7 @@ public class ElasticSearchServiceVerticle extends AbstractVerticle {
 
         // Start the service
         service.start();
-
+        LOGGER.info("shop-elasticsearch-service server started!");
     }
 
     @Override

@@ -31,7 +31,20 @@
         <log4j-version>2.10.0</log4j-version>
         <slf4j-log4j12-version>1.7.25</slf4j-log4j12-version>
         <lombok-version>1.16.20</lombok-version>
+        <commons-lang3.version>3.7</commons-lang3.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-dependencies</artifactId>
+                <version>${vertx-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -149,7 +162,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.7</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
     </dependencies>
 

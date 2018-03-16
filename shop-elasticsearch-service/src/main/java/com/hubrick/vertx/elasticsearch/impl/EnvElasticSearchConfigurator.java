@@ -19,7 +19,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import org.elasticsearch.common.transport.TransportAddress;
 
-import javax.inject.Inject;
 import java.net.InetSocketAddress;
 
 /**
@@ -34,7 +33,6 @@ public class EnvElasticSearchConfigurator extends JsonElasticSearchConfigurator 
     public static final String ENV_VAR_CLUSTER_NAME = "ES_CLUSTER_NAME";
     public static final String ENV_VAR_TRANSPORT_ADDRESSES = "ES_TRANSPORT_ADDRESSES";
 
-    @Inject
     public EnvElasticSearchConfigurator(Vertx vertx) {
         super(vertx);
     }

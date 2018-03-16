@@ -12,6 +12,7 @@ import com.hubrick.vertx.elasticsearch.impl.DefaultElasticSearchService;
 import com.hubrick.vertx.elasticsearch.impl.DefaultTransportClientFactory;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.VertxOptions;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.reactivex.core.Vertx;
@@ -35,6 +36,13 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
                 .register(ICommodityService.class, userService);
         this.publishEventBusService(SEARCH_SERVICE_NAME, ICommodityService.SEARCH_SERVICE_ADDRESS, ICommodityService.class).subscribe();
         vertx.getDelegate().deployVerticle(new RestSearchRxVerticle(userService), new DeploymentOptions().setConfig(this.config()));
+        vertx.deployVerticle(ElasticSearchServiceVerticle.class.getName(),
+                new DeploymentOptions().setConfig(new JsonObject()
+                        .put("api.name", "search")
+                        .put("address", "eb.elasticsearch")
+                        .put("transportAddresses", new JsonArray().add(new JsonObject().put("hostname", "111.231.132.168").put("port", 9300)))
+                        .put("cluster_name", "vertx_shop")
+                        .put("client_transport_sniff", false)));
     }
 
     public static void main(String[] args) {
@@ -51,7 +59,7 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
                     new DeploymentOptions().setConfig(new JsonObject()
                             .put("api.name", "search")
                             .put("address", "eb.elasticsearch")
-                            .put("transportAddresses", "[ { \"hostname\": \"localhost\", \"port\": 9300 }]")
+                            .put("transportAddresses", new JsonArray().add(new JsonObject().put("hostname", "111.231.132.168").put("port", 9300)))
                             .put("cluster_name", "elasticsearch")
                             .put("client_transport_sniff", false)
                     ));

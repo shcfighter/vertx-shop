@@ -46,7 +46,6 @@ import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRespo
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.common.xcontent.XContentType;
 
-import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -56,7 +55,6 @@ public class DefaultElasticSearchAdminService implements InternalElasticSearchAd
 
     private final InternalElasticSearchService service;
 
-    @Inject
     public DefaultElasticSearchAdminService(InternalElasticSearchService service) {
         this.service = service;
     }

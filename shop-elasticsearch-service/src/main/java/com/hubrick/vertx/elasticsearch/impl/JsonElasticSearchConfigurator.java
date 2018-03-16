@@ -21,7 +21,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.elasticsearch.common.transport.TransportAddress;
 
-import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ public class JsonElasticSearchConfigurator implements ElasticSearchConfigurator 
     public static final String CONFIG_HOSTNAME = "hostname";
     public static final String CONFIG_PORT = "port";
 
-    @Inject
     public JsonElasticSearchConfigurator(Vertx vertx) {
         this(getConfig(vertx));
     }

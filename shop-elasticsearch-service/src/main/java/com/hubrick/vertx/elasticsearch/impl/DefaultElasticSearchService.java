@@ -20,30 +20,7 @@ import com.hubrick.vertx.elasticsearch.ElasticSearchConfigurator;
 import com.hubrick.vertx.elasticsearch.ElasticSearchService;
 import com.hubrick.vertx.elasticsearch.TransportClientFactory;
 import com.hubrick.vertx.elasticsearch.internal.InternalElasticSearchService;
-import com.hubrick.vertx.elasticsearch.model.AbstractSearchOptions;
-import com.hubrick.vertx.elasticsearch.model.AggregationOption;
-import com.hubrick.vertx.elasticsearch.model.BaseSortOption;
-import com.hubrick.vertx.elasticsearch.model.BaseSuggestOption;
-import com.hubrick.vertx.elasticsearch.model.BulkDeleteOptions;
-import com.hubrick.vertx.elasticsearch.model.BulkIndexOptions;
-import com.hubrick.vertx.elasticsearch.model.BulkOptions;
-import com.hubrick.vertx.elasticsearch.model.BulkUpdateOptions;
-import com.hubrick.vertx.elasticsearch.model.CompletionSuggestOption;
-import com.hubrick.vertx.elasticsearch.model.Conflicts;
-import com.hubrick.vertx.elasticsearch.model.DeleteByQueryOptions;
-import com.hubrick.vertx.elasticsearch.model.DeleteOptions;
-import com.hubrick.vertx.elasticsearch.model.FieldSortOption;
-import com.hubrick.vertx.elasticsearch.model.GetOptions;
-import com.hubrick.vertx.elasticsearch.model.IndexOptions;
-import com.hubrick.vertx.elasticsearch.model.MultiGetOptions;
-import com.hubrick.vertx.elasticsearch.model.MultiGetQueryOptions;
-import com.hubrick.vertx.elasticsearch.model.MultiSearchOptions;
-import com.hubrick.vertx.elasticsearch.model.MultiSearchQueryOptions;
-import com.hubrick.vertx.elasticsearch.model.ScriptFieldOption;
-import com.hubrick.vertx.elasticsearch.model.ScriptSortOption;
-import com.hubrick.vertx.elasticsearch.model.SearchOptions;
-import com.hubrick.vertx.elasticsearch.model.SearchScrollOptions;
-import com.hubrick.vertx.elasticsearch.model.UpdateOptions;
+import com.hubrick.vertx.elasticsearch.model.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -58,18 +35,14 @@ import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.get.GetRequestBuilder;
+import org.elasticsearch.action.get.*;
 import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.get.MultiGetRequest;
-import org.elasticsearch.action.get.MultiGetRequestBuilder;
 import org.elasticsearch.action.get.MultiGetResponse;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.MultiSearchRequestBuilder;
+import org.elasticsearch.action.search.*;
 import org.elasticsearch.action.search.MultiSearchResponse;
-import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchScrollRequestBuilder;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.support.ActiveShardCount;
 import org.elasticsearch.action.support.IndicesOptions;
@@ -83,47 +56,7 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.NamedXContentRegistry;
 import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.BoostingQueryBuilder;
-import org.elasticsearch.index.query.CommonTermsQueryBuilder;
-import org.elasticsearch.index.query.ConstantScoreQueryBuilder;
-import org.elasticsearch.index.query.DisMaxQueryBuilder;
-import org.elasticsearch.index.query.ExistsQueryBuilder;
-import org.elasticsearch.index.query.FieldMaskingSpanQueryBuilder;
-import org.elasticsearch.index.query.FuzzyQueryBuilder;
-import org.elasticsearch.index.query.GeoBoundingBoxQueryBuilder;
-import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
-import org.elasticsearch.index.query.GeoPolygonQueryBuilder;
-import org.elasticsearch.index.query.GeoShapeQueryBuilder;
-import org.elasticsearch.index.query.IdsQueryBuilder;
-import org.elasticsearch.index.query.MatchAllQueryBuilder;
-import org.elasticsearch.index.query.MatchPhrasePrefixQueryBuilder;
-import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.PrefixQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.index.query.RegexpQueryBuilder;
-import org.elasticsearch.index.query.ScriptQueryBuilder;
-import org.elasticsearch.index.query.SimpleQueryStringBuilder;
-import org.elasticsearch.index.query.SpanContainingQueryBuilder;
-import org.elasticsearch.index.query.SpanFirstQueryBuilder;
-import org.elasticsearch.index.query.SpanMultiTermQueryBuilder;
-import org.elasticsearch.index.query.SpanNearQueryBuilder;
-import org.elasticsearch.index.query.SpanNotQueryBuilder;
-import org.elasticsearch.index.query.SpanOrQueryBuilder;
-import org.elasticsearch.index.query.SpanTermQueryBuilder;
-import org.elasticsearch.index.query.SpanWithinQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
-import org.elasticsearch.index.query.TermsQueryBuilder;
-import org.elasticsearch.index.query.TermsSetQueryBuilder;
-import org.elasticsearch.index.query.TypeQueryBuilder;
-import org.elasticsearch.index.query.WildcardQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
@@ -172,23 +105,10 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 
-import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.mapToBulkIndexResponse;
-import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.mapToDeleteByQueryResponse;
-import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.mapToDeleteResponse;
-import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.mapToIndexResponse;
-import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.mapToMultiGetResponse;
-import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.mapToMultiSearchResponse;
-import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.mapToSearchResponse;
-import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.mapToUpdateResponse;
+import static com.hubrick.vertx.elasticsearch.impl.ElasticSearchServiceMapper.*;
 
 /**
  * Default implementation of {@link ElasticSearchService}
@@ -265,7 +185,6 @@ public class DefaultElasticSearchService implements InternalElasticSearchService
                     .build()
     );
 
-    @Inject
     public DefaultElasticSearchService(TransportClientFactory clientFactory, ElasticSearchConfigurator configurator) {
         this.clientFactory = clientFactory;
         this.configurator = configurator;
@@ -276,7 +195,7 @@ public class DefaultElasticSearchService implements InternalElasticSearchService
 
         final Settings settings = Settings.builder()
                 .put("cluster.name", configurator.getClusterName())
-                .put("client.transport.sniff", true)
+                .put("client.transport.sniff", configurator.getClientTransportSniff())
                 .build();
 
         client = clientFactory.create(settings);
