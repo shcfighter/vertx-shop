@@ -37,12 +37,7 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
         this.publishEventBusService(SEARCH_SERVICE_NAME, ICommodityService.SEARCH_SERVICE_ADDRESS, ICommodityService.class).subscribe();
         vertx.getDelegate().deployVerticle(new RestSearchRxVerticle(userService), new DeploymentOptions().setConfig(this.config()));
         vertx.deployVerticle(ElasticSearchServiceVerticle.class.getName(),
-                new DeploymentOptions().setConfig(new JsonObject()
-                        .put("api.name", "search")
-                        .put("address", "eb.elasticsearch")
-                        .put("transportAddresses", new JsonArray().add(new JsonObject().put("hostname", "111.231.132.168").put("port", 9300)))
-                        .put("cluster_name", "vertx_shop")
-                        .put("client_transport_sniff", false)));
+                new DeploymentOptions().setConfig(this.config()));
     }
 
     public static void main(String[] args) {
@@ -60,7 +55,7 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
                             .put("api.name", "search")
                             .put("address", "eb.elasticsearch")
                             .put("transportAddresses", new JsonArray().add(new JsonObject().put("hostname", "111.231.132.168").put("port", 9300)))
-                            .put("cluster_name", "elasticsearch")
+                            .put("cluster_name", "vertx_shop")
                             .put("client_transport_sniff", false)
                     ));
         });

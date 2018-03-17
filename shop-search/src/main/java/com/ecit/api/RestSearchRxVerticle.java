@@ -28,7 +28,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         // body handler
         router.route().handler(BodyHandler.create());
         // API route handler
-        router.post("/register").handler(this::registerHandler);
+        router.get("/register").handler(this::registerHandler);
         //全局异常处理
         this.globalVerticle(router);
 
@@ -51,6 +51,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      */
     private void registerHandler(RoutingContext context){
         commodityService.insertCommodity();
+        this.returnWithSuccessMessage(context, "操作成功！");
     }
 
 }

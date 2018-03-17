@@ -34,26 +34,19 @@ public class ElasticSearchServiceVerticle extends AbstractVerticle {
 
     private static final Logger LOGGER = LogManager.getLogger(ElasticSearchServiceVerticle.class);
 
-    private final ElasticSearchService service;
-    private final ElasticSearchAdminService adminService;
+    private ElasticSearchService service;
+    private ElasticSearchAdminService adminService;
 
-    public ElasticSearchServiceVerticle() {
-        JsonObject oonfig = new JsonObject()
-                .put("api.name", "search")
-                .put("address", "eb.elasticsearch")
-                .put("transportAddresses", new JsonArray().add(new JsonObject().put("hostname", "111.231.132.168").put("port", 9300)))
-                .put("cluster_name", "vertx_shop")
-                .put("client_transport_sniff", false);
-        this.service = new DefaultElasticSearchService(new DefaultTransportClientFactory(), new JsonElasticSearchConfigurator(oonfig));
-        this.adminService = new DefaultElasticSearchAdminService(new DefaultElasticSearchService(new DefaultTransportClientFactory(),
-                new JsonElasticSearchConfigurator(oonfig)));
-    }
+    public ElasticSearchServiceVerticle() {}
 
     @Override
     public void start() throws Exception {
 
         // workaround for problem between ES netty and vertx (both wanting to set the same value)
         System.setProperty("es.set.netty.runtime.available.processors", "false");
+        this.service = new DefaultElasticSearchService(new DefaultTransportClientFactory(), new JsonElasticSearchConfigurator(this.config()));
+        this.adminService = new DefaultElasticSearchAdminService(new DefaultElasticSearchService(new DefaultTransportClientFactory(),
+                new JsonElasticSearchConfigurator(this.config())));
 
         String address = config().getString("address");
         if (address == null || address.isEmpty()) {
