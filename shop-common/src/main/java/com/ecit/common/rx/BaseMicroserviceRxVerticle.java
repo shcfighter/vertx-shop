@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class BaseMicroserviceRxVerticle extends AbstractVerticle {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(BaseMicroserviceRxVerticle.class);
+  protected static final Logger LOGGER = LoggerFactory.getLogger(BaseMicroserviceRxVerticle.class);
 
   protected ServiceDiscovery discovery;
   protected CircuitBreaker circuitBreaker;

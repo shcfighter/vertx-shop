@@ -37,7 +37,7 @@ public class ResultItems<T> {
 	}
 
 	public ResultItems(int status, String message) {
-		this.total = total;
+		this.status = status;
 		this.message = message;
 	}
 

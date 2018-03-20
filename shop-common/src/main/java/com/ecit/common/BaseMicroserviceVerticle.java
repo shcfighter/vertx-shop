@@ -32,7 +32,7 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
 
   private static final String LOG_EVENT_ADDRESS = "events.log";
 
-  private static final Logger logger = LoggerFactory.getLogger(BaseMicroserviceVerticle.class);
+  protected static final Logger LOGGER = LoggerFactory.getLogger(BaseMicroserviceVerticle.class);
 
   protected ServiceDiscovery discovery;
   protected CircuitBreaker circuitBreaker;
@@ -103,7 +103,7 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
     discovery.publish(record, ar -> {
       if (ar.succeeded()) {
         registeredRecords.add(record);
-        logger.info("Service <" + ar.result().getName() + "> published");
+        LOGGER.info("Service <" + ar.result().getName() + "> published");
         future.complete();
       } else {
         future.fail(ar.cause());

@@ -5,5 +5,13 @@
   "address": "eb.elasticsearch",
   "transportAddresses": [ { "hostname": "111.231.132.168", "port": 9300 }],
   "cluster_name": "vertx_shop",
-  "client_transport_sniff": true
+  "client_transport_sniff": true,
+  "host" : "111.231.132.168",
+  "port" : 5432,
+  "maxPoolSize" : 50,
+  "username" : "postgres",
+  "password" : "h123456",
+  "database" : "vertx_shop",
+  "charset" : "UTF-8",
+  "queryTimeout" : 10000
 }

@@ -7,9 +7,6 @@ import com.ecit.service.impl.CommodityServiceImpl;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import com.hubrick.vertx.elasticsearch.ElasticSearchServiceVerticle;
-import com.hubrick.vertx.elasticsearch.TransportClientFactory;
-import com.hubrick.vertx.elasticsearch.impl.DefaultElasticSearchService;
-import com.hubrick.vertx.elasticsearch.impl.DefaultTransportClientFactory;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonArray;
@@ -18,7 +15,6 @@ import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.serviceproxy.ServiceBinder;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
-import org.elasticsearch.common.settings.Settings;
 
 /**
  * Created by za-wangshenhua on 2018/2/2.
@@ -57,6 +53,14 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
                             .put("transportAddresses", new JsonArray().add(new JsonObject().put("hostname", "111.231.132.168").put("port", 9300)))
                             .put("cluster_name", "vertx_shop")
                             .put("client_transport_sniff", false)
+                            .put("host", "111.231.132.168")
+                            .put("port", 5432)
+                            .put("maxPoolSize", 50)
+                            .put("username", "postgres")
+                            .put("password", "h123456")
+                            .put("database", "vertx_shop")
+                            .put("charset", "UTF-8")
+                            .put("queryTimeout", 10000)
                     ));
         });
     }

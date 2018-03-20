@@ -1,0 +1,70 @@
+{
+   "mappings": {
+      "commodity": {
+         "properties": {
+            "commodity_id": {
+               "type": "long"
+            },
+            "commodity_name": {
+               "type": "text"
+            },
+            "brand_id": {
+               "type": "long"
+            },
+            "brand_name": {
+               "type": "text"
+            },
+            "category_id": {
+               "type": "long"
+            },
+            "category_name": {
+               "type": "text"
+            },
+            "price": {
+               "type": "keyword"
+            },
+            "num": {
+               "type": "long"
+            },
+            "sales_volume": {
+               "type": "integer"
+            },
+            "evaluation_num": {
+               "type": "integer"
+            },
+            "production_site": {
+               "type": "keyword"
+            },
+            "license_number": {
+               "type": "keyword"
+            },
+            "shelf_life": {
+               "type": "integer"
+            },
+            "status": {
+               "type": "integer"
+            },
+            "is_deleted": {
+               "type": "integer"
+            },
+            "create_time": {
+               "type": "date",
+               "format": "strict_date_optional_time||epoch_millis"
+            },
+            "update_time": {
+               "type": "date",
+               "format": "strict_date_optional_time||epoch_millis"
+            },
+            "description": {
+               "type": "text"
+            },
+            "remarks": {
+               "type": "text"
+            },
+            "versions": {
+               "type": "long"
+            }
+         }
+      }
+   }
+}
