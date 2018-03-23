@@ -13,5 +13,11 @@
   "password" : "h123456",
   "database" : "vertx_shop",
   "charset" : "UTF-8",
-  "queryTimeout" : 10000
+  "queryTimeout" : 10000,
+  "mongodb": {
+    "port": 27017,
+    "username": "shop_user",
+    "password": "h123456",
+    "db_name": "shop_message"
+  }
 }

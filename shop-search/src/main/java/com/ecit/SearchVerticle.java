@@ -3,7 +3,9 @@ package com.ecit;
 import com.ecit.api.RestSearchRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
 import com.ecit.service.ICommodityService;
+import com.ecit.service.IPreferencesService;
 import com.ecit.service.impl.CommodityServiceImpl;
+import com.ecit.service.impl.PreferencesServiceImpl;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import com.hubrick.vertx.elasticsearch.ElasticSearchServiceVerticle;
@@ -26,12 +28,13 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
     @Override
     public void start() throws Exception {
         super.start();
-        ICommodityService userService = new CommodityServiceImpl(vertx, this.config());
+        ICommodityService commodityService = new CommodityServiceImpl(vertx, this.config());
+        IPreferencesService preferencesService = new PreferencesServiceImpl(vertx, this.config());
         new ServiceBinder(vertx.getDelegate())
                 .setAddress(ICommodityService.SEARCH_SERVICE_ADDRESS)
-                .register(ICommodityService.class, userService);
+                .register(ICommodityService.class, commodityService);
         this.publishEventBusService(SEARCH_SERVICE_NAME, ICommodityService.SEARCH_SERVICE_ADDRESS, ICommodityService.class).subscribe();
-        vertx.getDelegate().deployVerticle(new RestSearchRxVerticle(userService), new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(new RestSearchRxVerticle(commodityService, preferencesService), new DeploymentOptions().setConfig(this.config()));
         vertx.deployVerticle(ElasticSearchServiceVerticle.class.getName(),
                 new DeploymentOptions().setConfig(this.config()));
     }
@@ -61,6 +64,11 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
                             .put("database", "vertx_shop")
                             .put("charset", "UTF-8")
                             .put("queryTimeout", 10000)
+                            .put("mongodb", new JsonObject()
+                                    .put("port", 27017)
+                                    .put("username", "shop_user")
+                                    .put("password", "h123456")
+                                    .put("db_name", "shop_message"))
                     ));
         });
     }

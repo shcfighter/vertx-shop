@@ -318,6 +318,7 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
     router.route().last().handler(context -> {
       this.returnWithFailureMessage(context, "404");
     }).failureHandler(context -> {
+      LOGGER.error("服务器异常", context.failure());
       this.returnWithFailureMessage(context, "服务器异常");
     });
   }

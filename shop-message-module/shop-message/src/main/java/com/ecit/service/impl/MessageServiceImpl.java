@@ -30,7 +30,7 @@ public class MessageServiceImpl implements IMessageService{
     private static MailClient mailClient = null;
 
     public MessageServiceImpl(Vertx vertx, JsonObject config) {
-        mongoClient = MongoClient.createShared(vertx, config, "message");
+        mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
         MailConfig emailConfig = new MailConfig();
         emailConfig.setHostname("smtp.mail.com");
         emailConfig.setPort(25);
@@ -56,6 +56,7 @@ public class MessageServiceImpl implements IMessageService{
             if(handler.succeeded()){
                 future.complete(code);
             } else {
+                LOGGER.error("发送目标【{}】验证码【{}】保存失败", destination, code, handler.cause());
                 future.fail(handler.cause());
             }
         });

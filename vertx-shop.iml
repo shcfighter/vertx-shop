@@ -64,6 +64,10 @@
     <orderEntry type="library" name="Maven: org.joda:joda-convert:1.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.21.0-GA" level="project" />
     <orderEntry type="library" name="Maven: com.github.mauricio:mysql-async_2.12:0.2.21" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-mongo-client:3.5.1" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-async:3.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:bson:3.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />

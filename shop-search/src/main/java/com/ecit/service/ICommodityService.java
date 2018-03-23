@@ -8,6 +8,8 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 
+import java.util.List;
+
 /**
  * Created by za-wangshenhua on 2018/3/15.
  */
@@ -18,8 +20,11 @@ public interface ICommodityService {
     String SEARCH_SERVICE_ADDRESS = "search_service_address";
 
     @Fluent
-    ICommodityService searchCommodity(String commodity, Handler<AsyncResult<SearchResponse>> handler);
+    ICommodityService searchCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler);
 
     @Fluent
     ICommodityService findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler);
+
+    @Fluent
+    ICommodityService preferencesCommodity(List<String> keywords, Handler<AsyncResult<SearchResponse>> handler);
 }

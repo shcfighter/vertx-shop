@@ -23,6 +23,9 @@
             "price": {
                "type": "keyword"
             },
+             "original_price": {
+               "type": "keyword"
+            },
             "num": {
                "type": "long"
             },

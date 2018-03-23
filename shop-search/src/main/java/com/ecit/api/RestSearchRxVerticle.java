@@ -1,27 +1,32 @@
 package com.ecit.api;
 
+import com.ecit.SearchType;
 import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.ICommodityService;
-import com.hubrick.vertx.elasticsearch.model.SearchResponse;
-import io.vertx.core.Future;
+import com.ecit.service.IPreferencesService;
+import io.vertx.reactivex.core.Future;
+import io.vertx.reactivex.ext.web.Cookie;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by za-wangshenhua on 2018/2/2.
  */
 public class RestSearchRxVerticle extends RestAPIRxVerticle{
 
-    private static final Logger LOGGER = LogManager.getLogger(RestSearchRxVerticle.class);
     private static final String HTTP_SEARCH_SERVICE = "http_search_service_api";
     private final ICommodityService commodityService;
+    private final IPreferencesService preferencesService;
 
-    public RestSearchRxVerticle(ICommodityService commodityService) {
+    public RestSearchRxVerticle(ICommodityService commodityService, IPreferencesService preferencesService) {
         this.commodityService = commodityService;
+        this.preferencesService = preferencesService;
     }
 
     @Override
@@ -31,8 +36,9 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         // body handler
         router.route().handler(BodyHandler.create());
         // API route handler
-        router.get("/search").handler(this::searchHandler);
+        router.post("/search").handler(this::searchHandler);
         router.get("/findCommodityById/:id").handler(this::findCommodityByIdHandler);
+        router.get("/findFavoriteCommodity").handler(this::findFavoriteCommodityHandler);
         //全局异常处理
         this.globalVerticle(router);
 
@@ -54,7 +60,15 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void searchHandler(RoutingContext context){
-        commodityService.searchCommodity(context.request().getParam("key"), handler -> {
+        final String keyword = context.request().getParam("keyword");
+        /**
+         * 异步保存搜索行为
+         */
+        Cookie cookie = context.getCookie("vertx-web.session");
+        if(Objects.nonNull(cookie)){
+            preferencesService.savePreferences(cookie.getValue(), keyword, SearchType.search, handler ->{});
+        }
+        commodityService.searchCommodity(keyword, handler -> {
             if(handler.failed()){
                 LOGGER.error("搜索商品异常：", handler.cause());
             } else {
@@ -64,9 +78,37 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         });
     }
 
+    /**
+     * 根据商品id查询详情信息
+     * @param context
+     */
     private void findCommodityByIdHandler(RoutingContext context){
         commodityService.findCommodityById(Integer.parseInt(context.request().getParam("id"))
                 , this.resultHandler(context));
+    }
+
+    /**
+     * 猜想喜欢的商品
+     * @param context
+     */
+    private void findFavoriteCommodityHandler(RoutingContext context){
+        final String cookies = context.getCookie("vertx-web.session").getValue();
+        if(StringUtils.isEmpty(cookies)){
+            Future.failedFuture(new NullPointerException("查询条件为null"));
+        }
+        Future<List<String>> future = Future.future();
+        preferencesService.findPreferences(cookies, future.completer());
+        future.compose(list -> {
+            commodityService.preferencesCommodity(list, handler -> {
+                if(handler.failed()){
+                    LOGGER.error("搜索商品异常：", handler.cause());
+                } else {
+                    this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().intValue(),
+                            handler.result().getHits().getHits().get(0).getSource()));
+                }
+            });
+            return Future.succeededFuture();
+        });
     }
 
 }

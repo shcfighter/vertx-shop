@@ -38,7 +38,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <option name="outputDirectory" value="D:\IdeaProjects\vertx-shop\shop-elasticsearch-service/src/main" />
         <processor name="io.vertx.codegen.CodeGenProcessor" />
         <module name="shop-elasticsearch-service" />
       </profile>
@@ -50,15 +49,12 @@
       <module name="shop-gateway" target="1.8" />
       <module name="shop-message" target="1.8" />
       <module name="shop-message-interface" target="1.8" />
-      <module name="shop-message-module" target="1.5" />
       <module name="shop-order" target="1.8" />
       <module name="shop-pay" target="1.8" />
       <module name="shop-search" target="1.8" />
       <module name="shop-user" target="1.8" />
       <module name="shop-user-interface" target="1.8" />
-      <module name="shop-user-module" target="1.8" />
       <module name="shopping-cart" target="1.8" />
-      <module name="vertx-elasticsearch-service" target="1.8" />
       <module name="vertx-shop" target="1.5" />
     </bytecodeTargetLevel>
   </component>
