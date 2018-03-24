@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * A verticle for global API gateway.
@@ -49,9 +48,8 @@ import java.util.stream.Collectors;
  */
 public class APIGatewayVerticle extends RestAPIVerticle {
 
-    private static final int DEFAULT_PORT = 8787;
-
     private static final Logger LOGGER = LogManager.getLogger(APIGatewayVerticle.class);
+    private static final int DEFAULT_PORT = 8787;
 
     private ShopAuth shopAuthProvider;
     private JDBCClient jdbcClient;
@@ -69,11 +67,11 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         VertxOptions options = new VertxOptions().setClusterManager(mgr);
         io.vertx.reactivex.core.Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(APIGatewayVerticle.class.getName(),
                 new DeploymentOptions().setConfig(new JsonObject()
-                        .put("url", "jdbc:postgresql://localhost:5432/vertx_shop")
+                        .put("url", "jdbc:postgresql://111.231.132.168:5432/vertx_shop")
                         .put("driver_class", "org.postgresql.Driver")
                         .put("max_pool_size", 50)
                         .put("user", "postgres")
-                        .put("password", "123456"))));
+                        .put("password", "h123456"))));
     }
 
     @Override

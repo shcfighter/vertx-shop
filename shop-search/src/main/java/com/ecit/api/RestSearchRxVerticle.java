@@ -11,15 +11,19 @@ import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by za-wangshenhua on 2018/2/2.
  */
 public class RestSearchRxVerticle extends RestAPIRxVerticle{
 
+    private static final Logger LOGGER = LogManager.getLogger(RestSearchRxVerticle.class);
     private static final String HTTP_SEARCH_SERVICE = "http_search_service_api";
     private final ICommodityService commodityService;
     private final IPreferencesService preferencesService;
@@ -70,10 +74,16 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         }
         commodityService.searchCommodity(keyword, handler -> {
             if(handler.failed()){
+                this.returnWithFailureMessage(context, "暂无该商品！");
                 LOGGER.error("搜索商品异常：", handler.cause());
+                return ;
             } else {
+                if(Objects.isNull(handler.result())){
+                    this.returnWithFailureMessage(context, "暂无该商品！");
+                    return ;
+                }
                 this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().intValue(),
-                        handler.result().getHits().getHits().get(0).getSource()));
+                        handler.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
             }
         });
     }
@@ -92,8 +102,9 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void findFavoriteCommodityHandler(RoutingContext context){
-        final String cookies = context.getCookie("vertx-web.session").getValue();
-        if(StringUtils.isEmpty(cookies)){
+        final Cookie cookie = context.getCookie("vertx-web.session");
+        String cookies = null;
+        if(Objects.isNull(cookie) || StringUtils.isEmpty(cookies = cookie.getValue())){
             Future.failedFuture(new NullPointerException("查询条件为null"));
         }
         Future<List<String>> future = Future.future();

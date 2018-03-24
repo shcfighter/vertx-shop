@@ -44,11 +44,12 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
         Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(MessageVerticle.class.getName(),
                 new DeploymentOptions().setConfig(new JsonObject()
                         .put("api.name", "message")
-                        .put("host", "111.231.132.168")
-                        .put("port", 27017)
-                        .put("username", "shop_user")
-                        .put("password", "h123456")
-                        .put("db_name", "shop_message")
+                        .put("mongodb", new JsonObject()
+                                .put("host", "111.231.132.168")
+                                .put("port", 27017)
+                                .put("username", "shop_user")
+                                .put("password", "h123456")
+                                .put("db_name", "shop_message"))
                 )));
     }
 }

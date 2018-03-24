@@ -32,7 +32,7 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
 
   private static final String LOG_EVENT_ADDRESS = "events.log";
 
-  protected static final Logger LOGGER = LoggerFactory.getLogger(BaseMicroserviceVerticle.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BaseMicroserviceVerticle.class);
 
   protected ServiceDiscovery discovery;
   protected CircuitBreaker circuitBreaker;

@@ -1,7 +1,6 @@
 package com.ecit.api;
 
 import com.ecit.common.enmu.RegisterType;
-import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.IMessageService;
 import io.vertx.reactivex.core.http.HttpServerRequest;
@@ -10,8 +9,6 @@ import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
 
 /**
  * Created by za-wangshenhua on 2018/2/2.

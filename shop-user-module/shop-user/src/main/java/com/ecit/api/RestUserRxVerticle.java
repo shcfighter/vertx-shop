@@ -142,15 +142,34 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         HttpServerRequest request = context.request();
         final String loginName = request.getParam("loginName");
         LOGGER.info("邮箱激活账号：{}, 验证码：{}", loginName, request.getParam("code"));
-        userService.activateEmailUser(loginName, handler -> {
-            if(handler.failed()){
-                LOGGER.error("邮箱激活失败", handler.cause());
-                this.internalError(context, handler.cause());
-                return ;
-            }
-            if(StringUtils.equals(handler.result(), request.getParam("code"))){
-                IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
-                messageService.updateMessage(loginName, RegisterType.email, messageHandler -> {});
+        userService.findEmailUser(loginName, handler -> {
+            if (handler.failed()) {
+                LOGGER.error("查询邮箱激活账户异常【{}】", loginName);
+                this.returnWithFailureMessage(context, "账户不存在");
+            } else {
+                JsonObject user = handler.result();
+                if(Objects.isNull(user)){
+                    LOGGER.error("邮箱激活未查询到用户【{}】", loginName);
+                    this.returnWithFailureMessage(context, "账户不存在");
+                    return ;
+                }
+                ;
+                IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate())
+                        .setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+                messageService.findMessage(loginName, RegisterType.email, emailHandler -> {
+                    if(emailHandler.failed()){
+                        LOGGER.error("调用短信验证码信息错误，", emailHandler.cause());
+                        this.returnWithFailureMessage(context, "调用短信验证码信息错误");
+                    } else {
+                        if(StringUtils.equals(emailHandler.result().getString("code"), request.getParam("code"))){
+                            this.returnWithSuccessMessage(context, "激活成功");
+                            userService.activateEmailUser(user.getLong("user_id"), user.getLong("versions"));
+                            messageService.updateMessage(loginName, RegisterType.email, messageHandler -> {});
+                            return ;
+                        }
+                        this.returnWithFailureMessage(context, "激活失败！");
+                    }
+                });
             }
         });
     }

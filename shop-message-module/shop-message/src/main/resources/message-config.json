@@ -2,50 +2,51 @@
   "api.name": "message",
   "api.message.http.port": 8081,
   "api.message.http.address": "0.0.0.0",
+  "mongodb": {
+    // Single Cluster Settings
+    "host" : "111.231.132.168", // string
+    "port" : 27017,      // int
 
-  // Single Cluster Settings
-  "host" : "111.231.132.168", // string
-  "port" : 27017,      // int
+    // Multiple Cluster Settings
+    /*"hosts" : [
+      {
+        "host" : "cluster1", // string
+        "port" : 27000       // int
+      },
+      {
+        "host" : "cluster2", // string
+        "port" : 28000       // int
+      }
+    ],*/
+    //"replicaSet" :  "foo",    // string
+    "serverSelectionTimeoutMS" : 30000, // long
 
-  // Multiple Cluster Settings
-  /*"hosts" : [
-    {
-      "host" : "cluster1", // string
-      "port" : 27000       // int
-    },
-    {
-      "host" : "cluster2", // string
-      "port" : 28000       // int
-    }
-  ],*/
-  //"replicaSet" :  "foo",    // string
-  "serverSelectionTimeoutMS" : 30000, // long
+    // Connection Pool Settings
+    "maxPoolSize" : 50,                // int
+    "minPoolSize" : 25,                // int
+    "maxIdleTimeMS" : 300000,          // long
+    "maxLifeTimeMS" : 3600000,         // long
+    "waitQueueMultiple"  : 10,         // int
+    "waitQueueTimeoutMS" : 10000,      // long
+    "maintenanceFrequencyMS" : 2000,   // long
+    "maintenanceInitialDelayMS" : 500, // long
 
-  // Connection Pool Settings
-  "maxPoolSize" : 50,                // int
-  "minPoolSize" : 25,                // int
-  "maxIdleTimeMS" : 300000,          // long
-  "maxLifeTimeMS" : 3600000,         // long
-  "waitQueueMultiple"  : 10,         // int
-  "waitQueueTimeoutMS" : 10000,      // long
-  "maintenanceFrequencyMS" : 2000,   // long
-  "maintenanceInitialDelayMS" : 500, // long
+    // Credentials / Auth
+    "username"   : "shop_user",     // string
+    "password"   : "h123456", // string
+    "db_name": "shop_message",
+    "authSource" : "shop_message",   // string
+    // Auth mechanism
+    //"authMechanism"     : "GSSAPI",        // string
+    //"gssapiServiceName" : "myservicename", // string
 
-  // Credentials / Auth
-  "username"   : "shop_user",     // string
-  "password"   : "h123456", // string
-  "db_name": "shop_message",
-  "authSource" : "shop_message",   // string
-  // Auth mechanism
-  //"authMechanism"     : "GSSAPI",        // string
-  //"gssapiServiceName" : "myservicename", // string
-
-  // Socket Settings
-  "connectTimeoutMS" : 300000, // int
-  "socketTimeoutMS"  : 100000, // int
-  "sendBufferSize"    : 8192,  // int
-  "receiveBufferSize" : 8192,  // int
-  "keepAlive" : true,           // boolean
+    // Socket Settings
+    "connectTimeoutMS" : 300000, // int
+    "socketTimeoutMS"  : 100000, // int
+    "sendBufferSize"    : 8192,  // int
+    "receiveBufferSize" : 8192,  // int
+    "keepAlive" : true           // boolean
+  },
 
   // Heartbeat socket settings
   "heartbeat.socket" : {

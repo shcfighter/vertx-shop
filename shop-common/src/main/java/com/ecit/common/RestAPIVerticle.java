@@ -14,6 +14,8 @@ import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.ext.web.sstore.LocalSessionStore;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -28,6 +30,7 @@ import java.util.function.Function;
  */
 public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
 
+  private static final Logger LOGGER = LogManager.getLogger(RestAPIVerticle.class);
   /**
    * Create http server for the REST service.
    *

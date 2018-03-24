@@ -34,7 +34,9 @@ public interface UserSql {
     public static final String SELECT_ACTIVATE_EMAIL_USER_SQL = "select * from t_user where email = ? and status = 0 and is_deleted = 0";
 
     /**
-     *  激活账户
+     *  查询激活账户
      */
-    public static final String ACTIVATE_EMAIL_USER_SQL = "select * from t_user where email = ? and status = 0 and is_deleted = 0";
+    public static final String ACTIVATE_EMAIL_USER_SELECT_SQL = "select * from t_user where email = ? and status = 0 and is_deleted = 0";
+
+    public static final String ACTIVATE_EMAIL_USER_SQL = "update t_user set status = 1, update_time = now(), versions = versions + 1 where user_id = ? and versions = ?";
 }

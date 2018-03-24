@@ -1,9 +1,11 @@
 package com.ecit.service;
 
 import io.vertx.codegen.annotations.Fluent;
+import io.vertx.codegen.annotations.GenIgnore;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 
@@ -28,6 +30,9 @@ public interface IUserService {
     @Fluent
     IUserService getMemberById(long userId, Handler<AsyncResult<JsonObject>> resultHandler);
 
+    @GenIgnore
+    Future activateEmailUser(long userId, long versions);
+
     @Fluent
-    IUserService activateEmailUser(String loginName, Handler<AsyncResult<String>> resultHandler);
+    IUserService findEmailUser(String loginName, Handler<AsyncResult<JsonObject>> resultHandler);
 }

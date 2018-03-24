@@ -27,7 +27,7 @@ public class PreferencesServiceImpl implements IPreferencesService{
     private static final String PREFERENCES_COLLECTION = "preferences";
 
     public PreferencesServiceImpl(Vertx vertx, JsonObject config) {
-        mongoClient = MongoClient.createShared(vertx, config);
+        mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
     }
 
     /**

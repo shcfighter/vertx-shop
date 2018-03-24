@@ -10,7 +10,6 @@
     <groupId>com.ecit</groupId>
     <artifactId>shop-message-interface</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
 
     <name>shop-message-interface</name>
     <url>http://maven.apache.org</url>
@@ -20,6 +19,11 @@
             <groupId>com.ecit</groupId>
             <artifactId>shop-common</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-mongo-client</artifactId>
+            <version>${vertx-version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -35,6 +39,31 @@
                         <annotationProcessor>io.vertx.serviceproxy.ServiceProxyProcessor</annotationProcessor>
                     </annotationProcessors>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -14,6 +14,8 @@ import io.vertx.reactivex.ext.web.handler.CorsHandler;
 import io.vertx.reactivex.ext.web.handler.SessionHandler;
 import io.vertx.reactivex.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.reactivex.ext.web.sstore.LocalSessionStore;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -30,6 +32,7 @@ import java.util.function.Function;
  */
 public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
 
+  private static final Logger LOGGER = LogManager.getLogger(RestAPIRxVerticle.class);
   protected Single<HttpServer> createHttpServer(Router router, String host, int port) {
     return vertx.createHttpServer()
       .requestHandler(router::accept)

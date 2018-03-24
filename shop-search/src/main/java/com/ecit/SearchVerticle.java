@@ -65,6 +65,7 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
                             .put("charset", "UTF-8")
                             .put("queryTimeout", 10000)
                             .put("mongodb", new JsonObject()
+                                    .put("host", "111.231.132.168")
                                     .put("port", 27017)
                                     .put("username", "shop_user")
                                     .put("password", "h123456")

@@ -1,6 +1,0 @@
-com\ecit\service\IdBuilder.class
-com\ecit\model\User.class
-com\ecit\UserVerticle.class
-com\ecit\api\RestUserRxVerticle.class
-com\ecit\model\UserConverter.class
-com\ecit\service\impl\UserServiceImpl.class
