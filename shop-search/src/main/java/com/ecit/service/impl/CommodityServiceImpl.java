@@ -92,7 +92,6 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
         Future<SearchResponse> future = Future.future();
         final SearchOptions searchOptions = new SearchOptions()
                 .setQuery(new JsonObject("{\n" +
-                        "   \"query\": {\n" +
                         "      \"bool\": {\n" +
                         "         \"should\": [\n" +
                         "            {\n" +
@@ -109,10 +108,10 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
                         "            }\n" +
                         "         ]\n" +
                         "      }\n" +
-                        "   }\n" +
                         "}\n"))
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true);
+                .setFetchSource(true)
+                .setSize(3);
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);

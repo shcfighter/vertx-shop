@@ -185,16 +185,13 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         request.send(handler -> {
             Buffer bodyBuffer = Buffer.buffer();
             if(handler.succeeded()){
-                System.out.println(handler.result().body().toString());
                 bodyBuffer.appendBuffer(handler.result().body());
 
             } else {
                 LOGGER.error("调用http接口错误！", handler.cause());
-                bodyBuffer.appendString("{\"error\": \"远程接口调用失败！\"}");
+                bodyBuffer.appendString("远程接口调用失败！");
             }
-            context.response().setStatusCode(200)
-                    .putHeader("content-type", "application/json")
-                    .end(bodyBuffer);
+            this.returnWithFailureMessage(context, bodyBuffer.toString());
             cbFuture.complete();
             ServiceDiscovery.releaseServiceObject(discovery, client);
         });

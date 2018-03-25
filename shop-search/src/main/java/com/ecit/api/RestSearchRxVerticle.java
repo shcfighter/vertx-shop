@@ -6,8 +6,8 @@ import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.ICommodityService;
 import com.ecit.service.IPreferencesService;
+import com.hubrick.vertx.elasticsearch.model.SearchResponse;
 import io.vertx.reactivex.core.Future;
-import io.vertx.reactivex.ext.web.Cookie;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
@@ -72,7 +72,6 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
          * 异步保存搜索行为
          */
         String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
-        System.out.println(cookie);
         if(StringUtils.isNotEmpty(cookie)){
             preferencesService.savePreferences(cookie, keyword, SearchType.search, handler ->{});
         }
@@ -106,23 +105,26 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void findFavoriteCommodityHandler(RoutingContext context){
-        final Cookie cookie = context.getCookie("vertx-web.session");
-        String cookies = null;
-        if(Objects.isNull(cookie) || StringUtils.isEmpty(cookies = cookie.getValue())){
-            Future.failedFuture(new NullPointerException("查询条件为null"));
+        String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
+        if(StringUtils.isEmpty(cookie)){
+            //todo 查询默认的
+
+            return ;
         }
         Future<List<String>> future = Future.future();
-        preferencesService.findPreferences(cookies, future.completer());
+        preferencesService.findPreferences(cookie, future.completer());
         future.compose(list -> {
-            commodityService.preferencesCommodity(list, handler -> {
-                if(handler.failed()){
-                    LOGGER.error("搜索商品异常：", handler.cause());
-                } else {
-                    this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().intValue(),
-                            handler.result().getHits().getHits().get(0).getSource()));
-                }
-            });
-            return Future.succeededFuture();
+            Future<SearchResponse> commodityFuture = Future.future();
+            commodityService.preferencesCommodity(list, commodityFuture.completer());
+            return commodityFuture;
+        }).setHandler(res -> {
+            if (res.failed()) {
+                LOGGER.error("查询偏好产品失败！", res.cause());
+                this.returnWithFailureMessage(context, "查询失败！");
+                return;
+            }
+            this.Ok(context, new ResultItems(0, res.result().getHits().getTotal().intValue(),
+                    res.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
         });
     }
 
