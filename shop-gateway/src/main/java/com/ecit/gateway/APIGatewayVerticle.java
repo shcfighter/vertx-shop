@@ -22,8 +22,6 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
-import io.vertx.ext.web.handler.AuthHandler;
-import io.vertx.ext.web.handler.BasicAuthHandler;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.UserSessionHandler;
 import io.vertx.servicediscovery.Record;
@@ -54,8 +52,6 @@ public class APIGatewayVerticle extends RestAPIVerticle {
     private ShopAuth shopAuthProvider;
     private JDBCClient jdbcClient;
 
-    private AuthHandler basicAuthHandler;
-
     public static void main(String[] args) {
         Config cfg = new Config();
         GroupConfig group = new GroupConfig();
@@ -80,7 +76,6 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         jdbcClient = JDBCClient.createNonShared(vertx, this.config());
         shopAuthProvider = ShopAuth.create(vertx, jdbcClient);
-        basicAuthHandler = BasicAuthHandler.create(shopAuthProvider);
 
         // get HTTP host and port from configuration, or use default value
         String host = config().getString("api.gateway.http.address", "localhost");
@@ -181,6 +176,9 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                 || context.request().method().compareTo(HttpMethod.PUT) == 0){
             Optional.ofNullable(context.getBodyAsJson()).orElse(new JsonObject()).getMap().forEach((k, v) -> request.addQueryParam(k, String.valueOf(v)));
         }
+        context.cookies().forEach(cookie -> {
+            request.putHeader(cookie.getName(), cookie.getValue());
+        });
         if (context.user() != null) {
             request.putHeader("user-principal", context.user().principal().encode());
         }
@@ -262,7 +260,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                     this.returnWithFailureMessage(context, "用户名或密码错误");
                 } else {
                     LOGGER.info("用户【{}】登录成功", userSession.principal());
-                    this.returnWithSuccessMessage(context, "登录成功");
+                    this.returnWithSuccessMessage(context, "登录成功", userSession.principal());
                 }
             } else {
                 LOGGER.error("调用远程登录方法错误！", handler.cause());

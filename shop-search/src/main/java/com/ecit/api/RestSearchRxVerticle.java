@@ -1,6 +1,7 @@
 package com.ecit.api;
 
 import com.ecit.SearchType;
+import com.ecit.common.constants.Constants;
 import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.ICommodityService;
@@ -10,6 +11,7 @@ import io.vertx.reactivex.ext.web.Cookie;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
+import io.vertx.reactivex.ext.web.handler.CookieHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +41,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
+        router.route().handler(CookieHandler.create());
         // API route handler
         router.post("/search").handler(this::searchHandler);
         router.get("/findCommodityById/:id").handler(this::findCommodityByIdHandler);
@@ -68,9 +71,10 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         /**
          * 异步保存搜索行为
          */
-        Cookie cookie = context.getCookie("vertx-web.session");
-        if(Objects.nonNull(cookie)){
-            preferencesService.savePreferences(cookie.getValue(), keyword, SearchType.search, handler ->{});
+        String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
+        System.out.println(cookie);
+        if(StringUtils.isNotEmpty(cookie)){
+            preferencesService.savePreferences(cookie, keyword, SearchType.search, handler ->{});
         }
         commodityService.searchCommodity(keyword, handler -> {
             if(handler.failed()){

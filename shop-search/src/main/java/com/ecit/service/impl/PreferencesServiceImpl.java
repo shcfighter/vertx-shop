@@ -48,7 +48,7 @@ public class PreferencesServiceImpl implements IPreferencesService{
                 .put("cookies", cookies)
                 .put("keyword", keyword)
                 .put("search_type", searchType.name())
-                .put("create_time", new Date())).subscribe(future::complete, future::fail);
+                .put("create_time", new Date().getTime())).subscribe(future::complete, future::fail);
         future.setHandler(handler);
         return this;
     }

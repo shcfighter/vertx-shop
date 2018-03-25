@@ -41,6 +41,13 @@ public class ResultItems<T> {
 		this.message = message;
 	}
 
+	public ResultItems(int status, int total, T items, String message) {
+		this.status = status;
+		this.total = total;
+		this.items = items;
+		this.message = message;
+	}
+
 	public static ResultItems getReturnItems(int status, String message){
 		return new ResultItems(status, message);
 	}
@@ -49,8 +56,12 @@ public class ResultItems<T> {
 		return new ResultItems(0, message);
 	}
 
-	public static ResultItems getReturnItemsSuccess(int total, Object items){
+	public static <T> ResultItems getReturnItemsSuccess(int total, T items){
 		return new ResultItems(0, total, items);
+	}
+
+	public static <T> ResultItems getReturnItemsSuccess(int total, T items, String message){
+		return new ResultItems(0, total, items, message);
 	}
 
 	public static ResultItems getReturnItemsFailure(String message){

@@ -16,10 +16,15 @@ $(function() {
             url: domain + "api/user/login",
             data: JSON.stringify(data),
             success: function(result){
-                //window.location.href = "index.html";
+                if(result.status == 0){
+                    sessionStorage.setItem("loginUser", JSON.stringify(result.items));
+                    window.location.href = "index.html";
+                } else {
+                    alert(result.message);
+                }
             },
             error: function () {
-                
+                alert("网路异常");
             }
         });
     });
@@ -39,17 +44,21 @@ $(function() {
         if(type == "mobile"){
             data["code"] = registerDiv.find("input[name='code']").val();
         }
-        console.log(data);
         $.ajax({
             type: 'POST',
             contentType: "application/json;",
             url: domain + "api/user/register",
             data: JSON.stringify(data),
             success: function(result){
-                //window.location.href = "index.html";
+                if(result.status == 0){
+                    alert("注册成功！");
+                    window.location.href = "/index.html";
+                } else {
+                    alert(result.message);
+                }
             },
             error: function () {
-
+                alert("网路异常");
             }
         });
     });

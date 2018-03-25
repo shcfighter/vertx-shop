@@ -1,5 +1,6 @@
 package com.ecit.common.rx;
 
+import com.ecit.common.constants.Constants;
 import com.ecit.common.result.ResultItems;
 import io.reactivex.Single;
 import io.vertx.core.AsyncResult;
@@ -135,6 +136,10 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
 
   protected void returnWithSuccessMessage(RoutingContext context, String message) {
     this.Ok(context, ResultItems.getReturnItemsSuccess(message));
+  }
+
+  protected <T> void returnWithSuccessMessage(RoutingContext context, String message, T items) {
+    this.Ok(context, ResultItems.getReturnItemsSuccess( 0, items, message));
   }
 
   protected void returnWithFailureMessage(RoutingContext context, String message) {
@@ -324,5 +329,9 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
       LOGGER.error("服务器异常", context.failure());
       this.returnWithFailureMessage(context, "服务器异常");
     });
+  }
+
+  protected String getHeader(RoutingContext context, String key) {
+    return Optional.ofNullable(context.request().getHeader(key)).orElse(null);
   }
 }

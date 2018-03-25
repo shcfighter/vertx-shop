@@ -1,7 +1,7 @@
 {
   "api.name": "user",
   "user.http.address": "0.0.0.0",
-  "user.http.port": 8080,
+  "user.http.port": 8083,
   "host" : "localhost",
   "port" : 5432,
   "maxPoolSize" : 50,
