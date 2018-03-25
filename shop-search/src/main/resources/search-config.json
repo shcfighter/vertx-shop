@@ -1,23 +1,29 @@
 {
-  "api.name": "search",
-  "user.http.address": "0.0.0.0",
-  "user.http.port": 8082,
-  "address": "eb.elasticsearch",
-  "transportAddresses": [ { "hostname": "111.231.132.168", "port": 9300 }],
-  "cluster_name": "vertx_shop",
-  "client_transport_sniff": true,
-  "host" : "111.231.132.168",
-  "port" : 5432,
-  "maxPoolSize" : 50,
-  "username" : "postgres",
-  "password" : "h123456",
-  "database" : "vertx_shop",
-  "charset" : "UTF-8",
-  "queryTimeout" : 10000,
-  "mongodb": {
-    "port": 27017,
-    "username": "shop_user",
-    "password": "h123456",
-    "db_name": "shop_message"
+  "api.name":"search",
+  "search.http.address":"0.0.0.0",
+  "search.http.port":8082,
+  "address":"eb.elasticsearch",
+  "transportAddresses":[
+    {
+      "hostname":"111.231.132.168",
+      "port":9300
+    }
+  ],
+  "cluster_name":"vertx_shop",
+  "client_transport_sniff":true,
+  "host":"111.231.132.168",
+  "port":5432,
+  "maxPoolSize":50,
+  "username":"postgres",
+  "password":"h123456",
+  "database":"vertx_shop",
+  "charset":"UTF-8",
+  "queryTimeout":10000,
+  "mongodb":{
+    "host":"111.231.132.168",
+    "port":27017,
+    "username":"shop_user",
+    "password":"h123456",
+    "db_name":"shop_message"
   }
 }

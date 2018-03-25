@@ -47,8 +47,8 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         this.globalVerticle(router);
 
         // get HTTP host and port from configuration, or use default value
-        String host = config().getString("user.http.address", "localhost");
-        int port = config().getInteger("user.http.port", 8082);
+        String host = config().getString("search.http.address", "localhost");
+        int port = config().getInteger("search.http.port", 8082);
 
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {
