@@ -47,6 +47,9 @@
             "status": {
                "type": "integer"
             },
+            "image_url": {
+                "type": "keyword"
+            },
             "is_deleted": {
                "type": "integer"
             },

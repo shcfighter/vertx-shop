@@ -2,55 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a0ab6bb7-03ce-41e2-b339-057d33302ddb" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message-interface/target/generated-sources/annotations/com/ecit/service/IMessageServiceVertxEBProxy.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message-interface/target/generated-sources/annotations/com/ecit/service/IMessageServiceVertxProxyHandler.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message-interface/target/maven-archiver/pom.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message-interface/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message-interface/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/target/classes/log4j2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/target/classes/message-config.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/target/maven-archiver/pom.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/target/generated-sources/annotations/com/ecit/service/IUserServiceVertxEBProxy.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/target/generated-sources/annotations/com/ecit/service/IUserServiceVertxProxyHandler.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/target/maven-archiver/pom.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/target/classes/log4j2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/target/classes/user-config.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/target/generated-sources/annotations/com/ecit/model/UserConverter.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/target/maven-archiver/pom.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/nginx.conf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/BaseMicroserviceVerticle.java" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/BaseMicroserviceVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/BaseMicroserviceRxVerticle.java" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/BaseMicroserviceRxVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/utils/salt/DefaultHashStrategy.java" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/utils/salt/DefaultHashStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/ShopAuth.java" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/ShopAuth.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthImpl.java" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message-interface/pom.xml" afterPath="$PROJECT_DIR$/shop-message-module/shop-message-interface/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchVerticle.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/PreferencesServiceImpl.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/PreferencesServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-ui/js/commons.js" afterPath="$PROJECT_DIR$/shop-ui/js/commons.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mapping" afterPath="$PROJECT_DIR$/mapping" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-ui/js/search.js" afterPath="$PROJECT_DIR$/shop-ui/js/search.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-ui/search.html" afterPath="$PROJECT_DIR$/shop-ui/search.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/constants/UserSql.java" afterPath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/constants/UserSql.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/service/IUserService.java" afterPath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/service/IUserService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java" />
     </list>
@@ -100,38 +58,48 @@
       <file leaf-file-name="RestSearchRxVerticle.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="332">
-              <caret line="76" column="65" lean-forward="false" selection-start-line="76" selection-start-column="65" selection-end-line="76" selection-end-column="65" />
+            <state relative-caret-position="162">
+              <caret line="74" column="40" lean-forward="false" selection-start-line="74" selection-start-column="25" selection-end-line="74" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="search.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/search.html">
+      <file leaf-file-name="RestUserRxVerticle.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="328" column="32" lean-forward="false" selection-start-line="162" selection-start-column="24" selection-end-line="328" selection-end-column="32" />
+            <state relative-caret-position="270">
+              <caret line="170" column="21" lean-forward="true" selection-start-line="170" selection-start-column="21" selection-end-line="170" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="search.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/js/search.js">
+      <file leaf-file-name="CommodityServiceImpl.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="343">
-              <caret line="22" column="134" lean-forward="false" selection-start-line="22" selection-start-column="134" selection-end-line="22" selection-end-column="134" />
+            <state relative-caret-position="140">
+              <caret line="54" column="37" lean-forward="false" selection-start-line="54" selection-start-column="37" selection-end-line="54" selection-end-column="37" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="IUserService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/service/IUserService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+            <state relative-caret-position="276">
+              <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserServiceImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="356">
+              <caret line="76" column="41" lean-forward="false" selection-start-line="76" selection-start-column="41" selection-end-line="76" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -197,7 +165,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user/pom.xml" />
         <option value="$PROJECT_DIR$/shop-elasticsearch-service/src/main/java/com/hubrick/vertx/elasticsearch/impl/DefaultRxElasticSearchAdminService.java" />
         <option value="$PROJECT_DIR$/shop-elasticsearch-service/src/main/java/com/hubrick/vertx/elasticsearch/RxElasticSearchAdminService.java" />
         <option value="$PROJECT_DIR$/shop-elasticsearch-service/src/main/java/com/hubrick/vertx/elasticsearch/impl/DefaultRxElasticSearchService.java" />
@@ -211,14 +178,12 @@
         <option value="$PROJECT_DIR$/shop.sql" />
         <option value="$PROJECT_DIR$/shop-search/src/main/resources/log4j2.xml" />
         <option value="$PROJECT_DIR$/shop-ui/index.html" />
-        <option value="$PROJECT_DIR$/mapping" />
         <option value="$PROJECT_DIR$/shop-elasticsearch-service/src/main/java/com/hubrick/vertx/elasticsearch/impl/JsonElasticSearchConfigurator.java" />
         <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/service/impl/MessageServiceImpl.java" />
         <option value="$PROJECT_DIR$/shop-search/src/main/resources/search-config.json" />
         <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchType.java" />
         <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/IPreferencesService.java" />
         <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/ICommodityService.java" />
-        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/shop-common/pom.xml" />
         <option value="$PROJECT_DIR$/shop-elasticsearch-service/pom.xml" />
@@ -235,9 +200,6 @@
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/BaseMicroserviceRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/constants/UserSql.java" />
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/service/IUserService.java" />
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java" />
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/BaseMicroserviceVerticle.java" />
@@ -246,8 +208,14 @@
         <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchVerticle.java" />
         <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-ui/search.html" />
-        <option value="$PROJECT_DIR$/shop-ui/js/search.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/mapping" />
+        <option value="$PROJECT_DIR$/shop-ui/js/search.js" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/target/generated-sources/annotations/com/ecit/service/IUserServiceVertxEBProxy.java" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/service/IUserService.java" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" />
       </list>
     </option>
   </component>
@@ -272,7 +240,7 @@
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="vertx-shop" />
+          <option name="myItemId" value="shop-user-interface" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -282,7 +250,31 @@
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="vertx-shop" />
+          <option name="myItemId" value="shop-user-interface" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="shop-user" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="shop-user" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -336,11 +328,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="shop-message-module" />
+              <option name="myItemId" value="shop-user-module" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="shop-message-interface" />
+              <option name="myItemId" value="shop-user-interface" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -354,11 +346,317 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="shop-message-module" />
+              <option name="myItemId" value="shop-user-module" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="shop-message" />
+              <option name="myItemId" value="shop-user-interface" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="target" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-interface" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="target" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="generated-sources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotations" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-interface" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ecit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-interface" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ecit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ecit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ecit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ecit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="impl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vertx-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user-module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="shop-user" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ecit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -382,12 +680,10 @@
     <property name="SONARLINT_ANALYSIS_RESULTS_SCOPE" value="VCS changed files" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\IdeaProjects\vertx-shop\shop-search\target" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user\src\main\java\com\ecit" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-search\src\main\resources" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user\target" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user-interface\src\main\java\com\ecit" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\IdeaProjects\vertx-shop\shop-search\src\main\java\com\ecit" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-message-module\shop-message" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.ecit.api" />
@@ -396,10 +692,12 @@
       <recent name="com.ecit.service" />
       <recent name="com.ecit.common.enmu" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\IdeaProjects\vertx-shop\shop-search\src\main\java\com\ecit" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-message-module\shop-message" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\IdeaProjects\vertx-shop" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-search\target" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user\src\main\java\com\ecit" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-search\src\main\resources" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user\target" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -414,7 +712,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.SearchVerticle">
+  <component name="RunManager" selected="Application.APIGatewayVerticle">
     <configuration default="false" name="APIGatewayVerticle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -928,8 +1226,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Application.SearchVerticle" />
-        <item index="1" class="java.lang.String" itemvalue="Application.APIGatewayVerticle" />
+        <item index="0" class="java.lang.String" itemvalue="Application.APIGatewayVerticle" />
+        <item index="1" class="java.lang.String" itemvalue="Application.SearchVerticle" />
         <item index="2" class="java.lang.String" itemvalue="Application.MessageVerticle" />
         <item index="3" class="java.lang.String" itemvalue="Application.UserVerticle" />
         <item index="4" class="java.lang.String" itemvalue="Application.Test" />
@@ -1014,12 +1312,12 @@
       <workItem from="1521808440631" duration="662000" />
       <workItem from="1521811162227" duration="419000" />
       <workItem from="1521853336529" duration="15954000" />
-      <workItem from="1521882567088" duration="4180000" />
+      <workItem from="1521882567088" duration="10015000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="434516000" />
+    <option name="totallyTimeSpent" value="440351000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1032,6 +1330,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1041,14 +1340,14 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.62356794" sideWeight="0.5060514" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2934947" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2934947" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.58428806" sideWeight="0.49394855" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44189852" sideWeight="0.49394855" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.60720134" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35325265" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35325265" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="SonarLint" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1084,7 +1383,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" x="518" y="58" width="330" height="611" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.46153846" sideWeight="0.49394855" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46153846" sideWeight="0.49394855" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45499182" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1093,7 +1392,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.58428806" sideWeight="0.49394855" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.44189852" sideWeight="0.49394855" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.60720134" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -1113,7 +1412,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="128" />
+      <option name="time" value="129" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1122,34 +1421,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mapping">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="70" column="7" lean-forward="true" selection-start-line="70" selection-start-column="7" selection-end-line="70" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-elasticsearch-service/src/main/java/com/hubrick/vertx/elasticsearch/impl/JsonElasticSearchConfigurator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="69" column="72" lean-forward="false" selection-start-line="69" selection-start-column="72" selection-end-line="69" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="7" lean-forward="false" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-core/3.5.1/vertx-core-3.5.1.jar!/io/vertx/core/Handler.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="9" column="9" lean-forward="false" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/js/login.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="66">
@@ -1175,13 +1446,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-40">
           <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-220">
-          <caret line="11" column="28" lean-forward="false" selection-start-line="11" selection-start-column="28" selection-end-line="11" selection-end-column="28" />
         </state>
       </provider>
     </entry>
@@ -1266,6 +1530,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1415,21 +1680,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
           <caret line="31" column="13" lean-forward="false" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/service/IUserService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="726">
-          <caret line="33" column="40" lean-forward="false" selection-start-line="33" selection-start-column="40" selection-end-line="33" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1672">
-          <caret line="76" column="21" lean-forward="false" selection-start-line="76" selection-start-column="21" selection-end-line="76" selection-end-column="21" />
           <folding />
         </state>
       </provider>
@@ -1482,42 +1732,98 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2563">
-          <caret line="154" column="17" lean-forward="false" selection-start-line="154" selection-start-column="17" selection-end-line="154" selection-end-column="17" />
+        <state relative-caret-position="163">
+          <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java">
+    <entry file="file://$PROJECT_DIR$/nginx.conf">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="76" column="65" lean-forward="false" selection-start-line="76" selection-start-column="65" selection-end-line="76" selection-end-column="65" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapping">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="51" column="14" lean-forward="false" selection-start-line="49" selection-start-column="12" selection-end-line="51" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/search.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="328" column="32" lean-forward="false" selection-start-line="162" selection-start-column="24" selection-end-line="328" selection-end-column="32" />
+        <state relative-caret-position="22">
+          <caret line="306" column="52" lean-forward="false" selection-start-line="306" selection-start-column="52" selection-end-line="306" selection-end-column="52" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/js/search.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="22" column="134" lean-forward="false" selection-start-line="22" selection-start-column="134" selection-end-line="22" selection-end-column="134" />
+        <state relative-caret-position="497">
+          <caret line="29" column="46" lean-forward="false" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+        <state relative-caret-position="162">
+          <caret line="74" column="40" lean-forward="false" selection-start-line="74" selection-start-column="25" selection-end-line="74" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user-interface/target/generated-sources/annotations/com/ecit/service/IUserServiceVertxEBProxy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="49" column="9" lean-forward="false" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/service/IUserService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="76" column="41" lean-forward="false" selection-start-line="76" selection-start-column="41" selection-end-line="76" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="170" column="21" lean-forward="true" selection-start-line="170" selection-start-column="21" selection-end-line="170" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar!/org/apache/commons/lang3/StringUtils.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="80" column="25" lean-forward="false" selection-start-line="80" selection-start-column="25" selection-end-line="80" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="54" column="37" lean-forward="false" selection-start-line="54" selection-start-column="37" selection-end-line="54" selection-end-column="37" />
           <folding />
         </state>
       </provider>

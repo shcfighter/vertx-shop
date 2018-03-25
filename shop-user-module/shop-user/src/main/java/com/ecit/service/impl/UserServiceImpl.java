@@ -70,11 +70,12 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements IUserServi
     }
 
     @Override
-    public Future activateEmailUser(long userId, long versions) {
+    public IUserService activateEmailUser(long userId, long versions, Handler<AsyncResult<Integer>> resultHandler) {
         Future<Integer> future = Future.future();
         this.execute(new JsonArray().add(userId).add(versions), UserSql.ACTIVATE_EMAIL_USER_SQL)
                 .subscribe(future::complete, future::fail);
-        return future;
+        future.setHandler(resultHandler);
+        return this;
     }
 
     @Override

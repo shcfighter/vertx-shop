@@ -163,7 +163,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                     } else {
                         if(StringUtils.equals(emailHandler.result().getString("code"), request.getParam("code"))){
                             this.returnWithSuccessMessage(context, "激活成功");
-                            userService.activateEmailUser(user.getLong("user_id"), user.getLong("versions"));
+                            userService.activateEmailUser(user.getLong("user_id"), user.getLong("versions"), activateHandler -> {});
                             messageService.updateMessage(loginName, RegisterType.email, messageHandler -> {});
                             return ;
                         }

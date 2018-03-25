@@ -14,8 +14,10 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by za-wangshenhua on 2018/3/15.
@@ -45,15 +47,21 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
     @Override
     public ICommodityService searchCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler) {
         Future<SearchResponse> future = Future.future();
+        JsonObject searchJson = null;
+        if (StringUtils.isBlank(keyword)) {
+            searchJson = new JsonObject("{\"match_all\": {}}");
+        } else {
+            searchJson = new JsonObject("{\n" +
+                "    \"multi_match\" : {\n" +
+                "      \"query\":    \"" + keyword + "\",\n" +
+                "      \"fields\": [ \"commodity_name\", \"brand_name\", \"category_name\", \"remarks\", \"description\" ] \n" +
+                "    }\n" +
+                "}");
+        }
         final SearchOptions searchOptions = new SearchOptions()
-                .setQuery(new JsonObject("{\n" +
-                        "    \"multi_match\" : {\n" +
-                        "      \"query\":    \"" + keyword + "\",\n" +
-                        "      \"fields\": [ \"commodity_name\", \"brand_name\", \"category_name\", \"remarks\", \"description\" ] \n" +
-                        "    }\n" +
-                        "}"))
+                .setQuery(searchJson)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true);
+                .setFetchSource(true).setSize(12);
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);

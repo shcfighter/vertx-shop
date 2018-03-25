@@ -20,12 +20,14 @@ $(function() {
                     var $li = $(".boxes");
                     $li.html("");
                     $.each(items, function(index, value) {
-                        $li.append("<li><div class=\"i-pic limit\"><img src=\"http://111.231.132.168:8080/images/59df2e7fN86c99a27.jpg\"/><p class=\"title fl\">" +
-                        value.commodity_name +
+                        $li.append("<li><div class=\"i-pic limit\"><img src=\"" +
+                            value.image_url +
+                            "\"/><p class=\"title fl\">" +
+                            value.commodity_name +
                             "</p><p class=\"price fl\"> <b>¥</b><strong>" +
                             value.price +
                             "</strong></p><p class=\"number fl\">销量<span>" +
-                            "1110" +
+                            value.sales_volume +
                             "</span></p></div></li>");
                     });
                 }
