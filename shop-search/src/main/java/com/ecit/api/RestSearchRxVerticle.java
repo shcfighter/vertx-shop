@@ -107,8 +107,18 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
     private void findFavoriteCommodityHandler(RoutingContext context){
         String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
         if(StringUtils.isEmpty(cookie)){
-            //todo 查询默认的
-
+            //查询默认的
+            Future<SearchResponse> commodityFuture = Future.future();
+            commodityService.findCommodityBySalesVolume(commodityFuture.completer());
+            commodityFuture.setHandler(res -> {
+                if (res.failed()) {
+                    LOGGER.error("查询偏好产品失败！", res.cause());
+                    this.returnWithFailureMessage(context, "查询失败！");
+                    return;
+                }
+                this.Ok(context, new ResultItems(0, res.result().getHits().getTotal().intValue(),
+                        res.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
+            });
             return ;
         }
         Future<List<String>> future = Future.future();

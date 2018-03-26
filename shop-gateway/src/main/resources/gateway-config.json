@@ -6,7 +6,7 @@
     "timeout": 10000,
     "max-failures": 5
   },
-  "url": "jdbc:postgresql://localhost:5432/vertx_shop",
+  "url": "jdbc:postgresql://111.231.132.168:5432/vertx_shop",
   "driver_class": "org.postgresql.Driver",
   "max_pool_size": 50,
   "user": "postgres",

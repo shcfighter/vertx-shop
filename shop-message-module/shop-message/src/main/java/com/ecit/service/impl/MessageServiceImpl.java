@@ -31,13 +31,7 @@ public class MessageServiceImpl implements IMessageService{
 
     public MessageServiceImpl(Vertx vertx, JsonObject config) {
         mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
-        MailConfig emailConfig = new MailConfig();
-        emailConfig.setHostname("smtp.mail.com");
-        emailConfig.setPort(25);
-        emailConfig.setStarttls(StartTLSOptions.REQUIRED);
-        emailConfig.setUsername("shc_fighter@mail.com");
-        emailConfig.setPassword("1234567890a");
-        mailClient = MailClient.createNonShared(vertx, emailConfig);
+        mailClient = MailClient.createNonShared(vertx, new MailConfig(config.getJsonObject("mail")));
     }
 
     @Override

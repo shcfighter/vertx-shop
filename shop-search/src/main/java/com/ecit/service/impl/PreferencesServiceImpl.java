@@ -63,7 +63,7 @@ public class PreferencesServiceImpl implements IPreferencesService{
     public IPreferencesService findPreferences(String cookies, Handler<AsyncResult<List<String>>> handler) {
         Future<List<String>> future = Future.future();
         mongoClient.rxFindWithOptions(PREFERENCES_COLLECTION, new JsonObject().put("cookies", cookies),
-                new FindOptions().setLimit(10).setSort(new JsonObject().put("create_time", -1)))
+                new FindOptions().setLimit(3).setSort(new JsonObject().put("create_time", -1)))
                 .subscribe(res -> future.complete(res.stream().map(jsonObject -> jsonObject.getString("keyword")).collect(Collectors.toList())), future::fail);
         future.setHandler(handler);
         return this;

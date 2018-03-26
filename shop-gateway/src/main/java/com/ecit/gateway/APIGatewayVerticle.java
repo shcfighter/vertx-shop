@@ -1,6 +1,7 @@
 package com.ecit.gateway;
 
 import com.ecit.common.RestAPIVerticle;
+import com.ecit.common.result.ResultItems;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.UserStatus;
 import com.ecit.gateway.auth.ShopAuth;
@@ -189,9 +190,11 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
             } else {
                 LOGGER.error("调用http接口错误！", handler.cause());
-                bodyBuffer.appendString("远程接口调用失败！");
+                bodyBuffer.appendString(ResultItems.getEncodePrettily(new ResultItems(-1, "远程接口调用失败！")));
             }
-            this.returnWithFailureMessage(context, bodyBuffer.toString());
+            context.response().setStatusCode(200)
+                    .putHeader("content-type", "application/json")
+                    .end(bodyBuffer);
             cbFuture.complete();
             ServiceDiscovery.releaseServiceObject(discovery, client);
         });

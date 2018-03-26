@@ -1,6 +1,6 @@
 {
   "api.name": "message",
-  "api.message.http.port": 8081,
+  "api.message.http.port": 8083,
   "api.message.http.address": "0.0.0.0",
   "mongodb": {
     // Single Cluster Settings
@@ -55,6 +55,13 @@
     "sendBufferSize"    : 8192,  // int
     "receiveBufferSize" : 8192,  // int
     "keepAlive" : true           // boolean
+  },
+  "mail" : {
+    "hostname" : "smtp.mail.com",
+    "port" : 25,
+    "starttls" : "REQUIRED",
+    "username" : "shc_fighter@mail.com",
+    "password" : "1234567890a"
   },
 
   // Server Settings

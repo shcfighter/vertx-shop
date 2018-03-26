@@ -50,6 +50,12 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
                                 .put("username", "shop_user")
                                 .put("password", "h123456")
                                 .put("db_name", "shop_message"))
+                        .put("mail", new JsonObject()
+                                .put("hostname", "smtp.mail.com")
+                                .put("port", 25)
+                                .put("username", "shc_fighter@mail.com")
+                                .put("password", "1234567890a")
+                                .put("starttls", "REQUIRED"))
                 )));
     }
 }

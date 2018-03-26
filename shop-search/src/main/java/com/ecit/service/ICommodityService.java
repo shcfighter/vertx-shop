@@ -27,4 +27,7 @@ public interface ICommodityService {
 
     @Fluent
     ICommodityService preferencesCommodity(List<String> keywords, Handler<AsyncResult<SearchResponse>> handler);
+
+    @Fluent
+    ICommodityService findCommodityBySalesVolume(Handler<AsyncResult<SearchResponse>> handler);
 }

@@ -8,3 +8,6 @@
 shop.sql,a\3\a37305f493d206ffa622986874aec5de26f67520
 7
 mapping,8\2\821b7db1bf69055d3819db82de2c55389a73409b
+:
+
+nginx.conf,e\d\ed8b45da44d73de79bd7c1c203a419d6ee7d6fde
