@@ -58,7 +58,13 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
         final SearchOptions searchOptions = new SearchOptions()
                 .setQuery(searchJson)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true).setSize(12);
+                .setFetchSource(true).setSize(12)
+                .addAggregation(new AggregationOption().setName("brand_name")
+                        .setType(AggregationOption.AggregationType.TERMS)
+                        .setDefinition(new JsonObject().put("field", "brand_name").put("size", 5)))
+                .addAggregation(new AggregationOption().setName("category_name")
+                        .setType(AggregationOption.AggregationType.TERMS)
+                        .setDefinition(new JsonObject().put("field", "category_name").put("size", 5)));
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);
@@ -120,6 +126,36 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
                 .setFetchSource(true)
                 .setSize(3)
                 .addFieldSort("sales_volume", SortOrder.DESC);
+        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
+                .subscribe(future::complete, future::fail);
+        future.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public ICommodityService findBrandCategory(String keyword, Handler<AsyncResult<SearchResponse>> handler) {
+        Future<SearchResponse> future = Future.future();
+        JsonObject searchJson = null;
+        if (StringUtils.isBlank(keyword)) {
+            searchJson = new JsonObject("{\"match_all\": {}}");
+        } else {
+            searchJson = new JsonObject("{\n" +
+                    "    \"multi_match\" : {\n" +
+                    "      \"query\":    \"" + keyword + "\",\n" +
+                    "      \"fields\": [ \"commodity_name\", \"brand_name\", \"category_name\", \"remarks\", \"description\" ] \n" +
+                    "    }\n" +
+                    "}");
+        }
+        final SearchOptions searchOptions = new SearchOptions()
+                .setQuery(searchJson)
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setFetchSource(true).setSize(0)
+                .addAggregation(new AggregationOption().setName("brand_name")
+                        .setType(AggregationOption.AggregationType.TERMS)
+                        .setDefinition(new JsonObject().put("field", "brand_name").put("size", 10)))
+                .addAggregation(new AggregationOption().setName("category_name")
+                        .setType(AggregationOption.AggregationType.TERMS)
+                        .setDefinition(new JsonObject().put("field", "category_name").put("size", 10)));
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);

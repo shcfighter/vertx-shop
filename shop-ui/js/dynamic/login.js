@@ -18,7 +18,7 @@ $(function() {
             success: function(result){
                 if(result.status == 0){
                     sessionStorage.setItem("loginUser", JSON.stringify(result.items));
-                    window.location.href = "index.html";
+                    window.location.href = "/index.html";
                 } else {
                     alert(result.message);
                 }

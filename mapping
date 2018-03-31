@@ -1,4 +1,15 @@
 {
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 1,
+            "number_of_replicas" : 2
+        }
+    }
+}
+
+
+
+{
    "mappings": {
       "commodity": {
          "properties": {
@@ -6,19 +17,20 @@
                "type": "long"
             },
             "commodity_name": {
+		        "analyzer": "ik_smart",
                "type": "text"
             },
             "brand_id": {
                "type": "long"
             },
             "brand_name": {
-               "type": "text"
+               "type": "keyword"
             },
             "category_id": {
                "type": "long"
             },
             "category_name": {
-               "type": "text"
+               "type": "keyword"
             },
             "price": {
                "type": "keyword"
@@ -62,9 +74,11 @@
                "format": "strict_date_optional_time||epoch_millis"
             },
             "description": {
+		        "analyzer": "ik_smart",
                "type": "text"
             },
             "remarks": {
+		        "analyzer": "ik_smart",
                "type": "text"
             },
             "versions": {

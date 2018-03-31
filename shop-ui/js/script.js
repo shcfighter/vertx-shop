@@ -45,22 +45,22 @@ $(document).ready(function() {
 	});
 
 
-	$("#select1 dd").click(function() {
-		$(this).addClass("selected").siblings().removeClass("selected");
-		if ($(this).hasClass("select-all")) {
-			$("#selectA").remove();
-		} else {
-			var copyThisA = $(this).clone();
-			if ($("#selectA").length > 0) {
-				$("#selectA a").html($(this).text());
-			} else {
-				$(".select-result dl").append(copyThisA.attr("id", "selectA"));
+    $(document).on("click", "#select1 dd", function() {
+        $(this).addClass("selected").siblings().removeClass("selected");
+        if ($(this).hasClass("select-all")) {
+            $("#selectA").remove();
+        } else {
+            var copyThisA = $(this).clone();
+            if ($("#selectA").length > 0) {
+                $("#selectA a").html($(this).text());
+            } else {
+                $(".select-result dl").append(copyThisA.attr("id", "selectA"));
 
-			}
-		}
-	});
+            }
+        }
+    });
 
-	$("#select2 dd").click(function() {
+    $(document).on("click", "#select2 dd", function() {
 		$(this).addClass("selected").siblings().removeClass("selected");
 		if ($(this).hasClass("select-all")) {
 			$("#selectB").remove();
@@ -74,7 +74,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#select3 dd").click(function() {
+    $(document).on("click", "#select3 dd", function() {
 		$(this).addClass("selected").siblings().removeClass("selected");
 		if ($(this).hasClass("select-all")) {
 			$("#selectC").remove();

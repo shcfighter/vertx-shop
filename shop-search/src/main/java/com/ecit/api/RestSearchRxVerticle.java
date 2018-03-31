@@ -6,7 +6,10 @@ import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.ICommodityService;
 import com.ecit.service.IPreferencesService;
+import com.google.common.collect.Lists;
 import com.hubrick.vertx.elasticsearch.model.SearchResponse;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Future;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -17,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -46,6 +50,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         router.post("/search").handler(this::searchHandler);
         router.get("/findCommodityById/:id").handler(this::findCommodityByIdHandler);
         router.get("/findFavoriteCommodity").handler(this::findFavoriteCommodityHandler);
+        router.get("/findBrandCategory").handler(this::findBrandCategoryHandler);
         //全局异常处理
         this.globalVerticle(router);
 
@@ -85,8 +90,23 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     this.returnWithFailureMessage(context, "暂无该商品！");
                     return ;
                 }
-                this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().intValue(),
-                        handler.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
+                final SearchResponse result = handler.result();
+                JsonObject resultJsonObject = new JsonObject();
+                resultJsonObject.put("items", result.getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList()));
+                JsonArray category = result.getAggregations().get("category_name").getJsonObject("category_name").getJsonArray("buckets");
+                List<String> categoryList = Lists.newArrayList();
+                for (int i = 0; i < category.size(); i++) {
+                    categoryList.add(category.getJsonObject(i).getString("key"));
+                }
+                resultJsonObject.put("category", categoryList);
+                JsonArray brand = result.getAggregations().get("brand_name").getJsonObject("brand_name").getJsonArray("buckets");
+                List<String> brandList = Lists.newArrayList();
+                for (int i = 0; i < brand.size(); i++) {
+                    brandList.add(brand.getJsonObject(i).getString("key"));
+                }
+                resultJsonObject.put("brand", brandList);
+                this.Ok(context, new ResultItems(0, result.getHits().getTotal().intValue(),
+                        resultJsonObject));
             }
         });
     }
@@ -135,6 +155,31 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
             }
             this.Ok(context, new ResultItems(0, res.result().getHits().getTotal().intValue(),
                     res.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
+        });
+    }
+
+    /**
+     * 根据查询关键字聚合品牌、类别
+     * @param context
+     */
+    public void findBrandCategoryHandler(RoutingContext context){
+        String keyword = context.request().getParam("key");
+        commodityService.findBrandCategory(keyword, handler -> {
+            if(handler.failed()){
+                this.returnWithFailureMessage(context, "暂无该商品！");
+                LOGGER.error("搜索商品异常：", handler.cause());
+                return ;
+            } else {
+                if(Objects.isNull(handler.result())){
+                    this.returnWithFailureMessage(context, "暂无该商品！");
+                    return ;
+                }
+                Map<String, JsonObject> aggs = handler.result().getAggregations();
+                System.out.println(aggs.get("category_name").getJsonObject("category_name").getJsonArray("buckets"));
+                System.out.println(aggs.get("brand_name").getJsonObject("brand_name").getJsonArray("buckets"));
+                this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().intValue(),
+                        handler.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
+            }
         });
     }
 

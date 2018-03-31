@@ -30,4 +30,7 @@ public interface ICommodityService {
 
     @Fluent
     ICommodityService findCommodityBySalesVolume(Handler<AsyncResult<SearchResponse>> handler);
+
+    @Fluent
+    ICommodityService findBrandCategory(String keyword, Handler<AsyncResult<SearchResponse>> handler);
 }

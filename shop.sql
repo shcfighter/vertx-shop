@@ -130,6 +130,7 @@ CREATE TABLE public.t_commodity
     production_site character varying(50) COLLATE pg_catalog."default",
     license_number character varying(20) COLLATE pg_catalog."default",
     shelf_life bigint,
+    image_url character varying(500) COLLATE pg_catalog."default",
     status smallint,
     is_deleted smallint,
     remarks character varying(255) COLLATE pg_catalog."default",

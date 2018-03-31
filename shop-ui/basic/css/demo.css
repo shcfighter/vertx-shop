@@ -99,7 +99,7 @@ color: #555555;background:none;border-color:transparent;cursor: default;}
  
 /*搜索框*/
 .search-bar{height:41px; margin: 8px 20px 0 75px;}
-.search-bar form{border:2px solid #F03726; max-width:670px;}
+.search-bar div{border:2px solid #F03726; max-width:670px;}
 .search-bar input{padding-left:5px;height:32px;width:78%;outline:none; font-size:12px; border:none}
 #ai-topsearch { width:20%;height:32px;border:none;float:right;background: #F03726 none repeat scroll 0% 0%;
 color: #F5F5F2;font-size: 14px;cursor:pointer;border-radius:0px 0px ;}
