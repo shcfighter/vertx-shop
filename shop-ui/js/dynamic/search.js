@@ -34,7 +34,7 @@ $(function() {
                     $li.html("");
                     $.each(items, function(index, value) {
                         $li.append("<li><div class=\"i-pic limit\" commodity_id=\"" + value.commodity_id + "\">" +
-                            "<img src=\"" + value.image_url + "\"/><p class=\"title fl\">" + value.commodity_name + "</p><p class=\"price fl\"> <b>¥</b><strong>" +
+                            "<img src=\"" + value.image_url[0] + "\"/><p class=\"title fl\">" + value.commodity_name + "</p><p class=\"price fl\"> <b>¥</b><strong>" +
                             value.price +
                             "</strong></p><p class=\"number fl\">销量<span>" +
                             value.sales_volume +
@@ -75,7 +75,7 @@ $(function() {
                     $li.siblings().html("");
                     $.each(items, function(index, value) {
                         $li.after("<li><div class=\"i-pic check\" commodity_id=\"" + value.commodity_id + "\">" +
-                            "<img src=\"" + value.image_url + "\"/>" +
+                            "<img src=\"" + value.image_url[0] + "\"/>" +
                             "<p class=\"title fl\">" + value.commodity_name + "</p>" +
                             "<p class=\"price fl\">" +
                             "<b>¥</b><strong>" + value.price + "</strong>" +

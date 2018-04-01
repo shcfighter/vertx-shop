@@ -41,25 +41,42 @@
             "num": {
                "type": "long"
             },
-            "sales_volume": {
+            "month_sales_volume": {
                "type": "integer"
             },
-            "evaluation_num": {
+            "total_sales_volume": {
                "type": "integer"
             },
-            "production_site": {
-               "type": "keyword"
-            },
-            "license_number": {
-               "type": "keyword"
-            },
-            "shelf_life": {
+            "total_evaluation_num": {
                "type": "integer"
+            },
+            "commodity_params": {
+                "type": "nested",
+                "properties": {
+                    "production_site": {
+                       "type": "keyword"
+                    },
+                    "license_number": {
+                       "type": "keyword"
+                    },
+                    "shelf_life": {
+                       "type": "keyword"
+                    },
+                    "weight": {
+                        "type": "keyword"
+                    }
+                }
             },
             "status": {
                "type": "integer"
             },
+            "freight": {
+                "type": "keyword"
+             },
             "image_url": {
+                "type": "keyword"
+            },
+            "detail_image_url": {
                 "type": "keyword"
             },
             "is_deleted": {

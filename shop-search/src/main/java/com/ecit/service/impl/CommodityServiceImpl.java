@@ -78,9 +78,18 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
      * @return
      */
     @Override
-    public ICommodityService findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler) {
-        Future future = Future.future();
-        this.retrieveOne(new JsonArray().add(id), CommoditySql.FIND_COMMODITY_BY_ID)
+    public ICommodityService findCommodityById(long id, Handler<AsyncResult<SearchResponse>> handler) {
+        Future<SearchResponse> future = Future.future();
+        final SearchOptions searchOptions = new SearchOptions()
+                .setQuery(new JsonObject("{" +
+                        "       \"match\":{" +
+                        "           \"commodity_id\": \"" + id + "\"" +
+                        "       }" +
+                        "}"))
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setFetchSource(true)
+                .setSize(1);
+        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);
         return this;

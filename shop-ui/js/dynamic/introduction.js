@@ -16,8 +16,28 @@ $(function(){
                 if(result.status == 0){
                     var items = result.items;
                     $(".tb-detail-hd h1").html(items.commodity_name);
-                    $(".tb-thumb").html("<li class=\"tb-selected\"><div class=\"tb-pic tb-s40\"><a href=\"javascript:void(0)\"><img src=\"" + items.image_url + "\" mid=\"" + items.image_url + "\" big=\"" + items.image_url + "\"></a></div></li>"
-                    );
+                    //设置浏览图片
+                    $.each(items.image_url, function(index, image_urls) {
+                        if (0 == index) {
+                            $(".tb-thumb").append("<li class=\"tb-selected\"><div class=\"tb-pic tb-s40\"><a href=\"javascript:void(0)\"><img src=\"" + image_urls + "\" mid=\"" + image_urls + "\" big=\"" + image_urls + "\"></a></div></li>");
+                            $("#thumblist li a").click();
+                        } else {
+                            $(".tb-thumb").append("<li><div class=\"tb-pic tb-s40\"><a href=\"javascript:void(0)\"><img src=\"" + image_urls + "\" mid=\"" + image_urls + "\" big=\"" + image_urls + "\"></a></div></li>");
+                        }
+                    });
+                    $(".tm-ind-sellCount .tm-count").html(items.month_sales_volume);
+                    $(".tm-ind-sumCount .tm-count").html(items.total_evaluation_num);
+                    $(".tm-ind-reviewCount .tm-count").html(items.total_sales_volume);
+                    $(".sys_item_price").html(items.price);
+                    $(".sys_item_mktprice").html(items.original_price);
+                    $(".sys_item_freprice").html(items.freight);
+                    $(".stock").html(items.num);
+                    //设置产品参数
+                    var params = items.commodity_params;
+                    //$("#J_AttrUL").append("<li title=\">产品类型:&nbsp;烘炒类</li>");
+                    $.each(items.detail_image_url, function(index, detail_image_url) {
+                        $(".twlistNews").append("<img src=\"" + detail_image_url + "\">");
+                    });
                 }
             },
             error: function () {

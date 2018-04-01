@@ -7,6 +7,7 @@ import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.ICommodityService;
 import com.ecit.service.IPreferencesService;
 import com.google.common.collect.Lists;
+import com.hubrick.vertx.elasticsearch.model.Hits;
 import com.hubrick.vertx.elasticsearch.model.SearchResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -77,7 +78,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
          * 异步保存搜索行为
          */
         String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
-        if(StringUtils.isNotEmpty(cookie)){
+        if(StringUtils.isNotEmpty(cookie) && StringUtils.isNotEmpty(keyword)){
             preferencesService.savePreferences(cookie, keyword, SearchType.search, handler ->{});
         }
         commodityService.searchCommodity(keyword, handler -> {
@@ -116,8 +117,15 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void findCommodityByIdHandler(RoutingContext context){
-        commodityService.findCommodityById(Integer.parseInt(context.request().getParam("id"))
-                , this.resultHandler(context));
+        commodityService.findCommodityById(Integer.parseInt(context.request().getParam("id")), handler -> {
+            if (handler.failed()) {
+                LOGGER.error("根据id查询产品失败！", handler.cause());
+                this.returnWithFailureMessage(context, "查询失败");
+            } else {
+                final Hits hits = handler.result().getHits();
+                this.Ok(context, ResultItems.getReturnItemsSuccess(hits.getTotal().intValue(), hits.getHits().get(0).getSource()));
+            }
+        });
     }
 
     /**
@@ -136,7 +144,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     this.returnWithFailureMessage(context, "查询失败！");
                     return;
                 }
-                this.Ok(context, new ResultItems(0, res.result().getHits().getTotal().intValue(),
+                this.Ok(context, ResultItems.getReturnItemsSuccess(res.result().getHits().getTotal().intValue(),
                         res.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
             });
             return ;

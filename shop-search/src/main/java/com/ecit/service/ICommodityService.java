@@ -23,7 +23,7 @@ public interface ICommodityService {
     ICommodityService searchCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler);
 
     @Fluent
-    ICommodityService findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler);
+    ICommodityService findCommodityById(long id, Handler<AsyncResult<SearchResponse>> handler);
 
     @Fluent
     ICommodityService preferencesCommodity(List<String> keywords, Handler<AsyncResult<SearchResponse>> handler);
