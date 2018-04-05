@@ -79,7 +79,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
          */
         String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
         if(StringUtils.isNotEmpty(cookie) && StringUtils.isNotEmpty(keyword)){
-            preferencesService.savePreferences(cookie, keyword, SearchType.search, handler ->{});
+            preferencesService.sendMqPreferences(cookie, keyword, SearchType.search, handler ->{});
         }
         commodityService.searchCommodity(keyword, handler -> {
             if(handler.failed()){

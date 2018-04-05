@@ -2,14 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a0ab6bb7-03ce-41e2-b339-057d33302ddb" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/OrderVerticle.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IdBuilder.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/shop-order/src/main/resources/log4j2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/shop-order/src/main/resources/order-config.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mapping" afterPath="$PROJECT_DIR$/mapping" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/service/impl/MessageServiceImpl.java" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/service/impl/MessageServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-order/pom.xml" afterPath="$PROJECT_DIR$/shop-order/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-order/shop-order.iml" afterPath="$PROJECT_DIR$/shop-order/shop-order.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/pom.xml" afterPath="$PROJECT_DIR$/shop-search/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/shop-search.iml" afterPath="$PROJECT_DIR$/shop-search/shop-search.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchVerticle.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchVerticle.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/ICommodityService.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/ICommodityService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/IPreferencesService.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/IPreferencesService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/PreferencesServiceImpl.java" afterPath="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/PreferencesServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-search/src/main/resources/search-config.json" afterPath="$PROJECT_DIR$/shop-search/src/main/resources/search-config.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-ui/introduction.html" afterPath="$PROJECT_DIR$/shop-ui/introduction.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/search.js" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/search.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/shop.sql" afterPath="$PROJECT_DIR$/shop.sql" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/shop-login/target/" />
@@ -51,86 +68,114 @@
     <option name="SHOW_EMPTY_GROUPS" value="false" />
     <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
   </component>
+  <component name="ErrorTreeViewConfiguration">
+    <option name="autoscrollToSource" value="true" />
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="true" />
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="RestSearchRxVerticle.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="125" column="128" lean-forward="false" selection-start-line="125" selection-start-column="128" selection-end-line="125" selection-end-column="128" />
+            <state relative-caret-position="431">
+              <caret line="30" column="33" lean-forward="false" selection-start-line="30" selection-start-column="33" selection-end-line="30" selection-end-column="59" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CommodityServiceImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java">
+      <file leaf-file-name="OrderVerticle.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/OrderVerticle.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="295">
+              <caret line="31" column="79" lean-forward="false" selection-start-line="31" selection-start-column="79" selection-end-line="31" selection-end-column="79" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RestOrderRxVerticle.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="176">
-              <caret line="84" column="32" lean-forward="false" selection-start-line="84" selection-start-column="32" selection-end-line="84" selection-end-column="32" />
+              <caret line="32" column="73" lean-forward="false" selection-start-line="32" selection-start-column="73" selection-end-line="32" selection-end-column="73" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="introduction.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/introduction.html">
+      <file leaf-file-name="OrderServiceImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="232" column="105" lean-forward="false" selection-start-line="232" selection-start-column="105" selection-end-line="232" selection-end-column="105" />
+            <state relative-caret-position="184">
+              <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mapping" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mapping">
+      <file leaf-file-name="IOrderService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="277">
-              <caret line="56" column="40" lean-forward="true" selection-start-line="56" selection-start-column="40" selection-end-line="56" selection-end-column="40" />
+            <state relative-caret-position="286">
+              <caret line="13" column="41" lean-forward="false" selection-start-line="13" selection-start-column="41" selection-end-line="13" selection-end-column="41" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="introduction.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js">
+      <file leaf-file-name="ICommodityService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/ICommodityService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="343">
-              <caret line="29" column="84" lean-forward="false" selection-start-line="29" selection-start-column="84" selection-end-line="29" selection-end-column="84" />
-              <folding>
-                <marker date="1522575077406" expanded="true" signature="1954:1960" ph="&amp;nbsp;" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="search.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/search.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="34" column="20" lean-forward="false" selection-start-line="34" selection-start-column="20" selection-end-line="41" selection-end-column="23" />
+            <state relative-caret-position="239">
+              <caret line="19" column="61" lean-forward="false" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="61" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/index.html">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-order/pom.xml">
+          <provider editor-type-id="MavenHelperPluginDependencyAnalyzer">
+            <state />
+          </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="23" column="56" lean-forward="false" selection-start-line="23" selection-start-column="56" selection-end-line="23" selection-end-column="56" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="search.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/search.html">
+      <file leaf-file-name="shop.sql" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/shop.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="174">
-              <caret line="301" column="45" lean-forward="false" selection-start-line="301" selection-start-column="40" selection-end-line="301" selection-end-column="45" />
+            <state relative-caret-position="396">
+              <caret line="218" column="0" lean-forward="true" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IdBuilder.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IdBuilder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="264">
+              <caret line="12" column="60" lean-forward="false" selection-start-line="12" selection-start-column="60" selection-end-line="12" selection-end-column="60" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-search/pom.xml">
+          <provider editor-type-id="MavenHelperPluginDependencyAnalyzer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="480">
+              <caret line="69" column="20" lean-forward="false" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -141,17 +186,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Enum" />
-        <option value="Class" />
         <option value="JavaScript File" />
+        <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mongo</find>
-      <find>mongoclient</find>
       <find>boxes</find>
       <find>menu-hd</find>
       <find>topMessage</find>
@@ -180,6 +223,8 @@
       <find>stock</find>
       <find>tm-count</find>
       <find>tm-ind-sellCount</find>
+      <find>rabbitmq</find>
+      <find>Got message</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -196,38 +241,20 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchType.java" />
-        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/IPreferencesService.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/shop-common/pom.xml" />
-        <option value="$PROJECT_DIR$/shop-elasticsearch-service/pom.xml" />
-        <option value="$PROJECT_DIR$/shop-search/pom.xml" />
-        <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/utils/salt/DefaultHashStrategy.java" />
-        <option value="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/ShopAuth.java" />
-        <option value="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" />
-        <option value="$PROJECT_DIR$/shop-message-module/shop-message-interface/pom.xml" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/BaseMicroserviceRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/constants/UserSql.java" />
-        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/BaseMicroserviceVerticle.java" />
         <option value="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthImpl.java" />
-        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchVerticle.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/target/generated-sources/annotations/com/ecit/service/IUserServiceVertxEBProxy.java" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/service/IUserService.java" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-search/src/main/resources/search-config.json" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/result/ResultItems.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/constants/Constants.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/PreferencesServiceImpl.java" />
-        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/service/impl/MessageServiceImpl.java" />
-        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" />
-        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" />
         <option value="$PROJECT_DIR$/shop-gateway/src/main/resources/gateway-config.json" />
         <option value="$PROJECT_DIR$/shop-search/src/main/resources/log4j2.xml" />
         <option value="$PROJECT_DIR$/shop-ui/js/script.js" />
@@ -238,15 +265,33 @@
         <option value="$PROJECT_DIR$/shop-ui/js/login.js" />
         <option value="$PROJECT_DIR$/shop-ui/js/index.js" />
         <option value="$PROJECT_DIR$/shop-ui/js/search.js" />
-        <option value="$PROJECT_DIR$/shop.sql" />
         <option value="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" />
         <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/ICommodityService.java" />
         <option value="$PROJECT_DIR$/shop-ui/js/dynamic/search.js" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js" />
+        <option value="$PROJECT_DIR$/mapping" />
+        <option value="$PROJECT_DIR$/shop-ui/introduction.html" />
+        <option value="$PROJECT_DIR$/shop-search/pom.xml" />
         <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" />
         <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js" />
-        <option value="$PROJECT_DIR$/shop-ui/introduction.html" />
-        <option value="$PROJECT_DIR$/mapping" />
+        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" />
+        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/service/impl/MessageServiceImpl.java" />
+        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-search/src/main/resources/search-config.json" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" />
+        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/IPreferencesService.java" />
+        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/PreferencesServiceImpl.java" />
+        <option value="$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/resources/order-config.json" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/OrderServiceImpl.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/OrderVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-order/pom.xml" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IdBuilder.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java" />
+        <option value="$PROJECT_DIR$/shop.sql" />
       </list>
     </option>
   </component>
@@ -313,8 +358,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -329,7 +374,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -345,25 +390,25 @@
     <property name="SONARLINT_ANALYSIS_RESULTS_SCOPE" value="VCS changed files" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\IdeaProjects\vertx-shop\shop-order\src\main\resources" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-gateway\src\main\resources" />
+      <recent name="D:\IdeaProjects\vertx-shop" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-search\target" />
+      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user\src\main\java\com\ecit" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.ecit.service" />
+      <recent name="com.ecit" />
+      <recent name="com.ecit.api" />
+      <recent name="com.ecit.enmu" />
+      <recent name="com.ecit.common.enmu" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\IdeaProjects\vertx-shop\shop-ui\js\dynamic" />
       <recent name="D:\IdeaProjects\vertx-shop\shop-search\src\main\java\com\ecit" />
       <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user" />
       <recent name="D:\IdeaProjects\vertx-shop\shop-message-module\shop-message" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.ecit.api" />
-      <recent name="com.ecit" />
-      <recent name="com.ecit.enmu" />
-      <recent name="com.ecit.service" />
-      <recent name="com.ecit.common.enmu" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\IdeaProjects\vertx-shop\shop-gateway\src\main\resources" />
-      <recent name="D:\IdeaProjects\vertx-shop" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-search\target" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-user-module\shop-user\src\main\java\com\ecit" />
-      <recent name="D:\IdeaProjects\vertx-shop\shop-search\src\main\resources" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -894,8 +939,8 @@
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Application.SearchVerticle" />
         <item index="1" class="java.lang.String" itemvalue="Application.APIGatewayVerticle" />
-        <item index="2" class="java.lang.String" itemvalue="Application.UserVerticle" />
-        <item index="3" class="java.lang.String" itemvalue="Application.MessageVerticle" />
+        <item index="2" class="java.lang.String" itemvalue="Application.MessageVerticle" />
+        <item index="3" class="java.lang.String" itemvalue="Application.UserVerticle" />
         <item index="4" class="java.lang.String" itemvalue="Application.Test" />
       </list>
     </recent_temporary>
@@ -988,12 +1033,22 @@
       <workItem from="1522285158480" duration="3290000" />
       <workItem from="1522299435835" duration="1525000" />
       <workItem from="1522369681302" duration="2349000" />
-      <workItem from="1522413949055" duration="19597000" />
+      <workItem from="1522413949055" duration="19967000" />
+      <workItem from="1522631248245" duration="126000" />
+      <workItem from="1522634915536" duration="14000" />
+      <workItem from="1522645382668" duration="2036000" />
+      <workItem from="1522657335115" duration="12000" />
+      <workItem from="1522657402069" duration="2217000" />
+      <workItem from="1522660109532" duration="1771000" />
+      <workItem from="1522662461885" duration="463000" />
+      <workItem from="1522663405812" duration="13074000" />
+      <workItem from="1522818418371" duration="1533000" />
+      <workItem from="1522895279237" duration="16391000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="509487000" />
+    <option name="totallyTimeSpent" value="547494000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1015,7 +1070,7 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46153846" sideWeight="0.50907713" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48772505" sideWeight="0.5121029" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2934947" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44189852" sideWeight="0.49394855" order="3" side_tool="false" content_ui="tabs" />
@@ -1031,7 +1086,7 @@
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46644846" sideWeight="0.49092284" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48772505" sideWeight="0.48789713" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1049,7 +1104,7 @@
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46153846" sideWeight="0.50907713" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48772505" sideWeight="0.5121029" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2934947" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1059,7 +1114,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" x="518" y="58" width="330" height="611" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46644846" sideWeight="0.49092284" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48772505" sideWeight="0.48789713" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45499182" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1088,7 +1143,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="141" />
+      <option name="time" value="157" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1097,175 +1152,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-auth-common/3.5.1/vertx-auth-common-3.5.1.jar!/io/vertx/ext/auth/AbstractUser.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="17" column="22" lean-forward="false" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopUser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="47" column="62" lean-forward="false" selection-start-line="47" selection-start-column="53" selection-end-line="47" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-core/3.5.1/vertx-core-3.5.1.jar!/io/vertx/core/MultiMap.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="19" column="17" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-core/3.5.1/vertx-core-3.5.1.jar!/io/vertx/core/http/impl/HttpServerRequestImpl.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="145" column="62" lean-forward="false" selection-start-line="145" selection-start-column="62" selection-end-line="145" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-codec-http/4.1.19.Final/netty-codec-http-4.1.19.Final.jar!/io/netty/handler/codec/http/HttpMessage.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="16" column="16" lean-forward="false" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/constants.java" />
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/constants/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="19" lean-forward="false" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/service/impl/UserServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="41" column="5" lean-forward="false" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="422">
-          <caret line="166" column="56" lean-forward="false" selection-start-line="166" selection-start-column="43" selection-end-line="166" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-rx-java2/3.5.1/vertx-rx-java2-3.5.1.jar!/io/vertx/reactivex/core/CompositeFuture.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="77" column="42" lean-forward="false" selection-start-line="77" selection-start-column="31" selection-end-line="77" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-search/target/generated-sources/annotations/com/ecit/service/ICommodityServiceVertxProxyHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="138" column="10" lean-forward="false" selection-start-line="138" selection-start-column="10" selection-end-line="138" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-mail-client/3.5.1/vertx-mail-client-3.5.1.jar!/io/vertx/ext/mail/StartTLSOptions.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="12" lean-forward="false" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-mail-client/3.5.1/vertx-mail-client-3.5.1.jar!/io/vertx/ext/mail/MailConfig.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="115" column="51" lean-forward="false" selection-start-line="115" selection-start-column="44" selection-end-line="115" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/service/impl/MessageServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="31" column="63" lean-forward="false" selection-start-line="31" selection-start-column="63" selection-end-line="31" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1188">
-          <caret line="54" column="48" lean-forward="false" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="24" lean-forward="false" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="924">
-          <caret line="42" column="14" lean-forward="false" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/resources/gateway-config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="21" lean-forward="false" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-core/3.5.1/vertx-core-3.5.1.jar!/io/vertx/core/impl/FutureImpl.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-web/3.5.1/vertx-web-3.5.1.jar!/io/vertx/reactivex/ext/web/Route.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="153" column="0" lean-forward="false" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="30" column="22" lean-forward="false" selection-start-line="30" selection-start-column="22" selection-end-line="30" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-258">
-          <caret line="173" column="15" lean-forward="false" selection-start-line="173" selection-start-column="15" selection-end-line="173" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/PreferencesServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1496">
-          <caret line="68" column="20" lean-forward="true" selection-start-line="68" selection-start-column="20" selection-end-line="68" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-elasticsearch-service/src/main/java/com/hubrick/vertx/elasticsearch/model/AggregationOption.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="261">
-          <caret line="42" column="28" lean-forward="false" selection-start-line="42" selection-start-column="11" selection-end-line="42" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-elasticsearch-service/target/generated-sources/annotations/com/hubrick/vertx/elasticsearch/ElasticSearchServiceVertxProxyHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="61">
-          <caret line="297" column="0" lean-forward="false" selection-start-line="297" selection-start-column="0" selection-end-line="297" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-search/src/main/resources/log4j2.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="268">
@@ -1298,7 +1184,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1313,7 +1198,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-12085">
           <caret line="1" column="936" lean-forward="false" selection-start-line="1" selection-start-column="936" selection-end-line="1" selection-end-column="936" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1338,18 +1222,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="41" column="12" lean-forward="false" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/js/commons.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="22" column="25" lean-forward="false" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1363,9 +1239,8 @@
     <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/resources/favicon.ico" />
     <entry file="file://$PROJECT_DIR$/shop-ui/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
+        <state relative-caret-position="506">
           <caret line="23" column="56" lean-forward="false" selection-start-line="23" selection-start-column="56" selection-end-line="23" selection-end-column="56" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1373,7 +1248,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22">
           <caret line="90" column="4" lean-forward="false" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1381,15 +1255,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="111">
           <caret line="79" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/ICommodityService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="25" column="83" lean-forward="false" selection-start-line="25" selection-start-column="83" selection-end-line="25" selection-end-column="83" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1397,64 +1262,274 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
           <caret line="32" column="11" lean-forward="false" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/search.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
+        <state relative-caret-position="6622">
           <caret line="301" column="45" lean-forward="false" selection-start-line="301" selection-start-column="40" selection-end-line="301" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/search.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="748">
+          <caret line="34" column="20" lean-forward="false" selection-start-line="34" selection-start-column="20" selection-end-line="41" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="638">
+          <caret line="29" column="84" lean-forward="false" selection-start-line="29" selection-start-column="84" selection-end-line="29" selection-end-column="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapping">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1232">
+          <caret line="56" column="40" lean-forward="false" selection-start-line="56" selection-start-column="40" selection-end-line="56" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/introduction.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="167" column="21" lean-forward="true" selection-start-line="167" selection-start-column="21" selection-end-line="167" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-rabbitmq-client/3.5.1/vertx-rabbitmq-client-3.5.1.jar!/io/vertx/rabbitmq/RabbitMQOptionsConverter.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="393">
+          <caret line="70" column="37" lean-forward="false" selection-start-line="70" selection-start-column="26" selection-end-line="70" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-rabbitmq-client/3.5.1/vertx-rabbitmq-client-3.5.1.jar!/io/vertx/rabbitmq/RabbitMQOptions.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="63" column="36" lean-forward="false" selection-start-line="63" selection-start-column="36" selection-end-line="63" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-rabbitmq-client/3.5.1/vertx-rabbitmq-client-3.5.1.jar!/io/vertx/rabbitmq/impl/RabbitMQClientImpl.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="115" column="24" lean-forward="false" selection-start-line="115" selection-start-column="24" selection-end-line="115" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-rabbitmq-client/3.5.1/vertx-rabbitmq-client-3.5.1.jar!/io/vertx/reactivex/rabbitmq/RabbitMQClient.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="90" column="34" lean-forward="false" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/service/impl/MessageServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="47" column="35" lean-forward="false" selection-start-line="47" selection-start-column="35" selection-end-line="47" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="39" column="68" lean-forward="false" selection-start-line="39" selection-start-column="68" selection-end-line="39" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/resources/gateway-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="59" lean-forward="false" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="69" column="1" lean-forward="false" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-search/src/main/resources/search-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="32" column="24" lean-forward="false" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message-interface/src/main/java/com/ecit/service/IMessageService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="20" column="63" lean-forward="false" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="523">
+          <caret line="44" column="29" lean-forward="false" selection-start-line="44" selection-start-column="21" selection-end-line="44" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="84" column="32" lean-forward="false" selection-start-line="84" selection-start-column="32" selection-end-line="84" selection-end-column="32" />
+        <state relative-caret-position="510">
+          <caret line="91" column="56" lean-forward="false" selection-start-line="91" selection-start-column="56" selection-end-line="91" selection-end-column="56" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/search.js">
+    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/IPreferencesService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="34" column="20" lean-forward="false" selection-start-line="34" selection-start-column="20" selection-end-line="41" selection-end-column="23" />
+        <state relative-caret-position="283">
+          <caret line="22" column="15" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/impl/PreferencesServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="62" column="6" lean-forward="false" selection-start-line="62" selection-start-column="6" selection-end-line="62" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/SearchVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="76" column="59" lean-forward="false" selection-start-line="76" selection-start-column="59" selection-end-line="76" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/resources/log4j2.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/resources/order-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="22" lean-forward="false" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="125" column="128" lean-forward="false" selection-start-line="125" selection-start-column="128" selection-end-line="125" selection-end-column="128" />
+        <state relative-caret-position="431">
+          <caret line="30" column="33" lean-forward="false" selection-start-line="30" selection-start-column="33" selection-end-line="30" selection-end-column="59" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js">
+    <entry file="file://$PROJECT_DIR$/shop-search/src/main/java/com/ecit/service/ICommodityService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="29" column="84" lean-forward="false" selection-start-line="29" selection-start-column="84" selection-end-line="29" selection-end-column="84" />
-          <folding>
-            <marker date="1522575077406" expanded="true" signature="1954:1960" ph="&amp;nbsp;" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/introduction.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="232" column="105" lean-forward="false" selection-start-line="232" selection-start-column="105" selection-end-line="232" selection-end-column="105" />
+        <state relative-caret-position="239">
+          <caret line="19" column="61" lean-forward="false" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="61" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mapping">
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="56" column="40" lean-forward="true" selection-start-line="56" selection-start-column="40" selection-end-line="56" selection-end-column="40" />
+        <state relative-caret-position="286">
+          <caret line="13" column="41" lean-forward="false" selection-start-line="13" selection-start-column="41" selection-end-line="13" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="32" column="73" lean-forward="false" selection-start-line="32" selection-start-column="73" selection-end-line="32" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/OrderVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="31" column="79" lean-forward="false" selection-start-line="31" selection-start-column="79" selection-end-line="31" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-search/pom.xml">
+      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="69" column="20" lean-forward="false" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/pom.xml">
+      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IdBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" column="60" lean-forward="false" selection-start-line="12" selection-start-column="60" selection-end-line="12" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="218" column="0" lean-forward="true" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1511,7 +1586,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>shop-account</last-edited>
+          <last-edited>shop-order</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

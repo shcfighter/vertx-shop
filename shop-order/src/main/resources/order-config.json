@@ -1,0 +1,13 @@
+{
+  "api.name":"order",
+  "order.http.address":"0.0.0.0",
+  "order.http.port":8084,
+  "host":"111.231.132.168",
+  "port":5432,
+  "maxPoolSize":50,
+  "username":"postgres",
+  "password":"h123456",
+  "database":"vertx_shop",
+  "charset":"UTF-8",
+  "queryTimeout":10000
+}

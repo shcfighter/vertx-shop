@@ -49,7 +49,7 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
                                 .put("port", 27017)
                                 .put("username", "shop_user")
                                 .put("password", "h123456")
-                                .put("db_name", "shop_message"))
+                                .put("db_name", "vertx_shop"))
                         .put("mail", new JsonObject()
                                 .put("hostname", "smtp.mail.com")
                                 .put("port", 25)

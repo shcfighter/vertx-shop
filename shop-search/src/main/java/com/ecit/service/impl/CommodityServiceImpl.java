@@ -1,17 +1,17 @@
 package com.ecit.service.impl;
 
 import com.ecit.common.db.JdbcRepositoryWrapper;
-import com.ecit.constants.CommoditySql;
 import com.ecit.service.ICommodityService;
 import com.hubrick.vertx.elasticsearch.RxElasticSearchService;
 import com.hubrick.vertx.elasticsearch.model.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 
 public class CommodityServiceImpl extends JdbcRepositoryWrapper implements ICommodityService {
 
+    private static final Logger LOGGER = LogManager.getLogger(CommodityServiceImpl.class);
     /**
      * es商品索引indeces
      */
     private static final String SHOP_INDICES = "shop";
-    final IndexOptions indexOptions = new IndexOptions();
 
     final RxElasticSearchService rxElasticSearchService;
 

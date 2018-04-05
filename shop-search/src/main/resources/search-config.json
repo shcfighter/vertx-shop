@@ -24,6 +24,13 @@
     "port":27017,
     "username":"shop_user",
     "password":"h123456",
-    "db_name":"shop_message"
+    "db_name":"vertx_shop"
+  },
+  "rabbitmq": {
+    "host": "111.231.132.168",
+    "port": 5672,
+    "username": "shop_user",
+    "password": "h123456",
+    "virtualHost": "/"
   }
 }

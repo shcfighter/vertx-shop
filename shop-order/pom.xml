@@ -14,6 +14,14 @@
     <name>shop-order</name>
     <url>http://maven.apache.org</url>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.ecit</groupId>
+            <artifactId>shop-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -22,6 +30,10 @@
                 <configuration>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <annotationProcessors>
+                        <annotationProcessor>io.vertx.serviceproxy.ServiceProxyProcessor</annotationProcessor>
+                    </annotationProcessors>
                 </configuration>
             </plugin>
             <plugin>
@@ -40,7 +52,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>io.vertx.core.Starter</Main-Class>
-                                        <Main-Verticle>com.ecit.HttpRxServer</Main-Verticle>
+                                        <Main-Verticle>com.ecit.OrderVerticle</Main-Verticle>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
@@ -49,14 +61,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <annotationProcessors>
-                        <annotationProcessor>io.vertx.serviceproxy.ServiceProxyProcessor</annotationProcessor>
-                    </annotationProcessors>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -2,12 +2,12 @@
   "api.name": "user",
   "user.http.address": "0.0.0.0",
   "user.http.port": 8081,
-  "host" : "localhost",
+  "host" : "111.231.132.168",
   "port" : 5432,
   "maxPoolSize" : 50,
   "username" : "postgres",
-  "password" : "123456",
-  "database" : "vertx-shop",
+  "password" : "h123456",
+  "database" : "vertx_shop",
   "charset" : "UTF-8",
   "queryTimeout" : 10000
 }

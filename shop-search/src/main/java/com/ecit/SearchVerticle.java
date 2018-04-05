@@ -69,7 +69,13 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
                                     .put("port", 27017)
                                     .put("username", "shop_user")
                                     .put("password", "h123456")
-                                    .put("db_name", "shop_message"))
+                                    .put("db_name", "vertx_shop"))
+                            .put("rabbitmq", new JsonObject()
+                                    .put("host", "localhost")
+                                    .put("port", 5672)
+                                    .put("username", "guest")
+                                    .put("password", "guest")
+                                    .put("virtualHost", "/"))
                     ));
         });
     }

@@ -190,3 +190,61 @@ COMMENT ON COLUMN public.t_commodity.num
 
 COMMENT ON COLUMN public.t_commodity.status
     IS '商品状态；0-未上架；1-已上架；2-已下架；';
+
+
+
+-- Table: public.t_order
+
+-- DROP TABLE public.t_order;
+
+CREATE TABLE public.t_order
+(
+    order_id bigint NOT NULL,
+    user_id bigint,
+    shipping_information_id bigint,
+    create_time timestamp without time zone,
+    order_status integer,
+    cancel_time timestamp without time zone,
+    send_time timestamp with time zone,
+    remarks character varying(255) COLLATE pg_catalog."default",
+    leave_message character varying(255) COLLATE pg_catalog."default",
+    versions bigint DEFAULT 0,
+    order_details json,
+    CONSTRAINT t_order_pkey PRIMARY KEY (order_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.t_order
+    OWNER to postgres;
+COMMENT ON TABLE public.t_order
+    IS '订单';
+
+COMMENT ON COLUMN public.t_order.user_id
+    IS '用户编号';
+
+COMMENT ON COLUMN public.t_order.shipping_information_id
+    IS '收货地址编号';
+
+COMMENT ON COLUMN public.t_order.create_time
+    IS '下单时间';
+
+COMMENT ON COLUMN public.t_order.order_status
+    IS '订单状态	1=有效	2=已取消订单	3=已退款	4=已发货	0=订单失效';
+
+COMMENT ON COLUMN public.t_order.cancel_time
+    IS '订单取消时间';
+
+COMMENT ON COLUMN public.t_order.send_time
+    IS '发货时间';
+
+COMMENT ON COLUMN public.t_order.remarks
+    IS '备注';
+
+COMMENT ON COLUMN public.t_order.order_details
+    IS '订单详情；如：[{"commodity_id": 123456, "order_num": 5}, {}]';
+
+COMMENT ON COLUMN public.t_order.leave_message
+    IS '买家留言';
