@@ -1,12 +1,14 @@
 package com.ecit.service.impl;
 
 import com.ecit.common.db.JdbcRepositoryWrapper;
+import com.ecit.constants.CommoditySql;
 import com.ecit.service.ICommodityService;
 import com.hubrick.vertx.elasticsearch.RxElasticSearchService;
 import com.hubrick.vertx.elasticsearch.model.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
 import org.apache.commons.lang3.StringUtils;
@@ -78,7 +80,15 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
      * @return
      */
     @Override
-    public ICommodityService findCommodityById(long id, Handler<AsyncResult<SearchResponse>> handler) {
+    public ICommodityService findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler) {
+        Future<JsonObject> future = Future.future();
+        this.retrieveOne(new JsonArray().add(id), CommoditySql.FIND_COMMODITY_BY_ID).subscribe(future::complete, future::fail);
+        future.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public ICommodityService findCommodityFromEsById(long id, Handler<AsyncResult<SearchResponse>> handler) {
         Future<SearchResponse> future = Future.future();
         final SearchOptions searchOptions = new SearchOptions()
                 .setQuery(new JsonObject("{" +

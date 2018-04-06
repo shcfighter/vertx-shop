@@ -1,3 +1,6 @@
+--
+set lc_monetary='zh_CN.UTF-8';
+
 -- Table: public.t_user
 
 -- DROP TABLE public.t_user;
@@ -117,27 +120,26 @@ COMMENT ON COLUMN public.t_product_category.category_sort
 
 CREATE TABLE public.t_commodity
 (
-    commodity_id bigint,
-    commodity_name character varying(8) COLLATE pg_catalog."default",
+    commodity_id bigint NOT NULL,
+    commodity_name character varying(50) COLLATE pg_catalog."default",
     brand_id bigint,
     brand_name character varying(10) COLLATE pg_catalog."default",
     category_id bigint,
     category_name character varying(10) COLLATE pg_catalog."default",
     price money,
+    original_price money,
     num bigint,
-    sales_volume bigint,
-    evaluation_num bigint,
-    production_site character varying(50) COLLATE pg_catalog."default",
     license_number character varying(20) COLLATE pg_catalog."default",
-    shelf_life bigint,
-    image_url character varying(500) COLLATE pg_catalog."default",
     status smallint,
+    image_url text COLLATE pg_catalog."default",
+    freight money,
     is_deleted smallint,
-    remarks character varying(255) COLLATE pg_catalog."default",
-    description character varying(255) COLLATE pg_catalog."default",
     create_time timestamp without time zone,
     update_time timestamp without time zone,
-    versions bigint
+    description character varying(255) COLLATE pg_catalog."default",
+    remarks character varying(255) COLLATE pg_catalog."default",
+    versions bigint,
+    CONSTRAINT t_commodity_pkey PRIMARY KEY (commodity_id)
 )
 WITH (
     OIDS = FALSE
@@ -167,20 +169,8 @@ COMMENT ON COLUMN public.t_commodity.category_name
 COMMENT ON COLUMN public.t_commodity.price
     IS '价格';
 
-COMMENT ON COLUMN public.t_commodity.sales_volume
-    IS '销量';
-
-COMMENT ON COLUMN public.t_commodity.evaluation_num
-    IS '评价数量';
-
-COMMENT ON COLUMN public.t_commodity.production_site
-    IS '生产地';
-
 COMMENT ON COLUMN public.t_commodity.license_number
     IS '产品生产编号';
-
-COMMENT ON COLUMN public.t_commodity.shelf_life
-    IS '保质期';
 
 COMMENT ON COLUMN public.t_commodity.description
     IS '描述';
@@ -188,9 +178,14 @@ COMMENT ON COLUMN public.t_commodity.description
 COMMENT ON COLUMN public.t_commodity.num
     IS '商品数量';
 
-COMMENT ON COLUMN public.t_commodity.status
-    IS '商品状态；0-未上架；1-已上架；2-已下架；';
+COMMENT ON COLUMN public.t_commodity.original_price
+    IS '原价';
 
+COMMENT ON COLUMN public.t_commodity.image_url
+    IS '商品图';
+
+COMMENT ON COLUMN public.t_commodity.freight
+    IS '快递费';
 
 
 -- Table: public.t_order

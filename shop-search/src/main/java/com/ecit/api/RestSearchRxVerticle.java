@@ -50,6 +50,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         // API route handler
         router.post("/search").handler(this::searchHandler);
         router.get("/findCommodityById/:id").handler(this::findCommodityByIdHandler);
+        router.get("/findCommodityFromESById/:id").handler(this::findCommodityFromESByIdHandler);
         router.get("/findFavoriteCommodity").handler(this::findFavoriteCommodityHandler);
         router.get("/findBrandCategory").handler(this::findBrandCategoryHandler);
         //全局异常处理
@@ -118,6 +119,21 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      */
     private void findCommodityByIdHandler(RoutingContext context){
         commodityService.findCommodityById(Integer.parseInt(context.request().getParam("id")), handler -> {
+            if (handler.failed()) {
+                LOGGER.error("根据id查询产品失败！", handler.cause());
+                this.returnWithFailureMessage(context, "查询失败");
+            } else {
+                this.Ok(context, ResultItems.getReturnItemsSuccess(1, handler.result()));
+            }
+        });
+    }
+
+    /**
+     * 根据商品id查询详情信息(数据源：elasticsearch)
+     * @param context
+     */
+    private void findCommodityFromESByIdHandler(RoutingContext context){
+        commodityService.findCommodityFromEsById(Integer.parseInt(context.request().getParam("id")), handler -> {
             if (handler.failed()) {
                 LOGGER.error("根据id查询产品失败！", handler.cause());
                 this.returnWithFailureMessage(context, "查询失败");

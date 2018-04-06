@@ -2,7 +2,7 @@
 <configuration status="debug">
 
     <properties>
-        <property name="logPath">/data/vertx-order/logs</property>
+        <property name="logPath">/data/vertx-cart/logs</property>
     </properties>
 
     <appenders>

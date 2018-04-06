@@ -11,7 +11,7 @@ $(function(){
         $.ajax({
             type: 'GET',
             contentType: "application/json;",
-            url: domain + "api/search/findCommodityById/" + id,
+            url: domain + "api/search/findCommodityFromESById/" + id,
             success: function(result){
                 if(result.status == 0){
                     var items = result.items;
@@ -34,7 +34,7 @@ $(function(){
                     $(".stock").html(items.num);
                     //设置产品参数
                     var params = items.commodity_params;
-                    //$("#J_AttrUL").append("<li title=\">产品类型:&nbsp;烘炒类</li>");
+                    console.log(items)
                     $.each(items.detail_image_url, function(index, detail_image_url) {
                         $(".twlistNews").append("<img src=\"" + detail_image_url + "\">");
                     });
@@ -47,4 +47,8 @@ $(function(){
     } else {
         alert("获取商品信息失败！");
     }
+
+    $("#LikBuy").click(function () {
+        window.location.href = "/pay.html?commodity_id=" + id + "&order_num=" + $("#text_box").val();
+    });
 });
