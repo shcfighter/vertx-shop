@@ -45,7 +45,7 @@ public class CartVerticle extends BaseMicroserviceRxVerticle{
         Vertx.rxClusteredVertx(options).subscribe(v -> {
             v.deployVerticle(CartVerticle.class.getName(),
                     new DeploymentOptions().setConfig(new JsonObject()
-                            .put("api.name", "search")
+                            .put("api.name", "cart")
                             .put("host", "111.231.132.168")
                             .put("port", 27017)
                             .put("username", "shop_user")

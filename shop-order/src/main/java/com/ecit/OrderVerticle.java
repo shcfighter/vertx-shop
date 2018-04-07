@@ -44,7 +44,7 @@ public class OrderVerticle extends BaseMicroserviceRxVerticle{
         Vertx.rxClusteredVertx(options).subscribe(v -> {
             v.deployVerticle(OrderVerticle.class.getName(),
                     new DeploymentOptions().setConfig(new JsonObject()
-                            .put("api.name", "search")
+                            .put("api.name", "order")
                             .put("host", "111.231.132.168")
                             .put("port", 5432)
                             .put("maxPoolSize", 50)

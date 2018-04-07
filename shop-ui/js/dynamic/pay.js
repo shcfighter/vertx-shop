@@ -18,7 +18,7 @@ $(function () {
                     console.log(items);
                     $(".bundle-main").html("<ul class=\"item-content clearfix\"><div class=\"pay-phone\">" +
                         "<li class=\"td td-item\"><div class=\"item-pic\"><a href=\"javascript:void(0)\" class=\"J_MakePoint\">" +
-                        "<img src=\"" + items.image_url + "\" class=\"itempic J_ItemImg\" width=\"80\"></a>" +
+                        "<img src=\"" + items.image_url + "\" class=\"itempic J_ItemImg\" width=\"80\" ></a>" +
                         "</div><div class=\"item-info\"><div class=\"item-basic-info\">" +
                         "<a href=\"javascript:void(0)\" class=\"item-title J_MakePoint\" data-point=\"tbcart.8.11\">" + items.commodity_name + "</a>" +
                         "</div></div></li><li class=\"td td-info\"><div class=\"item-props\">" +
@@ -45,4 +45,29 @@ $(function () {
     } else {
         alert("获取商品信息失败！");
     }
+
+    $(".btn-go").click(function () {
+        var data = [{
+            ids: id,
+            order_num: $(".text_box").val()
+        },{
+            ids: id,
+            order_num: $(".text_box").val()
+        }]
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json;",
+            url: domain + "api/order/insertOrder",
+            data: JSON.stringify(data),
+            success: function(result){
+                if(result.status == 0) {
+                    console.log(result);
+                    var items = result.items;
+                }
+            },
+            error: function () {
+                console.log("网络异常");
+            }
+        });
+    });
 });

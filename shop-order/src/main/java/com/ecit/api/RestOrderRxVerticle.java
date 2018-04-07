@@ -30,7 +30,7 @@ public class RestOrderRxVerticle  extends RestAPIRxVerticle {
         router.route().handler(BodyHandler.create());
         router.route().handler(CookieHandler.create());
         // API route handler
-        router.get("/insertOrder").handler(this::insertOrderHandler);
+        router.post("/insertOrder").handler(this::insertOrderHandler);
         //全局异常处理
         this.globalVerticle(router);
 
@@ -52,6 +52,10 @@ public class RestOrderRxVerticle  extends RestAPIRxVerticle {
      * @param context 上下文
      */
     private void insertOrderHandler(RoutingContext context){
-        final long[] ids = context.
+        final String ids = context.request().getParam("ids");
+        final String orderNum = context.request().getParam("order_num");
+
+
+        this.returnWithSuccessMessage(context, "下单成功！");
     }
 }
