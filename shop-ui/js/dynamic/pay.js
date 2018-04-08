@@ -48,11 +48,11 @@ $(function () {
 
     $(".btn-go").click(function () {
         var data = [{
-            ids: id,
-            order_num: $(".text_box").val()
+            "ids": 2,
+            "order_num": $(".text_box").val()
         },{
-            ids: id,
-            order_num: $(".text_box").val()
+            "ids": 2,
+            "order_num": $(".text_box").val()
         }]
         $.ajax({
             type: 'POST',

@@ -3,7 +3,6 @@ package com.ecit.api;
 import com.ecit.common.enmu.RegisterType;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.IMessageService;
-import io.vertx.reactivex.core.http.HttpServerRequest;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
@@ -53,8 +52,7 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void insertMessageHandler(RoutingContext context){
-        HttpServerRequest request = context.request();
-        messageService.saveMessage(request.getParam("destination"), RegisterType.mobile, handler ->{
+        messageService.saveMessage(context.getBodyAsJson().getString("destination"), RegisterType.mobile, handler ->{
             if(handler.succeeded()){
                 LOGGER.info("插入成功，code:{}", handler.result());
                 this.returnWithSuccessMessage(context, "插入成功");
@@ -66,10 +64,10 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
     }
 
     /*private void findMessageHandler(RoutingContext context){
-        HttpServerRequest request = context.request();
-        messageService.findMessage(request.getParam("destination"), RegisterType.mobile, handler ->{
+        final String destination = context.getBodyAsJson().getString("destination");
+        messageService.findMessage(destination, RegisterType.mobile, handler ->{
             if(handler.succeeded()){
-                messageService.updateMessage(request.getParam("destination"), RegisterType.mobile, deleteHandler -> {
+                messageService.updateMessage(destination, RegisterType.mobile, deleteHandler -> {
                     if (deleteHandler.succeeded()) {
                         LOGGER.info("数据删除成功！");
                     } else {

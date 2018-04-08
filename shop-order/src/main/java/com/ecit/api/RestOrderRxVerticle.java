@@ -54,7 +54,8 @@ public class RestOrderRxVerticle  extends RestAPIRxVerticle {
     private void insertOrderHandler(RoutingContext context){
         final String ids = context.request().getParam("ids");
         final String orderNum = context.request().getParam("order_num");
-
+        System.out.println(ids);
+        System.out.println(context.getBodyAsJsonArray());
 
         this.returnWithSuccessMessage(context, "下单成功！");
     }

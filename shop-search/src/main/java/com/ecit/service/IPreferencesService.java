@@ -1,13 +1,11 @@
 package com.ecit.service;
 
 import com.ecit.SearchType;
-import io.reactivex.Completable;
-import io.reactivex.Single;
-import io.vertx.codegen.annotations.*;
+import io.vertx.codegen.annotations.Fluent;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
-import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.core.Future;
 
 import java.util.List;
 
@@ -18,9 +16,8 @@ import java.util.List;
 @VertxGen
 public interface IPreferencesService {
 
-    @GenIgnore
-    @ProxyIgnore
-    Completable savePreferences();
+    @Fluent
+    IPreferencesService savePreferences(Handler<AsyncResult<Void>> handler);
 
     @Fluent
     IPreferencesService findPreferences(String cookies, Handler<AsyncResult<List<String>>> handler);

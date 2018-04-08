@@ -8,7 +8,6 @@ import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.service.IMessageService;
 import com.ecit.service.IUserService;
 import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.core.http.HttpServerRequest;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
@@ -63,20 +62,20 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
 
     /**
      * 注册
-     * @param context
+     * @param context 上下文
      */
     private void registerHandler(RoutingContext context){
-        HttpServerRequest request = context.request();
-        if(!StringUtils.equals(request.getParam("password"), request.getParam("passwordConfirm"))){
+        final JsonObject params = context.getBodyAsJson();
+        if(!StringUtils.equals(params.getString("password"), params.getString("passwordConfirm"))){
             LOGGER.info("注册密码和确认密码不一致！");
             this.returnWithFailureMessage(context, "密码和确认密码不一致");
             return ;
         }
 
-        final String loginName = request.getParam("loginName");
-        final String password = request.getParam("password");
+        final String loginName = params.getString("loginName");
+        final String password = params.getString("password");
         final String salt = hashStrategy.generateSalt();
-        final String type = Optional.ofNullable(request.getParam("type")).orElse(RegisterType.loginName.name());
+        final String type = Optional.ofNullable(params.getString("type")).orElse(RegisterType.loginName.name());
         //如果为手机注册验证手机验证码
         IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
         if(StringUtils.equals(type, RegisterType.mobile.name())) {
@@ -84,7 +83,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                 if (handler.succeeded()) {
                     final JsonObject message = handler.result();
                     if (Objects.nonNull(message)
-                            && StringUtils.endsWithIgnoreCase(message.getString("code"), request.getParam("code"))) {
+                            && StringUtils.endsWithIgnoreCase(message.getString("code"), params.getString("code"))) {
                         this.register(context, type, loginName, salt, password);
                         messageService.updateMessage(loginName, RegisterType.mobile, deleteHandler -> {
                             if (deleteHandler.succeeded()) {
@@ -113,7 +112,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
 
     /**
      * 注册逻辑
-     * @param context
+     * @param context 上下文
      * @param type
      * @param loginName
      * @param salt
@@ -139,9 +138,9 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     }
 
     private void activateHandler(RoutingContext context) {
-        HttpServerRequest request = context.request();
-        final String loginName = request.getParam("loginName");
-        LOGGER.info("邮箱激活账号：{}, 验证码：{}", loginName, request.getParam("code"));
+        final JsonObject params = context.getBodyAsJson();
+        final String loginName = params.getString("loginName");
+        LOGGER.info("邮箱激活账号：{}, 验证码：{}", loginName, params.getString("code"));
         userService.findEmailUser(loginName, handler -> {
             if (handler.failed()) {
                 LOGGER.error("查询邮箱激活账户异常【{}】", loginName);
@@ -161,7 +160,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                         LOGGER.error("调用短信验证码信息错误，", emailHandler.cause());
                         this.returnWithFailureMessage(context, "调用短信验证码信息错误");
                     } else {
-                        if(StringUtils.equals(emailHandler.result().getString("code"), request.getParam("code"))){
+                        if(StringUtils.equals(emailHandler.result().getString("code"), params.getString("code"))){
                             this.returnWithSuccessMessage(context, "激活成功");
                             userService.activateEmailUser(user.getLong("user_id"), user.getLong("versions"), activateHandler -> {});
                             messageService.updateMessage(loginName, RegisterType.email, messageHandler -> {});
@@ -176,11 +175,10 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
 
     /**
      * 修改密码
-     * @param context
+     * @param context 上下文
      */
     private void changePwdHandler(RoutingContext context, JsonObject principal){
-        Long userId = principal.getLong("userId");
-        System.out.println(userId);
+        final Long userId = principal.getLong("userId");
         if(Objects.isNull(userId) ){
             LOGGER.error("登录id【{}】不存在", userId);
             this.returnWithFailureMessage(context, "登录id【" + userId + "】不存在");
@@ -197,7 +195,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             /**
              * 密码加密
              */
-            String password = hashStrategy.computeHash(context.request().getParam("pwd"), user.getString("salt"), -1);
+            String password = hashStrategy.computeHash(context.getBodyAsJson().getString("pwd"), user.getString("salt"), -1);
             userService.changePwd(userId, password,
                     user.getLong("versions"), handler2 -> {
                         if(handler2.failed()){

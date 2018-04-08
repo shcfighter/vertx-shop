@@ -13,8 +13,7 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.http.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
@@ -138,7 +137,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                     //负载均衡策略：随机
                     Optional<Record> client = Optional.ofNullable(CollectionUtil.isEmpty(records) ? null : records.get(new Random().nextInt(records.size())));
                     if (client.isPresent()) {
-                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(WebClient.class), future);
+                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(HttpClient.class), future);
                     } else {
                         notFound(context);
                         future.complete();
@@ -147,15 +146,6 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                     future.fail(ar.cause());
                 }
             });
-
-            /*HttpEndpoint.getWebClient(discovery, new JsonObject().put("api.name", prefix), handler -> {
-                if(handler.succeeded()){
-                    doDispatch(context, newPath, handler.result(), future);
-                } else {s
-                    LOGGER.error("获取webclient【{}】失败！", prefix);
-                    future.fail(handler.cause());
-                }
-            });*/
         }).setHandler(ar -> {
             if (ar.failed()) {
                 LOGGER.error("gateway调用失败！", ar.cause());
@@ -171,8 +161,43 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param path    relative path
      * @param client  relevant HTTP client
      */
-    private void doDispatch(RoutingContext context, String path, WebClient client, Future<Object> cbFuture) {
-        final HttpRequest<Buffer> request = client.request(context.request().method(), path);
+    private void doDispatch(RoutingContext context, String path, HttpClient client, Future<Object> cbFuture) {
+        HttpClientRequest toReq = client
+                .request(context.request().method(), path, response -> {
+                    response.bodyHandler(body -> {
+                        if (response.statusCode() >= 500) { // api endpoint server error, circuit breaker should fail
+                            cbFuture.fail(response.statusCode() + ": " + body.toString());
+                        } else {
+                            HttpServerResponse toRsp = context.response()
+                                    .setStatusCode(response.statusCode());
+                            response.headers().forEach(header -> {
+                                toRsp.putHeader(header.getKey(), header.getValue());
+                            });
+                            // send response
+                            toRsp.end(body);
+                            cbFuture.complete();
+                        }
+                        ServiceDiscovery.releaseServiceObject(discovery, client);
+                    });
+                });
+        // set headers
+        context.request().headers().forEach(header -> {
+            toReq.putHeader(header.getKey(), header.getValue());
+        });
+        context.cookies().forEach(cookie -> {
+            toReq.putHeader(cookie.getName(), cookie.getValue());
+        });
+        if (context.user() != null) {
+            toReq.putHeader("user-principal", context.user().principal().encode());
+        }
+        // send request
+        if (context.getBody() == null) {
+            toReq.end();
+        } else {
+            toReq.end(context.getBody());
+        }
+
+        /*final HttpRequest<Buffer> request = client.request(context.request().method(), path);
         if(context.request().method().compareTo(HttpMethod.POST) == 0
                 || context.request().method().compareTo(HttpMethod.PUT) == 0){
             Optional.ofNullable(context.getBodyAsJson()).orElse(new JsonObject()).getMap().forEach((k, v) -> request.addQueryParam(k, String.valueOf(v)));
@@ -197,7 +222,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                     .end(bodyBuffer);
             cbFuture.complete();
             ServiceDiscovery.releaseServiceObject(discovery, client);
-        });
+        });*/
     }
 
     /**
@@ -246,7 +271,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param context 上下文
      */
     private void loginEntryHandler(RoutingContext context) {
-        JsonObject params = context.getBodyAsJson();
+        final JsonObject params = context.getBodyAsJson();
         final String loginName = params.getString("loginName");
         LOGGER.info("用户【{}】登录系统", loginName);
         shopAuthProvider.setAuthenticationQuery(UserSql.LOGIN_SQL);

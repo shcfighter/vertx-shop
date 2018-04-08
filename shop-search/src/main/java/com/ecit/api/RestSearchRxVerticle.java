@@ -74,7 +74,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void searchHandler(RoutingContext context){
-        final String keyword = context.request().getParam("keyword");
+        final String keyword = context.getBodyAsJson().getString("keyword");
         /**
          * 异步保存搜索行为
          */
@@ -199,8 +199,6 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     return ;
                 }
                 Map<String, JsonObject> aggs = handler.result().getAggregations();
-                System.out.println(aggs.get("category_name").getJsonObject("category_name").getJsonArray("buckets"));
-                System.out.println(aggs.get("brand_name").getJsonObject("brand_name").getJsonArray("buckets"));
                 this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().intValue(),
                         handler.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
             }

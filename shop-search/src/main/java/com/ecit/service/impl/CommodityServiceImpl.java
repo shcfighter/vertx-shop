@@ -136,15 +136,11 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
     public ICommodityService findCommodityBySalesVolume(Handler<AsyncResult<SearchResponse>> handler) {
         Future<SearchResponse> future = Future.future();
         final SearchOptions searchOptions = new SearchOptions()
-                .setQuery(new JsonObject("{\n" +
-                        "　　\"match_all\":{\n" +
-                        "\n" +
-                        "　　}\n" +
-                        "}"))
+                .setQuery(new JsonObject("{\"match_all\":{}}"))
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setFetchSource(true)
                 .setSize(3)
-                .addFieldSort("sales_volume", SortOrder.DESC);
+                .addFieldSort("month_sales_volume", SortOrder.DESC);
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);

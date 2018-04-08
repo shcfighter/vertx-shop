@@ -2,7 +2,6 @@ package com.ecit.service.impl;
 
 import com.ecit.SearchType;
 import com.ecit.service.IPreferencesService;
-import io.reactivex.Completable;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
@@ -56,8 +55,8 @@ public class PreferencesServiceImpl implements IPreferencesService{
          */
         rabbitMQClient.start(startMQ -> {
             if (startMQ.succeeded()) {
-                LOGGER.info("rabbit mq start success !");
-                this.savePreferences().subscribe();
+                LOGGER.info("rabbitmq start success !");
+                this.savePreferences(handler -> {});
             } else {
                 LOGGER.error("rabbitmq start failed !");
             }
@@ -69,7 +68,7 @@ public class PreferencesServiceImpl implements IPreferencesService{
      * @return
      */
     @Override
-    public Completable savePreferences() {
+    public IPreferencesService savePreferences(Handler<AsyncResult<Void>> handler) {
         vertx.eventBus().consumer("my.address", msg -> {
             JsonObject json = (JsonObject) msg.body();
             JsonObject perferences = new JsonObject(json.getString("body"));
@@ -79,7 +78,8 @@ public class PreferencesServiceImpl implements IPreferencesService{
         });
 
         // Setup the link between rabbitmq consumer and event bus address
-        return rabbitMQClient.rxBasicConsume(QUEUES, "my.address");
+        rabbitMQClient.rxBasicConsume(QUEUES, "my.address").subscribe();
+        return this;
     }
 
     /**

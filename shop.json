@@ -1,0 +1,53 @@
+{"commodity_id":"1","commodity_name":"Apple iPhone X (A1865) 64GB 深空灰色 移动联通电信4G手机","brand_id":"1","brand_name":"Apple","category_id":"1","category_name":"手机","original_price":"8388.00","price":"8388.00","status":"1","num":5000,"is_deleted":0,"create_time":"2018-03-17","update_time":"2018-03-17","remarks":"Apple/苹果","description":"Apple iPhone X (A1865) 64GB 深空灰色 移动联通电信4G手机","versions":"0","image_url":["http://111.231.132.168:8080/images/59df2e83Nc6f15397.jpg","http://111.231.132.168:8080/images/59df2e82N3e8f5183.jpg","http://111.231.132.168:8080/images/59df2e82N11980eca.jpg","http://111.231.132.168:8080/images/59df2e7fN86c99a27.jpg","http://111.231.132.168:8080/images/59df2e82N1f855465.jpg"],"detail_image_url":["http://111.231.132.168:8080/images/59e0726aN1edf23c4.jpg"],"freight":"20","commodity_params":{"production_site":"Apple/苹果","license_number":"A1865","shelf_life":"永久","weight":"435.00g"},"month_sales_volume":"56","total_sales_volume":"187","total_evaluation_num":"69"},
+{
+"commodity_id": "2",
+"commodity_name": "三星 Galaxy S9+（SM-G9650/DS）6GB+128GB 谜夜黑 移动联通电信4G手机 双卡双待",
+"brand_id": "2",
+"brand_name": "三星",
+"category_id": "1",
+"category_name": "手机",
+  "original_price": 6999.00,
+"price": 6999.00,
+"status": "1",
+"num": 5000,
+"is_deleted": 0,
+"create_time": "2018-03-17",
+"update_time": "2018-03-17",
+"remarks": "三星 Galaxy S9+（SM-G9650/DS）6GB+128GB 谜夜黑 移动联通电信4G手机 双卡双待",
+"description": "三星 Galaxy S9+（SM-G9650/DS）6GB+128GB 谜夜黑 移动联通电信4G手机 双卡双待",
+"versions": "0",
+"image_url": [
+"http://111.231.132.168:8080/images/5a96a286N0958bd54.jpg",
+"http://111.231.132.168:8080/images/5a9679d6N7b8d458f.jpg",
+"http://111.231.132.168:8080/images/5a9679d7Ne0771423.jpg",
+"http://111.231.132.168:8080/images/5a9679d7N0b3fa77e.jpg",
+"http://111.231.132.168:8080/images/5a9679d8N9ec96152.jpg"
+],
+  "detail_image_url": [
+	"http://111.231.132.168:8080/images/5a964cf7N0c110264.jpg",
+	"http://111.231.132.168:8080/images/5a964ebcNcb217ed4.gif",
+    "http://111.231.132.168:8080/images/5a96596cNe030de85.gif",
+    "http://111.231.132.168:8080/images/5a965986N0a9dd456.gif",
+    "http://111.231.132.168:8080/images/5a966f24N86a29739.jpg",
+    "http://111.231.132.168:8080/images/5a964d2dN4bfc3126.jpg",
+    "http://111.231.132.168:8080/images/5aa27d5fNb1781a15.gif",
+    "http://111.231.132.168:8080/images/5a964d4aNd71983be.jpg",
+    "http://111.231.132.168:8080/images/5a9659e1N9664288c.gif",
+    "http://111.231.132.168:8080/images/5a965abeN3459ec48.gif",
+    "http://111.231.132.168:8080/images/5a965d85N4a4c4c28.gif",
+    "http://111.231.132.168:8080/images/5a964d7aN99f0f63e.jpg",
+  "http://111.231.132.168:8080/images/5a964d8aNda053a9e.jpg",
+  "http://111.231.132.168:8080/images/5a966462N2f40bab6.gif",
+  "http://111.231.132.168:8080/images/5ab32061N5808c08e.jpg"
+],"freight": "15",
+  "commodity_params":{
+  	"production_site": "三星手机",
+"license_number": "6577495",
+"shelf_life": "永久",
+  "weight": "0.53kg"
+},
+"month_sales_volume": "24",
+   "total_sales_volume": "380",
+   "total_evaluation_num": "235"
+},
+{"commodity_id":"14","commodity_name":"海尔（Haier）3匹 冷暖 变频 一级能效 自清洁 智能 圆柱空调柜机KFR-72LW/07UDP21AU1（致樽）","brand_id":"10","brand_name":"海尔（Haier）","category_id":"6","category_name":"空调","original_price":9999.0,"price":8899.0,"status":"1","num":5000,"is_deleted":0,"create_time":"2018-03-17","update_time":"2018-03-17","remarks":"1234567","description":"空调","versions":"0","image_url":["http://111.231.132.168:8080/images/5a166b16N21e72dbd.jpg","http://111.231.132.168:8080/images/59704e72N242ce1e1.jpg","http://111.231.132.168:8080/images/59704e72N6102bc9a.jpg","http://111.231.132.168:8080/images/59704e76N21f5b9e9.jpg"],"detail_image_url":["http://111.231.132.168:8080/images/TB2.uFEvrJkpuFjy1zcXXa5FFXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2AaeivB8lpuFjy0FnXXcZyXXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2yvJHvwRkpuFjy1zeXXc.6FXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2j6afvrFkpuFjy1XcXXclapXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2wN4lvwxlpuFjSszgXXcJdpXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2_44lvwxlpuFjSszgXXcJdpXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2fo4EzUlnpuFjSZFjXXXTaVXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2HIM6vhXlpuFjSsphXXbJOXXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2flwsfZPRfKJjSZFOXXbKEVXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2LNGmzSFmpuFjSZFrXXayOXXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2wW1azItnpuFjSZFvXXbcTpXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2zdywzHxmpuFjSZJiXXXauVXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2lVx9zNxmpuFjSZFNXXXrRXXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2hUJ9caagSKJjy0FhXXcrbFXa_!!2616970884.jpg","http://111.231.132.168:8080/images/TB2Sy18n3DD8KJjy0FdXXcjvXXa-2616970884.jpg","http://111.231.132.168:8080/images/TB2fr_ab1ySBuNjy1zdXXXPxFXa-2616970884.png"],"freight":"15","commodity_params":{"production_site":"空调","license_number":"FNhDa-A3","shelf_life":180,"weight":"45.0kg"},"month_sales_volume":"99","total_sales_volume":"999999","total_evaluation_num":"10000"}
