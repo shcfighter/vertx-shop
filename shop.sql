@@ -15,7 +15,7 @@ CREATE TABLE public.t_user
     password character varying(200) COLLATE pg_catalog."default",
     salt character varying(64) COLLATE pg_catalog."default",
     status smallint,
-    is_deleted smallint,
+    is_deleted smallint DEFAULT 0,
     create_time timestamp without time zone,
     update_time timestamp without time zone,
     remarks character varying(255) COLLATE pg_catalog."default",
@@ -59,7 +59,7 @@ CREATE TABLE public.t_product_brand
     brand_id bigint NOT NULL,
     brand_name character varying(10) COLLATE pg_catalog."default",
     brand_sort integer,
-    is_deleted smallint,
+    is_deleted smallint DEFAULT 0,
     create_time timestamp without time zone,
     update_time timestamp without time zone,
     remarks character varying(255) COLLATE pg_catalog."default",
@@ -91,7 +91,7 @@ CREATE TABLE public.t_product_category
     category_id bigint NOT NULL,
     category_name character varying(10) COLLATE pg_catalog."default",
     category_sort integer,
-    is_deleted smallint,
+    is_deleted smallint DEFAULT 0,
     create_time timestamp without time zone,
     update_time timestamp without time zone,
     remarks character varying(255) COLLATE pg_catalog."default",
@@ -133,12 +133,12 @@ CREATE TABLE public.t_commodity
     status smallint,
     image_url text COLLATE pg_catalog."default",
     freight money,
-    is_deleted smallint,
+    is_deleted smallint DEFAULT 0,
     create_time timestamp without time zone,
     update_time timestamp without time zone,
     description character varying(255) COLLATE pg_catalog."default",
     remarks character varying(255) COLLATE pg_catalog."default",
-    versions bigint,
+    versions bigint DEFAULT 0,
     CONSTRAINT t_commodity_pkey PRIMARY KEY (commodity_id)
 )
 WITH (
@@ -199,12 +199,13 @@ CREATE TABLE public.t_order
     shipping_information_id bigint,
     create_time timestamp without time zone,
     order_status integer,
+    order_details json,
     cancel_time timestamp without time zone,
     send_time timestamp with time zone,
+    is_deleted smallint DEFAULT 0,
     remarks character varying(255) COLLATE pg_catalog."default",
     leave_message character varying(255) COLLATE pg_catalog."default",
     versions bigint DEFAULT 0,
-    order_details json,
     CONSTRAINT t_order_pkey PRIMARY KEY (order_id)
 )
 WITH (
@@ -227,13 +228,15 @@ COMMENT ON COLUMN public.t_order.create_time
     IS '下单时间';
 
 COMMENT ON COLUMN public.t_order.order_status
-    IS '订单状态	1=有效	2=已取消订单	3=已退款	4=已发货	0=订单失效';
+    IS '订单状态	1=待付款	2=已付款待发货	3=已发货待收货	4=已收货待评价  5=订单完成   6=已退款 	0=订单失效';
 
 COMMENT ON COLUMN public.t_order.cancel_time
     IS '订单取消时间';
 
 COMMENT ON COLUMN public.t_order.send_time
     IS '发货时间';
+COMMENT ON COLUMN public.t_order.is_deleted
+    IS '0-未删除；1-已删除';
 
 COMMENT ON COLUMN public.t_order.remarks
     IS '备注';

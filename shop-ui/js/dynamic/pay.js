@@ -47,13 +47,17 @@ $(function () {
     }
 
     $(".btn-go").click(function () {
-        var data = [{
-            "ids": 2,
-            "order_num": $(".text_box").val()
-        },{
-            "ids": 2,
-            "order_num": $(".text_box").val()
-        }]
+        var data = {
+            "shippingInformationId" : 1,
+            "orderDetails" : [{
+                "ids": 2,
+                "orderNum": $(".text_box").val()
+            },{
+                "ids": 2,
+                "orderNum": $(".text_box").val()
+            }],
+            "leaveMessage": "尽快发货"
+        }
         $.ajax({
             type: 'POST',
             contentType: "application/json;",

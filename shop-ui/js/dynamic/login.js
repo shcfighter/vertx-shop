@@ -86,4 +86,17 @@ $(function() {
             }
         });
     });
+
+    /**
+     * enter键自动提交
+     */
+    $(document).keyup(function(event){
+        if(event.keyCode ==13){
+            if(window.location.pathname.indexOf("login") > 0){
+                $(".login").click();
+            } else if (window.location.pathname.indexOf("register") > 0) {
+                $(".register").click();
+            }
+        }
+    });
 });

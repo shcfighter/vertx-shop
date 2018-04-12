@@ -54,15 +54,15 @@ public class JdbcRepositoryWrapper {
 
   }
 
-  protected int calcPage(int page, int limit) {
+  protected int calcPage(int page, int size) {
     if (page <= 0)
       return 0;
-    return limit * (page - 1);
+    return size * (page - 1);
   }
 
-  protected Single<List<JsonObject>> retrieveByPage(int page, int limit, String sql) {
+  protected Single<List<JsonObject>> retrieveByPage(JsonArray param, int size, int page, String sql) {
     return this.getConnection()
-            .flatMap(conn -> conn.rxQueryWithParams(sql, new JsonArray().add(calcPage(page, limit)).add(limit))
+            .flatMap(conn -> conn.rxQueryWithParams(sql, param.add(size).add(calcPage(page, size)))
                     .map(ResultSet::getRows).doAfterTerminate(conn::close));
   }
 
