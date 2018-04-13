@@ -9,13 +9,14 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>shop-account</module>
         <module>shop-common</module>
+        <module>shop-gateway</module>
+        <module>shop-account</module>
         <module>shop-order</module>
         <module>shopping-cart</module>
         <module>shop-pay</module>
-        <module>shop-search</module>
-        <module>shop-gateway</module>
+        <module>shop-search-module/shop-search-interface</module>
+        <module>shop-search-module/shop-search</module>
         <module>shop-user-module/shop-user</module>
         <module>shop-user-module/shop-user-interface</module>
         <module>shop-message-module/shop-message-interface</module>

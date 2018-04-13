@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
@@ -6,20 +8,11 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.ecit</groupId>
-    <artifactId>shop-order</artifactId>
-    <packaging>jar</packaging>
-
-    <name>shop-order</name>
-    <url>http://maven.apache.org</url>
+    <artifactId>shop-search</artifactId>
+    <name>shop-search</name>
+    <url>http://www.example.com</url>
 
     <dependencies>
-        <dependency>
-            <groupId>com.ecit</groupId>
-            <artifactId>shop-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>com.ecit</groupId>
             <artifactId>shop-search-interface</artifactId>
@@ -36,9 +29,6 @@
                     <source>${java-version}</source>
                     <target>${java-version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                    <annotationProcessors>
-                        <annotationProcessor>io.vertx.serviceproxy.ServiceProxyProcessor</annotationProcessor>
-                    </annotationProcessors>
                 </configuration>
             </plugin>
             <plugin>
@@ -69,7 +59,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>io.vertx.core.Starter</Main-Class>
-                                        <Main-Verticle>com.ecit.OrderVerticle</Main-Verticle>
+                                        <Main-Verticle>com.ecit.SearchVerticle</Main-Verticle>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>

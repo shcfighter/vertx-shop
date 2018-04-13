@@ -9,6 +9,7 @@
         <module name="shop-account" />
         <module name="shop-gateway" />
         <module name="shop-message" />
+        <module name="shop-search" />
       </profile>
       <profile name="Annotation profile for shop-common" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -38,13 +39,6 @@
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-pay" />
       </profile>
-      <profile name="Annotation profile for shop-search" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
-        <module name="shop-search" />
-      </profile>
       <profile name="Annotation profile for shop-user" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -66,6 +60,13 @@
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-message-interface" />
       </profile>
+      <profile name="Annotation profile for shop-search-interface" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
+        <module name="shop-search-interface" />
+      </profile>
       <profile name="Annotation profile for vertx-shop" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -74,5 +75,8 @@
         <module name="shop-elasticsearch-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="shop-search-module" target="9" />
+    </bytecodeTargetLevel>
   </component>
 </project>

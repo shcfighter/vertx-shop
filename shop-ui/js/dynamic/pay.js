@@ -50,10 +50,10 @@ $(function () {
         var data = {
             "shippingInformationId" : 1,
             "orderDetails" : [{
-                "ids": 2,
+                "id": 2,
                 "orderNum": $(".text_box").val()
             },{
-                "ids": 2,
+                "id": 2,
                 "orderNum": $(".text_box").val()
             }],
             "leaveMessage": "尽快发货"
