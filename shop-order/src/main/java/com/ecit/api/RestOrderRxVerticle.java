@@ -3,10 +3,9 @@ package com.ecit.api;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.ICommodityService;
 import com.ecit.service.IOrderService;
-import com.google.common.collect.Lists;
+import com.ecit.service.IdBuilder;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
@@ -20,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by za-wangshenhua on 2018/4/5.
@@ -82,27 +80,12 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         }
 
         final ICommodityService commodityService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityService.SEARCH_SERVICE_ADDRESS).build(ICommodityService.class);
-        final List<Future> isOk = new ArrayList<>(orderDetails.size());
-        for (int i = 0; i < orderDetails.size(); i++) {
-            Future future = Future.future();
-            isOk.add(future);
-            JsonObject order = orderDetails.getJsonObject(i);
-            commodityService.findCommodityById(order.getLong("id"), orderHandler -> {
-                if(orderHandler.succeeded()){
-                    JsonObject commodity = orderHandler.result();
-                    order.put("commodityName", commodity.getString("commodity_name"));
-                    order.put("price", commodity.getString("price"));
-                    order.put("imageUrl", commodity.getString("image_url"));
-                    future.complete();
-                } else {
-                    LOGGER.info("调用商品【{}】详情接口失败", order.getLong("id"));
-                    future.fail(orderHandler.cause());
-                }
-            });
-        }
-        CompositeFuture.all(isOk).compose(msg ->{
+        final long orderId = IdBuilder.getUniqueId();
+        CompositeFuture.all(this.checkCommodity(commodityService, orderDetails))
+                .compose(check -> CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails)))
+                .compose(msg ->{
             Future<Integer> orderFuture = Future.future();
-            orderService.insertOrder(userId, params.getLong("shippingInformationId"),
+            orderService.insertOrder(orderId, userId, params.getLong("shippingInformationId"),
                     params.getString("leaveMessage"), orderDetails, orderFuture);
             return orderFuture;
         }).setHandler(orderHandler -> {
@@ -114,6 +97,64 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                 this.returnWithFailureMessage(context, "下单失败！");
             }
         });
+    }
+
+    /**
+     * 预扣商品库存
+     * @param commodityService
+     * @param orderId
+     * @param orderDetails
+     * @return
+     */
+    private List<Future> preparedDecrCommodity(ICommodityService commodityService, long orderId, JsonArray orderDetails) {
+        final List<Future> isOk = new ArrayList<>(orderDetails.size());
+        for (int i = 0; i < orderDetails.size(); i++) {
+            Future future = Future.future();
+            isOk.add(future);
+            JsonObject order = orderDetails.getJsonObject(i);
+            commodityService.preparedCommodity(order.getLong("id"), orderId, order.getInteger("orderNum"), hander -> {
+                if(hander.succeeded()){
+                    LOGGER.info("商品【{}】预扣商品库存成功", order.getLong("id"));
+                    future.complete();
+                } else {
+                    LOGGER.info("调用商品【{}】预处理接口失败", order.getLong("id"));
+                    future.fail(hander.cause());
+                }
+            });
+        }
+        return isOk;
+    }
+
+    /**
+     * 检查商品数量是否足够
+     * @param commodityService
+     * @param orderDetails
+     * @return
+     */
+    private List<Future> checkCommodity(ICommodityService commodityService, JsonArray orderDetails){
+        final List<Future> isOk = new ArrayList<>(orderDetails.size());
+        for (int i = 0; i < orderDetails.size(); i++) {
+            Future future = Future.future();
+            isOk.add(future);
+            JsonObject order = orderDetails.getJsonObject(i);
+            commodityService.findCommodityById(order.getLong("id"), orderHandler -> {
+                if(orderHandler.succeeded()){
+                    JsonObject commodity = orderHandler.result();
+                    if(order.getInteger("orderNum") > commodity.getInteger("num")){
+                        future.fail("订单数量大于库存数据量");
+                        return ;
+                    }
+                    order.put("commodityName", commodity.getString("commodity_name"));
+                    order.put("price", commodity.getString("price"));
+                    order.put("imageUrl", commodity.getString("image_url"));
+                    future.complete();
+                } else {
+                    LOGGER.info("调用商品【{}】详情接口失败", order.getLong("id"));
+                    future.fail(orderHandler.cause());
+                }
+            });
+        }
+        return isOk;
     }
 
     /**

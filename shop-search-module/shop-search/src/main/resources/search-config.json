@@ -29,8 +29,8 @@
   "rabbitmq": {
     "host": "111.231.132.168",
     "port": 5672,
-    "username": "shop_user",
-    "password": "h123456",
+    "username": "guest",
+    "password": "guest",
     "virtualHost": "/"
   }
 }

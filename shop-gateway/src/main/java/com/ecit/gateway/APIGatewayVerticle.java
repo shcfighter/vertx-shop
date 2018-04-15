@@ -74,7 +74,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
     public void start(Future<Void> future) throws Exception {
         super.start();
 
-        jdbcClient = JDBCClient.createNonShared(vertx, this.config());
+        jdbcClient = JDBCClient.createShared(vertx, this.config());
         shopAuthProvider = ShopAuth.create(vertx, jdbcClient);
 
         // get HTTP host and port from configuration, or use default value

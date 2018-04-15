@@ -33,4 +33,6 @@ public interface OrderSql {
      * 取消订单
      */
     static final String cancel_order_sql = "update t_order cancel_time = now(), order_status = ?, versions = (versions + 1) where order_id = ? and versions = ?";
+
+
 }

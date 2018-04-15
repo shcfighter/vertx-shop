@@ -1,12 +1,13 @@
 $(function () {
     $(".am-nav-tabs a").click(function() {
         var tab = $(this).attr("href");
-        console.log(tab);
         var data = {
             status: parseInt($(this).attr("status")),
             size: 10,
             page: 1
         }
+        var tab_index = $(this).closest("ul").find("a").index(this);
+        console.log(tab_index);
         $.ajax({
             type: 'POST',
             contentType: "application/json;",
@@ -15,7 +16,9 @@ $(function () {
             success: function(result){
                 if(result.status == 0){
                     var items = result.items;
-                    $(tab + " .order-list").append("");
+                    var $order_list = $(".am-tabs-bd").find(".order-list").get(tab_index);
+                    console.log($($order_list).html())
+                    $($order_list).html("");
                     $.each(items, function (index, value) {
                         var orderDetails = JSON.parse(value.order_details);
                         var orderDetailsHtml = "";
@@ -55,7 +58,7 @@ $(function () {
                             "    </li>\n" +
                             "</ul>";
                         });
-                        $("#tab1 .order-list").append("<div class=\"order-status3\">\n" +
+                        $($order_list).append("<div class=\"order-status3\">\n" +
                             "    <div class=\"order-title\">\n" +
                             "        <div class=\"dd-num\">订单编号：<a href=\"javascript:void(0);\">" + value.order_id + "</a></div>\n" +
                             "        <span>成交时间：" + value.create_time + "</span>\n" +

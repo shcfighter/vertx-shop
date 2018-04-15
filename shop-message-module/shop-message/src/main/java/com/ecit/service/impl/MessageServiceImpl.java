@@ -30,7 +30,7 @@ public class MessageServiceImpl implements IMessageService{
 
     public MessageServiceImpl(Vertx vertx, JsonObject config) {
         mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
-        mailClient = MailClient.createNonShared(vertx, new MailConfig(config.getJsonObject("mail")));
+        mailClient = MailClient.createShared(vertx, new MailConfig(config.getJsonObject("mail")));
     }
 
     @Override

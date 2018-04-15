@@ -129,6 +129,7 @@ CREATE TABLE public.t_commodity
     price money,
     original_price money,
     num bigint,
+    freeze_num bigint DEFAULT 0,
     license_number character varying(20) COLLATE pg_catalog."default",
     status smallint,
     image_url text COLLATE pg_catalog."default",
@@ -177,6 +178,9 @@ COMMENT ON COLUMN public.t_commodity.description
 
 COMMENT ON COLUMN public.t_commodity.num
     IS '商品数量';
+
+COMMENT ON COLUMN public.t_commodity.freeze_num
+    IS '冻结数量';
 
 COMMENT ON COLUMN public.t_commodity.original_price
     IS '原价';
@@ -246,3 +250,43 @@ COMMENT ON COLUMN public.t_order.order_details
 
 COMMENT ON COLUMN public.t_order.leave_message
     IS '买家留言';
+
+
+-- Table: public.t_order_commodity_log
+
+-- DROP TABLE public.t_order_commodity_log;
+
+CREATE TABLE public.t_order_commodity_log
+(
+    log_id bigint NOT NULL,
+    order_id bigint NOT NULL,
+    commodity_id bigint NOT NULL,
+    ip inet,
+    num bigint DEFAULT 0,
+    is_deleted smallint DEFAULT 0,
+    create_time timestamp without time zone,
+    remarks text COLLATE pg_catalog."default",
+    CONSTRAINT t_order_commodity_log_pkey PRIMARY KEY (log_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.t_order_commodity_log
+    OWNER to postgres;
+
+COMMENT ON COLUMN public.t_order_commodity_log.order_id
+    IS '订单id';
+
+COMMENT ON COLUMN public.t_order_commodity_log.commodity_id
+    IS '商品id';
+
+COMMENT ON COLUMN public.t_order_commodity_log.ip
+    IS 'ip地址';
+
+COMMENT ON COLUMN public.t_order_commodity_log.num
+    IS '订单购买数量';
+
+COMMENT ON COLUMN public.t_order_commodity_log.create_time
+    IS '下单时间';

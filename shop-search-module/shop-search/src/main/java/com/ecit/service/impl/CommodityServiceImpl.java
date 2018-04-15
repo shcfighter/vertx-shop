@@ -3,6 +3,7 @@ package com.ecit.service.impl;
 import com.ecit.common.db.JdbcRepositoryWrapper;
 import com.ecit.constants.CommoditySql;
 import com.ecit.service.ICommodityService;
+import com.ecit.service.IdBuilder;
 import com.hubrick.vertx.elasticsearch.RxElasticSearchService;
 import com.hubrick.vertx.elasticsearch.model.*;
 import io.vertx.core.AsyncResult;
@@ -10,6 +11,8 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.SQLConnection;
+import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +36,7 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
     final RxElasticSearchService rxElasticSearchService;
 
     public CommodityServiceImpl(Vertx vertx, JsonObject config) {
-        super(vertx, config);
+        super(vertx.getDelegate(), config);
         rxElasticSearchService = RxElasticSearchService.createEventBusProxy(vertx.getDelegate(), config.getString("address"));
     }
 
@@ -82,7 +85,7 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
     @Override
     public ICommodityService findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler) {
         Future<JsonObject> future = Future.future();
-        this.retrieveOne(new JsonArray().add(id), CommoditySql.FIND_COMMODITY_BY_ID).subscribe(future::complete, future::fail);
+        this.retrieveOne(new JsonArray().add(id), CommoditySql.FIND_COMMODITY_BY_ID, future);
         future.setHandler(handler);
         return this;
     }
@@ -173,6 +176,55 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
                         .setDefinition(new JsonObject().put("field", "category_name").put("size", 10)));
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
                 .subscribe(future::complete, future::fail);
+        future.setHandler(handler);
+        return this;
+    }
+
+    /**
+     * 订单预处理
+     * @param id
+     * @param orderId
+     * @param num
+     * @param handler
+     * @return
+     */
+    @Override
+    public ICommodityService preparedCommodity(long id, long orderId, int num, Handler<AsyncResult<Integer>> handler) {
+        Future<Integer> future = Future.future();
+        postgreSQLClient.getConnection(connHandler -> {
+            if (connHandler.failed()) {
+                future.fail(connHandler.cause());
+                throw new RuntimeException(connHandler.cause());
+            }
+            final SQLConnection conn = connHandler.result();
+            Future<Void> voidFuture = Future.future();
+            conn.setAutoCommit(false, voidFuture);
+            voidFuture.compose(v -> {
+                Future<UpdateResult> commodityFuture = Future.future();
+                conn.updateWithParams(CommoditySql.ORDER_COMMODITY_BY_ID, new JsonArray().add(num). add(num).add(id), commodityFuture);
+                return commodityFuture;
+            }).compose(c -> {
+                Future<UpdateResult> orderCommodifyLogFuture = Future.future();
+                conn.updateWithParams(CommoditySql.ORDER_LOG_SQL, new JsonArray()
+                        .add(IdBuilder.getUniqueId()).add(orderId).add(id).add("0.0.0.0").add(num),
+                        orderCommodifyLogFuture);
+                return orderCommodifyLogFuture;
+            }).setHandler(endHandler -> {
+                try {
+                    if (endHandler.succeeded()) {
+                        conn.commit(commit -> {
+                            future.complete();
+                        });
+                    } else {
+                        conn.rollback(rollback -> {
+                            future.fail(endHandler.cause());
+                        });
+                    }
+                } finally {
+                    conn.close();
+                }
+            });
+        });
         future.setHandler(handler);
         return this;
     }

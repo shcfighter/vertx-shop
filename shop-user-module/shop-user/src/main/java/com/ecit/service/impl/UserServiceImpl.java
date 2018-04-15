@@ -1,6 +1,7 @@
 package com.ecit.service.impl;
 
 import com.ecit.common.db.JdbcRepositoryWrapper;
+import com.ecit.common.db.JdbcRxRepositoryWrapper;
 import com.ecit.common.enmu.IsDeleted;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.UserStatus;
@@ -21,7 +22,7 @@ import java.util.Objects;
 /**
  * Created by za-wangshenhua on 2018/2/2.
  */
-public class UserServiceImpl extends JdbcRepositoryWrapper implements IUserService{
+public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserService{
 
     private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
     public UserServiceImpl(Vertx vertx, JsonObject config) {

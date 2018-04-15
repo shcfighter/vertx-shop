@@ -20,7 +20,7 @@ $(function () {
                         "<li class=\"td td-item\"><div class=\"item-pic\"><a href=\"javascript:void(0)\" class=\"J_MakePoint\">" +
                         "<img src=\"" + items.image_url + "\" class=\"itempic J_ItemImg\" width=\"80\" ></a>" +
                         "</div><div class=\"item-info\"><div class=\"item-basic-info\">" +
-                        "<a href=\"javascript:void(0)\" class=\"item-title J_MakePoint\" data-point=\"tbcart.8.11\">" + items.commodity_name + "</a>" +
+                        "<a href=\"javascript:void(0)\" class=\"item-title J_MakePoint\" commodity_id = \"" + items.commodity_id + "\" data-point=\"tbcart.8.11\">" + items.commodity_name + "</a>" +
                         "</div></div></li><li class=\"td td-info\"><div class=\"item-props\">" +
                         /*"<span class=\"sku-line\">颜色：12#川南玛瑙</span><span class=\"sku-line\">包装：裸装</span>" +*/
                         "</div></li><li class=\"td td-price\"><div class=\"item-price price-promo-promo\"><div class=\"price-content\">" +
@@ -50,11 +50,11 @@ $(function () {
         var data = {
             "shippingInformationId" : 1,
             "orderDetails" : [{
-                "id": 2,
-                "orderNum": $(".text_box").val()
+                "id": parseInt($(".item-title").attr("commodity_id")),
+                "orderNum": parseInt($(".text_box").val())
             },{
                 "id": 2,
-                "orderNum": $(".text_box").val()
+                "orderNum": parseInt($(".text_box").val())
             }],
             "leaveMessage": "尽快发货"
         }
