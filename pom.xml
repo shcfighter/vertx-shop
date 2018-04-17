@@ -13,7 +13,6 @@
         <module>shop-gateway</module>
         <module>shop-account</module>
         <module>shop-order</module>
-        <module>shopping-cart</module>
         <module>shop-pay</module>
         <module>shop-search-module/shop-search-interface</module>
         <module>shop-search-module/shop-search</module>

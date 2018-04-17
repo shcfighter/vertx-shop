@@ -40,7 +40,7 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
 
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {
-            this.publishHttpEndpoint(HTTP_MESSAGE_SERVICE, host, port).subscribe();
+            this.publishHttpEndpoint(HTTP_MESSAGE_SERVICE, host, port, "message.api.name").subscribe();
             LOGGER.info("shop-message server started!");
         }, error -> {
             LOGGER.info("shop-message server start fail!", error);

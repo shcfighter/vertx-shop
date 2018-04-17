@@ -52,7 +52,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
 
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {
-            this.publishHttpEndpoint(HTTP_ORDER_SERVICE, host, port).subscribe();
+            this.publishHttpEndpoint(HTTP_ORDER_SERVICE, host, port, "order.api.name").subscribe();
             LOGGER.info("shop-order server started!");
         }, error -> {
             LOGGER.info("shop-order server start fail!", error);
@@ -72,7 +72,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             return;
         }
         final JsonObject params = context.getBodyAsJson();
-        JsonArray orderDetails = params.getJsonArray("orderDetails");
+        JsonArray orderDetails = params.getJsonArray("order_details");
         if (Objects.isNull(params) || Objects.isNull(orderDetails) || orderDetails.isEmpty()) {
             LOGGER.error("订单信息参数错误:{}", params);
             this.returnWithFailureMessage(context, "下单失败！");
@@ -85,8 +85,8 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                 .compose(check -> CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails)))
                 .compose(msg ->{
             Future<Integer> orderFuture = Future.future();
-            orderService.insertOrder(orderId, userId, params.getLong("shippingInformationId"),
-                    params.getString("leaveMessage"), orderDetails, orderFuture);
+            orderService.insertOrder(orderId, userId, params.getLong("shipping_information_id"),
+                    params.getString("leave_message"), orderDetails, orderFuture);
             return orderFuture;
         }).setHandler(orderHandler -> {
             if (orderHandler.succeeded()) {
@@ -112,7 +112,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             Future future = Future.future();
             isOk.add(future);
             JsonObject order = orderDetails.getJsonObject(i);
-            commodityService.preparedCommodity(order.getLong("id"), orderId, order.getInteger("orderNum"), hander -> {
+            commodityService.preparedCommodity(order.getLong("id"), orderId, order.getInteger("order_num"), hander -> {
                 if(hander.succeeded()){
                     LOGGER.info("商品【{}】预扣商品库存成功", order.getLong("id"));
                     future.complete();
@@ -140,13 +140,13 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             commodityService.findCommodityById(order.getLong("id"), orderHandler -> {
                 if(orderHandler.succeeded()){
                     JsonObject commodity = orderHandler.result();
-                    if(order.getInteger("orderNum") > commodity.getInteger("num")){
+                    if(order.getInteger("order_num") > commodity.getInteger("num")){
                         future.fail("订单数量大于库存数据量");
                         return ;
                     }
-                    order.put("commodityName", commodity.getString("commodity_name"));
+                    order.put("commodity_name", commodity.getString("commodity_name"));
                     order.put("price", commodity.getString("price"));
-                    order.put("imageUrl", commodity.getString("image_url"));
+                    order.put("image_url", commodity.getString("image_url"));
                     future.complete();
                 } else {
                     LOGGER.info("调用商品【{}】详情接口失败", order.getLong("id"));

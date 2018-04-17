@@ -43,7 +43,7 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
         VertxOptions options = new VertxOptions().setClusterManager(mgr);
         Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(UserVerticle.class.getName(),
                 new DeploymentOptions().setConfig(new JsonObject()
-                        .put("api.name", "user")
+                        .put("user.api.name", "user")
                         .put("host", "111.231.132.168")
                         .put("port", 5432)
                         .put("maxPoolSize", 50)

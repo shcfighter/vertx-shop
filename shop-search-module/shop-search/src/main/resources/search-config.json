@@ -1,5 +1,5 @@
 {
-  "api.name":"search",
+  "search.api.name":"search",
   "search.http.address":"0.0.0.0",
   "search.http.port":8082,
   "address":"eb.elasticsearch",
@@ -10,7 +10,7 @@
     }
   ],
   "cluster_name":"vertx_shop",
-  "client_transport_sniff":true,
+  "client_transport_sniff":false,
   "host":"111.231.132.168",
   "port":5432,
   "maxPoolSize":50,

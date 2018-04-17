@@ -104,4 +104,14 @@ $(function() {
         $("input[name='index_none_header_sysc']").val(decodeURI(key));
     }
     $("#ai-topsearch").click();
+
+    /**
+     * enter键自动提交
+     */
+    $("#searchInput").bind('keypress',function(event){
+        if(event.keyCode == "13")
+        {
+            $("#ai-topsearch").click();
+        }
+    });
 });

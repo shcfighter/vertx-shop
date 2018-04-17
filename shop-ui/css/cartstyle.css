@@ -127,8 +127,8 @@ body, button, input, select, textarea {
 
    {
 .item-content {overflow: hidden;} 
-.td.td-item {width: 30%;}
-.td.td-info{width:20%;position: static;padding-left: 0;}  
+.td.td-item {width: 50%;}
+.td.td-info{width:0%;position: static;padding-left: 0;}
 .td.td-info .item-props{position: static;text-align:center;padding-top:17px;margin-top:0 ;} 
 .item-props.item-props-can{height:100px;border: 1px dashed transparent;}	
  /*价格*/

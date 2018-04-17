@@ -1,7 +1,10 @@
 {
-  "api.name":"order",
+  "order.api.name":"order",
   "order.http.address":"0.0.0.0",
   "order.http.port":8084,
+  "cart.api.name":"cart",
+  "cart.http.address":"0.0.0.0",
+  "cart.http.port":8085,
   "host":"111.231.132.168",
   "port":5432,
   "maxPoolSize":50,
@@ -9,5 +12,12 @@
   "password":"h123456",
   "database":"vertx_shop",
   "charset":"UTF-8",
-  "queryTimeout":10000
+  "queryTimeout":10000,
+  "mongodb":{
+    "host":"111.231.132.168",
+    "port":27017,
+    "username":"shop_user",
+    "password":"h123456",
+    "db_name":"vertx_shop"
+  }
 }

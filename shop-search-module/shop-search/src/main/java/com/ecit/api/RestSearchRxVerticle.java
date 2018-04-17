@@ -62,7 +62,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
 
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {
-            this.publishHttpEndpoint(HTTP_SEARCH_SERVICE, host, port).subscribe();
+            this.publishHttpEndpoint(HTTP_SEARCH_SERVICE, host, port, "search.api.name").subscribe();
             LOGGER.info("shop-search server started!");
         }, error -> {
             LOGGER.info("shop-search server start fail!", error);

@@ -25,13 +25,6 @@
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-order" />
       </profile>
-      <profile name="Annotation profile for shopping-cart" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
-        <module name="shopping-cart" />
-      </profile>
       <profile name="Annotation profile for shop-pay" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -60,13 +53,6 @@
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-message-interface" />
       </profile>
-      <profile name="Annotation profile for shop-search-interface" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
-        <module name="shop-search-interface" />
-      </profile>
       <profile name="Annotation profile for vertx-shop" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -74,9 +60,14 @@
         <processor name="io.vertx.codegen.CodeGenProcessor" />
         <module name="shop-elasticsearch-service" />
       </profile>
+      <profile name="Annotation profile for shop-search-interface" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
+        <module name="shop-search-interface" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="shop-search-module" target="9" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="9" />
   </component>
 </project>

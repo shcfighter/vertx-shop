@@ -53,7 +53,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {
             this.hashStrategy = new DefaultHashStrategy(vertx.getDelegate());
-            this.publishHttpEndpoint(HTTP_USER_SERVICE, host, port).subscribe();
+            this.publishHttpEndpoint(HTTP_USER_SERVICE, host, port, "user.api.name").subscribe();
             LOGGER.info("shop-user server started!");
         }, error -> {
             LOGGER.info("shop-user server start fail!", error);

@@ -17,6 +17,7 @@ import io.vertx.servicediscovery.types.EventBusService;
 import io.vertx.servicediscovery.types.HttpEndpoint;
 import io.vertx.servicediscovery.types.JDBCDataSource;
 import io.vertx.servicediscovery.types.MessageSource;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Set;
 
@@ -46,9 +47,12 @@ public class BaseMicroserviceRxVerticle extends AbstractVerticle {
     );
   }
 
-  protected Single<Integer> publishHttpEndpoint(String name, String host, int port) {
+  protected Single<Integer> publishHttpEndpoint(String name, String host, int port, String apiName) {
+    if (StringUtils.isEmpty(apiName)) {
+      apiName = "api.name";
+    }
     Record record = HttpEndpoint.createRecord(name, host, port, "/",
-      new JsonObject().put("api.name", config().getString("api.name", ""))
+      new JsonObject().put("api.name", config().getString(apiName, ""))
     );
     return publish(record);
   }

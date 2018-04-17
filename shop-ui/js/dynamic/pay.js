@@ -48,15 +48,12 @@ $(function () {
 
     $(".btn-go").click(function () {
         var data = {
-            "shippingInformationId" : 1,
-            "orderDetails" : [{
+            "shipping_information_id" : 1,
+            "order_details" : [{
                 "id": parseInt($(".item-title").attr("commodity_id")),
-                "orderNum": parseInt($(".text_box").val())
-            },{
-                "id": 2,
-                "orderNum": parseInt($(".text_box").val())
+                "order_num": parseInt($(".text_box").val())
             }],
-            "leaveMessage": "尽快发货"
+            "leave_message": "尽快发货"
         }
         $.ajax({
             type: 'POST',

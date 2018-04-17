@@ -71,8 +71,8 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
   }
 
   protected void requireLogin(RoutingContext context, BiConsumer<RoutingContext, JsonObject> biHandler) {
-      /*context.request().headers().add("user-principal", new JsonObject().put("loginName", "test")
-              .put("userId", 123456L).encodePrettily());*/
+      context.request().headers().add("user-principal", new JsonObject().put("loginName", "test")
+              .put("userId", 123456L).encodePrettily());
     Optional<JsonObject> principal = Optional.ofNullable(context.request().getHeader("user-principal"))
       .map(JsonObject::new);
     if (principal.isPresent()) {
@@ -142,6 +142,10 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
 
   protected <T> void returnWithSuccessMessage(RoutingContext context, String message, T items) {
     this.Ok(context, ResultItems.getReturnItemsSuccess( 0, items, message));
+  }
+
+  protected <T> void returnWithSuccessMessage(RoutingContext context, String message, int total, T items) {
+    this.Ok(context, ResultItems.getReturnItemsSuccess( total, items, message));
   }
 
   protected void returnWithFailureMessage(RoutingContext context, String message) {

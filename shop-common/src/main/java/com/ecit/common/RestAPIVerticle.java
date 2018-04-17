@@ -347,6 +347,10 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
     this.Ok(context, ResultItems.getReturnItemsSuccess( 0, items, message));
   }
 
+  protected <T> void returnWithSuccessMessage(RoutingContext context, String message, int total, T items) {
+    this.Ok(context, ResultItems.getReturnItemsSuccess( total, items, message));
+  }
+
   protected void returnWithFailureMessage(RoutingContext context, String message) {
     this.Ok(context, ResultItems.getReturnItemsFailure(message));
   }

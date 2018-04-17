@@ -180,7 +180,7 @@ height: 14px;background: url(../images/cardbg.png);}
 .suggestmain .am-btn.anniu{width:100%;margin:20px auto 25px;}
 .suggestTel i{margin-right:10px ;}
 /*底部*/
-.footer{display:none; text-align: center;border-top: 2px solid #F8F8F8 margin-top:20px; padding-top: 5px;}
+.footer{display:none; text-align: center;border-top: 2px solid #F8F8F8; margin-top:20px; padding-top: 5px;}
 .main-wrap {background-color:#fff;}
 @media only screen and (min-width:640px) 
 {	
@@ -226,7 +226,7 @@ header article{max-width: 1200px;margin:0px auto;}
  
 /*搜索框*/
 .search-bar {height: 51px;margin: 0px 50px 0 120px; padding-left:5%;}
-.search-bar form{border:2px solid #F03726; max-width:670px;}
+.search-bar div{border:2px solid #F03726; max-width:670px;}
 .search-bar input{padding-left:5px;width: 80%;height:46px;outline:none; font-size:12px; border:none}
 #ai-topsearch { width:20%;height:46px;border: 0px none;float:right;background: #F03726 none repeat scroll 0% 0%;
 color: #F5F5F2;font-size: 14px;cursor:pointer;}

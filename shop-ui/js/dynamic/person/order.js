@@ -27,14 +27,14 @@ $(function () {
                             "    <li class=\"td td-item\">\n" +
                             "        <div class=\"item-pic\">\n" +
                             "            <a href=\"#\" class=\"J_MakePoint\">\n" +
-                            "                <img src=\"" + orderValue.imageUrl + "\"\n" +
+                            "                <img src=\"" + orderValue.image_url + "\"\n" +
                             "                     class=\"itempic J_ItemImg\">\n" +
                             "            </a>\n" +
                             "        </div>\n" +
                             "        <div class=\"item-info\">\n" +
                             "            <div class=\"item-basic-info\">\n" +
                             "                <a href=\"#\">\n" +
-                            "                    <p>" + orderValue.commodityName + "</p>\n" +
+                            "                    <p>" + orderValue.commodity_name + "</p>\n" +
                             "                    <p class=\"info-little\">颜色：12#川南玛瑙\n" +
                             "                        <br/>包装：裸装 </p>\n" +
                             "                </a>\n" +
@@ -48,7 +48,7 @@ $(function () {
                             "    </li>\n" +
                             "    <li class=\"td td-number\">\n" +
                             "        <div class=\"item-number\">\n" +
-                            "            <span>×</span>" + orderValue.orderNum + "\n" +
+                            "            <span>×</span>" + orderValue.order_num + "\n" +
                             "        </div>\n" +
                             "    </li>\n" +
                             "    <li class=\"td td-operation\">\n" +

@@ -1,5 +1,5 @@
 {
-  "api.name": "user",
+  "user.api.name": "user",
   "user.http.address": "0.0.0.0",
   "user.http.port": 8081,
   "host" : "111.231.132.168",

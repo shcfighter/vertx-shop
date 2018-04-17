@@ -10,6 +10,7 @@ import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import com.hubrick.vertx.elasticsearch.ElasticSearchServiceVerticle;
 import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -51,7 +52,7 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
         Vertx.rxClusteredVertx(options).subscribe(v -> {
             v.deployVerticle(SearchVerticle.class.getName(),
                     new DeploymentOptions().setConfig(new JsonObject()
-                            .put("api.name", "search")
+                            .put("search.api.name", "search")
                             .put("address", "eb.elasticsearch")
                             .put("transportAddresses", new JsonArray().add(new JsonObject().put("hostname", "111.231.132.168").put("port", 9300)))
                             .put("cluster_name", "vertx_shop")

@@ -37,6 +37,7 @@ $(function(){
     }
     var loginUser = jQuery.parseJSON(sessionLoginUser);
     $(".login_user").html("亲，<a href=\"/person/index.html\" target=\"_top\" class=\"h\">" + loginUser.loginName + "</a>");
+
 });
 
 /**

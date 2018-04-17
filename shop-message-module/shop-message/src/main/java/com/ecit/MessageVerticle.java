@@ -43,7 +43,7 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
         VertxOptions options = new VertxOptions().setClusterManager(mgr);
         Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(MessageVerticle.class.getName(),
                 new DeploymentOptions().setConfig(new JsonObject()
-                        .put("api.name", "message")
+                        .put("message.api.name", "message")
                         .put("mongodb", new JsonObject()
                                 .put("host", "111.231.132.168")
                                 .put("port", 27017)

@@ -2,6 +2,7 @@ package com.ecit.gateway;
 
 import com.ecit.common.RestAPIVerticle;
 import com.ecit.common.result.ResultItems;
+import com.ecit.common.utils.IpUtils;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.UserStatus;
 import com.ecit.gateway.auth.ShopAuth;
@@ -52,24 +53,6 @@ public class APIGatewayVerticle extends RestAPIVerticle {
     private ShopAuth shopAuthProvider;
     private JDBCClient jdbcClient;
 
-    public static void main(String[] args) {
-        Config cfg = new Config();
-        GroupConfig group = new GroupConfig();
-        group.setName("p-dev");
-        group.setPassword("p-dev");
-        cfg.setGroupConfig(group);
-        // 申明集群管理器
-        ClusterManager mgr = new HazelcastClusterManager(cfg);
-        VertxOptions options = new VertxOptions().setClusterManager(mgr);
-        io.vertx.reactivex.core.Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(APIGatewayVerticle.class.getName(),
-                new DeploymentOptions().setConfig(new JsonObject()
-                        .put("url", "jdbc:postgresql://111.231.132.168:5432/vertx_shop")
-                        .put("driver_class", "org.postgresql.Driver")
-                        .put("max_pool_size", 50)
-                        .put("user", "postgres")
-                        .put("password", "h123456"))));
-    }
-
     @Override
     public void start(Future<Void> future) throws Exception {
         super.start();
@@ -119,8 +102,9 @@ public class APIGatewayVerticle extends RestAPIVerticle {
     }
 
     private void dispatchRequests(RoutingContext context) {
-        int initialOffset = 5; // length of `/api/`
+        final int initialOffset = 5; // length of `/api/`
         String path = context.request().uri();
+        LOGGER.info("接口【{}】调用，远程ip【{}】", path, IpUtils.getIpAddr(context.request()));
         if (path.length() <= initialOffset) {
             notFound(context);
             return;
@@ -298,5 +282,24 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         context.clearUser();
         context.session().destroy();
         context.response().setStatusCode(204).end();
+    }
+
+
+    public static void main(String[] args) {
+        Config cfg = new Config();
+        GroupConfig group = new GroupConfig();
+        group.setName("p-dev");
+        group.setPassword("p-dev");
+        cfg.setGroupConfig(group);
+        // 申明集群管理器
+        ClusterManager mgr = new HazelcastClusterManager(cfg);
+        VertxOptions options = new VertxOptions().setClusterManager(mgr);
+        io.vertx.reactivex.core.Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(APIGatewayVerticle.class.getName(),
+                new DeploymentOptions().setConfig(new JsonObject()
+                        .put("url", "jdbc:postgresql://111.231.132.168:5432/vertx_shop")
+                        .put("driver_class", "org.postgresql.Driver")
+                        .put("max_pool_size", 50)
+                        .put("user", "postgres")
+                        .put("password", "h123456"))));
     }
 }
