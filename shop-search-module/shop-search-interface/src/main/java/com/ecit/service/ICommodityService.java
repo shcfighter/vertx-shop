@@ -20,7 +20,7 @@ public interface ICommodityService {
     String SEARCH_SERVICE_ADDRESS = "search_service_address";
 
     @Fluent
-    ICommodityService searchCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler);
+    ICommodityService searchCommodity(String keyword, int pageSize, int page, Handler<AsyncResult<SearchResponse>> handler);
 
     @Fluent
     ICommodityService findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler);

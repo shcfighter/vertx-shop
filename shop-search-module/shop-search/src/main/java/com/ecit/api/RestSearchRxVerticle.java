@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -74,15 +75,17 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void searchHandler(RoutingContext context){
-        final String keyword = context.getBodyAsJson().getString("keyword");
+        final JsonObject params = context.getBodyAsJson();
+        final String keyword = params.getString("keyword");
         /**
          * 异步保存搜索行为
          */
-        String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
+        final String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
         if(StringUtils.isNotEmpty(cookie) && StringUtils.isNotEmpty(keyword)){
             preferencesService.sendMqPreferences(cookie, keyword, SearchType.search, handler ->{});
         }
-        commodityService.searchCommodity(keyword, handler -> {
+        final int page = Optional.ofNullable(params.getInteger("page")).orElse(1);
+        commodityService.searchCommodity(keyword, Optional.ofNullable(params.getInteger("pageSize")).orElse(10), page, handler -> {
             if(handler.failed()){
                 this.returnWithFailureMessage(context, "暂无该商品！");
                 LOGGER.error("搜索商品异常：", handler.cause());
@@ -108,7 +111,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                 }
                 resultJsonObject.put("brand", brandList);
                 this.Ok(context, new ResultItems(0, result.getHits().getTotal().intValue(),
-                        resultJsonObject));
+                        resultJsonObject, "查询成功", page));
             }
         });
     }

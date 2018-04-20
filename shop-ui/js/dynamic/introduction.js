@@ -33,6 +33,10 @@ $(function(){
                     $(".sys_item_mktprice").html(items.original_price);
                     $(".sys_item_freprice").html(items.freight);
                     $(".stock").html(items.num);
+                    $("#J_AttrUL").html("");
+                    $.each(items.commodity_params, function (index, value) {
+                        $("#J_AttrUL").append("<li title=\"\">" + value + "</li>");
+                    });
                     //设置产品参数
                     var params = items.commodity_params;
                     console.log(items)
@@ -51,23 +55,6 @@ $(function(){
 
     $("#LikBuy").click(function () {
         window.location.href = "/pay.html?commodity_id=" + id + "&order_num=" + $("#text_box").val();
-    });
-
-    /**
-     * 搜索
-     */
-    $(".submit").click(function(){
-        var keyword = encodeURI($("input[name='index_none_header_sysc']").val());
-        window.location.href = "/search.html?keyword=" + keyword;
-    });
-    /**
-     * enter键自动提交
-     */
-    $("#searchInput").bind('keypress',function(event){
-        if(event.keyCode == "13")
-        {
-            $("#ai-topsearch").click();
-        }
     });
 
     $("#LikBasket").click(function () {

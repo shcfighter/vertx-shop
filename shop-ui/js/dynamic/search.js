@@ -2,6 +2,7 @@
  * Created by za-wangshenhua on 2018/3/22.
  */
 $(function() {
+    var pageSize = 12;
 
     /**
      * 搜索
@@ -16,8 +17,14 @@ $(function() {
         if (undefined != category && null != category && "" != category) {
             keyword += (" " + category);
         }
+        var page = parseInt($(".am-pagination .am-active").attr("page"));
+        if(undefined == page || null == page){
+            page = 1;
+        }
         var data = {
-            keyword: keyword
+            keyword: keyword,
+            pageSize: pageSize,
+            page: page
         }
         /**
          * 搜索
@@ -29,6 +36,30 @@ $(function() {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0){
+                    $(".am-pagination").html("");
+                    var pageTotal = result.total % pageSize == 0 ? parseInt(result.total / pageSize) : parseInt(result.total / pageSize) + 1;
+                    if(result.page == 1) {
+                        $(".am-pagination").append("<li class=\"am-disabled\" page = " + (result.page - 1) + "><a href=\"javascript:void(0);\">&laquo;</a></li>");
+                    } else {
+                        $(".am-pagination").append("<li class=\"\" page = " + (result.page - 1) + "><a href=\"javascript:void(0);\">&laquo;</a></li>");
+                    }
+                    var m = (pageTotal - result.page) >= 5 ? 5 : (9 - (pageTotal - result.page))
+                    var start = result.page - m >= 0 ? result.page - m : 1;
+                    for (var i = start; i <= pageTotal; i++){
+                        if (i == result.page){
+                            $(".am-pagination").append("<li class=\"am-active\" page = " + i + "><a href=\"javascript:void(0);\">" + i + "</a></li>");
+                        } else {
+                            $(".am-pagination").append("<li page = " + i + "><a href=\"javascript:void(0);\">" + i + "</a></li>");
+                        }
+                        if(i == start + 9){
+                            break;
+                        }
+                    }
+                    if(result.page == pageTotal) {
+                        $(".am-pagination").append("<li class=\"am-disabled\"  page = " + (result.page + 1) + "><a href=\"javascript:void(0);\">&raquo;</a></li>");
+                    } else {
+                        $(".am-pagination").append("<li class=\"\"  page = " + (result.page + 1) + "><a href=\"javascript:void(0);\">&raquo;</a></li>");
+                    }
                     var items = result.items.items;
                     var $li = $(".boxes");
                     $li.html("");
@@ -113,5 +144,14 @@ $(function() {
         {
             $("#ai-topsearch").click();
         }
+    });
+
+    $(".am-pagination li").live("click", function () {
+        if($(this).hasClass("am-disabled")) {
+            return ;
+        }
+        $(".am-pagination li").removeClass();
+        $(this).addClass("am-active");
+        $("#ai-topsearch").click();
     });
 });

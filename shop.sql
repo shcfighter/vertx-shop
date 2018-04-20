@@ -121,23 +121,23 @@ COMMENT ON COLUMN public.t_product_category.category_sort
 CREATE TABLE public.t_commodity
 (
     commodity_id bigint NOT NULL,
-    commodity_name character varying(50) COLLATE pg_catalog."default",
+    commodity_name character varying(100) COLLATE pg_catalog."default",
     brand_id bigint,
-    brand_name character varying(10) COLLATE pg_catalog."default",
+    brand_name character varying(50) COLLATE pg_catalog."default",
     category_id bigint,
-    category_name character varying(10) COLLATE pg_catalog."default",
+    category_name character varying(50) COLLATE pg_catalog."default",
     price money,
     original_price money,
     num bigint,
     freeze_num bigint DEFAULT 0,
-    license_number character varying(20) COLLATE pg_catalog."default",
+    -- license_number character varying(20) COLLATE pg_catalog."default",
     status smallint,
     image_url text COLLATE pg_catalog."default",
     freight money,
     is_deleted smallint DEFAULT 0,
     create_time timestamp without time zone,
     update_time timestamp without time zone,
-    description character varying(255) COLLATE pg_catalog."default",
+    description character varying(500) COLLATE pg_catalog."default",
     remarks character varying(255) COLLATE pg_catalog."default",
     versions bigint DEFAULT 0,
     CONSTRAINT t_commodity_pkey PRIMARY KEY (commodity_id)
@@ -170,8 +170,8 @@ COMMENT ON COLUMN public.t_commodity.category_name
 COMMENT ON COLUMN public.t_commodity.price
     IS '价格';
 
-COMMENT ON COLUMN public.t_commodity.license_number
-    IS '产品生产编号';
+-- COMMENT ON COLUMN public.t_commodity.license_number
+   -- IS '产品生产编号';
 
 COMMENT ON COLUMN public.t_commodity.description
     IS '描述';

@@ -17,7 +17,7 @@
                "type": "long"
             },
             "commodity_name": {
-		        "analyzer": "ik_smart",
+		"analyzer": "ik_smart",
                "type": "text"
             },
             "brand_id": {
@@ -51,21 +51,8 @@
                "type": "integer"
             },
             "commodity_params": {
-                "type": "nested",
-                "properties": {
-                    "production_site": {
-                       "type": "keyword"
-                    },
-                    "license_number": {
-                       "type": "keyword"
-                    },
-                    "shelf_life": {
-                       "type": "keyword"
-                    },
-                    "weight": {
-                        "type": "keyword"
-                    }
-                }
+		    "analyzer": "ik_smart",
+                "type": "text"
             },
             "status": {
                "type": "integer"
@@ -84,18 +71,18 @@
             },
             "create_time": {
                "type": "date",
-               "format": "strict_date_optional_time||epoch_millis"
+               "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
             },
             "update_time": {
                "type": "date",
-               "format": "strict_date_optional_time||epoch_millis"
+               "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
             },
             "description": {
-		        "analyzer": "ik_smart",
+		"analyzer": "ik_smart",
                "type": "text"
             },
             "remarks": {
-		        "analyzer": "ik_smart",
+		"analyzer": "ik_smart",
                "type": "text"
             },
             "versions": {

@@ -17,7 +17,6 @@ import io.vertx.reactivex.core.Vertx;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +46,7 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
      * @return
      */
     @Override
-    public ICommodityService searchCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler) {
+    public ICommodityService searchCommodity(String keyword, int pageSize, int page, Handler<AsyncResult<SearchResponse>> handler) {
         Future<SearchResponse> future = Future.future();
         JsonObject searchJson = null;
         if (StringUtils.isBlank(keyword)) {
@@ -63,7 +62,7 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
         final SearchOptions searchOptions = new SearchOptions()
                 .setQuery(searchJson)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true).setSize(12)
+                .setFetchSource(true).setSize(pageSize).setFrom(this.calcPage(page, pageSize))
                 .addAggregation(new AggregationOption().setName("brand_name")
                         .setType(AggregationOption.AggregationType.TERMS)
                         .setDefinition(new JsonObject().put("field", "brand_name").put("size", 5)))

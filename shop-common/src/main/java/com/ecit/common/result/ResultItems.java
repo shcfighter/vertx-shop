@@ -5,8 +5,6 @@ import io.vertx.core.json.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -26,6 +24,8 @@ public class ResultItems<T> {
 	private T items;
 
 	private String message;
+
+	private int page = 0;
 
 	public ResultItems() {
 	}
@@ -48,6 +48,14 @@ public class ResultItems<T> {
 		this.message = message;
 	}
 
+	public ResultItems(int status, int total, T items, String message, int page) {
+		this.status = status;
+		this.total = total;
+		this.items = items;
+		this.message = message;
+		this.page = page;
+	}
+
 	public static ResultItems getReturnItems(int status, String message){
 		return new ResultItems(status, message);
 	}
@@ -62,6 +70,10 @@ public class ResultItems<T> {
 
 	public static <T> ResultItems getReturnItemsSuccess(int total, T items, String message){
 		return new ResultItems(0, total, items, message);
+	}
+
+	public static <T> ResultItems getReturnItemsSuccess(int total, T items, String message, int page){
+		return new ResultItems(0, total, items, message, page);
 	}
 
 	public static ResultItems getReturnItemsFailure(String message){
