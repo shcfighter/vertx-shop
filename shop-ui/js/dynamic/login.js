@@ -20,11 +20,12 @@ $(function() {
                     sessionStorage.setItem("loginUser", JSON.stringify(result.items));
                     window.location.href = "/index.html";
                 } else {
-                    alert(result.message);
+                    //alert(result.message);
+                    $.Pop(result.message,"alert",function(){});
                 }
             },
             error: function () {
-                alert("网路异常");
+                console.log("网络错误！");
             }
         });
     });
@@ -51,14 +52,14 @@ $(function() {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0){
-                    alert("注册成功！");
+                    $.Pop("注册成功！", "alert", function(){});
                     window.location.href = "/index.html";
                 } else {
                     alert(result.message);
                 }
             },
             error: function () {
-                alert("网路异常");
+                console.log("网络错误！");
             }
         });
     });
@@ -76,13 +77,13 @@ $(function() {
             data: JSON.stringify(data),
             success: function(result){
                 if (result.status == 0) {
-                    alert("发送成功");
+                    $.Pop("发送成功","alert",function(){});
                 } else {
-                    alert("发送失败");
+                    $.Pop("发送失败","alert",function(){});
                 }
             },
             error: function () {
-
+                console.log("网络错误！");
             }
         });
     });

@@ -26,4 +26,7 @@ public interface IOrderService {
     @Fluent
     IOrderService findPageOrder(long userId, Integer status, int size, int offset, Handler<AsyncResult<List<JsonObject>>> handler);
 
+    @Fluent
+    IOrderService findOrderRowNum(long userId, Integer status, Handler<AsyncResult<JsonObject>> handler);
+
 }

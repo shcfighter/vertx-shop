@@ -85,7 +85,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
             preferencesService.sendMqPreferences(cookie, keyword, SearchType.search, handler ->{});
         }
         final int page = Optional.ofNullable(params.getInteger("page")).orElse(1);
-        commodityService.searchCommodity(keyword, Optional.ofNullable(params.getInteger("pageSize")).orElse(10), page, handler -> {
+        commodityService.searchCommodity(keyword, Optional.ofNullable(params.getInteger("pageSize")).orElse(12), page, handler -> {
             if(handler.failed()){
                 this.returnWithFailureMessage(context, "暂无该商品！");
                 LOGGER.error("搜索商品异常：", handler.cause());
@@ -110,8 +110,9 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     brandList.add(brand.getJsonObject(i).getString("key"));
                 }
                 resultJsonObject.put("brand", brandList);
-                this.Ok(context, new ResultItems(0, result.getHits().getTotal().intValue(),
-                        resultJsonObject, "查询成功", page));
+                /*this.Ok(context, new ResultItems(0, result.getHits().getTotal().intValue(),
+                        resultJsonObject, "查询成功", page));*/
+                this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultJsonObject, page);
             }
         });
     }

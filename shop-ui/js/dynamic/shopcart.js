@@ -6,7 +6,7 @@ $(function () {
         page_size: 10,
         page: 1
     }
-    loadCart();
+    loadCart(1);
 
     $(".deleteAll").live("click", function () {
         var arr = new Array();
@@ -70,16 +70,15 @@ $(function () {
     });
 });
 
-function loadCart(){
+function loadCart(page){
     $.ajax({
         type: 'GET',
         contentType: "application/json;",
-        url: domain + "api/cart/findCartPage?page=1&page_size=10",
+        url: domain + "api/cart/findCartPage?pageSize=10&page=" + page,
         //data: JSON.stringify(data),
         success: function(result){
-            console.log(result);
             if (0 == result.status) {
-                $(".bundle-main").html("");
+                $("#page").val(result.page);
                 $.each(result.items, function (index, value) {
                     $(".bundle-main").append("<ul class=\"item-content clearfix\">" +
                         "\t<li class=\"td td-chk\">\n" +
@@ -148,11 +147,25 @@ function loadCart(){
                         "</ul>");
                 });
             } else {
-                alert(result.message);
+                $.Pop(result.message, "alert", function(){});
             }
         },
         error: function () {
-            alert("网络错误！");
+            console.log("网络错误！");
         }
     });
 }
+
+$(window).scroll(
+    function () {
+        var scrollTop = $(this).scrollTop();
+        var scrollHeight = $(document).height();
+        var windowHeight = $(this).height();
+        if (scrollTop + windowHeight == scrollHeight) {
+            var page = $("#page").val();
+            if(undefined == page || null == page){
+                page = 1;
+            }
+            this.loadCart(parseInt(page) + 1);
+        }
+    });

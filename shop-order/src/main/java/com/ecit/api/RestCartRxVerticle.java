@@ -89,7 +89,7 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
     private void findCartPageHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         this.checkUser(context, userId);
-        final int pageSize = Integer.parseInt(Optional.ofNullable(context.request().getParam("page_size")).orElse("0"));
+        final int pageSize = Integer.parseInt(Optional.ofNullable(context.request().getParam("pageSize")).orElse("0"));
         final int page = Integer.parseInt(Optional.ofNullable(context.request().getParam("page")).orElse("0"));
         Future<Long> future = Future.future();
         cartService.findCartRowNum(userId, future);
@@ -100,7 +100,7 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
                     this.returnWithFailureMessage(context, "查询购物车失败");
                     return;
                 }
-                this.returnWithSuccessMessage(context, "查询购物车成功", rowNum.intValue(), handler.result());
+                this.returnWithSuccessMessage(context, "查询购物车成功", rowNum.intValue(), handler.result(), page);
             });
             return Future.succeededFuture();
         }).setHandler(handler -> {

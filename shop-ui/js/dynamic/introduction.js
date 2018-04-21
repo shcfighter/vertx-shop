@@ -51,7 +51,7 @@ $(function(){
             }
         });
     } else {
-        alert("获取商品信息失败！");
+        $.Pop("获取商品信息失败！", "alert", function(){});
     }
 
     $("#LikBuy").click(function () {
@@ -98,7 +98,7 @@ $(function(){
             },
             end: {
                 left: offset.left,//抛物体终点横坐标
-                top: offset.top, //抛物体终点纵坐标
+                top: 250, //抛物体终点纵坐标
             },
             onEnd: function() {
                 $("#tip").show().animate({width: '200px'},300).fadeOut(500);////成功加入购物车动画效果

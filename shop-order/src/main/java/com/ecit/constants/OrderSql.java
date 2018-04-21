@@ -20,6 +20,16 @@ public interface OrderSql {
             "where is_deleted = 0 and user_id = ? order by create_time desc limit ? offset ?";
 
     /**
+     * 查询订单详情数量（订单状态）
+     */
+    static final String FIND_ORDER_ROWNUM_SQL = "select count(1) rowNum from t_order where is_deleted = 0 and user_id = ? and order_status = ?";
+
+    /**
+     * 查询订单详情数量(所有订单)
+     */
+    static final String FIND_ALL_ORDER_ROWNUM_SQL = "select count(1) rowNum from t_order where is_deleted = 0 and user_id = ?";
+
+    /**
      *  根据订单id查询订单详情
      */
     static final String find_order_by_id = "select * from t_order where order_id = ?";

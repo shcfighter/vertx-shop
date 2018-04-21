@@ -2,11 +2,34 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="663c9261-12a8-483c-b096-d6c04bb8c3c0" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/shop-ui/js/jquery.fly.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/page.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop-ui/js/xcConfirm.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/constants/OrderSql.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/constants/OrderSql.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/css/optstyle.css" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/css/optstyle.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-ui/introduction.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/introduction.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/commons.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/commons.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/pay.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/pay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/person/order.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/person/order.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/search.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/search.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/shopcart.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/shopcart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/pay.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/pay.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/person/order.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/order.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/search.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/shopcart.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/shopcart.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/shop-message-module/shop-message-interface/target/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -33,29 +56,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="introduction.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/shop-ui/introduction.html">
+      <file leaf-file-name="APIGatewayVerticle.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="132">
-              <caret line="24" column="7" selection-start-line="24" selection-start-column="7" selection-end-line="24" selection-end-column="7" />
+            <state relative-caret-position="81">
+              <caret line="283" column="10" selection-start-line="283" selection-start-column="10" selection-end-line="283" selection-end-column="10" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/css/style.css">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-ui/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="251" selection-start-line="251" selection-end-line="251" />
+            <state relative-caret-position="220">
+              <caret line="28" column="67" lean-forward="true" selection-start-line="27" selection-start-column="20" selection-end-line="28" selection-end-column="67" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="introduction.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js">
+      <file leaf-file-name="shopcart.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/shopcart.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="512">
-              <caret line="107" column="7" selection-start-line="107" selection-start-column="7" selection-end-line="107" selection-end-column="7" />
+            <state relative-caret-position="566">
+              <caret line="149" column="61" lean-forward="true" selection-start-line="149" selection-start-column="61" selection-end-line="149" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="commons.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/shop-ui/js/commons.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="367">
+              <caret line="47" column="106" selection-start-line="47" selection-start-column="106" selection-end-line="47" selection-end-column="106" />
             </state>
           </provider>
         </entry>
@@ -67,6 +99,7 @@
       <list>
         <option value="Interface" />
         <option value="Enum" />
+        <option value="CSS File" />
         <option value="JavaScript File" />
       </list>
     </option>
@@ -79,7 +112,6 @@
       <find>tab5</find>
       <find>&quot;</find>
       <find>execute</find>
-      <find>am-nav-tabs</find>
       <find>am-tabs-bd</find>
       <find>am-tab-panel</find>
       <find>item-title</find>
@@ -99,6 +131,11 @@
       <find>slides</find>
       <find>shopCart</find>
       <find>shopCart_1</find>
+      <find>am-nav-tabs</find>
+      <find>icons.png</find>
+      <find>ul</find>
+      <find>li</find>
+      <find>box</find>
     </findStrings>
     <replaceStrings>
       <replace>shwang</replace>
@@ -111,57 +148,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/service/IdBuilder.java" />
-        <option value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/service/impl/IdBuilder.java" />
-        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java" />
-        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java" />
-        <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/db/JdbcRepositoryWrapper.java" />
-        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/pay.js" />
-        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/person/order.js" />
-        <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/BaseMicroserviceRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/BaseMicroserviceVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" />
-        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/shop-order/src/main/resources/order-config.json" />
         <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" />
         <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/OrderVerticle.java" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/utils/IpUtils.java" />
         <option value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/cluster.xml" />
         <option value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/resources/search-config.json" />
         <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/ICartService.java" />
         <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/CartServiceImpl.java" />
-        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/shopcart.js" />
         <option value="$PROJECT_DIR$/shop-ui/css/cartstyle.css" />
         <option value="$PROJECT_DIR$/shop-ui/css/personal.css" />
         <option value="$PROJECT_DIR$/shop-ui/person/coupon.html" />
         <option value="$PROJECT_DIR$/shop-ui/js/dynamic/index.js" />
-        <option value="$PROJECT_DIR$/shop-ui/pay.html" />
-        <option value="$PROJECT_DIR$/shop-ui/shopcart.html" />
         <option value="$PROJECT_DIR$/shop-ui/success.html" />
-        <option value="$PROJECT_DIR$/shop-ui/login.html" />
         <option value="$PROJECT_DIR$/shop-ui/index3.html" />
-        <option value="$PROJECT_DIR$/shop-ui/index.html" />
         <option value="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/service/ICommodityService.java" />
         <option value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" />
-        <option value="$PROJECT_DIR$/shop-ui/js/commons.js" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/result/ResultItems.java" />
-        <option value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-ui/search.html" />
-        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/search.js" />
         <option value="$PROJECT_DIR$/shop-ui/js/ieBetter-min.js" />
         <option value="$PROJECT_DIR$/shop-ui/css/style.css" />
-        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js" />
+        <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/constants/OrderSql.java" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/search.js" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/page.js" />
+        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-ui/css/optstyle.css" />
+        <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-ui/css/xcConfirm.css" />
+        <option value="$PROJECT_DIR$/shop-ui/pay.html" />
+        <option value="$PROJECT_DIR$/shop-ui/register.html" />
+        <option value="$PROJECT_DIR$/shop-ui/login.html" />
+        <option value="$PROJECT_DIR$/shop-ui/js/xcConfirm.js" />
         <option value="$PROJECT_DIR$/shop-ui/introduction.html" />
+        <option value="$PROJECT_DIR$/shop-ui/search.html" />
+        <option value="$PROJECT_DIR$/shop-ui/shopcart.html" />
+        <option value="$PROJECT_DIR$/shop-ui/person/order.html" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/person/order.js" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/pay.js" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/shopcart.js" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/login.js" />
+        <option value="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-ui/index.html" />
+        <option value="$PROJECT_DIR$/shop-ui/js/commons.js" />
       </list>
     </option>
   </component>
@@ -217,6 +254,49 @@
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
               <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -224,6 +304,13 @@
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
               <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="dynamic" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -238,6 +325,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/service" />
     <property name="last_opened_file_path" value="D:/workspace/hengda_v3" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -676,8 +764,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.OrderVerticle" />
         <item itemvalue="Application.APIGatewayVerticle" />
+        <item itemvalue="Application.OrderVerticle" />
         <item itemvalue="Application.SearchVerticle" />
         <item itemvalue="Application.RestOrderRxVerticle" />
       </list>
@@ -714,25 +802,25 @@
       <workItem from="1524107165670" duration="980000" />
       <workItem from="1524187893655" duration="2125000" />
       <workItem from="1524197928591" duration="5886000" />
-      <workItem from="1524274220033" duration="6903000" />
+      <workItem from="1524274220033" duration="24302000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="159989000" />
+    <option name="totallyTimeSpent" value="177388000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="bottom" id="Messages" order="0" weight="0.32838285" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="6" />
       <window_info anchor="right" id="Capture Analysis" order="8" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" weight="0.32838285" />
-      <window_info anchor="right" id="Maven Projects" order="4" weight="0.32980332" />
+      <window_info anchor="right" id="Maven Projects" order="1" weight="0.32980332" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="11" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.330033" />
@@ -741,8 +829,9 @@
       <window_info id="Designer" order="4" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.25189108" />
       <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.32838285" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info id="UI Designer" order="5" />
       <window_info anchor="right" id="Theme Preview" order="10" />
       <window_info id="Favorites" order="7" side_tool="true" />
@@ -756,35 +845,33 @@
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="right" id="Bean Validation" order="9" />
       <window_info anchor="right" id="Properties" order="5" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Java Enterprise" order="9" />
-      <window_info anchor="bottom" id="Find" order="2" />
     </layout>
     <layout-to-restore>
       <window_info id="Designer" order="4" />
-      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="right" id="Properties" order="5" />
       <window_info anchor="bottom" id="Spring" order="12" />
       <window_info id="Image Layers" order="6" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.330033" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info id="UI Designer" order="5" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="13" />
       <window_info id="Capture Tool" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="8" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" weight="0.32838285" />
       <window_info anchor="bottom" id="Messages" order="0" weight="0.32838285" />
       <window_info anchor="bottom" id="SonarLint" order="14" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Java Enterprise" order="9" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="11" />
       <window_info id="Nl-Palette" order="2" />
-      <window_info anchor="right" id="Maven Projects" order="4" weight="0.32980332" />
-      <window_info anchor="bottom" id="Find" order="2" />
+      <window_info anchor="right" id="Maven Projects" order="1" weight="0.32980332" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25189108" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="bottom" id="Message" order="1" />
@@ -793,8 +880,9 @@
       <window_info anchor="right" id="Theme Preview" order="10" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.40429044" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.32838285" />
       <window_info anchor="right" id="Bean Validation" order="9" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.40429044" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -805,7 +893,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="12" />
+      <option name="time" value="19" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -814,6 +902,41 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>principal.get()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>params.getInteger(&quot;status&quot;)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>params.containsKey(&quot;status&quot;)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>final int page = Optional.ofNullable(params.getInteger(&quot;page&quot;)).orElse(1);</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>Optional.ofNullable(params.getInteger(&quot;page&quot;)).orElse(1)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>Optional.ofNullable(params.getInteger(&quot;page&quot;))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>params.getInteger(&quot;page&quot;)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>new JsonArray(ids)</expression-string>
         <language-id>JAVA</language-id>
@@ -824,167 +947,9 @@
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>params.containsKey(&quot;ids&quot;)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>Objects.isNull(params)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>record.getMetadata()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>order.getInteger(&quot;orderNum&quot;) &gt; commodity.getInteger(&quot;num&quot;)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>commodity.getInteger(&quot;num&quot;)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/person/order.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-22">
-          <caret line="50" column="69" selection-start-line="50" selection-start-column="59" selection-end-line="50" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="26" column="31" selection-start-line="26" selection-start-column="18" selection-end-line="26" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-web/3.5.1/vertx-web-3.5.1.jar!/io/vertx/reactivex/ext/web/Router.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="56" column="16" selection-start-line="56" selection-start-column="16" selection-end-line="56" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/BaseMicroserviceVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="537">
-          <caret line="62" column="68" lean-forward="true" selection-start-line="62" selection-start-column="68" selection-end-line="62" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="8" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="21" column="57" lean-forward="true" selection-start-line="21" selection-start-column="57" selection-end-line="21" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="75" column="58" selection-start-line="75" selection-start-column="58" selection-end-line="75" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="10" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="42" column="79" selection-start-line="42" selection-start-column="72" selection-end-line="42" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="49" column="73" selection-start-line="49" selection-start-column="64" selection-end-line="49" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/resources/order-config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="24" lean-forward="true" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="45" column="38" selection-start-line="45" selection-start-column="38" selection-end-line="45" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/OrderVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="57" column="55" selection-start-line="57" selection-start-column="55" selection-end-line="57" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="42" column="73" selection-start-line="42" selection-start-column="73" selection-end-line="42" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/utils/IpUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="106" column="85" selection-start-line="106" selection-start-column="85" selection-end-line="106" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="814">
-          <caret line="37" column="47" selection-start-line="37" selection-start-column="47" selection-end-line="37" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/BaseMicroserviceRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="44" column="35" lean-forward="true" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="349" column="45" selection-start-line="349" selection-start-column="21" selection-end-line="349" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/cluster.xml" />
     <entry file="file://$PROJECT_DIR$/shop-search-module/shop-search/src/main/resources/search-config.json">
       <provider selected="true" editor-type-id="text-editor">
@@ -1004,13 +969,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="110">
           <caret line="19" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/shopcart.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="111" column="56" selection-start-line="111" selection-start-column="56" selection-end-line="111" selection-end-column="56" />
         </state>
       </provider>
     </entry>
@@ -1035,24 +993,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/login.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-220">
-          <caret line="71" column="16" lean-forward="true" selection-start-line="71" selection-start-column="16" selection-end-line="71" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/search.input.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/pay.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>
@@ -1063,31 +1007,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/shopcart.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="11" column="68" selection-start-line="11" selection-start-column="68" selection-end-line="11" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="924">
-          <caret line="42" column="16" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/index3.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="21252">
           <caret line="966" selection-start-line="966" selection-end-line="966" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="875" column="73" selection-start-line="875" selection-start-column="73" selection-end-line="875" selection-end-column="73" />
         </state>
       </provider>
     </entry>
@@ -1118,58 +1041,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/result/ResultItems.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="32" column="11" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/commons.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="2" selection-start-line="4" selection-start-column="2" selection-end-line="4" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/search.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="880">
-          <caret line="40" column="29" selection-start-line="40" selection-start-column="23" selection-end-line="40" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="44" column="36" selection-start-line="44" selection-start-column="36" selection-end-line="44" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="148" column="37" lean-forward="true" selection-start-line="148" selection-start-column="37" selection-end-line="148" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="379" column="46" selection-start-line="379" selection-start-column="35" selection-end-line="379" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="73" column="59" selection-start-line="73" selection-start-column="59" selection-end-line="73" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/js/ieBetter-min.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
@@ -1194,17 +1065,251 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js">
+    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="107" column="7" selection-start-line="107" selection-start-column="7" selection-end-line="107" selection-end-column="7" />
+        <state relative-caret-position="434">
+          <caret line="355" column="3" selection-start-line="355" selection-start-column="3" selection-end-line="355" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/result/ResultItems.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="74" column="100" selection-start-line="74" selection-start-column="96" selection-end-line="74" selection-end-column="100" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-web/3.5.1/vertx-web-3.5.1.jar!/io/vertx/ext/web/impl/RoutingContextImplBase.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="129" selection-start-line="129" selection-end-line="129" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="93" column="53" selection-start-line="93" selection-start-column="53" selection-end-line="93" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/OrderServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-16">
+          <caret line="58" column="14" selection-start-line="58" selection-start-column="14" selection-end-line="58" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/IOrderService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="103">
+          <caret line="28" column="11" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/constants/OrderSql.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="29" column="75" selection-start-line="29" selection-start-column="75" selection-end-line="29" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="187" column="105" selection-start-line="187" selection-start-column="99" selection-end-line="187" selection-end-column="105" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/script.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/AmazeUI-2.4.2/assets/js/jquery.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="102" column="107" selection-start-line="102" selection-start-column="103" selection-end-line="102" selection-end-column="107" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/css/optstyle.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="27" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="63" selection-start-line="63" selection-end-line="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="73" column="8" selection-start-line="73" selection-start-column="6" selection-end-line="74" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/css/xcConfirm.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1116">
+          <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/xcConfirm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="184" selection-start-line="184" selection-end-line="184" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/pay.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="43" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/introduction.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="24" column="7" selection-start-line="24" selection-start-column="7" selection-end-line="24" selection-end-column="7" />
+        <state relative-caret-position="396">
+          <caret line="24" column="43" selection-start-line="24" selection-start-column="43" selection-end-line="24" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="43" selection-start-line="18" selection-start-column="43" selection-end-line="18" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/shopcart.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/person/order.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="16" column="20" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/page.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+          <folding>
+            <element signature="e#66#73#1" expanded="true" />
+            <element signature="e#55#62#1" expanded="true" />
+            <element signature="e#67#74#1" expanded="true" />
+            <element signature="e#56#63#1" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/person/order.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1474">
+          <caret line="100" column="20" selection-start-line="100" selection-start-column="20" selection-end-line="100" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/introduction.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="71" column="23" selection-start-line="71" selection-start-column="12" selection-end-line="71" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="85" column="37" selection-start-line="85" selection-start-column="37" selection-end-line="85" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/search.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1474">
+          <caret line="67" column="36" lean-forward="true" selection-start-line="67" selection-start-column="36" selection-end-line="67" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/pay.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8">
+          <caret line="45" column="50" lean-forward="true" selection-start-line="45" selection-start-column="8" selection-end-line="45" selection-end-column="50" />
+          <folding>
+            <element signature="n#style#0;n#input#1;n#div#0;n#div#0;n#div#0;n#li#0;n#ul#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/resources/gateway-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" column="31" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/shopcart.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="566">
+          <caret line="149" column="61" lean-forward="true" selection-start-line="149" selection-start-column="61" selection-end-line="149" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="283" column="10" selection-start-line="283" selection-start-column="10" selection-end-line="283" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="28" column="67" lean-forward="true" selection-start-line="27" selection-start-column="20" selection-end-line="28" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/commons.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="47" column="106" selection-start-line="47" selection-start-column="106" selection-end-line="47" selection-end-column="106" />
         </state>
       </provider>
     </entry>

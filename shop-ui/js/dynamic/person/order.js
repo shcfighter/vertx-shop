@@ -1,13 +1,17 @@
 $(function () {
+    var pageSize = 10;
     $(".am-nav-tabs a").click(function() {
         var tab = $(this).attr("href");
+        var page = parseInt($(".am-pagination .am-active").attr("page"));
+        if(undefined == page || null == page){
+            page = 1;
+        }
         var data = {
             status: parseInt($(this).attr("status")),
-            size: 10,
-            page: 1
+            pageSize: pageSize,
+            page: page
         }
         var tab_index = $(this).closest("ul").find("a").index(this);
-        console.log(tab_index);
         $.ajax({
             type: 'POST',
             contentType: "application/json;",
@@ -15,9 +19,9 @@ $(function () {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0){
+                    pageTurning(result, pageSize);
                     var items = result.items;
                     var $order_list = $(".am-tabs-bd").find(".order-list").get(tab_index);
-                    console.log($($order_list).html())
                     $($order_list).html("");
                     $.each(items, function (index, value) {
                         var orderDetails = JSON.parse(value.order_details);
@@ -94,13 +98,26 @@ $(function () {
                             "</div>");
                     });
                 } else {
-                    alert(result.message);
+                    $.Pop(result.message, "alert", function(){});
                 }
             },
             error: function () {
-                alert("网路异常");
             }
         });
     });
     $(".am-nav-tabs").find("a").get(0).click();
+
+    $(".am-pagination").on("click", "li", function () {
+        if($(this).hasClass("am-disabled")) {
+            return ;
+        }
+        $(".am-pagination li").removeClass();
+        $(this).addClass("am-active");
+        var status = $(".am-nav-tabs").find(".am-active").children("a").attr("status");
+        console.log(status);
+        if (undefined == status || null ==status) {
+            status = 0;
+        }
+        $(".am-nav-tabs").find("a").get(status).click();
+    });
 });

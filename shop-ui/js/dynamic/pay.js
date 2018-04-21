@@ -43,7 +43,7 @@ $(function () {
             }
         });
     } else {
-        alert("获取商品信息失败！");
+        $.Pop("获取商品信息失败！", "alert", function(){});
     }
 
     $(".btn-go").click(function () {

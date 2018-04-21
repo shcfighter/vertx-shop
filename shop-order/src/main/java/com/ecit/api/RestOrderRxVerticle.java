@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by za-wangshenhua on 2018/4/5.
@@ -176,16 +177,28 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             this.returnWithFailureMessage(context, "查询订单信息失败！");
             return;
         }
-        orderService.findPageOrder(userId, params.containsKey("status") ? params.getInteger("status") : null,
-                params.getInteger("size"), params.getInteger("page"),
-                handler -> {
-                    if (handler.succeeded()) {
-                        this.returnWithSuccessMessage(context, "查询订单信息成功！", handler.result());
-                    } else {
-                        LOGGER.error("查询订单信息失败: ", handler.cause());
-                        this.returnWithFailureMessage(context, "查询订单信息失败！");
-                    }
-                });
+        final int page = Optional.ofNullable(params.getInteger("page")).orElse(1);
+        final int pageSize = Optional.ofNullable(params.getInteger("pageSize")).orElse(10);
+        Future<JsonObject> future = Future.future();
+        orderService.findOrderRowNum(userId, params.containsKey("status") ? params.getInteger("status") : null, future);
+        future.compose(rowNum -> {
+            orderService.findPageOrder(userId, params.containsKey("status") ? params.getInteger("status") : null, pageSize, page,
+                    handler -> {
+                        if (handler.succeeded()) {
+                            this.returnWithSuccessMessage(context, "查询订单信息成功！", rowNum.getInteger("rownum"), handler.result(), page);
+                        } else {
+                            LOGGER.error("查询订单信息失败: ", handler.cause());
+                            this.returnWithFailureMessage(context, "查询订单信息失败！");
+                        }
+                    });
+            return Future.succeededFuture();
+        }).setHandler(end -> {
+            if (end.failed()) {
+                LOGGER.error("查询订单信息失败: ", end.cause());
+                this.returnWithFailureMessage(context, "查询订单信息失败！");
+            }
+        });
+
 
     }
 

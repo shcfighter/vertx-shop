@@ -66,4 +66,13 @@ public class OrderServiceImpl extends JdbcRepositoryWrapper implements IOrderSer
         future.setHandler(handler);
         return this;
     }
+
+    @Override
+    public IOrderService findOrderRowNum(long userId, Integer status, Handler<AsyncResult<JsonObject>> handler) {
+        Future<JsonObject> future = Future.future();
+        this.retrieveOne(Objects.nonNull(status) ? new JsonArray().add(userId).add(status) : new JsonArray().add(userId),
+                Objects.nonNull(status) ? OrderSql.FIND_ORDER_ROWNUM_SQL : OrderSql.FIND_ALL_ORDER_ROWNUM_SQL, future);
+        future.setHandler(handler);
+        return this;
+    }
 }

@@ -9,21 +9,19 @@ $.ajaxSetup({
     contentType:"application/json;charset=utf-8",
     statusCode: {
         401: function() {
-            if (confirm("未登录，请先登录") == true){
-                window.location.href = "/login.html";
-                return ;
-            }else{
-                return ;
-            }
+            $.Pop('未登录，请先登录', 'confirm', function(){window.location.href = "/login.html";});
         },
         404: function() {
-            alert('数据获取/输入失败，没有此服务。404');
+            $.Pop("数据获取/输入失败，没有此服务。404", "alert", function(){});
         },
         504: function() {
-            alert('数据获取/输入失败，服务器没有响应。504');
+            $.Pop("数据获取/输入失败，服务器没有响应。504", "alert", function(){});
         },
         500: function() {
-            alert('服务器有误。500');
+            $.Pop("服务器有误。500", "alert", function(){});
+        },
+        502: function() {
+            $.Pop("网关超时。502", "alert", function(){});
         }
     }
 });
@@ -36,8 +34,25 @@ $(function(){
         return ;
     }
     var loginUser = jQuery.parseJSON(sessionLoginUser);
-    $(".login_user").html("亲，<a href=\"/person/index.html\" target=\"_top\" class=\"h\">" + loginUser.loginName + "</a>");
+    $(".login_user").html("亲，<a href=\"/person/index.html\" target=\"_top\" class=\"h\">" + loginUser.loginName + "</a> " +
+        " <a href=\"javascript:void(0);\" target=\"_top\" class=\"h\" id=\"logout\">退出</a>");
 
+    $(".login_user").on("click", "#logout", function () {
+        $.ajax({
+            type: 'GET',
+            contentType: "application/json;",
+            url: domain + "logout",
+            success: function(result){
+                if(result.status == 0){
+                    sessionStorage.removeItem("loginUser");
+                    $(".login_user").html("<a href=\"/login.html\" target=\"_top\" class=\"h\">亲，请登录</a>  <a href=\"/register.html\" target=\"_top\">免费注册</a>");
+                }
+            },
+            error: function () {
+                console.log("网络异常");
+            }
+        });
+    });
 });
 
 /**

@@ -78,7 +78,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         router.route("/api/*").handler(this::formatContentTypeHandler);
         router.post("/api/user/login").handler(this::loginEntryHandler);
         router.get("/uaa").handler(this::authUaaHandler);
-        router.post("/logout").handler(this::logoutHandler);
+        router.get("/logout").handler(this::logoutHandler);
         // api dispatcher
         router.route("/api/*").handler(this::dispatchRequests);
         //全局异常处理
@@ -281,7 +281,8 @@ public class APIGatewayVerticle extends RestAPIVerticle {
     private void logoutHandler(RoutingContext context) {
         context.clearUser();
         context.session().destroy();
-        context.response().setStatusCode(204).end();
+        //context.response().setStatusCode(204).end();
+        this.returnWithSuccessMessage(context, "注销成功");
     }
 
 
