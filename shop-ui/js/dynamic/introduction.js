@@ -25,6 +25,7 @@ $(function(){
                         } else {
                             $(".tb-thumb").append("<li><div class=\"tb-pic tb-s40\"><a href=\"javascript:void(0)\"><img src=\"" + image_urls + "\" mid=\"" + image_urls + "\" big=\"" + image_urls + "\"></a></div></li>");
                         }
+                        $(".slides").append("<li><img src=\"" + image_urls + "\" title=\"pic\"/></li>");
                     });
                     $(".tm-ind-sellCount .tm-count").html(items.month_sales_volume);
                     $(".tm-ind-sumCount .tm-count").html(items.total_evaluation_num);
@@ -81,5 +82,28 @@ $(function(){
                 console.log("网络异常");
             }
         });
-    })
+    });
+
+    /**
+     * 购物车
+     */
+    $(".addcart").click(function(event) {
+        var offset = $("#shopCart_1").offset();
+        var img = $("#thumblist").find("li").eq(0).find("img").attr("src"); //获取当前点击图片链接
+        var flyer = $('<img class="flyer-img" src="' + img + '">'); //抛物体对象
+        flyer.fly({
+            start: {
+                left: event.clientX,//抛物体起点横坐标
+                top: event.clientY //抛物体起点纵坐标
+            },
+            end: {
+                left: offset.left,//抛物体终点横坐标
+                top: offset.top, //抛物体终点纵坐标
+            },
+            onEnd: function() {
+                $("#tip").show().animate({width: '200px'},300).fadeOut(500);////成功加入购物车动画效果
+                this.destory(); //销毁抛物体
+            }
+        });
+    });
 });
