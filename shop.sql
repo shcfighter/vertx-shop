@@ -202,14 +202,15 @@ CREATE TABLE public.t_order
     user_id bigint,
     shipping_information_id bigint,
     create_time timestamp without time zone,
-    order_status integer,
     order_details json,
+    total_price money NOT NULL DEFAULT 0,
+    order_status integer,
     cancel_time timestamp without time zone,
     send_time timestamp with time zone,
     is_deleted smallint DEFAULT 0,
     remarks character varying(255) COLLATE pg_catalog."default",
-    leave_message character varying(255) COLLATE pg_catalog."default",
     versions bigint DEFAULT 0,
+    leave_message character varying(255) COLLATE pg_catalog."default",
     CONSTRAINT t_order_pkey PRIMARY KEY (order_id)
 )
 WITH (
@@ -231,22 +232,26 @@ COMMENT ON COLUMN public.t_order.shipping_information_id
 COMMENT ON COLUMN public.t_order.create_time
     IS '下单时间';
 
+COMMENT ON COLUMN public.t_order.order_details
+    IS '订单详情；如：[{"commodity_id": 123456, "order_num": 5}, {}]';
+
+COMMENT ON COLUMN public.t_order.total_price
+    IS '总价格';
+
 COMMENT ON COLUMN public.t_order.order_status
-    IS '订单状态	1=待付款	2=已付款待发货	3=已发货待收货	4=已收货待评价  5=订单完成   6=已退款 	0=订单失效';
+    IS '订单状态	1=有效	2=已取消订单	3=已退款	4=已发货	0=订单失效';
 
 COMMENT ON COLUMN public.t_order.cancel_time
     IS '订单取消时间';
 
 COMMENT ON COLUMN public.t_order.send_time
     IS '发货时间';
-COMMENT ON COLUMN public.t_order.is_deleted
-    IS '0-未删除；1-已删除';
+
+COMMENT ON COLUMN public.t_user_info.is_deleted
+    IS '0-未删除；1-删除';
 
 COMMENT ON COLUMN public.t_order.remarks
     IS '备注';
-
-COMMENT ON COLUMN public.t_order.order_details
-    IS '订单详情；如：[{"commodity_id": 123456, "order_num": 5}, {}]';
 
 COMMENT ON COLUMN public.t_order.leave_message
     IS '买家留言';
@@ -290,3 +295,63 @@ COMMENT ON COLUMN public.t_order_commodity_log.num
 
 COMMENT ON COLUMN public.t_order_commodity_log.create_time
     IS '下单时间';
+
+
+-- Table: public.t_user_info
+
+-- DROP TABLE public.t_user_info;
+
+CREATE TABLE public.t_user_info
+(
+    user_info_id bigint NOT NULL,
+    user_id bigint,
+    real_name character varying(20) COLLATE pg_catalog."default",
+    sex integer,
+    birthday date,
+    photo_url character varying(512) COLLATE pg_catalog."default",
+    address character varying(512) COLLATE pg_catalog."default",
+    qq character varying(50) COLLATE pg_catalog."default",
+    weibo character varying(50) COLLATE pg_catalog."default",
+    invite_code character varying(50) COLLATE pg_catalog."default",
+    is_deleted smallint,
+    create_time timestamp without time zone,
+    update_time timestamp without time zone,
+    remarks character varying(256) COLLATE pg_catalog."default",
+    versions bigint NOT NULL DEFAULT 0
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.t_user_info
+    OWNER to postgres;
+COMMENT ON TABLE public.t_user_info
+    IS '用户详情表';
+
+COMMENT ON COLUMN public.t_user_info.user_id
+    IS '用户id';
+
+COMMENT ON COLUMN public.t_user_info.real_name
+    IS '真实姓名';
+
+COMMENT ON COLUMN public.t_user_info.sex
+    IS '性别   0-男；1-女；2-保密';
+
+COMMENT ON COLUMN public.t_user_info.birthday
+    IS '生日';
+
+COMMENT ON COLUMN public.t_user_info.photo_url
+    IS '头像url';
+
+COMMENT ON COLUMN public.t_user_info.address
+    IS '家庭地址';
+
+COMMENT ON COLUMN public.t_user_info.invite_code
+    IS '邀请码';
+
+COMMENT ON COLUMN public.t_user_info.is_deleted
+    IS '0-未删除；1-删除';
+
+COMMENT ON COLUMN public.t_user_info.versions
+    IS '版本号';

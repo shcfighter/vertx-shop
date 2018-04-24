@@ -9,6 +9,11 @@ public interface CommoditySql {
      * 通过id查询商品详情
      */
     static final String FIND_COMMODITY_BY_ID = "select * from t_commodity where commodity_id = ? and is_deleted = 0 and status = 1;";
+
+    /**
+     * 通过ids查询商品详情
+     */
+    static final String FIND_COMMODITY_BY_IDS = "select * from t_commodity where commodity_id in({{ids}}) and is_deleted = 0 and status = 1";
     /**
      * 商品下单扣库存
      */

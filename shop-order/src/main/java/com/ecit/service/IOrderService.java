@@ -29,4 +29,10 @@ public interface IOrderService {
     @Fluent
     IOrderService findOrderRowNum(long userId, Integer status, Handler<AsyncResult<JsonObject>> handler);
 
+    @Fluent
+    IOrderService preparedInsertOrder(JsonArray params, Handler<AsyncResult<String>> handler);
+
+    @Fluent
+    IOrderService findPreparedOrder(String id, Handler<AsyncResult<JsonObject>> handler);
+
 }

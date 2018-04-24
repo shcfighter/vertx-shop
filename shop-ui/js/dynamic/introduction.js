@@ -55,10 +55,31 @@ $(function(){
     }
 
     $("#LikBuy").click(function () {
-        window.location.href = "/pay.html?commodity_id=" + id + "&order_num=" + $("#text_box").val();
+        var cart_ids = new Array();
+        var cart_json = {};
+        cart_json["order_id"] = id;
+        cart_json["source"] = "buy";
+        cart_json["order_num"] = isNaN(parseInt($("#text_box").val())) ? 0 : parseInt($("#text_box").val());
+        cart_ids.push(cart_json);
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json;",
+            url: domain + "api/order/preparedInsertOrder",
+            data: JSON.stringify(cart_ids),
+            success: function(result){
+                if(result.status == 0){
+                    window.location.href = "/pay.html?order_id=" + result.items;
+                } else {
+                    $.Pop(result.message, "alert", function(){});
+                }
+            },
+            error: function () {
+                console.log("网络异常");
+            }
+        });
     });
 
-    $("#LikBasket").click(function () {
+    $("#LikBasket").click(function (event) {
         var data ={
             commodity_id: parseInt($(".tb-detail-hd").attr("commodity_id")),
             commodity_name: $(".tb-detail-hd h1").html(),
@@ -75,7 +96,23 @@ $(function(){
             success: function(result){
                 if(result.status == 0){
                     console.log(result);
-
+                    var offset = $("#shopCart_1").offset();
+                    var img = $("#thumblist").find("li").eq(0).find("img").attr("src"); //获取当前点击图片链接
+                    var flyer = $('<img class="flyer-img" src="' + img + '">'); //抛物体对象
+                    flyer.fly({
+                        start: {
+                            left: event.clientX,//抛物体起点横坐标
+                            top: event.clientY //抛物体起点纵坐标
+                        },
+                        end: {
+                            left: offset.left,//抛物体终点横坐标
+                            top: 250, //抛物体终点纵坐标
+                        },
+                        onEnd: function() {
+                            $("#tip").show().animate({width: '200px'},300).fadeOut(500);////成功加入购物车动画效果
+                            this.destory(); //销毁抛物体
+                        }
+                    });
                 }
             },
             error: function () {
@@ -87,7 +124,7 @@ $(function(){
     /**
      * 购物车
      */
-    $(".addcart").click(function(event) {
+    /*$(".addcart").click(function(event) {
         var offset = $("#shopCart_1").offset();
         var img = $("#thumblist").find("li").eq(0).find("img").attr("src"); //获取当前点击图片链接
         var flyer = $('<img class="flyer-img" src="' + img + '">'); //抛物体对象
@@ -105,5 +142,5 @@ $(function(){
                 this.destory(); //销毁抛物体
             }
         });
-    });
+    });*/
 });

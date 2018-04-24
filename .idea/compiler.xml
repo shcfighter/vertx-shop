@@ -53,19 +53,19 @@
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-message-interface" />
       </profile>
-      <profile name="Annotation profile for vertx-shop" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.codegen.CodeGenProcessor" />
-        <module name="shop-elasticsearch-service" />
-      </profile>
       <profile name="Annotation profile for shop-search-interface" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-search-interface" />
+      </profile>
+      <profile name="Annotation profile for vertx-shop" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-elasticsearch-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="9" />

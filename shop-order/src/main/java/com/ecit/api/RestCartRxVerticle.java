@@ -77,7 +77,7 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
                 this.returnWithFailureMessage(context, "加入购物车失败");
                 return;
             }
-            this.returnWithFailureMessage(context, "成功加入购物车");
+            this.returnWithSuccessMessage(context, "成功加入购物车");
         });
     }
 

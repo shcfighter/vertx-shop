@@ -45,7 +45,7 @@ $(function() {
                             "<img src=\"" + value.image_url[0] + "\"/><p class=\"title fl\">" + value.commodity_name + "</p><p class=\"price fl\"> <b>¥</b><strong>" +
                             value.price +
                             "</strong></p><p class=\"number fl\">销量<span>" +
-                            value.sales_volume +
+                            value.month_sales_volume +
                             "</span></p></div></li>");
                     });
                     var brand = result.items.brand;

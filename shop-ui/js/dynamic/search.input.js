@@ -15,4 +15,8 @@ $(function () {
             $("#ai-topsearch").click();
         }
     });
+
+    $("#shopCart").click(function () {
+        window.location.href = "/shopcart.html";
+    });
 })

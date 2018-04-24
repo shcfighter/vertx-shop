@@ -25,8 +25,9 @@ $(function () {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0){
-                    loadCart();
+                    loadCart(1);
                     $(".check-all").prop("checked",false);
+                    calculatePrice();
                 }
             },
             error: function () {
@@ -48,6 +49,7 @@ $(function () {
             success: function(result){
                 if(result.status == 0){
                     $("#" + id).closest("ul").remove();
+                    calculatePrice();
                 }
             },
             error: function () {
@@ -67,8 +69,58 @@ $(function () {
                 $(this).prop("checked",false);
             });
         }
+        calculatePrice();
+    });
+
+    $(".cart_check").live("click", function () {
+        calculatePrice();
+    });
+
+    $(".btn-area").click(function () {
+        var cart_ids = new Array();
+        $(".cart_check").each(function(){
+          if(this.checked){
+              var cart_json = {};
+              cart_json["order_id"] = $(this).attr("commodity_id");
+              cart_json["source"] = "cart";
+              cart_json["order_num"] = isNaN(parseInt($(this).closest(".item-content").find(".text_box").val())) ? 0 : parseInt($(this).closest(".item-content").find(".text_box").val());
+              cart_ids.push(cart_json);
+          }
+        });
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json;",
+            url: domain + "api/order/preparedInsertOrder",
+            data: JSON.stringify(cart_ids),
+            success: function(result){
+                if(result.status == 0){
+                    window.location.href = "/pay.html?order_id=" + result.items;
+                } else {
+                    $.Pop(result.message, "alert", function(){});
+                }
+            },
+            error: function () {
+                console.log("网络异常");
+            }
+        });
     });
 });
+
+/**
+ * 计算勾选的价格及数量
+ */
+function calculatePrice(){
+    var orderNum = 0;
+    var price = 0.00;
+    $(".check").each(function(){
+        if(this.checked){
+            orderNum += isNaN(parseInt($(this).closest(".item-content").find(".text_box").val())) ? 0 : parseInt($(this).closest(".item-content").find(".text_box").val());
+            price += isNaN(parseFloat($(this).closest(".item-content").find(".J_ItemSum").text())) ? 0 : parseInt($(this).closest(".item-content").find(".J_ItemSum").text());
+        }
+    });
+    $("#J_SelectedItemsCount").html(orderNum);
+    $("#J_Total").html(price.toFixed(2));
+}
 
 function loadCart(page){
     $.ajax({
@@ -83,7 +135,7 @@ function loadCart(page){
                     $(".bundle-main").append("<ul class=\"item-content clearfix\">" +
                         "\t<li class=\"td td-chk\">\n" +
                         "\t    <div class=\"cart-checkbox \">\n" +
-                        "\t\t<input class=\"check cart_check\" id=\"J_CheckBox_170769542747\" name=\"items[]\" value=\"" + value._id + "\" type=\"checkbox\">\n" +
+                        "\t\t<input class=\"check cart_check\" id=\"J_CheckBox_170769542747\" name=\"items[]\" commodity_id=" +value.commodity_id + " value=\"" + value._id + "\" type=\"checkbox\">\n" +
                         "\t\t<label for=\"J_CheckBox_170769542747\"></label>\n" +
                         "\t    </div>\n" +
                         "\t</li>\n" +
@@ -125,7 +177,7 @@ function loadCart(page){
                         "\t\t<div class=\"item-amount \">\n" +
                         "\t\t    <div class=\"sl\">\n" +
                         "\t\t\t<input class=\"min am-btn\" name=\"\" type=\"button\" value=\"-\"/>\n" +
-                        "\t\t\t<input class=\"text_box\" name=\"\" type=\"text\" value=\"3\" style=\"width:30px;\"/>\n" +
+                        "\t\t\t<input class=\"text_box\" name=\"\" type=\"text\" value=\"" + value.order_num + "\" style=\"width:30px;\"/>\n" +
                         "\t\t\t<input class=\"add am-btn\" name=\"\" type=\"button\" value=\"+\"/>\n" +
                         "\t\t    </div>\n" +
                         "\t\t</div>\n" +
@@ -133,7 +185,7 @@ function loadCart(page){
                         "\t</li>\n" +
                         "\t<li class=\"td td-sum\">\n" +
                         "\t    <div class=\"td-inner\">\n" +
-                        "\t\t<em tabindex=\"0\" class=\"J_ItemSum number\">117.00</em>\n" +
+                        "\t\t<em tabindex=\"0\" class=\"J_ItemSum number\">" + (value.order_num * value.price).toFixed(2) + "</em>\n" +
                         "\t    </div>\n" +
                         "\t</li>\n" +
                         "\t<li class=\"td td-op\">\n" +
@@ -154,6 +206,21 @@ function loadCart(page){
             console.log("网络错误！");
         }
     });
+
+    $(".add").live("click", function () {
+        var t = $(this).parent().find('input[class*=text_box]');
+        var price = $(this).closest(".item-content").find(".price-now").text();
+        $(this).closest(".item-content").find(".J_ItemSum").text(((parseInt(t.val()) + 1) * price).toFixed(2));
+    })
+    $(".min").live("click", function () {
+        var t = parseInt($(this).parent().find('input[class*=text_box]').val());
+        var price = $(this).closest(".item-content").find(".price-now").text();
+        if (t <= 1) {
+            $(this).closest(".item-content").find(".J_ItemSum").text(price);
+        } else {
+            $(this).closest(".item-content").find(".J_ItemSum").text(((t - 1) * price).toFixed(2));
+        }
+    })
 }
 
 $(window).scroll(

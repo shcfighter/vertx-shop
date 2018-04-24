@@ -77,8 +77,8 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         router.get("/api/v").handler(this::apiVersion);
         router.route("/api/*").handler(this::formatContentTypeHandler);
         router.post("/api/user/login").handler(this::loginEntryHandler);
+        router.get("/api/user/logout").handler(this::logoutHandler);
         router.get("/uaa").handler(this::authUaaHandler);
-        router.get("/logout").handler(this::logoutHandler);
         // api dispatcher
         router.route("/api/*").handler(this::dispatchRequests);
         //全局异常处理
@@ -172,7 +172,8 @@ public class APIGatewayVerticle extends RestAPIVerticle {
             toReq.putHeader(cookie.getName(), cookie.getValue());
         });
         if (context.user() != null) {
-            toReq.putHeader("user-principal", context.user().principal().encode());
+            toReq.putHeader("user-principal", context.user().principal().encode())
+                .putHeader("ip", IpUtils.getIpAddr(context.request()));
         }
         // send request
         if (context.getBody() == null) {

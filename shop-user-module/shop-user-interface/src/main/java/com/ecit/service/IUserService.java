@@ -5,6 +5,9 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.UpdateResult;
+
+import java.util.Date;
 
 /**
  * Created by za-wangshenhua on 2018/2/2.
@@ -32,4 +35,10 @@ public interface IUserService {
 
     @Fluent
     IUserService findEmailUser(String loginName, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    @Fluent
+    IUserService getUserInfo(long userId, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    @Fluent
+    IUserService saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, Handler<AsyncResult<UpdateResult>> resultHandler);
 }

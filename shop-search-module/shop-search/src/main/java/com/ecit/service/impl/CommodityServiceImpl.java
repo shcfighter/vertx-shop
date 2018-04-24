@@ -1,30 +1,35 @@
 package com.ecit.service.impl;
 
-import com.ecit.common.db.JdbcRepositoryWrapper;
+import com.ecit.common.db.JdbcRxRepositoryWrapper;
+import com.ecit.common.utils.MustacheUtils;
 import com.ecit.constants.CommoditySql;
 import com.ecit.service.ICommodityService;
 import com.ecit.service.IdBuilder;
+import com.google.common.collect.Lists;
 import com.hubrick.vertx.elasticsearch.RxElasticSearchService;
 import com.hubrick.vertx.elasticsearch.model.*;
+import io.reactivex.Single;
+import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * Created by za-wangshenhua on 2018/3/15.
  */
 
-public class CommodityServiceImpl extends JdbcRepositoryWrapper implements ICommodityService {
+public class CommodityServiceImpl extends JdbcRxRepositoryWrapper implements ICommodityService {
 
     private static final Logger LOGGER = LogManager.getLogger(CommodityServiceImpl.class);
     /**
@@ -35,7 +40,7 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
     final RxElasticSearchService rxElasticSearchService;
 
     public CommodityServiceImpl(Vertx vertx, JsonObject config) {
-        super(vertx.getDelegate(), config);
+        super(vertx, config);
         rxElasticSearchService = RxElasticSearchService.createEventBusProxy(vertx.getDelegate(), config.getString("address"));
     }
 
@@ -84,7 +89,24 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
     @Override
     public ICommodityService findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler) {
         Future<JsonObject> future = Future.future();
-        this.retrieveOne(new JsonArray().add(id), CommoditySql.FIND_COMMODITY_BY_ID, future);
+        this.retrieveOne(new JsonArray().add(id), CommoditySql.FIND_COMMODITY_BY_ID)
+                .subscribe(future::complete, future::fail);
+        future.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public ICommodityService findCommodityByIds(List<Long> ids, Handler<AsyncResult<List<JsonObject>>> handler) {
+        Future<List<JsonObject>> future = Future.future();
+        JsonArray params = new JsonArray();
+        List<String> buffer = Lists.newArrayList();
+        ids.forEach(id -> {
+            buffer.add("?");
+            params.add(id);
+        });
+        this.retrieveMany(params,
+                MustacheUtils.mustacheString(CommoditySql.FIND_COMMODITY_BY_IDS, Map.of("ids",buffer.stream().collect(Collectors.joining(",")))))
+                .subscribe(future::complete, future::fail);
         future.setHandler(handler);
         return this;
     }
@@ -188,42 +210,23 @@ public class CommodityServiceImpl extends JdbcRepositoryWrapper implements IComm
      * @return
      */
     @Override
-    public ICommodityService preparedCommodity(long id, long orderId, int num, Handler<AsyncResult<Integer>> handler) {
-        Future<Integer> future = Future.future();
-        postgreSQLClient.getConnection(connHandler -> {
-            if (connHandler.failed()) {
-                future.fail(connHandler.cause());
-                throw new RuntimeException(connHandler.cause());
-            }
-            final SQLConnection conn = connHandler.result();
-            Future<Void> voidFuture = Future.future();
-            conn.setAutoCommit(false, voidFuture);
-            voidFuture.compose(v -> {
-                Future<UpdateResult> commodityFuture = Future.future();
-                conn.updateWithParams(CommoditySql.ORDER_COMMODITY_BY_ID, new JsonArray().add(num). add(num).add(id), commodityFuture);
-                return commodityFuture;
-            }).compose(c -> {
-                Future<UpdateResult> orderCommodifyLogFuture = Future.future();
-                conn.updateWithParams(CommoditySql.ORDER_LOG_SQL, new JsonArray()
-                        .add(IdBuilder.getUniqueId()).add(orderId).add(id).add("0.0.0.0").add(num),
-                        orderCommodifyLogFuture);
-                return orderCommodifyLogFuture;
-            }).setHandler(endHandler -> {
-                try {
-                    if (endHandler.succeeded()) {
-                        conn.commit(commit -> {
-                            future.complete();
-                        });
-                    } else {
-                        conn.rollback(rollback -> {
-                            future.fail(endHandler.cause());
-                        });
-                    }
-                } finally {
-                    conn.close();
-                }
-            });
-        });
+    public ICommodityService preparedCommodity(long id, long orderId, int num, String ip, Handler<AsyncResult<UpdateResult>> handler) {
+        Future<UpdateResult> future = Future.future();
+        postgreSQLClient.rxGetConnection()
+            .flatMap(conn ->
+                conn.rxSetAutoCommit(false).toSingleDefault(false)
+                    .flatMap(autoCommit -> conn.rxUpdateWithParams(CommoditySql.ORDER_COMMODITY_BY_ID, new JsonArray().add(num). add(num).add(id)))
+                    .flatMap(updateResult -> conn.rxUpdateWithParams(CommoditySql.ORDER_LOG_SQL, new JsonArray()
+                        .add(IdBuilder.getUniqueId()).add(orderId).add(id).add("0.0.0.0").add(num)))
+                    // Rollback if any failed with exception propagation
+                    .onErrorResumeNext(ex -> conn.rxRollback()
+                        .toSingleDefault(true)
+                        .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
+                        .flatMap(ignore -> Single.error(ex))
+                    )
+                    // close the connection regardless succeeded or failed
+                    .doAfterTerminate(conn::close)
+            ).subscribe(future::complete, future::fail);
         future.setHandler(handler);
         return this;
     }

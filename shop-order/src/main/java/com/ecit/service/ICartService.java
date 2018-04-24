@@ -31,4 +31,7 @@ public interface ICartService {
 
     @Fluent
     ICartService removeCart(long userId, List<String> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler);
+
+    @Fluent
+    ICartService removeCartByCommodityId(long userId, List<Long> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler);
 }

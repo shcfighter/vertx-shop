@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,6 +44,8 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.post("/register").handler(this::registerHandler);
         router.get("/activate/:loginName/:code").handler(this::activateHandler);
         router.put("/changepwd").handler(context -> this.requireLogin(context, this::changePwdHandler));
+        router.get("/getUserInfo").handler(context -> this.requireLogin(context, this::getUserInfoHandler));
+        router.post("/saveUserInfo").handler(context -> this.requireLogin(context, this::saveUserInfoHandler));
         //全局异常处理
         this.globalVerticle(router);
 
@@ -208,4 +211,36 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         });
     }
 
+    private void getUserInfoHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        userService.getUserInfo(userId, handler -> {
+            if(handler.failed()){
+                LOGGER.error("获取用户信息失败", handler.cause());
+                this.returnWithFailureMessage(context, "获取用户信息失败!");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "查询用户详情成功", handler.result());
+
+        });
+    }
+
+    /**
+     * 保存个人信息
+     * @param context
+     * @param principal
+     */
+    private void saveUserInfoHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        JsonObject params = context.getBodyAsJson();
+        userService.saveUserInfo(userId, params.getString("login_name"), params.getString("user_name"),
+                params.getString("mobile"), params.getString("email"), params.getInteger("sex"), new Date().getTime(), handler -> {
+            if(handler.failed()){
+                LOGGER.error("获取用户信息失败", handler.cause());
+                this.returnWithFailureMessage(context, "获取用户信息失败!");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "查询用户详情成功", handler.result());
+
+        });
+    }
 }

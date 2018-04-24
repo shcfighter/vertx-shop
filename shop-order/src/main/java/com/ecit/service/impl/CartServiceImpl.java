@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by za-wangshenhua on 2018/4/6.
@@ -101,9 +102,24 @@ public class CartServiceImpl implements ICartService {
     @Override
     public ICartService removeCart(long userId, List<String> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler) {
         Future<MongoClientUpdateResult> future = Future.future();
-        mongoClient.rxUpdateCollectionWithOptions(CART_COLLECTION, new JsonObject().put("user_id", 123456)
+        mongoClient.rxUpdateCollectionWithOptions(CART_COLLECTION, new JsonObject()
                         .put("user_id", userId)
                         .put("_id", new JsonObject().put("$in", new JsonArray(ids)))
+                        .put("is_deleted", 0),
+                new JsonObject().put("$set", new JsonObject().put("is_deleted", 1)),
+                new UpdateOptions().setMulti(true))
+                .subscribe(future::complete, future::fail);
+        future.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public ICartService removeCartByCommodityId(long userId, List<Long> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler) {
+        Future<MongoClientUpdateResult> future = Future.future();
+        System.out.println(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        mongoClient.rxUpdateCollectionWithOptions(CART_COLLECTION, new JsonObject()
+                        .put("user_id", userId)
+                        .put("commodity_id", new JsonObject().put("$in", new JsonArray(ids)))
                         .put("is_deleted", 0),
                 new JsonObject().put("$set", new JsonObject().put("is_deleted", 1)),
                 new UpdateOptions().setMulti(true))

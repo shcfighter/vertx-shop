@@ -41,7 +41,7 @@ $(function(){
         $.ajax({
             type: 'GET',
             contentType: "application/json;",
-            url: domain + "logout",
+            url: domain + "api/user/logout",
             success: function(result){
                 if(result.status == 0){
                     sessionStorage.removeItem("loginUser");
