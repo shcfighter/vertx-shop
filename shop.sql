@@ -207,6 +207,7 @@ CREATE TABLE public.t_order
     order_status integer,
     cancel_time timestamp without time zone,
     send_time timestamp with time zone,
+    freight money NOT NULL DEFAULT 0,
     is_deleted smallint DEFAULT 0,
     remarks character varying(255) COLLATE pg_catalog."default",
     versions bigint DEFAULT 0,
@@ -255,6 +256,9 @@ COMMENT ON COLUMN public.t_order.remarks
 
 COMMENT ON COLUMN public.t_order.leave_message
     IS '买家留言';
+
+COMMENT ON COLUMN public.t_order.freight
+    IS '快递费';
 
 
 -- Table: public.t_order_commodity_log
@@ -336,7 +340,7 @@ COMMENT ON COLUMN public.t_user_info.real_name
     IS '真实姓名';
 
 COMMENT ON COLUMN public.t_user_info.sex
-    IS '性别   0-男；1-女；2-保密';
+    IS '性别   0-保密；1-女；2-男';
 
 COMMENT ON COLUMN public.t_user_info.birthday
     IS '生日';

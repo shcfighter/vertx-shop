@@ -46,6 +46,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.put("/changepwd").handler(context -> this.requireLogin(context, this::changePwdHandler));
         router.get("/getUserInfo").handler(context -> this.requireLogin(context, this::getUserInfoHandler));
         router.post("/saveUserInfo").handler(context -> this.requireLogin(context, this::saveUserInfoHandler));
+
         //全局异常处理
         this.globalVerticle(router);
 
@@ -232,14 +233,15 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     private void saveUserInfoHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         JsonObject params = context.getBodyAsJson();
-        userService.saveUserInfo(userId, params.getString("login_name"), params.getString("user_name"),
-                params.getString("mobile"), params.getString("email"), params.getInteger("sex"), new Date().getTime(), handler -> {
+        userService.saveUserInfo(userId, params.getString("login_name"), params.getString("user_name"),params.getString("mobile"),
+                params.getString("email"), params.getInteger("sex"), Objects.isNull(params.getLong("birthday")) ? 0 : params.getLong("birthday"), params.getString("photo_url"),
+                handler -> {
             if(handler.failed()){
-                LOGGER.error("获取用户信息失败", handler.cause());
-                this.returnWithFailureMessage(context, "获取用户信息失败!");
+                LOGGER.error("更新用户信息失败", handler.cause());
+                this.returnWithFailureMessage(context, "更新用户信息失败!");
                 return ;
             }
-            this.returnWithSuccessMessage(context, "查询用户详情成功", handler.result());
+            this.returnWithSuccessMessage(context, "更新用户详情成功", handler.result());
 
         });
     }

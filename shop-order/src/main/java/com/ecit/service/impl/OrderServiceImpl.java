@@ -37,7 +37,7 @@ public class OrderServiceImpl extends JdbcRxRepositoryWrapper implements IOrderS
      * @return
      */
     @Override
-    public IOrderService insertOrder(long orderId, long userId, long shippingInformationId, String leaveMessage,
+    public IOrderService insertOrder(long orderId, long userId, String price, String freight, long shippingInformationId, String leaveMessage,
                                      JsonArray orderDetails, Handler<AsyncResult<Integer>> handler) {
         Future<Integer> future = Future.future();
         this.execute(new JsonArray().add(orderId)
@@ -46,6 +46,8 @@ public class OrderServiceImpl extends JdbcRxRepositoryWrapper implements IOrderS
                 .add(OrderStatus.VALID.getValue())
                 .add(leaveMessage)
                 .add(orderDetails.encodePrettily())
+                .add(price)
+                .add(freight)
                 , OrderSql.INSERT_ORDER_SQL).subscribe(future::complete, future::fail);
         future.setHandler(handler);
         return this;

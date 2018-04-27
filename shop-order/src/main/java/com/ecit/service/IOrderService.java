@@ -7,7 +7,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public interface IOrderService {
     String ORDER_SERVICE_ADDRESS = "order_service_address";
 
     @Fluent
-    IOrderService insertOrder(long orderId, long userId, long shippingInformationId, String leaveMessage, JsonArray orderDetails, Handler<AsyncResult<Integer>> handler);
+    IOrderService insertOrder(long orderId, long userId, String price, String freight, long shippingInformationId, String leaveMessage, JsonArray orderDetails, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
     IOrderService findPageOrder(long userId, Integer status, int size, int offset, Handler<AsyncResult<List<JsonObject>>> handler);

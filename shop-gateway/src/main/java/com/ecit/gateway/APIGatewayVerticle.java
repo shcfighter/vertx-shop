@@ -14,11 +14,13 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.jdbc.JDBCClient;
+import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.client.HttpRequest;
@@ -33,10 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 /**
  * A verticle for global API gateway.
@@ -75,10 +74,11 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         // version handler
         router.get("/api/v").handler(this::apiVersion);
+        router.post("/api/uploadImageAvatar").handler(context -> this.requireLogin(context, this::uploadImageAvatarHandler));
+        router.get("/api/uaa").handler(this::authUaaHandler);
         router.route("/api/*").handler(this::formatContentTypeHandler);
         router.post("/api/user/login").handler(this::loginEntryHandler);
         router.get("/api/user/logout").handler(this::logoutHandler);
-        router.get("/uaa").handler(this::authUaaHandler);
         // api dispatcher
         router.route("/api/*").handler(this::dispatchRequests);
         //全局异常处理
@@ -181,33 +181,6 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         } else {
             toReq.end(context.getBody());
         }
-
-        /*final HttpRequest<Buffer> request = client.request(context.request().method(), path);
-        if(context.request().method().compareTo(HttpMethod.POST) == 0
-                || context.request().method().compareTo(HttpMethod.PUT) == 0){
-            Optional.ofNullable(context.getBodyAsJson()).orElse(new JsonObject()).getMap().forEach((k, v) -> request.addQueryParam(k, String.valueOf(v)));
-        }
-        context.cookies().forEach(cookie -> {
-            request.putHeader(cookie.getName(), cookie.getValue());
-        });
-        if (context.user() != null) {
-            request.putHeader("user-principal", context.user().principal().encode());
-        }
-        request.send(handler -> {
-            Buffer bodyBuffer = Buffer.buffer();
-            if(handler.succeeded()){
-                bodyBuffer.appendBuffer(handler.result().body());
-
-            } else {
-                LOGGER.error("调用http接口错误！", handler.cause());
-                bodyBuffer.appendString(ResultItems.getEncodePrettily(new ResultItems(-1, "远程接口调用失败！")));
-            }
-            context.response().setStatusCode(200)
-                    .putHeader("content-type", "application/json")
-                    .end(bodyBuffer);
-            cbFuture.complete();
-            ServiceDiscovery.releaseServiceObject(discovery, client);
-        });*/
     }
 
     /**
@@ -233,8 +206,8 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param context
      */
     private void formatContentTypeHandler(RoutingContext context) {
-        if(context.request().method().compareTo(HttpMethod.POST) == 0
-                && context.request().method().compareTo(HttpMethod.PUT) == 0
+        if((context.request().method().compareTo(HttpMethod.POST) == 0
+                || context.request().method().compareTo(HttpMethod.PUT) == 0)
                 && !StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
             LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
             badRequest(context, new Throwable("请求方式【Content-Type】错误"));
@@ -284,6 +257,24 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         context.session().destroy();
         //context.response().setStatusCode(204).end();
         this.returnWithSuccessMessage(context, "注销成功");
+    }
+
+    private void uploadImageAvatarHandler(RoutingContext context, JsonObject principal){
+        Set<FileUpload> fileUploads = context.fileUploads();
+        if(CollectionUtil.isEmpty(fileUploads)){
+            this.returnWithFailureMessage(context, "上传失败！");
+            return ;
+        }
+        for (FileUpload avatar : fileUploads) {
+            FileSystem fs = vertx.fileSystem();
+            fs.copy(avatar.uploadedFileName(), "/data/shop/images/avatar/" + avatar.fileName(), res -> {
+                if (res.succeeded()) {
+                    this.returnWithSuccessMessage(context, "上传成功！", "http://111.231.132.168:8080/images/avatar/" + avatar.fileName());
+                } else {
+                    this.returnWithFailureMessage(context, "上传失败，请重试！");
+                }
+            });
+        }
     }
 
 

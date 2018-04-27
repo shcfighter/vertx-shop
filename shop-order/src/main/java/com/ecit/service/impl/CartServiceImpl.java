@@ -116,7 +116,6 @@ public class CartServiceImpl implements ICartService {
     @Override
     public ICartService removeCartByCommodityId(long userId, List<Long> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler) {
         Future<MongoClientUpdateResult> future = Future.future();
-        System.out.println(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
         mongoClient.rxUpdateCollectionWithOptions(CART_COLLECTION, new JsonObject()
                         .put("user_id", userId)
                         .put("commodity_id", new JsonObject().put("$in", new JsonArray(ids)))

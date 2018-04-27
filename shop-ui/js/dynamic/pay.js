@@ -19,7 +19,7 @@ $(function () {
                     var total_price = 0.00;
                     source = items[0].source;
                     $.each(items, function (index, value) {
-                        total_price += parseInt(value.price.substr(1).replace(",", "")) * value.order_num;
+                        total_price += parseInt(value.price) * value.order_num;
                         $(".bundle-main").append("<ul class=\"item-content clearfix\"><div class=\"pay-phone\">" +
                             "<li class=\"td td-item\"><div class=\"item-pic\"><a href=\"javascript:void(0)\" class=\"J_MakePoint\">" +
                             "<img src=\"" + value.image_url + "\" class=\"itempic J_ItemImg\" width=\"80\" ></a>" +
@@ -28,17 +28,14 @@ $(function () {
                             "</div></div></li><li class=\"td td-info\"><div class=\"item-props\">" +
                             /*"<span class=\"sku-line\">颜色：12#川南玛瑙</span><span class=\"sku-line\">包装：裸装</span>" +*/
                             "</div></li><li class=\"td td-price\"><div class=\"item-price price-promo-promo\"><div class=\"price-content\">" +
-                            "<em class=\"J_Price price-now\">" + value.price + "</em>" +
+                            "￥<em class=\"J_Price price-now\">" + value.price + "</em>" +
                             "</div></div></li></div><li class=\"td td-amount\"><div class=\"amount-wrapper \"><div class=\"item-amount \">" +
-                            "<span class=\"phone-title\">购买数量</span><div class=\"sl\">" +
-                            "<input class=\"min am-btn\" name=\"\" type=\"button\" value=\"-\"/>" +
-                            "<input class=\"text_box\" name=\"\" type=\"text\" value=\"" + value.order_num + "\"style=\"width:30px;\"/>" +
-                            "<input class=\"add am-btn\" name=\"\" type=\"button\" value=\"+\"/>" +
+                            "<span class=\"phone-title\">购买数量</span><div class=\"sl\">" + value.order_num +
                             "</div></div></div></li><li class=\"td td-sum\"><div class=\"td-inner\">" +
-                            "<em tabindex=\"0\" class=\"J_ItemSum number\">￥" + (parseInt(value.price.substr(1).replace(",", "")) * value.order_num).toFixed(2) + "</em>" +
+                            "<em tabindex=\"0\" class=\"J_ItemSum number\">￥" + (parseInt(value.price) * value.order_num).toFixed(2) + "</em>" +
                             "</div></li><li class=\"td td-oplist\"><div class=\"td-inner\">" +
                             "<span class=\"phone-title\">配送方式</span>" +
-                            "<div class=\"pay-logis\">快递<b class=\"sys_item_freprice\">" + value.freight + "</b>元" +
+                            "<div class=\"pay-logis\">快递￥<b class=\"sys_item_freprice\">" + value.freight + "</b>元" +
                             "</div></div></li></ul>");
                     });
                 }
@@ -58,7 +55,7 @@ $(function () {
         $(".item-content").each(function (index, content) {
             var content = {
                 "id": parseInt($(this).find(".item-title").attr("commodity_id")),
-                "order_num": parseInt($(this).find(".text_box").val())
+                "order_num": parseInt($(this).find(".sl").text())
             }
             order_details.push(content);
         })
@@ -79,6 +76,8 @@ $(function () {
                     $.Pop("下单成功！</br>查看订单列表", "confirm", function(){
                         window.location.href = "/success.html"
                     });
+                } else {
+                    $.Pop("下单失败，请重试！", "alert", function(){});
                 }
             },
             error: function () {

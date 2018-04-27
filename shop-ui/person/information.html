@@ -8,10 +8,13 @@
     <link href="../AmazeUI-2.4.2/assets/css/amazeui.css" rel="stylesheet" type="text/css">
     <link href="../css/personal.css" rel="stylesheet" type="text/css">
     <link href="../css/infstyle.css" rel="stylesheet" type="text/css">
-    <script src="../AmazeUI-2.4.2/assets/js/jquery.min.js"></script>
-    <script src="../AmazeUI-2.4.2/assets/js/amazeui.js"></script>
-    <script src="../js/commons.js"></script>
-    <script src="../js/dynamic/person/information.js"></script>
+    <script type="text/javascript" src="../AmazeUI-2.4.2/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../AmazeUI-2.4.2/assets/js/amazeui.js"></script>
+    <script type="text/javascript" src="../js/commons.js"></script>
+    <script type="text/javascript" src="../js/dynamic/search.input.js"></script>
+    <script type="text/javascript" src="../js/dynamic/person/information.js"></script>
+    <script type="text/javascript" src="../js/laydate.js"></script>
+    <script type="text/javascript" src="../js/xcConfirm.js"></script>
 </head>
 <body>
 <!--头 -->
@@ -103,17 +106,19 @@
                 <!--头像 -->
                 <div class="user-infoPic">
 
-                    <div class="filePic">
-                        <input type="file" class="inputPic" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*">
-                        <img class="am-circle am-img-thumbnail" src="../images/getAvatar.do.jpg" alt=""/>
-                    </div>
+                    <form name="form01" method="POST" enctype="multipart/form-data">
+                        <div class="filePic">
+                            <input type="file" class="inputPic" name="file" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*" onchange="submitform()" >
+                            <img class="am-circle am-img-thumbnail" src="../images/getAvatar.do.jpg" alt=""/>
+                        </div>
+                    </form>
 
                     <p class="am-form-help">头像</p>
 
                     <div class="info-m">
                         <div><b>用户名：<i>小叮当</i></b></div>
                         <div class="vip">
-                            <span></span><a href="#">会员专享</a>
+                            <span></span><a href="javascript:void(0);">会员专享</a>
                         </div>
                     </div>
                 </div>
@@ -142,13 +147,13 @@
                             <label class="am-form-label">性别</label>
                             <div class="am-form-content sex">
                                 <label class="am-radio-inline">
-                                    <input type="radio" name="radio10" value="male" data-am-ucheck> 男
+                                    <input type="radio" name="sex" value="2" data-am-ucheck> 男
                                 </label>
                                 <label class="am-radio-inline">
-                                    <input type="radio" name="radio10" value="female" data-am-ucheck> 女
+                                    <input type="radio" name="sex" value="1" data-am-ucheck> 女
                                 </label>
                                 <label class="am-radio-inline">
-                                    <input type="radio" name="radio10" value="secret" data-am-ucheck> 保密
+                                    <input type="radio" name="sex" value="0" data-am-ucheck> 保密
                                 </label>
                             </div>
                         </div>
@@ -156,27 +161,15 @@
                         <div class="am-form-group">
                             <label for="user-birth" class="am-form-label">生日</label>
                             <div class="am-form-content birth">
-                                <div class="birth-select">
-                                    <select data-am-selected>
-                                        <option value="a">2015</option>
-                                        <option value="b">1987</option>
-                                    </select>
-                                    <em>年</em>
-                                </div>
-                                <div class="birth-select2">
-                                    <select data-am-selected>
-                                        <option value="a">12</option>
-                                        <option value="b">8</option>
-                                    </select>
-                                    <em>月</em></div>
-                                <div class="birth-select2">
-                                    <select data-am-selected>
-                                        <option value="a">21</option>
-                                        <option value="b">23</option>
-                                    </select>
-                                    <em>日</em></div>
+                                <input type="text" class="date-input" placeholder="请选择日期" id="birthday">
                             </div>
-
+                            <script>
+                                lay('#version').html('-v'+ laydate.v);
+                                //执行一个laydate实例
+                                laydate.render({
+                                    elem: '#birthday' //指定元素
+                                });
+                            </script>
                         </div>
                         <div class="am-form-group">
                             <label for="user-phone" class="am-form-label">电话</label>

@@ -7,6 +7,7 @@ import com.ecit.service.ICommodityService;
 import com.ecit.service.IOrderService;
 import com.ecit.service.IdBuilder;
 import com.google.common.collect.Lists;
+import com.hazelcast.util.CollectionUtil;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
@@ -21,10 +22,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.beans.FeatureDescriptor;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by za-wangshenhua on 2018/4/5.
@@ -90,11 +94,27 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         final ICommodityService commodityService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityService.SEARCH_SERVICE_ADDRESS).build(ICommodityService.class);
         final ICartService cartService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICartService.CART_SERVICE_ADDRESS).build(ICartService.class);
         final long orderId = IdBuilder.getUniqueId();
+        List<BigDecimal> totalPrice = Lists.newArrayList();
+        List<BigDecimal> totalFreight = Lists.newArrayList();
         CompositeFuture.all(this.checkCommodity(commodityService, orderDetails))
-                .compose(check -> CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails, IpUtils.getIpAddr(context.request().getDelegate()))))
+                .compose(check -> {
+                    List<JsonObject> list = check.list();
+                    BigDecimal freight = new BigDecimal(0);
+                    for (int i = 0; i < list.size(); i++) {
+                        JsonObject commodity = list.get(i);
+                        if (freight.compareTo(new BigDecimal(commodity.getString("freight"))) == -1){
+                            freight = new BigDecimal(commodity.getString("freight"));
+                        }
+                        totalPrice.add(new BigDecimal(commodity.getString("price")).multiply(new BigDecimal(orderDetails.getJsonObject(i).getInteger("order_num"))));
+                    }
+                    totalPrice.add(freight);
+                    totalFreight.add(freight);
+                    return CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails, IpUtils.getIpAddr(context.request().getDelegate())));
+                })
                 .compose(msg ->{
                     Future<Integer> orderFuture = Future.future();
-                    orderService.insertOrder(orderId, userId, params.getLong("shipping_information_id"),
+                    orderService.insertOrder(orderId, userId, totalPrice.stream().reduce(BigDecimal::add).orElse(new BigDecimal("0.00")).toString(),
+                            CollectionUtil.isEmpty(totalFreight) ? "0.00" : totalFreight.get(0).toString(), params.getLong("shipping_information_id"),
                             params.getString("leave_message"), orderDetails, orderFuture);
                     return orderFuture;
         }).setHandler(orderHandler -> {
@@ -189,7 +209,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                     order.put("commodity_name", commodity.getString("commodity_name"));
                     order.put("price", commodity.getString("price"));
                     order.put("image_url", commodity.getString("image_url"));
-                    future.complete();
+                    future.complete(commodity);
                 } else {
                     LOGGER.info("调用商品【{}】详情接口失败", order.getLong("id"));
                     future.fail(orderHandler.cause());

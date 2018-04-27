@@ -26,9 +26,7 @@ $(function () {
                     $.each(items, function (index, value) {
                         var orderDetails = JSON.parse(value.order_details);
                         var orderDetailsHtml = "";
-                        var price = 0.00;
                         $.each(orderDetails, function (orderIndex, orderValue) {
-                            price += parseFloat(orderValue.price.substr(1).replace(",", "")) * parseFloat(orderValue.order_num);
                             orderDetailsHtml += "<ul class=\"item-list\">\n" +
                             "    <li class=\"td td-item\">\n" +
                             "        <div class=\"item-pic\">\n" +
@@ -49,7 +47,7 @@ $(function () {
                             "    </li>\n" +
                             "    <li class=\"td td-price\">\n" +
                             "        <div class=\"item-price\">\n" +
-                            "            " + orderValue.price + "\n" +
+                            "            ￥" + orderValue.price + "\n" +
                             "        </div>\n" +
                             "    </li>\n" +
                             "    <li class=\"td td-number\">\n" +
@@ -76,8 +74,8 @@ $(function () {
                             "        <div class=\"order-right\">\n" +
                             "            <li class=\"td td-amount\">\n" +
                             "                <div class=\"item-amount\">\n" +
-                            "                    合计：" + price + "\n" +
-                            "                    <p>含运费：<span>10.00</span></p>\n" +
+                            "                    合计：" + value.total_price + "\n" +
+                            "                    <p>含运费：<span>" + value.freight + "</span></p>\n" +
                             "                </div>\n" +
                             "            </li>\n" +
                             "            <div class=\"move-right\">\n" +

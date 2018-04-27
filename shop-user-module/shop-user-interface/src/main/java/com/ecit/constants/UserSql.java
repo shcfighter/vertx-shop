@@ -46,7 +46,7 @@ public interface UserSql {
     /**
      * 查询用户信息
      */
-    public static final String GET_USER_INFO_SQL = "select u.user_id, u.login_name, u.user_name, u.mobile, u.email, ui.user_info_id, ui.sex, ui.birthday, " +
+    public static final String GET_USER_INFO_SQL = "select u.user_id, u.login_name, u.user_name, u.mobile, u.email, ui.user_info_id, ui.sex, ui.birthday, ui.photo_url, " +
             "u.versions, ui.versions info_versions from t_user u left join t_user_info ui on(u.user_id = ui.user_id) where u.user_id = ? and u.is_deleted = 0";
 
     /**
@@ -56,8 +56,8 @@ public interface UserSql {
             "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
 
     public static final String INSERT_USER_INFO_SQL = "insert into t_user_info(user_info_id, user_id, real_name, sex, birthday, photo_url, is_deleted, create_time) " +
-            "values (?, ?, ?, ?, now(), ?, 0, now())";
+            "values (?, ?, ?, ?, ?, ?, 0, now())";
 
-    public static final String UPDATE_USER_INFO_SQL = "update t_user_info set real_name = ?, sex = ?, birthday = now(), " +
+    public static final String UPDATE_USER_INFO_SQL = "update t_user_info set real_name = ?, sex = ?, birthday = ?, photo_url = ?, " +
             "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
 }

@@ -40,5 +40,5 @@ public interface IUserService {
     IUserService getUserInfo(long userId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent
-    IUserService saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, Handler<AsyncResult<UpdateResult>> resultHandler);
+    IUserService saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, String photoUrl, Handler<AsyncResult<UpdateResult>> resultHandler);
 }

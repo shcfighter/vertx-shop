@@ -164,10 +164,10 @@ function loadCart(page){
                         "\t    <div class=\"item-price price-promo-promo\">\n" +
                         "\t\t<div class=\"price-content\">\n" +
                         "\t\t    <div class=\"price-line\">\n" +
-                        "\t\t\t<em class=\"price-original\">" + value.original_price + "</em>\n" +
+                        "\t\t\t<em class=\"price-original\">￥" + value.original_price + "</em>\n" +
                         "\t\t    </div>\n" +
                         "\t\t    <div class=\"price-line\">\n" +
-                        "\t\t\t<em class=\"J_Price price-now\" tabindex=\"0\">" + value.price + "</em>\n" +
+                        "\t\t\t￥<em class=\"J_Price price-now\" tabindex=\"0\">" + value.price + "</em>\n" +
                         "\t\t    </div>\n" +
                         "\t\t</div>\n" +
                         "\t    </div>\n" +
@@ -185,7 +185,7 @@ function loadCart(page){
                         "\t</li>\n" +
                         "\t<li class=\"td td-sum\">\n" +
                         "\t    <div class=\"td-inner\">\n" +
-                        "\t\t<em tabindex=\"0\" class=\"J_ItemSum number\">" + (value.order_num * value.price).toFixed(2) + "</em>\n" +
+                        "\t\t￥<em tabindex=\"0\" class=\"J_ItemSum number\">" + (value.order_num * value.price).toFixed(2) + "</em>\n" +
                         "\t    </div>\n" +
                         "\t</li>\n" +
                         "\t<li class=\"td td-op\">\n" +
@@ -211,6 +211,7 @@ function loadCart(page){
         var t = $(this).parent().find('input[class*=text_box]');
         var price = $(this).closest(".item-content").find(".price-now").text();
         $(this).closest(".item-content").find(".J_ItemSum").text(((parseInt(t.val()) + 1) * price).toFixed(2));
+        calculatePrice();
     })
     $(".min").live("click", function () {
         var t = parseInt($(this).parent().find('input[class*=text_box]').val());
@@ -220,6 +221,7 @@ function loadCart(page){
         } else {
             $(this).closest(".item-content").find(".J_ItemSum").text(((t - 1) * price).toFixed(2));
         }
+        calculatePrice();
     })
 }
 

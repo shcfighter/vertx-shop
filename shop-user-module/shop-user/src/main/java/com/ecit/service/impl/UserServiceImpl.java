@@ -2,6 +2,7 @@ package com.ecit.service.impl;
 
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
 import com.ecit.common.enmu.IsDeleted;
+import com.ecit.common.utils.FormatUtils;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.UserStatus;
 import com.ecit.service.IUserService;
@@ -16,9 +17,11 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -100,7 +103,7 @@ public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserSer
     }
 
     @Override
-    public IUserService saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, Handler<AsyncResult<UpdateResult>> resultHandler) {
+    public IUserService saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, String photoUrl, Handler<AsyncResult<UpdateResult>> resultHandler) {
         Future<JsonObject> userFuture = Future.future();
         this.retrieveOne(new JsonArray().add(userId), UserSql.GET_USER_INFO_SQL)
                 .subscribe(userFuture::complete, userFuture::fail);
@@ -114,10 +117,12 @@ public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserSer
                                     .flatMap(updateResult -> {
                                         if (Objects.isNull(user.getLong("info_versions"))) {
                                             return conn.rxUpdateWithParams(UserSql.INSERT_USER_INFO_SQL,
-                                                    new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(userName).add(sex).add(""));
+                                                    new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(userName).add(sex)
+                                                            .add(DateFormatUtils.format(new Date(birthday), FormatUtils.DATE_FORMAT)).add(photoUrl));
                                         } else {
                                             return conn.rxUpdateWithParams(UserSql.UPDATE_USER_INFO_SQL,
-                                                new JsonArray().add(userName).add(sex).add(userId).add(user.getLong("info_versions")));
+                                                new JsonArray().add(userName).add(sex).add(DateFormatUtils.format(new Date(birthday), FormatUtils.DATE_FORMAT)).add(photoUrl)
+                                                        .add(userId).add(user.getLong("info_versions")));
                                         }
                                     })
                                     // Rollback if any failed with exception propagation

@@ -52,8 +52,9 @@ $(function() {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0){
-                    $.Pop("注册成功！", "alert", function(){});
-                    window.location.href = "/index.html";
+                    $.Pop("注册成功！", "alert", function(){
+                        window.location.href = "/index.html";
+                    });
                 } else {
                     alert(result.message);
                 }
