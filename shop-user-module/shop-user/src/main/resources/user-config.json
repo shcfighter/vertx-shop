@@ -9,5 +9,12 @@
   "password" : "h123456",
   "database" : "vertx_shop",
   "charset" : "UTF-8",
-  "queryTimeout" : 10000
+  "queryTimeout" : 10000,
+  "rabbitmq": {
+    "host": "111.231.132.168",
+    "port": 5672,
+    "username": "guest",
+    "password": "guest",
+    "virtualHost": "/"
+  }
 }

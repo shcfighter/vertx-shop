@@ -1,6 +1,7 @@
 package com.ecit.gateway;
 
 import com.ecit.common.RestAPIVerticle;
+import com.ecit.common.id.IdWorker;
 import com.ecit.common.result.ResultItems;
 import com.ecit.common.utils.IpUtils;
 import com.ecit.constants.UserSql;
@@ -10,6 +11,7 @@ import com.ecit.gateway.auth.impl.ShopUser;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.util.CollectionUtil;
+import com.hazelcast.util.UuidUtil;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
@@ -74,7 +76,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         // version handler
         router.get("/api/v").handler(this::apiVersion);
-        router.post("/api/uploadImageAvatar").handler(context -> this.requireLogin(context, this::uploadImageAvatarHandler));
+        router.post("/api/uploadImageAvatar").handler(this::uploadImageAvatarHandler);
         router.get("/api/uaa").handler(this::authUaaHandler);
         router.route("/api/*").handler(this::formatContentTypeHandler);
         router.post("/api/user/login").handler(this::loginEntryHandler);
@@ -259,18 +261,25 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         this.returnWithSuccessMessage(context, "注销成功");
     }
 
-    private void uploadImageAvatarHandler(RoutingContext context, JsonObject principal){
+    private void uploadImageAvatarHandler(RoutingContext context){
+        if (Objects.isNull(context.user())){
+            this.noAuth(context);
+            return;
+        }
         Set<FileUpload> fileUploads = context.fileUploads();
         if(CollectionUtil.isEmpty(fileUploads)){
+            LOGGER.error("头像上传失败，文件为空！");
             this.returnWithFailureMessage(context, "上传失败！");
             return ;
         }
         for (FileUpload avatar : fileUploads) {
             FileSystem fs = vertx.fileSystem();
-            fs.copy(avatar.uploadedFileName(), "/data/shop/images/avatar/" + avatar.fileName(), res -> {
+            final String[] images = StringUtils.split(avatar.fileName(), ".");
+            fs.copy(avatar.uploadedFileName(), "/data/shop/images/avatar/" + UuidUtil.createClusterUuid() + "." + images[images.length - 1], res -> {
                 if (res.succeeded()) {
                     this.returnWithSuccessMessage(context, "上传成功！", "http://111.231.132.168:8080/images/avatar/" + avatar.fileName());
                 } else {
+                    LOGGER.error("头像上传失败！", res.cause());
                     this.returnWithFailureMessage(context, "上传失败，请重试！");
                 }
             });

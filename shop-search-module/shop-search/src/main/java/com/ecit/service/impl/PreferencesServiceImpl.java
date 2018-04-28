@@ -43,7 +43,7 @@ public class PreferencesServiceImpl implements IPreferencesService{
     /**
      * rabbitmq 队列
      */
-    private static final String QUEUES = "vertx.shop.queues";
+    private static final String QUEUES = "vertx.shop.preferences.queues";
 
 
     public PreferencesServiceImpl(Vertx vertx, JsonObject config) {
@@ -72,7 +72,7 @@ public class PreferencesServiceImpl implements IPreferencesService{
         vertx.eventBus().consumer("my.address", msg -> {
             JsonObject json = (JsonObject) msg.body();
             JsonObject perferences = new JsonObject(json.getString("body"));
-            System.out.println("Got message: " + perferences);
+            LOGGER.debug("Got perferences message: {}", perferences);
             mongoClient.rxInsert(PREFERENCES_COLLECTION, new JsonObject(json.getString("body")))
                     .subscribe();
         });

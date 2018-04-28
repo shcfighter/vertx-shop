@@ -317,7 +317,7 @@ CREATE TABLE public.t_user_info
     qq character varying(50) COLLATE pg_catalog."default",
     weibo character varying(50) COLLATE pg_catalog."default",
     invite_code character varying(50) COLLATE pg_catalog."default",
-    is_deleted smallint,
+    is_deleted smallint DEFAULT 0,
     create_time timestamp without time zone,
     update_time timestamp without time zone,
     remarks character varying(256) COLLATE pg_catalog."default",
@@ -359,3 +359,43 @@ COMMENT ON COLUMN public.t_user_info.is_deleted
 
 COMMENT ON COLUMN public.t_user_info.versions
     IS '版本号';
+
+
+-- Table: public.t_user_certified
+
+-- DROP TABLE public.t_user_certified;
+
+CREATE TABLE public.t_user_certified
+(
+    certified_id bigint NOT NULL,
+    user_id bigint,
+    certified_type integer,
+    certified_time timestamp without time zone,
+    update_time timestamp without time zone,
+    is_deleted smallint DEFAULT 0,
+    remarks text COLLATE pg_catalog."default",
+    versions bigint DEFAULT 0,
+    CONSTRAINT t_user_certified_pkey PRIMARY KEY (certified_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.t_user_certified
+    OWNER to postgres;
+COMMENT ON TABLE public.t_user_certified
+    IS '用户认证表';
+
+COMMENT ON COLUMN public.t_user_certified.user_id
+    IS '用户id';
+
+COMMENT ON COLUMN public.t_user_certified.certified_type
+    IS '认证类型：1-登录密码认证；2-支付密码认证；3-手机验证认证；4-邮箱验证认证；5-实名认证；6-
+安全问题认证';
+
+COMMENT ON COLUMN public.t_user_certified.certified_time
+    IS '认证时间';
+
+COMMENT ON COLUMN public.t_user_certified.is_deleted
+    IS '0-未删除；1-删除';

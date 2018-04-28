@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -35,11 +36,10 @@ public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserSer
     }
 
     @Override
-    public IUserService register(String loginName, String mobile, String email, String pwd, String salt,
+    public IUserService register(long userId, String loginName, String mobile, String email, String pwd, String salt,
                                  Handler<AsyncResult<Integer>> resultHandler) {
         Future<Integer> future = Future.future();
-        long userId = IdBuilder.getUniqueId();
-        this.executeNoResult(new JsonArray().add(userId).add(StringUtils.isEmpty(loginName) ? "member_" + userId : loginName).add(pwd)
+        this.execute(new JsonArray().add(userId).add(StringUtils.isEmpty(loginName) ? "member_" + userId : loginName).add(pwd)
                         .add(Objects.isNull(email) ? UserStatus.ACTIVATION.getStatus() : UserStatus.INACTIVATED.getStatus()).add(IsDeleted.NO.getValue())
                         .add(Objects.isNull(mobile) ? "" : mobile).add(Objects.isNull(email) ? "" : email).add(salt),
                 UserSql.REGISTER_SQL).subscribe(future::complete, future::fail);
@@ -139,4 +139,6 @@ public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserSer
         future.setHandler(resultHandler);
         return this;
     }
+
+
 }

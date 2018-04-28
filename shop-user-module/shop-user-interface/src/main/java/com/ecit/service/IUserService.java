@@ -8,6 +8,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.UpdateResult;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by za-wangshenhua on 2018/2/2.
@@ -19,7 +20,7 @@ public interface IUserService {
     public static final String USER_SERVICE_ADDRESS = "user-service-address";
 
     @Fluent
-    IUserService register(String loginName, String mobile, String email, String pwd, String salt, Handler<AsyncResult<Integer>> resultHandler);
+    IUserService register(long userId, String loginName, String mobile, String email, String pwd, String salt, Handler<AsyncResult<Integer>> resultHandler);
 
     @Fluent
     IUserService login(String loginName, String pwd, Handler<AsyncResult<JsonObject>> resultHandler);
@@ -41,4 +42,6 @@ public interface IUserService {
 
     @Fluent
     IUserService saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, String photoUrl, Handler<AsyncResult<UpdateResult>> resultHandler);
+
+
 }

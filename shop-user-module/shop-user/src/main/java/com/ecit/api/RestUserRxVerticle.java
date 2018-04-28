@@ -5,8 +5,11 @@ import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.salt.DefaultHashStrategy;
 import com.ecit.common.utils.salt.ShopHashStrategy;
+import com.ecit.enmu.CertifiedType;
+import com.ecit.service.ICertifiedService;
 import com.ecit.service.IMessageService;
 import com.ecit.service.IUserService;
+import com.ecit.service.IdBuilder;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -28,10 +31,12 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     private static final Logger LOGGER = LogManager.getLogger(RestUserRxVerticle.class);
     private static final String HTTP_USER_SERVICE = "http_user_service_api";
     private final IUserService userService;
+    private final ICertifiedService certifiedService;
     private ShopHashStrategy hashStrategy;
 
-    public RestUserRxVerticle(IUserService userService) {
+    public RestUserRxVerticle(IUserService userService, ICertifiedService certifiedService) {
         this.userService = userService;
+        this.certifiedService = certifiedService;
     }
 
     @Override
@@ -46,6 +51,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.put("/changepwd").handler(context -> this.requireLogin(context, this::changePwdHandler));
         router.get("/getUserInfo").handler(context -> this.requireLogin(context, this::getUserInfoHandler));
         router.post("/saveUserInfo").handler(context -> this.requireLogin(context, this::saveUserInfoHandler));
+        router.get("/findUserCertified").handler(context -> this.requireLogin(context, this::findUserCertifiedHandler));
 
         //全局异常处理
         this.globalVerticle(router);
@@ -123,7 +129,8 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      * @param password
      */
     private void register(RoutingContext context, String type, String loginName, String salt, String password){
-        userService.register(StringUtils.equals(type, RegisterType.loginName.name()) ? loginName : null,
+        final long userId = IdBuilder.getUniqueId();
+        userService.register(userId, StringUtils.equals(type, RegisterType.loginName.name()) ? loginName : null,
                 StringUtils.equals(type, RegisterType.mobile.name()) ? loginName : null,
                 StringUtils.equals(type, RegisterType.email.name()) ? loginName : null,
                 hashStrategy.computeHash(password, salt, -1),
@@ -131,6 +138,12 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                 registerHandler -> {
                     if (registerHandler.succeeded()) {
                         if (registerHandler.result() >= 1) {
+                            certifiedService.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), handler -> {});
+                            if (StringUtils.equals(type, RegisterType.mobile.name())) {
+                                certifiedService.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), handler -> {});
+                            } else if (StringUtils.equals(type, RegisterType.email.name())) {
+                                certifiedService.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), handler -> {});
+                            }
                             this.Ok(context, ResultItems.getReturnItemsSuccess("注册成功"));
                         } else {
                             this.Ok(context, ResultItems.getReturnItemsFailure("注册失败"));
@@ -244,5 +257,23 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             this.returnWithSuccessMessage(context, "更新用户详情成功", handler.result());
 
         });
+    }
+
+    /**
+     * 查询用户认证信息
+     * @param context
+     * @param principal
+     */
+    private void findUserCertifiedHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        certifiedService.findUserCertifiedByUserId(userId, handler -> {
+                    if(handler.failed()){
+                        LOGGER.error("查询用户认证信息失败！", handler.cause());
+                        this.returnWithFailureMessage(context, "查询用户认证信息失败！");
+                        return ;
+                    }
+                    this.returnWithSuccessMessage(context, "查询用户认证信息成功", handler.result());
+
+                });
     }
 }

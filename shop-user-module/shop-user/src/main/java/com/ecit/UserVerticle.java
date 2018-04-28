@@ -2,7 +2,9 @@ package com.ecit;
 
 import com.ecit.api.RestUserRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
+import com.ecit.service.ICertifiedService;
 import com.ecit.service.IUserService;
+import com.ecit.service.impl.CertifiedServiceImpl;
 import com.ecit.service.impl.UserServiceImpl;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
@@ -25,11 +27,12 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
     public void start() throws Exception {
         super.start();
         IUserService userService = new UserServiceImpl(vertx, this.config());
+        ICertifiedService certifiedService = new CertifiedServiceImpl(vertx, this.config(), userService);
         new ServiceBinder(vertx.getDelegate())
                 .setAddress(IUserService.USER_SERVICE_ADDRESS)
                 .register(IUserService.class, userService);
         this.publishEventBusService(USER_SERVICE_NAME, IUserService.USER_SERVICE_ADDRESS, IUserService.class).subscribe();
-        vertx.getDelegate().deployVerticle(new RestUserRxVerticle(userService), new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(new RestUserRxVerticle(userService, certifiedService), new DeploymentOptions().setConfig(this.config()));
     }
 
     public static void main(String[] args) {
@@ -52,6 +55,12 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
                         .put("database", "vertx_shop")
                         .put("charset", "UTF-8")
                         .put("queryTimeout", 10000)
+                        .put("rabbitmq", new JsonObject()
+                                .put("host", "111.231.132.168")
+                                .put("port", 5672)
+                                .put("username", "guest")
+                                .put("password", "guest")
+                                .put("virtualHost", "/"))
                 )));
     }
 }
