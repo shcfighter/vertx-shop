@@ -1,6 +1,7 @@
 package com.ecit.service.impl;
 
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
+import com.ecit.common.utils.FormatUtils;
 import com.ecit.constants.UserSql;
 import com.ecit.service.ICertifiedService;
 import com.ecit.service.IUserService;
@@ -13,8 +14,11 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQOptions;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.rabbitmq.RabbitMQClient;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Date;
 import java.util.List;
 
 public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICertifiedService {
@@ -32,6 +36,10 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
      * rabbitmq 队列
      */
     private static final String QUEUES = "vertx.shop.certified.queues";
+    /**
+     * eventbus 地址
+     */
+    private static final String EVENTBUS_QUEUES = "eventbus.certified.queues";
 
     final RabbitMQClient rabbitMQClient;
     final Vertx vertx;
@@ -56,7 +64,7 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
     }
 
     public void saveCertified() {
-        vertx.eventBus().consumer("my.address",  msg -> {
+        vertx.eventBus().consumer(EVENTBUS_QUEUES,  msg -> {
             JsonObject json = (JsonObject) msg.body();
             LOGGER.debug("Got certified message: {}", json);
             JsonObject certified = new JsonObject(json.getString("body"));
@@ -66,9 +74,9 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
                 oneCertifiedFuture.compose(oneCertified -> {
                     Future<Integer> certifiedFuture = Future.future();
                     if (oneCertified.size() > 0) {
-                        this.updateUserCertified(oneCertified.getLong("certified_id"), certifiedFuture);
+                        this.updateUserCertified(oneCertified.getLong("certified_id"), certified.getLong("time"), certifiedFuture);
                     } else {
-                        this.saveUserCertified(certified.getLong("user_id"), certified.getInteger("certified_type"), certifiedFuture);
+                        this.saveUserCertified(certified.getLong("user_id"), certified.getInteger("certified_type"), certified.getLong("time"), certifiedFuture);
                     }
                     return certifiedFuture;
                 }).setHandler(handler -> {
@@ -87,7 +95,7 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
         });
 
         // Setup the link between rabbitmq consumer and event bus address
-        rabbitMQClient.rxBasicConsume(QUEUES, "my.address", false).subscribe();
+        rabbitMQClient.rxBasicConsume(QUEUES, EVENTBUS_QUEUES, false).subscribe();
         return ;
     }
 
@@ -100,7 +108,8 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
      */
     @Override
     public ICertifiedService sendUserCertified(long userId, int certifiedType, Handler<AsyncResult<Void>> resultHandler) {
-        JsonObject message = new JsonObject().put("body", new JsonObject().put("user_id", userId).put("certified_type", certifiedType).encodePrettily());
+        JsonObject message = new JsonObject().put("body", new JsonObject().put("user_id", userId).put("certified_type", certifiedType)
+                .put("time", System.currentTimeMillis()).encodePrettily());
         Future future = Future.future();
         // Put the channel in confirm mode. This can be done once at init.
         rabbitMQClient.confirmSelect(confirmResult -> {
@@ -133,18 +142,20 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
     }
 
     @Override
-    public ICertifiedService saveUserCertified(long userId, int certifiedType, Handler<AsyncResult<Integer>> resultHandler) {
+    public ICertifiedService saveUserCertified(long userId, int certifiedType, long certifiedTime, Handler<AsyncResult<Integer>> resultHandler) {
         Future<Integer> userFuture = Future.future();
-        this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(certifiedType), UserSql.INSERT_USER_CERTIFIED_SQL)
+        this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(certifiedType)
+                .add(DateFormatUtils.format(new Date(certifiedTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT)), UserSql.INSERT_USER_CERTIFIED_SQL)
                 .subscribe(userFuture::complete, userFuture::fail);
         userFuture.setHandler(resultHandler);
         return this;
     }
 
     @Override
-    public ICertifiedService updateUserCertified(long certifiedId, Handler<AsyncResult<Integer>> resultHandler) {
+    public ICertifiedService updateUserCertified(long certifiedId, long updateTime, Handler<AsyncResult<Integer>> resultHandler) {
         Future<Integer> userFuture = Future.future();
-        this.execute(new JsonArray().add(certifiedId), UserSql.UPDATE_USER_CERTIFIED_SQL)
+        this.execute(new JsonArray().add(DateFormatUtils.format(new Date(updateTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT))
+                .add(certifiedId), UserSql.UPDATE_USER_CERTIFIED_SQL)
                 .subscribe(userFuture::complete, userFuture::fail);
         userFuture.setHandler(resultHandler);
         return this;

@@ -70,12 +70,12 @@ public interface UserSql {
     /**
      *  保存用户认证信息
      */
-    static final String INSERT_USER_CERTIFIED_SQL = "insert into t_user_certified(certified_id, user_id, certified_type, certified_time) values (?, ?, ?, now())";
+    static final String INSERT_USER_CERTIFIED_SQL = "insert into t_user_certified(certified_id, user_id, certified_type, certified_time) values (?, ?, ?, ?)";
 
     /**
      *  更新用户认证信息
      */
-    static final String UPDATE_USER_CERTIFIED_SQL = "update t_user_certified set update_time = now(), versions = versions + 1 where certified_id = ?";
+    static final String UPDATE_USER_CERTIFIED_SQL = "update t_user_certified set update_time = ?, versions = versions + 1 where certified_id = ?";
 
     /**
      *  查询用户认证信息

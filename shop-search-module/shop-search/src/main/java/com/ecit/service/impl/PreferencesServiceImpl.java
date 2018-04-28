@@ -44,6 +44,10 @@ public class PreferencesServiceImpl implements IPreferencesService{
      * rabbitmq 队列
      */
     private static final String QUEUES = "vertx.shop.preferences.queues";
+    /**
+     * eventbus 地址
+     */
+    private static final String EVENTBUS_QUEUES = "eventbus.preferences.queues";
 
 
     public PreferencesServiceImpl(Vertx vertx, JsonObject config) {
@@ -69,7 +73,7 @@ public class PreferencesServiceImpl implements IPreferencesService{
      */
     @Override
     public IPreferencesService savePreferences(Handler<AsyncResult<Void>> handler) {
-        vertx.eventBus().consumer("my.address", msg -> {
+        vertx.eventBus().consumer(EVENTBUS_QUEUES, msg -> {
             JsonObject json = (JsonObject) msg.body();
             JsonObject perferences = new JsonObject(json.getString("body"));
             LOGGER.debug("Got perferences message: {}", perferences);
@@ -78,7 +82,7 @@ public class PreferencesServiceImpl implements IPreferencesService{
         });
 
         // Setup the link between rabbitmq consumer and event bus address
-        rabbitMQClient.rxBasicConsume(QUEUES, "my.address").subscribe();
+        rabbitMQClient.rxBasicConsume(QUEUES, EVENTBUS_QUEUES).subscribe();
         return this;
     }
 
