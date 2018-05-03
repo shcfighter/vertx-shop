@@ -2,8 +2,10 @@ package com.ecit;
 
 import com.ecit.api.RestUserRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
+import com.ecit.service.IAddressService;
 import com.ecit.service.ICertifiedService;
 import com.ecit.service.IUserService;
+import com.ecit.service.impl.AddressServiceImpl;
 import com.ecit.service.impl.CertifiedServiceImpl;
 import com.ecit.service.impl.UserServiceImpl;
 import com.hazelcast.config.Config;
@@ -28,11 +30,12 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
         super.start();
         IUserService userService = new UserServiceImpl(vertx, this.config());
         ICertifiedService certifiedService = new CertifiedServiceImpl(vertx, this.config(), userService);
+        IAddressService addressService = new AddressServiceImpl(vertx, this.config());
         new ServiceBinder(vertx.getDelegate())
                 .setAddress(IUserService.USER_SERVICE_ADDRESS)
                 .register(IUserService.class, userService);
         this.publishEventBusService(USER_SERVICE_NAME, IUserService.USER_SERVICE_ADDRESS, IUserService.class).subscribe();
-        vertx.getDelegate().deployVerticle(new RestUserRxVerticle(userService, certifiedService), new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(new RestUserRxVerticle(userService, certifiedService, addressService), new DeploymentOptions().setConfig(this.config()));
     }
 
     public static void main(String[] args) {

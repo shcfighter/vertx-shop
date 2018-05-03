@@ -399,3 +399,55 @@ COMMENT ON COLUMN public.t_user_certified.certified_time
 
 COMMENT ON COLUMN public.t_user_certified.is_deleted
     IS '0-未删除；1-删除';
+
+
+-- Table: public.t_address
+
+-- DROP TABLE public.t_address;
+
+CREATE TABLE public.t_address
+(
+    address_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    receiver character varying(50) COLLATE pg_catalog."default",
+    mobile character varying(20) COLLATE pg_catalog."default",
+    province_code character varying(12) COLLATE pg_catalog."default",
+    city_code character varying(12) COLLATE pg_catalog."default",
+    county_code character varying(12) COLLATE pg_catalog."default",
+    address character varying(100) COLLATE pg_catalog."default",
+    address_details text COLLATE pg_catalog."default",
+    is_default smallint DEFAULT 0,
+    is_deleted smallint DEFAULT 0,
+    create_time timestamp without time zone,
+    update_time timestamp without time zone,
+    remarks text COLLATE pg_catalog."default",
+    versions bigint DEFAULT 0,
+    CONSTRAINT t_address_pkey PRIMARY KEY (address_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.t_address
+    OWNER to postgres;
+COMMENT ON TABLE public.t_address
+    IS '收货地址';
+
+COMMENT ON COLUMN public.t_address.receiver
+    IS '收货人';
+
+COMMENT ON COLUMN public.t_address.mobile
+    IS '手机号码';
+
+COMMENT ON COLUMN public.t_address.address
+    IS '地址';
+
+COMMENT ON COLUMN public.t_address.address_details
+    IS '详细地址';
+
+COMMENT ON COLUMN public.t_address.is_default
+    IS '是否默认地址；0-不；1-是；';
+
+COMMENT ON COLUMN public.t_address.is_deleted
+    IS '0-未删除；1-删除';

@@ -72,10 +72,10 @@ $(function () {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0) {
-                    console.log(result);
-                    $.Pop("下单成功！</br>查看订单列表", "confirm", function(){
+                    window.location.href = "/success.html";
+                    /*$.Pop("下单成功！</br>查看订单列表", "confirm", function(){
                         window.location.href = "/success.html"
-                    });
+                    });*/
                 } else {
                     $.Pop("下单失败，请重试！", "alert", function(){});
                 }

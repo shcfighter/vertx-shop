@@ -6,10 +6,7 @@ import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.salt.DefaultHashStrategy;
 import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.enmu.CertifiedType;
-import com.ecit.service.ICertifiedService;
-import com.ecit.service.IMessageService;
-import com.ecit.service.IUserService;
-import com.ecit.service.IdBuilder;
+import com.ecit.service.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -30,13 +27,15 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
 
     private static final Logger LOGGER = LogManager.getLogger(RestUserRxVerticle.class);
     private static final String HTTP_USER_SERVICE = "http_user_service_api";
+    private ShopHashStrategy hashStrategy;
     private final IUserService userService;
     private final ICertifiedService certifiedService;
-    private ShopHashStrategy hashStrategy;
+    private final IAddressService addressService;
 
-    public RestUserRxVerticle(IUserService userService, ICertifiedService certifiedService) {
+    public RestUserRxVerticle(IUserService userService, ICertifiedService certifiedService, IAddressService addressService) {
         this.userService = userService;
         this.certifiedService = certifiedService;
+        this.addressService = addressService;
     }
 
     @Override
@@ -52,6 +51,12 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.get("/getUserInfo").handler(context -> this.requireLogin(context, this::getUserInfoHandler));
         router.post("/saveUserInfo").handler(context -> this.requireLogin(context, this::saveUserInfoHandler));
         router.get("/findUserCertified").handler(context -> this.requireLogin(context, this::findUserCertifiedHandler));
+        router.post("/insertAddress").handler(context -> this.requireLogin(context, this::insertAddressHandler));
+        router.put("/updateAddress").handler(context -> this.requireLogin(context, this::updateAddressHandler));
+        router.put("/updateDefaultAddress/:addressId").handler(context -> this.requireLogin(context, this::updateDefaultAddressHandler));
+        router.delete("/deleteAddress/:addressId").handler(context -> this.requireLogin(context, this::deleteAddressHandler));
+        router.get("/findAddress").handler(context -> this.requireLogin(context, this::findAddressHandler));
+        router.get("/getAddressById/:addressId").handler(context -> this.requireLogin(context, this::getAddressByIdHandler));
 
         //全局异常处理
         this.globalVerticle(router);
@@ -275,5 +280,120 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                     this.returnWithSuccessMessage(context, "查询用户认证信息成功", handler.result());
 
                 });
+    }
+
+    /**
+     *  新增收货地址
+     * @param context
+     * @param principal
+     */
+    private void insertAddressHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        final JsonObject params = context.getBodyAsJson();
+        addressService.insertAddress(userId, params.getString("receiver"), params.getString("mobile"),
+                params.getString("province_code"), params.getString("city_code"), params.getString("county_code"),
+                params.getString("address"), params.getString("address_details"),
+                handler -> {
+                    if(handler.failed()){
+                        LOGGER.error("保存收货地址信息失败！", handler.cause());
+                        this.returnWithFailureMessage(context, "保存收货地址信息失败！");
+                        return ;
+                    }
+                    this.returnWithSuccessMessage(context, "保存收货地址信息成功", handler.result());
+
+                });
+    }
+
+    /**
+     *  更新收货地址
+     * @param context
+     * @param principal
+     */
+    private void updateAddressHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        final JsonObject params = context.getBodyAsJson();
+        addressService.updateAddress(params.getLong("address_id"), params.getString("receiver"), params.getString("mobile"),
+                params.getString("province_code"), params.getString("city_code"), params.getString("county_code"),
+                params.getString("address"), params.getString("address_details"),
+                handler -> {
+                    if(handler.failed()){
+                        LOGGER.error("修改收货地址信息失败！", handler.cause());
+                        this.returnWithFailureMessage(context, "修改收货地址信息失败！");
+                        return ;
+                    }
+                    this.returnWithSuccessMessage(context, "修改收货地址信息成功", handler.result());
+
+                });
+    }
+
+    /**
+     *  收货地址置为默认地址
+     * @param context
+     * @param principal
+     */
+    private void updateDefaultAddressHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        addressService.updateDefaultAddress(userId, Long.parseLong(context.pathParam("addressId")),
+                handler -> {
+                    if(handler.failed()){
+                        LOGGER.error("设置收货地址失败！", handler.cause());
+                        this.returnWithFailureMessage(context, "设置收货地址失败！");
+                        return ;
+                    }
+                    this.returnWithSuccessMessage(context, "设置收货地址成功", handler.result());
+
+                });
+    }
+
+    /**
+     *  删除收货地址
+     * @param context
+     * @param principal
+     */
+    private void deleteAddressHandler(RoutingContext context, JsonObject principal){
+        addressService.deleteAddress(Long.parseLong(context.pathParam("addressId")), handler -> {
+                    if(handler.failed()){
+                        LOGGER.error("删除收货地址失败！", handler.cause());
+                        this.returnWithFailureMessage(context, "删除收货地址失败！");
+                        return ;
+                    }
+                    this.returnWithSuccessMessage(context, "删除收货地址成功", handler.result());
+
+                });
+    }
+
+    /**
+     *  查询收货地址
+     * @param context
+     * @param principal
+     */
+    private void findAddressHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        addressService.findAddress(userId, handler -> {
+            if(handler.failed()){
+                LOGGER.error("查询收货地址失败！", handler.cause());
+                this.returnWithFailureMessage(context, "查询收货地址失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "查询收货地址成功", handler.result());
+
+        });
+    }
+
+    /**
+     *
+     * @param context
+     * @param principal
+     */
+    private void getAddressByIdHandler(RoutingContext context, JsonObject principal){
+        addressService.getAddressById(Long.parseLong(context.pathParam("addressId")), handler -> {
+            if(handler.failed()){
+                LOGGER.error("查询收货地址失败！", handler.cause());
+                this.returnWithFailureMessage(context, "查询收货地址失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "查询收货地址成功", handler.result());
+
+        });
     }
 }

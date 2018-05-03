@@ -15,7 +15,7 @@ public interface UserSql {
     /**
      * 登录
      */
-    static final String LOGIN_SQL = "select user_id userId, login_name loginName, password pwd, salt, status from t_user where" +
+    static final String LOGIN_SQL = "select user_id::text userId, login_name loginName, password pwd, salt, status from t_user where" +
             " (mobile = ? or email = ? or login_name = ?) and is_deleted = ?";
 
     /**
@@ -27,11 +27,6 @@ public interface UserSql {
      * 通过id获取用户信息
      */
     static final String GET_USER_BY_ID_SQL = "select * from t_user where user_id = ? and is_deleted = ?";
-
-    /**
-     * 查询激活账户
-     */
-    static final String SELECT_ACTIVATE_EMAIL_USER_SQL = "select * from t_user where email = ? and status = 0 and is_deleted = 0";
 
     /**
      *  查询激活账户
@@ -46,7 +41,7 @@ public interface UserSql {
     /**
      * 查询用户信息
      */
-    static final String GET_USER_INFO_SQL = "select u.user_id, u.login_name, u.user_name, u.mobile, u.email, ui.user_info_id, ui.sex, ui.birthday, ui.photo_url, " +
+    static final String GET_USER_INFO_SQL = "select u.user_id:text, u.login_name, u.user_name, u.mobile, u.email, ui.user_info_id, ui.sex, ui.birthday, ui.photo_url, " +
             "u.versions, ui.versions info_versions from t_user u left join t_user_info ui on(u.user_id = ui.user_id) where u.user_id = ? and u.is_deleted = 0";
 
     /**
@@ -86,4 +81,43 @@ public interface UserSql {
      * 根据类型查询用户认证信息
      */
     static final String SELECT_USER_CERTIFIED_BY_TYPE_SQL = "select * from t_user_certified where user_id = ? and certified_type = ? and is_deleted = 0";
+
+    /**
+     *  新增收货地址
+     */
+    static final String INSERT_ADDRESS_SQL = "insert into t_address(address_id, user_id, receiver, mobile, province_code, city_code, county_code, address, address_details, create_time) " +
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, now())";
+
+    /**
+     *  查询收货地址列表
+     */
+    static final String FIND_ADDRESS_SQL = "select address_id::text, user_id::text, receiver, mobile, province_code, city_code, county_code, " +
+            "address, address_details, is_default, versions from t_address where user_id = ? and is_deleted = 0 order by is_default desc, create_time desc ";
+
+    /**
+     *  通过id修改收货地址
+     */
+    static final String UPDATE_ADDRESS_BY_ID_SQL = "update t_address receiver = ?, mobile = ?, province_code = ?, city_code = ?," +
+            "county_code = ?, address = ?, address_details = ?, versions = versions + 1, update_time = now() where address_id = ?";
+
+    /**
+     * 设置为默认收货地址
+     */
+    static final String UPDATE_ADDRESS_BY_DEFAULT_SQL = "update t_address set is_default = 1, versions = versions + 1, update_time = now() where address_id = ? ";
+
+    /**
+     *  设置为非默认收货地址
+     */
+    static final String UPDATE_ADDRESS_BY_NOT_DEFAULT_SQL = "update t_address set is_default = 0, versions = versions + 1, update_time = now() where user_id = ? and is_default = 1";
+
+    /**
+     *  删除收货地址
+     */
+    static final String DELETE_ADDRESS_BY_ID_SQL = "update t_address set is_deleted = 1, versions = versions + 1, update_time = now() where address_id = ? ";
+
+    /**
+     * 根据id查询收货地址
+     */
+    static final String GET_ADDRESS_BY_ID_SQL = "select address_id, user_id, receiver, mobile, province_code, city_code, county_code, address, versions from t_address where address_id = ? ";
+
 }
