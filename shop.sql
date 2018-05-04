@@ -401,13 +401,13 @@ COMMENT ON COLUMN public.t_user_certified.is_deleted
     IS '0-未删除；1-删除';
 
 
--- Table: public.t_address
+-- Table: public.t_shipping_information
 
--- DROP TABLE public.t_address;
+-- DROP TABLE public.t_shipping_information
 
-CREATE TABLE public.t_address
+CREATE TABLE public.t_shipping_information
 (
-    address_id bigint NOT NULL,
+    shipping_information_id bigint NOT NULL,
     user_id bigint NOT NULL,
     receiver character varying(50) COLLATE pg_catalog."default",
     mobile character varying(20) COLLATE pg_catalog."default",
@@ -422,32 +422,32 @@ CREATE TABLE public.t_address
     update_time timestamp without time zone,
     remarks text COLLATE pg_catalog."default",
     versions bigint DEFAULT 0,
-    CONSTRAINT t_address_pkey PRIMARY KEY (address_id)
+    CONSTRAINT t_shipping_information_pkey PRIMARY KEY (shipping_information_id)
 )
 WITH (
     OIDS = FALSE
 )
 TABLESPACE pg_default;
 
-ALTER TABLE public.t_address
+ALTER TABLE public.t_shipping_information
     OWNER to postgres;
-COMMENT ON TABLE public.t_address
+COMMENT ON TABLE public.t_shipping_information
     IS '收货地址';
 
-COMMENT ON COLUMN public.t_address.receiver
+COMMENT ON COLUMN public.t_shipping_information.receiver
     IS '收货人';
 
-COMMENT ON COLUMN public.t_address.mobile
+COMMENT ON COLUMN public.t_shipping_information.mobile
     IS '手机号码';
 
-COMMENT ON COLUMN public.t_address.address
+COMMENT ON COLUMN public.t_shipping_information.address
     IS '地址';
 
-COMMENT ON COLUMN public.t_address.address_details
+COMMENT ON COLUMN public.t_shipping_information.address_details
     IS '详细地址';
 
-COMMENT ON COLUMN public.t_address.is_default
+COMMENT ON COLUMN public.t_shipping_information.is_default
     IS '是否默认地址；0-不；1-是；';
 
-COMMENT ON COLUMN public.t_address.is_deleted
+COMMENT ON COLUMN public.t_shipping_information.is_deleted
     IS '0-未删除；1-删除';

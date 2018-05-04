@@ -126,7 +126,7 @@ function loadAddress(){
                         defaultAddr = "defaultAddr";
                     }
                     $(".am-thumbnails").append("<li class=\"user-addresslist " + defaultAddr + "\">\n" +
-                        "                        <span class=\"new-option-r\" id=\"" + value.address_id + "\"><i class=\"am-icon-check-circle\"></i>默认地址</span>\n" +
+                        "                        <span class=\"new-option-r\" id=\"" + value.shipping_information_id + "\"><i class=\"am-icon-check-circle\"></i>默认地址</span>\n" +
                         "                        <p class=\"new-tit new-p-re\">\n" +
                         "                            <span class=\"new-txt\">" + value.receiver + "</span>\n" +
                         "                            <span class=\"new-txt-rd2\">" + value.mobile + "</span>\n" +
@@ -139,7 +139,7 @@ function loadAddress(){
                         "                        <div class=\"new-addr-btn\">\n" +
                         /*"                            <a href=\"javascript:void(0);\" id=\"am-icon-edit\"><i class=\"am-icon-edit\"></i>编辑</a>\n" +
                         "                            <span class=\"new-addr-bar\">|</span>\n" +*/
-                        "                            <a href=\"javascript:void(0);\" onclick=\"delClick('" + value.address_id + "');\"><i class=\"am-icon-trash\"></i>删除</a>\n" +
+                        "                            <a href=\"javascript:void(0);\" onclick=\"delClick('" + value.shipping_information_id + "');\"><i class=\"am-icon-trash\"></i>删除</a>\n" +
                         "                        </div>\n" +
                         "                    </li>");
                 })

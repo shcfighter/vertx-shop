@@ -8,14 +8,14 @@ public interface CommoditySql {
     /**
      * 通过id查询商品详情
      */
-    static final String FIND_COMMODITY_BY_ID = "select commodity_id, commodity_name, brand_id, brand_name, category_id, category_name, price::numeric, original_price::numeric, " +
+    static final String FIND_COMMODITY_BY_ID = "select commodity_id::text, commodity_name, brand_id, brand_name, category_id, category_name, price::numeric, original_price::numeric, " +
             "num, freeze_num, status, image_url, freight::numeric, is_deleted, create_time, update_time, description, remarks, versions " +
             "from t_commodity where commodity_id = ? and is_deleted = 0 and status = 1;";
 
     /**
      * 通过ids查询商品详情
      */
-    static final String FIND_COMMODITY_BY_IDS = "select commodity_id, commodity_name, brand_id, brand_name, category_id, category_name, price::numeric, original_price::numeric, " +
+    static final String FIND_COMMODITY_BY_IDS = "select commodity_id::text, commodity_name, brand_id, brand_name, category_id, category_name, price::numeric, original_price::numeric, " +
             "num, freeze_num, status, image_url, freight::numeric, is_deleted, create_time, update_time, description, remarks, versions " +
             "from t_commodity where commodity_id in({{ids}}) and is_deleted = 0 and status = 1";
     /**

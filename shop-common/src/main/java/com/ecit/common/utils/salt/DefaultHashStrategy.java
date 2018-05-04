@@ -55,7 +55,7 @@ public class DefaultHashStrategy
     }
 
     public Long getUserId(JsonArray row) {
-        return row.getLong(0);
+        return Long.parseLong(row.getString(0));
     }
 
     public String getLoginName(JsonArray row) {

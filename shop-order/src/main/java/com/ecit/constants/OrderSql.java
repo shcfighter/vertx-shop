@@ -10,13 +10,13 @@ public interface OrderSql {
     /**
      * 分页查询订单详情（订单状态）
      */
-    static final String FIND_PAGE_ORDER_SQL = "select order_id, shipping_information_id, create_time, order_status, cancel_time, send_time, order_details, total_price, freight from t_order " +
+    static final String FIND_PAGE_ORDER_SQL = "select order_id::text, shipping_information_id, create_time, order_status, cancel_time, send_time, order_details, total_price, freight from t_order " +
             "where is_deleted = 0 and user_id = ? and order_status = ? order by create_time desc limit ? offset ?";
 
     /**
      * 分页查询订单详情(所有订单)
      */
-    static final String FIND_ALL_PAGE_ORDER_SQL = "select order_id, shipping_information_id, create_time, order_status, cancel_time, send_time, order_details, total_price, freight from t_order " +
+    static final String FIND_ALL_PAGE_ORDER_SQL = "select order_id::text, shipping_information_id, create_time, order_status, cancel_time, send_time, order_details, total_price, freight from t_order " +
             "where is_deleted = 0 and user_id = ? order by create_time desc limit ? offset ?";
 
     /**
@@ -32,7 +32,9 @@ public interface OrderSql {
     /**
      *  根据订单id查询订单详情
      */
-    static final String find_order_by_id = "select * from t_order where order_id = ?";
+    static final String find_order_by_id = "select order_id::text, user_id, shipping_information_id, create_time, order_details, " +
+            "total_price, order_status, cancel_time, send_time, freight, is_deleted, remarks, versions, leave_message" +
+            " from t_order where order_id = ?";
 
     /**
      * 订单发货

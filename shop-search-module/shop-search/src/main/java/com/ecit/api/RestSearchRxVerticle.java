@@ -122,7 +122,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void findCommodityByIdHandler(RoutingContext context){
-        commodityService.findCommodityById(Integer.parseInt(context.request().getParam("id")), handler -> {
+        commodityService.findCommodityById(Long.parseLong(context.request().getParam("id")), handler -> {
             if (handler.failed()) {
                 LOGGER.error("根据id查询产品失败！", handler.cause());
                 this.returnWithFailureMessage(context, "查询失败");
@@ -137,7 +137,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      * @param context
      */
     private void findCommodityFromESByIdHandler(RoutingContext context){
-        commodityService.findCommodityFromEsById(Integer.parseInt(context.request().getParam("id")), handler -> {
+        commodityService.findCommodityFromEsById(Long.parseLong(context.request().getParam("id")), handler -> {
             if (handler.failed()) {
                 LOGGER.error("根据id查询产品失败！", handler.cause());
                 this.returnWithFailureMessage(context, "查询失败");

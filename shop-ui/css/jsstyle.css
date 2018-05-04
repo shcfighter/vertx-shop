@@ -17,6 +17,7 @@ h3 { font-size: 14px;font-weight: 700;}
 .address h3 { border-bottom:none;}
 .address li.user-addresslist{display:none;width:100%;padding:10px;position: relative;min-height:80px ;}
 .address-left{ width:90%;float:left;position: relative;}
+.default-address{ padding-top: 15px;}
 .user.DefaultAddr {font-size: 14px;font-weight: 700;}
 .address-right{ float:right; margin-right:5px;padding-top:15px ;}	
 .deftip {position: absolute;top: 0px;right: 0px;padding: 0px 2px;text-decoration: none;opacity: 0.7; z-index: 3;background: #CCC none repeat scroll 0% 0%;
@@ -177,7 +178,7 @@ hr {margin: 5px 0px;}
 .paycont{margin:0px auto;}
 	/*地址管理*/
 .address ul{margin-top:10px ;}
-.address li.user-addresslist{display:block; width: 255px;height: 150px;float: left;background: url(../images/peraddbg.png) no-repeat scroll 0% 0%;margin-right:10px ;padding:10px ;}
+.address li.user-addresslist{display:block; width: 255px;height: 150px;float: left;background: url(../images/peraddbg.png) no-repeat scroll 0% 0%;margin-right:10px ;padding:10px ;margin-bottom: 10px;}
 .address li.user-addresslist.defaultAddr{background: url(../images/peraddressbg.png) no-repeat scroll 0% 0%;}
 .address-left{ width:100%;position: relative;}
 .address-right,.per-border{display:none ;}
@@ -194,9 +195,24 @@ hr {margin: 5px 0px;}
 .td.td-info{position: absolute;margin-top:0px;}
 .td.td-info .item-props{text-align: left;padding-top:0px ;}
 	  
-	  
-	   }
-	   
+
+}
+
+.new-txt {
+    padding-left: 15px;
+    background: url(../images/addicon1.png) 1px 2px no-repeat;
+    color: #6E6E6E;
+}
+.new-txt-rd2 {
+    background: url(../images/addicon2.png) 1px 10px no-repeat;
+    padding-left: 15px;
+    padding-top: 8px;
+}
+.new-mu_l2a {
+    padding: 6px 15px 8px;
+    display: block;
+    background: url(../images/addicon.png) 1px 9px no-repeat;
+}
 	   
 	   
 	   
