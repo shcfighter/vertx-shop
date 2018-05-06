@@ -30,7 +30,7 @@ $(function () {
             user_name: $("#user_name").val(),
             mobile: $("#user_phone").val(),
             email: $("#user_email").val(),
-            sex: $("input[name='sez']:checked").val(),
+            sex: parseInt($("input[name='sex']:checked").val()),
             photo_url: $(".am-img-thumbnail").attr("src"),
             birthday: Date.parse(new Date($("#birthday").val()))
         }

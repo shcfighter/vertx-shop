@@ -92,13 +92,14 @@ $(function() {
     /**
      * enter键自动提交
      */
-    $(document).keyup(function(event){
-        if(event.keyCode ==13){
+    $("input[name='passwordConfirm']").bind('keypress', function(event){
+        if(event.keyCode == 13){
             if(window.location.pathname.indexOf("login") > 0){
                 $(".login").click();
             } else if (window.location.pathname.indexOf("register") > 0) {
-                $(".register").click();
+                $(event.currentTarget).closest(".am-tab-panel").find(".am-btn-primary").click();
             }
         }
     });
-});
+
+})

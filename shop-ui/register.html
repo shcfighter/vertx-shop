@@ -39,7 +39,7 @@
 
                 <div class="am-tabs-bd">
                     <div class="am-tab-panel am-active">
-                        <form method="post">
+                        <form>
 
                             <div class="user-email">
                                 <label for="email"><i class="am-icon-envelope-o"></i></label>
@@ -62,13 +62,13 @@
                             </label>
                         </div>
                         <div class="am-cf">
-                            <input type="submit" name="email" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl register">
+                            <input type="button" name="email" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl register">
                         </div>
 
                     </div>
 
                     <div class="am-tab-panel">
-                        <form method="post">
+                        <form>
                             <div class="user-phone">
                                 <label for="phone"><i class="am-icon-mobile-phone am-icon-md"></i></label>
                                 <input type="tel" name="loginName" id="phone" placeholder="请输入手机号">
@@ -76,8 +76,7 @@
                             <div class="verification">
                                 <label for="code"><i class="am-icon-code-fork"></i></label>
                                 <input type="tel" name="code" id="code" placeholder="请输入验证码">
-                                <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();"
-                                   id="sendMobileCode">
+                                <a class="btn" href="javascript:void(0);" id="sendMobileCode">
                                     <span id="dyMobileButton">获取</span></a>
                             </div>
                             <div class="user-pass">
@@ -95,7 +94,7 @@
                             </label>
                         </div>
                         <div class="am-cf">
-                            <input type="submit" name="mobile" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl register">
+                            <input type="button" name="mobile" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl register">
                         </div>
 
                         <hr>
@@ -135,6 +134,7 @@
             </p>
         </div>
     </div>
+</div>
 </body>
 
 </html>

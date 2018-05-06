@@ -3,58 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="663c9261-12a8-483c-b096-d6c04bb8c3c0" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-elasticsearch-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-elasticsearch-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/constants/CommoditySql.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/constants/CommoditySql.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/service/ICommodityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/service/ICommodityService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/introduction.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/introduction.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/js/commons.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/commons.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/pay.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/pay.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/pay.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/pay.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/address.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/address.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/bill.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/bill.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/billlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/billlist.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/bindphone.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/bindphone.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/blog.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/blog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/bonus.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/bonus.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/cardlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/cardlist.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/cardmethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/cardmethod.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/change.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/change.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/collection.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/collection.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/comment.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/comment.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/commentlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/commentlist.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/consultation.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/consultation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/coupon.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/coupon.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/email.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/foot.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/foot.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/idcard.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/idcard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/information.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/information.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/logistics.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/logistics.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/news.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/news.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/order.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/order.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/orderinfo.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/orderinfo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/password.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/password.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/pointnew.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/pointnew.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/points.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/points.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/question.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/question.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/record.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/record.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/refund.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/refund.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/safety.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/safety.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/setpay.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/setpay.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/suggest.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/suggest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/wallet.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/wallet.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/person/walletlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/person/walletlist.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/shopcart.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/shopcart.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/sort.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/sort.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-ui/success.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/success.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop.sql" beforeDir="false" afterPath="$PROJECT_DIR$/shop.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/dynamic/person/information.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/dynamic/person/information.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/register.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/shop-message-module/shop-message-interface/target/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -81,11 +35,47 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="RestAPIRxVerticle.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="RestAPIRxVerticle.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="62">
-              <caret line="78" column="8" selection-start-line="78" selection-start-column="6" selection-end-line="79" selection-end-column="58" />
+            <state relative-caret-position="22">
+              <caret line="78" column="6" selection-start-line="78" selection-start-column="6" selection-end-line="79" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RestUserRxVerticle.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="254" column="60" selection-start-line="254" selection-start-column="60" selection-end-line="254" selection-end-column="60" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/login.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="380">
+              <caret line="64" column="11" selection-start-line="47" selection-start-column="8" selection-end-line="64" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="register.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-ui/register.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="69" column="44" selection-start-line="69" selection-start-column="32" selection-end-line="69" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="information.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/person/information.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="32" column="62" selection-start-line="32" selection-start-column="62" selection-end-line="32" selection-end-column="62" />
             </state>
           </provider>
         </entry>
@@ -105,15 +95,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>FIND_COMMODITY_BY_IDS</find>
-      <find>inputPic</find>
-      <find>am-img-thumbnail</find>
-      <find>QUEUES</find>
-      <find>getAreaListcallback</find>
-      <find>chooseCity</find>
-      <find>chooseProvince</find>
-      <find>#city</find>
-      <find>am-thumbnails</find>
       <find>GET_USER_BY_ID_SQL</find>
       <find>GET_USER_INFO_SQL</find>
       <find>addstyle.css</find>
@@ -135,6 +116,15 @@
       <find>am-save</find>
       <find>J_MakePoint</find>
       <find>J_MiniCartNum</find>
+      <find>login-form</find>
+      <find>form</find>
+      <find>$(document)</find>
+      <find>$(&quot;.register&quot;)</find>
+      <find>.register</find>
+      <find>passwordConfirm</find>
+      <find>script</find>
+      <find>am-tab-panel</find>
+      <find>am-btn-primary</find>
     </findStrings>
     <replaceStrings>
       <replace>shwang</replace>
@@ -147,13 +137,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/pay.js" />
-        <option value="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/constants/CommoditySql.java" />
-        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" />
-        <option value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/service/impl/CommodityServiceImpl.java" />
-        <option value="$PROJECT_DIR$/shop-elasticsearch-service/pom.xml" />
-        <option value="$PROJECT_DIR$/shop.sql" />
-        <option value="$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-ui/js/commons.js" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java" />
         <option value="$PROJECT_DIR$/shop-ui/index.html" />
@@ -197,7 +180,14 @@
         <option value="$PROJECT_DIR$/shop-ui/person/suggest.html" />
         <option value="$PROJECT_DIR$/shop-ui/person/wallet.html" />
         <option value="$PROJECT_DIR$/shop-ui/person/walletlist.html" />
+        <option value="$PROJECT_DIR$/shop-elasticsearch-service/pom.xml" />
+        <option value="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-ui/css/dlstyle.css" />
+        <option value="$PROJECT_DIR$/shop-ui/register.html" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/person/information.js" />
+        <option value="$PROJECT_DIR$/shop-ui/js/dynamic/login.js" />
       </list>
     </option>
   </component>
@@ -244,8 +234,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -291,28 +279,91 @@
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="dynamic" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="dynamic" type="462c0819:PsiDirectoryNode" />
+              <item name="person" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="rx" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="ecit" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-ui" type="462c0819:PsiDirectoryNode" />
-              <item name="person" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="ecit" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -773,10 +824,10 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.SearchVerticle" />
         <item itemvalue="Application.OrderVerticle" />
-        <item itemvalue="Application.APIGatewayVerticle" />
         <item itemvalue="Application.UserVerticle" />
+        <item itemvalue="Application.APIGatewayVerticle" />
+        <item itemvalue="Application.SearchVerticle" />
         <item itemvalue="Application.RestUserRxVerticle" />
       </list>
     </recent_temporary>
@@ -825,12 +876,13 @@
       <workItem from="1525259887189" duration="536000" />
       <workItem from="1525260469165" duration="1041000" />
       <workItem from="1525309159280" duration="31869000" />
-      <workItem from="1525506161821" duration="17257000" />
+      <workItem from="1525506161821" duration="19036000" />
+      <workItem from="1525594130278" duration="6627000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="365543000" />
+    <option name="totallyTimeSpent" value="373949000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -843,27 +895,27 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info anchor="right" id="Palette" order="4" />
+      <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32838285" />
       <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49924356" weight="0.32838285" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="6" />
       <window_info anchor="right" id="Capture Analysis" order="8" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5015129" side_tool="true" weight="0.6287129" />
-      <window_info anchor="right" id="Maven Projects" order="1" visible="true" weight="0.32980332" />
+      <window_info anchor="right" id="Maven Projects" order="1" weight="0.32980332" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="11" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" visible="true" weight="0.5709571" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.5709571" />
       <window_info anchor="bottom" id="Terminal" order="13" />
       <window_info id="Capture Tool" order="3" />
       <window_info id="Designer" order="4" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26701966" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24962178" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2708018" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32838285" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="5" weight="0.24962178" />
       <window_info id="UI Designer" order="5" />
       <window_info anchor="right" id="Theme Preview" order="10" />
       <window_info id="Favorites" order="7" side_tool="true" />
@@ -876,18 +928,19 @@
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="right" id="Bean Validation" order="9" />
-      <window_info anchor="right" id="Properties" order="5" />
+      <window_info anchor="right" id="Properties" order="4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24962178" />
       <window_info anchor="bottom" id="Java Enterprise" order="9" />
     </layout>
     <layout-to-restore>
       <window_info id="Designer" order="4" />
-      <window_info anchor="right" id="Palette" order="4" />
-      <window_info anchor="right" id="Properties" order="5" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Properties" order="4" />
       <window_info anchor="bottom" id="Spring" order="12" />
       <window_info id="Image Layers" order="6" />
-      <window_info anchor="bottom" id="Run" order="3" weight="0.6089109" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.5709571" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="5" weight="0.24962178" />
       <window_info id="UI Designer" order="5" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="13" />
@@ -895,15 +948,16 @@
       <window_info anchor="right" id="Capture Analysis" order="8" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5015129" side_tool="true" weight="0.6287129" />
-      <window_info active="true" anchor="bottom" id="Messages" order="0" sideWeight="0.49924356" visible="true" weight="0.32838285" />
+      <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49924356" weight="0.32838285" />
       <window_info anchor="bottom" id="SonarLint" order="14" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.24962178" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24962178" />
       <window_info anchor="bottom" id="Java Enterprise" order="9" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="11" />
       <window_info id="Nl-Palette" order="2" />
       <window_info anchor="right" id="Maven Projects" order="1" weight="0.32980332" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26701966" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.32838285" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2708018" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32838285" />
@@ -911,9 +965,8 @@
       <window_info anchor="right" id="Theme Preview" order="10" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="bottom" id="Find" order="2" weight="0.32838285" />
-      <window_info anchor="right" id="Bean Validation" order="9" />
       <window_info anchor="bottom" id="Debug" order="4" sideWeight="0.49848714" weight="0.5627063" />
+      <window_info anchor="right" id="Bean Validation" order="9" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -989,107 +1042,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/shop-elasticsearch-service/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="128" column="15" lean-forward="true" selection-start-line="128" selection-start-column="15" selection-end-line="128" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/service/impl/CartServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="85" column="76" selection-start-line="85" selection-start-column="72" selection-end-line="85" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/OrderVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="49" column="46" selection-start-line="49" selection-start-column="42" selection-end-line="49" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="54" column="30" selection-start-line="54" selection-start-column="30" selection-end-line="54" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/js/commons.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="82" column="46" selection-start-line="82" selection-start-column="32" selection-end-line="82" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/RestAPIVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="768">
-          <caret line="115" column="66" selection-start-line="115" selection-start-column="66" selection-end-line="115" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="23" column="4" lean-forward="true" selection-start-line="23" selection-start-column="4" selection-end-line="53" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/introduction.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="59" column="6" selection-start-line="59" selection-start-column="6" selection-end-line="59" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="16" column="7" lean-forward="true" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/pay.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="57" column="6" selection-start-line="57" selection-start-column="6" selection-end-line="57" selection-end-column="6" />
-          <folding>
-            <element signature="n#style#0;n#i#0;n#li#1;n#ul#0;n#div#1;n#div#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="53" column="6" selection-start-line="53" selection-start-column="6" selection-end-line="53" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-ui/shopcart.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="52" column="6" selection-start-line="52" selection-start-column="6" selection-end-line="52" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-ui/sort.html">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1342,10 +1294,108 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/shop-elasticsearch-service/src/main/java/com/hubrick/vertx/elasticsearch/ElasticSearchServiceVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="46" selection-start-line="46" selection-end-line="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="57" column="67" selection-start-line="57" selection-start-column="67" selection-end-line="57" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="251" column="20" lean-forward="true" selection-start-line="251" selection-start-column="20" selection-end-line="251" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message-interface/src/main/java/com/ecit/service/IMessageService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="20" column="63" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/api/RestMessageRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-elasticsearch-service/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="7" column="38" selection-start-line="7" selection-start-column="38" selection-end-line="7" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/service/impl/MessageServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="62">
-          <caret line="78" column="8" selection-start-line="78" selection-start-column="6" selection-end-line="79" selection-end-column="58" />
+        <state relative-caret-position="22">
+          <caret line="78" column="6" selection-start-line="78" selection-start-column="6" selection-end-line="79" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/css/dlstyle.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="11" column="14" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="31" column="22" lean-forward="true" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/search.input.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" column="7" lean-forward="true" selection-start-line="11" selection-start-column="4" selection-end-line="16" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="254" column="60" selection-start-line="254" selection-start-column="60" selection-end-line="254" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/person/information.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="32" column="62" selection-start-line="32" selection-start-column="62" selection-end-line="32" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="69" column="44" selection-start-line="69" selection-start-column="32" selection-end-line="69" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-ui/js/dynamic/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="64" column="11" selection-start-line="47" selection-start-column="8" selection-end-line="64" selection-end-column="11" />
         </state>
       </provider>
     </entry>
@@ -1401,7 +1451,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>shop-common</last-edited>
+          <last-edited>shop-search-interface</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
