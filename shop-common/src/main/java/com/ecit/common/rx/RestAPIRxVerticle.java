@@ -77,7 +77,7 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
 
   protected void requireLogin(RoutingContext context, BiConsumer<RoutingContext, JsonObject> biHandler) {
       context.request().headers().add("user-principal", new JsonObject().put("loginName", "test")
-              .put("userId", 123456L).encodePrettily());
+              .put("userId", 190540843415900160L).encodePrettily());
     Optional<JsonObject> principal = Optional.ofNullable(context.request().getHeader("user-principal"))
       .map(JsonObject::new);
     if (principal.isPresent()) {

@@ -92,7 +92,7 @@ $(function() {
     /**
      * enter键自动提交
      */
-    $("input[name='passwordConfirm']").bind('keypress', function(event){
+    $("input[name='passwordConfirm'], input[name=\"pwd\"]").bind('keypress', function(event){
         if(event.keyCode == 13){
             if(window.location.pathname.indexOf("login") > 0){
                 $(".login").click();

@@ -318,7 +318,7 @@ CREATE TABLE public.t_user_info
     user_info_id bigint NOT NULL,
     user_id bigint,
     real_name character varying(20) COLLATE pg_catalog."default",
-    sex integer,
+    sex integer default 0,
     birthday date,
     photo_url character varying(512) COLLATE pg_catalog."default",
     address character varying(512) COLLATE pg_catalog."default",

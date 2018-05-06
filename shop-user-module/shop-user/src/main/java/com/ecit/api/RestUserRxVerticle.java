@@ -6,6 +6,7 @@ import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.salt.DefaultHashStrategy;
 import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.enmu.CertifiedType;
+import com.ecit.enmu.UserSex;
 import com.ecit.service.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
@@ -252,7 +253,10 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         final Long userId = principal.getLong("userId");
         JsonObject params = context.getBodyAsJson();
         userService.saveUserInfo(userId, params.getString("login_name"), params.getString("user_name"),params.getString("mobile"),
-                params.getString("email"), params.getInteger("sex"), Objects.isNull(params.getLong("birthday")) ? 0 : params.getLong("birthday"), params.getString("photo_url"),
+                params.getString("email"),
+                Objects.nonNull(params.getInteger("sex")) ? params.getInteger("sex") : UserSex.CONFIDENTIALITY.getKey(),
+                Objects.isNull(params.getLong("birthday")) ? 0 : params.getLong("birthday"),
+                params.getString("photo_url"),
                 handler -> {
             if(handler.failed()){
                 LOGGER.error("更新用户信息失败", handler.cause());
