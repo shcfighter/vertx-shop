@@ -27,6 +27,6 @@ public interface CommoditySql {
     /**
      *  扣库存预处理
      */
-    static final String ORDER_LOG_SQL = "insert into t_order_commodity_log(log_id, order_id, commodity_id, ip, num, create_time) " +
-            "values(?, ?, ?, ?, ?, now());";
+    static final String ORDER_LOG_SQL = "insert into t_order_commodity_log(log_id, order_id, commodity_id, ip, num, logistics, pay_way, create_time) " +
+            "values(?, ?, ?, ?, ?, ?, ?, now());";
 }

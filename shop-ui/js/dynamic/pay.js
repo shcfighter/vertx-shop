@@ -61,11 +61,20 @@ $(function () {
             }
             order_details.push(content);
         })
+        var shipping_information_id = $(".defaultAddr").attr("id");
+        var logistics = $(".op_express_delivery_hot").find(".selected").attr("data-value");
+        var pay_way = $(".pay-list").find(".selected").attr("data-value");
+        if (undefined == shipping_information_id || null == shipping_information_id) {
+            $.Pop("请先选择收货地址！", "alert", function(){});
+            return ;
+        }
         var data = {
-            "shipping_information_id" : 1,
+            "shipping_information_id" : shipping_information_id,
             "order_details" : order_details,
             "source": source,
-            "leave_message": "尽快发货"
+            "logistics": logistics,
+            "pay_way": pay_way,
+            "leave_message": $(".J_MakePoint").val()
         }
         $.ajax({
             type: 'POST',
@@ -149,7 +158,7 @@ function loadAddress() {
                         hidden = "";
                     }
                     $(".address ul").append("<div class=\"per-border\"></div>\n" +
-                        "                <li class=\"user-addresslist " + defaultAddr + "\">\n" +
+                        "                <li class=\"user-addresslist " + defaultAddr + "\" id = \"" + value.shipping_information_id + "\">\n" +
                         "                    <div class=\"address-left\">\n" +
                         "                        <div class=\"user DefaultAddr\">\n" +
                         "                            <span class=\"buy-address-detail\">\n" +

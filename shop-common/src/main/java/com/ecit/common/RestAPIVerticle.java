@@ -14,6 +14,7 @@ import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.ext.web.sstore.LocalSessionStore;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +32,11 @@ import java.util.function.Function;
 public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
 
   private static final Logger LOGGER = LogManager.getLogger(RestAPIVerticle.class);
+  /**
+   * 特殊url无需登录可以正常返回
+   */
+  private static final String SPECIALURL = "findCartRowNum";
+
   /**
    * Create http server for the REST service.
    *
@@ -80,7 +86,8 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
   protected void enableLocalSession(Router router) {
     router.route().handler(CookieHandler.create());
     router.route().handler(SessionHandler.create(
-      LocalSessionStore.create(vertx, "shopping.user.session")));
+      LocalSessionStore.create(vertx, "shopping.user.session"))
+            .setSessionTimeout(5 * 60 * 60 * 1000L));
   }
 
   /**
@@ -91,7 +98,8 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
   protected void enableClusteredSession(Router router) {
     router.route().handler(CookieHandler.create());
     router.route().handler(SessionHandler.create(
-      ClusteredSessionStore.create(vertx, "shopping.user.session")));
+      ClusteredSessionStore.create(vertx, "shopping.user.session"))
+            .setSessionTimeout(5 * 60 * 60 * 1000L));
   }
 
   // Auth helper method
@@ -105,6 +113,10 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
     if (principal.isPresent()) {
       biHandler.accept(context, principal.get());
     } else {
+      if (StringUtils.contains(context.request().uri(), SPECIALURL)) {
+        this.returnWithSuccessMessage(context, null, 0);
+        return ;
+      }
       LOGGER.info("未登录，无权访问！");
       this.noAuth(context);
     }

@@ -210,14 +210,14 @@ public class CommodityServiceImpl extends JdbcRxRepositoryWrapper implements ICo
      * @return
      */
     @Override
-    public ICommodityService preparedCommodity(long id, long orderId, int num, String ip, Handler<AsyncResult<UpdateResult>> handler) {
+    public ICommodityService preparedCommodity(long id, long orderId, int num, String ip, String logistics, String payWay, Handler<AsyncResult<UpdateResult>> handler) {
         Future<UpdateResult> future = Future.future();
         postgreSQLClient.rxGetConnection()
             .flatMap(conn ->
                 conn.rxSetAutoCommit(false).toSingleDefault(false)
                     .flatMap(autoCommit -> conn.rxUpdateWithParams(CommoditySql.ORDER_COMMODITY_BY_ID, new JsonArray().add(num). add(num).add(id)))
                     .flatMap(updateResult -> conn.rxUpdateWithParams(CommoditySql.ORDER_LOG_SQL, new JsonArray()
-                        .add(IdBuilder.getUniqueId()).add(orderId).add(id).add("0.0.0.0").add(num)))
+                        .add(IdBuilder.getUniqueId()).add(orderId).add(id).add(ip).add(num).add(logistics).add(payWay)))
                     // Rollback if any failed with exception propagation
                     .onErrorResumeNext(ex -> conn.rxRollback()
                         .toSingleDefault(true)

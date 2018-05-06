@@ -15,6 +15,7 @@ import io.vertx.reactivex.ext.web.handler.CorsHandler;
 import io.vertx.reactivex.ext.web.handler.SessionHandler;
 import io.vertx.reactivex.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.reactivex.ext.web.sstore.LocalSessionStore;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +35,10 @@ import java.util.function.Function;
 public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
 
   private static final Logger LOGGER = LogManager.getLogger(RestAPIRxVerticle.class);
+  /**
+   * 特殊url无需登录可以正常返回
+   */
+  private static final String SPECIALURL = "findCartRowNum";
   protected Single<HttpServer> createHttpServer(Router router, String host, int port) {
     return vertx.createHttpServer()
       .requestHandler(router::accept)
@@ -78,6 +83,11 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
     if (principal.isPresent()) {
       biHandler.accept(context, principal.get());
     } else {
+      if (StringUtils.contains(context.request().uri(), SPECIALURL)) {
+        this.returnWithSuccessMessage(context, null, 0);
+        return ;
+      }
+      LOGGER.info("未登录，无权访问！");
       this.noAuth(context);
     }
   }

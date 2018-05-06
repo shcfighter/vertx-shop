@@ -128,12 +128,12 @@ CREATE TABLE public.t_commodity
     category_name character varying(50) COLLATE pg_catalog."default",
     price money,
     original_price money,
-    num bigint,
+    num bigint DEFAULT 0,
     freeze_num bigint DEFAULT 0,
     -- license_number character varying(20) COLLATE pg_catalog."default",
     status smallint,
     image_url text COLLATE pg_catalog."default",
-    freight money,
+    freight money DEFAULT 0,
     is_deleted smallint DEFAULT 0,
     create_time timestamp without time zone,
     update_time timestamp without time zone,
@@ -272,6 +272,8 @@ CREATE TABLE public.t_order_commodity_log
     commodity_id bigint NOT NULL,
     ip inet,
     num bigint DEFAULT 0,
+    pay_way character varying(20),
+    logistics character varying(20),
     is_deleted smallint DEFAULT 0,
     create_time timestamp without time zone,
     remarks text COLLATE pg_catalog."default",
@@ -296,6 +298,12 @@ COMMENT ON COLUMN public.t_order_commodity_log.ip
 
 COMMENT ON COLUMN public.t_order_commodity_log.num
     IS '订单购买数量';
+
+COMMENT ON COLUMN public.t_order_commodity_log.pay_way
+    IS '支付方式';
+
+COMMENT ON COLUMN public.t_order_commodity_log.logistics
+    IS '物流快递公司';
 
 COMMENT ON COLUMN public.t_order_commodity_log.create_time
     IS '下单时间';

@@ -41,6 +41,7 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
         // API route handler
         router.post("/insertCart").handler(context -> this.requireLogin(context, this::insertCartHandler));
         router.get("/findCartPage").handler(context -> this.requireLogin(context, this::findCartPageHandler));
+        router.get("/findCartRowNum").handler(context -> this.requireLogin(context, this::findCartRowNumHandler));
         router.post("/removeCart").handler(context -> this.requireLogin(context, this::removeCartHandler));
         //全局异常处理
         this.globalVerticle(router);
@@ -108,6 +109,26 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
                 LOGGER.error("查询购物信息失败：", handler.cause());
                 this.returnWithFailureMessage(context, "查询购物车失败");
                 return;
+            }
+        });
+
+    }
+
+    /**
+     * 购物车商品数量
+     * @param context
+     * @param principal
+     */
+    private void findCartRowNumHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        this.checkUser(context, userId);
+        cartService.findCartRowNum(userId, handler -> {
+            if (handler.failed()) {
+                LOGGER.error("查询购物信息失败：", handler.cause());
+                this.returnWithFailureMessage(context, "查询购物车失败！");
+                return;
+            } else {
+                this.returnWithSuccessMessage(context, "查询购物车成功！", handler.result());
             }
         });
 

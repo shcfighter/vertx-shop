@@ -27,6 +27,7 @@ $.ajaxSetup({
 });
 
 $(function(){
+    loadCartNum();
     var sessionLoginUser = sessionStorage.getItem("loginUser");
     if(undefined == sessionLoginUser ||
         null == sessionLoginUser ||
@@ -53,6 +54,7 @@ $(function(){
             }
         });
     });
+
 });
 
 /**
@@ -69,4 +71,24 @@ function getQueryVariable(variable)
         if(pair[0] == variable){return pair[1];}
     }
     return(false);
+}
+
+/**
+ * 获取购物车数量
+ */
+function loadCartNum() {
+    $.ajax({
+        type: "GET",
+        contentType: "application/json;",
+        url: domain + "api/cart/findCartRowNum",
+        success: function(result){
+            if(result.status == 0){
+                $("#J_MiniCartNum").html("(" + result.items + ")");
+                $(".cart_num ").html(result.items);
+            }
+        },
+        error: function () {
+            console.log("网络异常");
+        }
+    });
 }

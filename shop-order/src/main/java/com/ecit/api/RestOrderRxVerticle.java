@@ -109,12 +109,13 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                     }
                     totalPrice.add(freight);
                     totalFreight.add(freight);
-                    return CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails, IpUtils.getIpAddr(context.request().getDelegate())));
+                    return CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails, IpUtils.getIpAddr(context.request().getDelegate()),
+                            params.getString("logistics"), params.getString("pay_way")));
                 })
                 .compose(msg ->{
                     Future<Integer> orderFuture = Future.future();
                     orderService.insertOrder(orderId, userId, totalPrice.stream().reduce(BigDecimal::add).orElse(new BigDecimal("0.00")).toString(),
-                            CollectionUtil.isEmpty(totalFreight) ? "0.00" : totalFreight.get(0).toString(), params.getLong("shipping_information_id"),
+                            CollectionUtil.isEmpty(totalFreight) ? "0.00" : totalFreight.get(0).toString(), Long.parseLong(params.getString("shipping_information_id")),
                             params.getString("leave_message"), orderDetails, orderFuture);
                     return orderFuture;
         }).setHandler(orderHandler -> {
@@ -168,13 +169,14 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
      * @param orderDetails
      * @return
      */
-    private List<Future> preparedDecrCommodity(ICommodityService commodityService, long orderId, JsonArray orderDetails, String ip) {
+    private List<Future> preparedDecrCommodity(ICommodityService commodityService, long orderId, JsonArray orderDetails, String ip, String logistics, String payWay) {
         final List<Future> isOk = new ArrayList<>(orderDetails.size());
         for (int i = 0; i < orderDetails.size(); i++) {
             Future future = Future.future();
             isOk.add(future);
             JsonObject order = orderDetails.getJsonObject(i);
-            commodityService.preparedCommodity(order.getLong("id"), orderId, order.getInteger("order_num"), ip, hander -> {
+            commodityService.preparedCommodity(order.getLong("id"), orderId, order.getInteger("order_num"), ip, logistics, payWay,
+                    hander -> {
                 if(hander.succeeded()){
                     LOGGER.info("商品【{}】预扣商品库存成功", order.getLong("id"));
                     future.complete();
@@ -291,13 +293,14 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                     commodityList.stream().forEach(commodity -> {
                         for (int i = 0; i < orderArray.size(); i++) {
                             JsonObject order = orderArray.getJsonObject(i);
-                            if(Long.parseLong(order.getString("order_id")) == commodity.getInteger("commodity_id")){
+                            if(Long.parseLong(order.getString("order_id")) == Long.parseLong(commodity.getString("commodity_id"))){
                                 commodity.put("order_num", order.getInteger("order_num"));
                                 commodity.put("source", order.getString("source"));
                             }
                         }
                     });
                 } catch (Exception e) {
+                    LOGGER.error("下单失败：", e);
                     this.returnWithFailureMessage(context, "下单失败");
                     return ;
                 }

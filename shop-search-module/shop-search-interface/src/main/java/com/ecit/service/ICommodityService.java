@@ -42,5 +42,5 @@ public interface ICommodityService {
     ICommodityService findBrandCategory(String keyword, Handler<AsyncResult<SearchResponse>> handler);
 
     @Fluent
-    ICommodityService preparedCommodity(long id, long orderId, int num, String ip, Handler<AsyncResult<UpdateResult>> handler);
+    ICommodityService preparedCommodity(long id, long orderId, int num, String ip, String logistics, String payWay, Handler<AsyncResult<UpdateResult>> handler);
 }
