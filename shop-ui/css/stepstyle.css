@@ -8,8 +8,11 @@ letter-spacing: normal;word-spacing: normal;}
 background-position: -45px -135px;width: 29px;height: 29px;}
 /*变换的背景*/
 .u-stage-icon-inner .bg {position: absolute;left: 0px;top: 0px;}
+.u-stage-icon-inner .bg2 {position: absolute;left: 0px;top: 0px;}
 .step-1 .u-stage-icon-inner .bg {background-image: url(../images/sprite.png);background-position: -79px -135px;width: 19px;height: 19px;}
+.step-1 .u-stage-icon-inner .bg2 {background-image: url(../images/sprite.png);background-position: -103px -135px;width: 19px;height: 19px;}
 .step-2 .u-stage-icon-inner .bg {opacity:0;background-image: url(../images/sprite.png);background-position: -103px -135px;width: 19px;height: 19px;}
+.step-2 .u-stage-icon-inner .bg2 {background-image: url(../images/sprite.png);background-position: -103px -135px;width: 19px;height: 19px;}
 
 .u-stage-icon-inner {position: relative;z-index: 20;display: inline-block;width: 19px;height: 19px;line-height: 19px;
 vertical-align: top;margin-top: 5px;margin-left: -24px;color: #b5b5b5;font-size: 12px;letter-spacing: normal;word-spacing: normal;}
@@ -26,6 +29,7 @@ vertical-align: top;margin-top: 5px;margin-left: -24px;color: #b5b5b5;font-size:
 .am-form-group.code {position: relative;}
 .am-form-group.code .am-form-content {margin-right:80px;}
 .am-form-group.code a.btn{position:absolute;right: 0;top: 0;}
+.am-form-group.code a.botton{position:absolute;right: 0;top: 0;}
 .am-form-group.select .am-selected {width:100% ;font-size: 14px;}
 .am-form-group.select .am-selected-status{color:#b5b5b5;}
 .info-btn{text-align: center;padding-bottom: 10px;}

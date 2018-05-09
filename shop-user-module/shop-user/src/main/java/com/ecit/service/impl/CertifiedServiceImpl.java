@@ -74,9 +74,10 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
                 oneCertifiedFuture.compose(oneCertified -> {
                     Future<Integer> certifiedFuture = Future.future();
                     if (oneCertified.size() > 0) {
-                        this.updateUserCertified(oneCertified.getLong("certified_id"), certified.getLong("time"), certifiedFuture);
+                        this.updateUserCertified(oneCertified.getLong("certified_id"), certified.getString("remarks"), certified.getLong("time"), certifiedFuture);
                     } else {
-                        this.saveUserCertified(certified.getLong("user_id"), certified.getInteger("certified_type"), certified.getLong("time"), certifiedFuture);
+                        this.saveUserCertified(certified.getLong("user_id"), certified.getInteger("certified_type"), certified.getString("remarks"),
+                                certified.getLong("time"), certifiedFuture);
                     }
                     return certifiedFuture;
                 }).setHandler(handler -> {
@@ -107,9 +108,9 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
      * @return
      */
     @Override
-    public ICertifiedService sendUserCertified(long userId, int certifiedType, Handler<AsyncResult<Void>> resultHandler) {
+    public ICertifiedService sendUserCertified(long userId, int certifiedType, String remarks, Handler<AsyncResult<Void>> resultHandler) {
         JsonObject message = new JsonObject().put("body", new JsonObject().put("user_id", userId).put("certified_type", certifiedType)
-                .put("time", System.currentTimeMillis()).encodePrettily());
+                .put("time", System.currentTimeMillis()).put("remarks", remarks).encodePrettily());
         Future future = Future.future();
         // Put the channel in confirm mode. This can be done once at init.
         rabbitMQClient.confirmSelect(confirmResult -> {
@@ -142,20 +143,21 @@ public class CertifiedServiceImpl extends JdbcRxRepositoryWrapper implements ICe
     }
 
     @Override
-    public ICertifiedService saveUserCertified(long userId, int certifiedType, long certifiedTime, Handler<AsyncResult<Integer>> resultHandler) {
+    public ICertifiedService saveUserCertified(long userId, int certifiedType, String remarks, long certifiedTime, Handler<AsyncResult<Integer>> resultHandler) {
         Future<Integer> userFuture = Future.future();
         this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(certifiedType)
-                .add(DateFormatUtils.format(new Date(certifiedTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT)), UserSql.INSERT_USER_CERTIFIED_SQL)
+                .add(DateFormatUtils.format(new Date(certifiedTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT)).add(remarks),
+                UserSql.INSERT_USER_CERTIFIED_SQL)
                 .subscribe(userFuture::complete, userFuture::fail);
         userFuture.setHandler(resultHandler);
         return this;
     }
 
     @Override
-    public ICertifiedService updateUserCertified(long certifiedId, long updateTime, Handler<AsyncResult<Integer>> resultHandler) {
+    public ICertifiedService updateUserCertified(long certifiedId, String remarks, long updateTime, Handler<AsyncResult<Integer>> resultHandler) {
         Future<Integer> userFuture = Future.future();
         this.execute(new JsonArray().add(DateFormatUtils.format(new Date(updateTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT))
-                .add(certifiedId), UserSql.UPDATE_USER_CERTIFIED_SQL)
+                .add(remarks).add(certifiedId), UserSql.UPDATE_USER_CERTIFIED_SQL)
                 .subscribe(userFuture::complete, userFuture::fail);
         userFuture.setHandler(resultHandler);
         return this;

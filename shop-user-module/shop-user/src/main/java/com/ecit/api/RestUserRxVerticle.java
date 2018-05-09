@@ -49,6 +49,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.post("/register").handler(this::registerHandler);
         router.get("/activate/:loginName/:code").handler(this::activateHandler);
         router.put("/changepwd").handler(context -> this.requireLogin(context, this::changePwdHandler));
+        router.put("/changeEmail").handler(context -> this.requireLogin(context, this::changeEmailHandler));
         router.get("/getUserInfo").handler(context -> this.requireLogin(context, this::getUserInfoHandler));
         router.post("/saveUserInfo").handler(context -> this.requireLogin(context, this::saveUserInfoHandler));
         router.get("/findUserCertified").handler(context -> this.requireLogin(context, this::findUserCertifiedHandler));
@@ -58,6 +59,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.delete("/deleteAddress/:addressId").handler(context -> this.requireLogin(context, this::deleteAddressHandler));
         router.get("/findAddress").handler(context -> this.requireLogin(context, this::findAddressHandler));
         router.get("/getAddressById/:addressId").handler(context -> this.requireLogin(context, this::getAddressByIdHandler));
+        router.put("/idcardCertified").handler(context -> this.requireLogin(context, this::idcardCertifiedHandler));
 
         //全局异常处理
         this.globalVerticle(router);
@@ -144,11 +146,11 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                 registerHandler -> {
                     if (registerHandler.succeeded()) {
                         if (registerHandler.result() >= 1) {
-                            certifiedService.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), handler -> {});
+                            certifiedService.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler -> {});
                             if (StringUtils.equals(type, RegisterType.mobile.name())) {
-                                certifiedService.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), handler -> {});
+                                certifiedService.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), loginName, handler -> {});
                             } else if (StringUtils.equals(type, RegisterType.email.name())) {
-                                certifiedService.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), handler -> {});
+                                certifiedService.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), loginName, handler -> {});
                             }
                             this.Ok(context, ResultItems.getReturnItemsSuccess("注册成功"));
                         } else {
@@ -160,6 +162,10 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                 });
     }
 
+    /**
+     * 邮箱激活
+     * @param context
+     */
     private void activateHandler(RoutingContext context) {
         final JsonObject params = context.getBodyAsJson();
         final String loginName = params.getString("loginName");
@@ -207,6 +213,12 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             this.returnWithFailureMessage(context, "登录id【" + userId + "】不存在");
             return ;
         }
+        JsonObject params = context.getBodyAsJson();
+        if (!StringUtils.equals(params.getString("pwd"), params.getString("confirm_pwd"))) {
+            LOGGER.error("新密码和确认密码不一致！");
+            this.returnWithFailureMessage(context, "新密码和确认密码不一致！");
+            return ;
+        }
         userService.getMemberById(userId, handler -> {
             if(handler.failed()){
                 LOGGER.error("获取用户信息失败", handler.cause());
@@ -214,11 +226,17 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                 return ;
             }
             JsonObject user = handler.result();
+            final String originalPwd = hashStrategy.computeHash(params.getString("original_pwd"), user.getString("salt"), -1);
+            if(!StringUtils.equals(originalPwd, user.getString("password"))){
+                LOGGER.error("原密码错误！");
+                this.returnWithFailureMessage(context, "原密码错误！");
+                return ;
+            }
 
             /**
              * 密码加密
              */
-            String password = hashStrategy.computeHash(context.getBodyAsJson().getString("pwd"), user.getString("salt"), -1);
+            final String password = hashStrategy.computeHash(params.getString("pwd"), user.getString("salt"), -1);
             userService.changePwd(userId, password,
                     user.getLong("versions"), handler2 -> {
                         if(handler2.failed()){
@@ -226,11 +244,78 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                             this.returnWithFailureMessage(context, "修改密码失败!");
                             return ;
                         }
-                        this.Ok(context, ResultItems.getReturnItemsSuccess("修改密码成功"));
+                        certifiedService.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler3 -> {});
+                        this.returnWithSuccessMessage(context, "修改密码成功");
                     });
         });
     }
 
+    /**
+     * 修改密码
+     * @param context
+     * @param principal
+     */
+    private void changeEmailHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        if(Objects.isNull(userId) ){
+            LOGGER.error("登录id【{}】不存在", userId);
+            this.returnWithFailureMessage(context, "登录id【" + userId + "】不存在");
+            return ;
+        }
+        JsonObject params = context.getBodyAsJson();
+        userService.getMemberById(userId, handler -> {
+            if(handler.failed()){
+                LOGGER.error("获取用户信息失败", handler.cause());
+                this.returnWithFailureMessage(context, "修改邮箱失败!");
+                return ;
+            }
+            JsonObject user = handler.result();
+            final String email = params.getString("email");
+            final String code = params.getString("code");
+
+            IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate())
+                    .setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+            messageService.findMessage(email, RegisterType.email, handler2 -> {
+                if (handler2.succeeded()) {
+                    final JsonObject message = handler2.result();
+                    if (Objects.nonNull(message)
+                            && StringUtils.endsWithIgnoreCase(message.getString("code"), code)) {
+                        userService.updateEmail(userId, email,
+                                user.getLong("versions"), handler3 -> {
+                                    if(handler2.failed()){
+                                        LOGGER.error("修改邮箱失败", handler3.cause());
+                                        this.returnWithFailureMessage(context, "修改邮箱失败!");
+                                        return ;
+                                    }
+                                    certifiedService.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), email, handler4 -> {});
+                                    this.returnWithSuccessMessage(context, "修改邮箱成功");
+                                });
+                        messageService.updateMessage(email, RegisterType.email, deleteHandler -> {
+                            if (deleteHandler.succeeded()) {
+                                LOGGER.info("数据删除成功！");
+                            } else {
+                                LOGGER.info("数据删除失败！", deleteHandler.cause());
+                            }
+                        });
+                    } else {
+                        LOGGER.info("验证码不匹配！");
+                        this.returnWithFailureMessage(context, "验证码错误");
+                        return ;
+                    }
+                } else {
+                    LOGGER.info("查询验证码失败", handler2.cause());
+                    this.returnWithFailureMessage(context, "验证码错误");
+                    return ;
+                }
+            });
+        });
+    }
+
+    /**
+     * 获取用户详情信息
+     * @param context
+     * @param principal
+     */
     private void getUserInfoHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         userService.getUserInfo(userId, handler -> {
@@ -398,6 +483,25 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             }
             this.returnWithSuccessMessage(context, "查询收货地址成功", handler.result());
 
+        });
+    }
+
+    /**
+     * 实名认证
+     * @param context
+     * @param principal
+     */
+    private void idcardCertifiedHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        JsonObject params = context.getBodyAsJson();
+        userService.updateIdcard(userId, params.getString("real_name"), params.getString("id_card"), handler -> {
+            if(handler.failed()){
+                LOGGER.error("更新实名认证失败！", handler.cause());
+                this.returnWithFailureMessage(context, "实名认证失败！");
+                return ;
+            }
+
+            this.returnWithSuccessMessage(context, "实名认证成功", handler.result());
         });
     }
 }

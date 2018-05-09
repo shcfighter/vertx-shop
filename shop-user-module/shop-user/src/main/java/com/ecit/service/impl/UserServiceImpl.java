@@ -140,5 +140,35 @@ public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserSer
         return this;
     }
 
+    @Override
+    public IUserService updateEmail(long userId, String email, long versions, Handler<AsyncResult<Integer>> handler) {
+        Future<Integer> future = Future.future();
+        this.execute(new JsonArray().add(email).add(userId).add(versions), UserSql.UPDATE_USER_EMAIL_SQL)
+                .subscribe(future::complete, future::fail);
+        future.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public IUserService updateIdcard(long userId, String realName, String idCard, Handler<AsyncResult<Integer>> handler) {
+        Future<JsonObject> future = Future.future();
+        this.retrieveOne(new JsonArray().add(userId), UserSql.SELECT_USER_INFO_BY_USERID_SQL)
+            .subscribe(future::complete, future::fail);
+        future.compose(userInfo -> {
+           if (Objects.isNull(userInfo) || userInfo.size() == 0) {
+               Future<Integer> insertFuture = Future.future();
+               this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(realName).add(idCard), UserSql.INSERT_USER_INFO_IDCARD_SQL)
+                       .subscribe(insertFuture::complete, insertFuture::fail);
+               return insertFuture;
+           } else {
+               Future<Integer> updateFuture = Future.future();
+               this.execute(new JsonArray().add(realName).add(idCard).add(userId).add(userInfo.getLong("versions")), UserSql.UPDATE_USER_IDCARD_SQL)
+                       .subscribe(updateFuture::complete, updateFuture::fail);
+               return updateFuture;
+           }
+        }).setHandler(handler);
+        return this;
+    }
+
 
 }

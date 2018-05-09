@@ -17,13 +17,13 @@ import java.util.List;
 public interface ICertifiedService {
 
     @Fluent
-    ICertifiedService sendUserCertified(long userId, int certifiedType, Handler<AsyncResult<Void>> resultHandler);
+    ICertifiedService sendUserCertified(long userId, int certifiedType, String remarks, Handler<AsyncResult<Void>> resultHandler);
 
     @Fluent
-    ICertifiedService saveUserCertified(long userId, int certifiedType, long certifiedTime, Handler<AsyncResult<Integer>> resultHandler);
+    ICertifiedService saveUserCertified(long userId, int certifiedType, String remarks, long certifiedTime, Handler<AsyncResult<Integer>> resultHandler);
 
     @Fluent
-    ICertifiedService updateUserCertified(long certifiedId, long updateTime, Handler<AsyncResult<Integer>> resultHandler);
+    ICertifiedService updateUserCertified(long certifiedId, String remarks, long updateTime, Handler<AsyncResult<Integer>> resultHandler);
 
     @Fluent
     ICertifiedService findUserCertifiedByUserId(long userId, Handler<AsyncResult<List<JsonObject>>> resultHandler);

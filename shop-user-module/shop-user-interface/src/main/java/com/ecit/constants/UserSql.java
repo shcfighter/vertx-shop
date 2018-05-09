@@ -51,6 +51,18 @@ public interface UserSql {
             "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
 
     /**
+     * 修改email
+     */
+    static final String UPDATE_USER_EMAIL_SQL = "update t_user set email = ?, " +
+            "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
+
+    /**
+     * 修改mobile
+     */
+    static final String UPDATE_USER_MOBILE_SQL = "update t_user set mobile = ?, " +
+            "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
+
+    /**
      *  保存用户详情信息
      */
     static final String INSERT_USER_INFO_SQL = "insert into t_user_info(user_info_id, user_id, real_name, sex, birthday, photo_url, is_deleted, create_time) " +
@@ -63,14 +75,31 @@ public interface UserSql {
             "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
 
     /**
+     *  实名认证
+     */
+    static final String UPDATE_USER_IDCARD_SQL = "update t_user_info set real_name = ?, id_card = ?, " +
+            "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
+
+    /**
+     * 实名认证时插入
+     */
+    static final String INSERT_USER_INFO_IDCARD_SQL = "insert into t_user_info(user_info_id, user_id, real_name, id_card, is_deleted, create_time) " +
+            "values (?, ?, ?, ?, 0, now())";
+
+    /**
+     * 通过userid查询用户详情信息
+     */
+    static final String SELECT_USER_INFO_BY_USERID_SQL = "select * from t_user_info where user_id =? and is_deleted = 0";
+
+    /**
      *  保存用户认证信息
      */
-    static final String INSERT_USER_CERTIFIED_SQL = "insert into t_user_certified(certified_id, user_id, certified_type, certified_time) values (?, ?, ?, ?)";
+    static final String INSERT_USER_CERTIFIED_SQL = "insert into t_user_certified(certified_id, user_id, certified_type, certified_time, remarks) values (?, ?, ?, ?, ?)";
 
     /**
      *  更新用户认证信息
      */
-    static final String UPDATE_USER_CERTIFIED_SQL = "update t_user_certified set update_time = ?, versions = versions + 1 where certified_id = ?";
+    static final String UPDATE_USER_CERTIFIED_SQL = "update t_user_certified set update_time = ?, remarks = ?, versions = versions + 1 where certified_id = ?";
 
     /**
      *  查询用户认证信息

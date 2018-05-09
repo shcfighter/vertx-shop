@@ -43,5 +43,11 @@ public interface IUserService {
     @Fluent
     IUserService saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, String photoUrl, Handler<AsyncResult<UpdateResult>> resultHandler);
 
+    @Fluent
+    IUserService updateEmail(long userId, String email, long versions, Handler<AsyncResult<Integer>> handler);
+
+    @Fluent
+    IUserService updateIdcard(long userId, String realName, String idCard, Handler<AsyncResult<Integer>> handler);
+
 
 }

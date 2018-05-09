@@ -27,10 +27,13 @@ public class MessageServiceImpl implements IMessageService{
     private static final Logger LOGGER = LogManager.getLogger(MessageServiceImpl.class);
     private static MongoClient mongoClient;
     private static MailClient mailClient = null;
+    private static String fromUser;
 
     public MessageServiceImpl(Vertx vertx, JsonObject config) {
         mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
-        mailClient = MailClient.createShared(vertx, new MailConfig(config.getJsonObject("mail")));
+        JsonObject mail = config.getJsonObject("mail");
+        mailClient = MailClient.createShared(vertx, new MailConfig(mail));
+        fromUser = mail.getString("fromUser");
     }
 
     @Override
@@ -90,26 +93,31 @@ public class MessageServiceImpl implements IMessageService{
     }
 
     @Override
-    public IMessageService registerEmailMessage(String destination, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
+    public IMessageService registerEmailMessage(String destination, Handler<AsyncResult<String>> resultHandler) {
+        Future future = Future.future();
         this.saveMessage(destination, RegisterType.email, handler -> {
             if(handler.succeeded()){
                 final String code = handler.result();
                 MailMessage message = new MailMessage();
-                message.setFrom("shc_fighter@mail.com");
+                message.setFrom(fromUser);
                 message.setTo(destination);
                 message.setText("注册激活");
                 message.setHtml("<a href=\"http://111.231.132.168/api/user/activate/" + destination + "/" + code + "\">验证码：" + code + "</a>");
                 mailClient.sendMail(message, result -> {
                     if (result.succeeded()) {
                         LOGGER.info("邮件【{}】发送成功！", destination);
+                        future.complete(handler.result());
                     } else {
-                        LOGGER.info("邮件【{}】发送失败", destination, result.cause());
+                        LOGGER.error("邮件【{}】发送失败", destination, result.cause());
+                        future.fail(result.cause());
                     }
                 });
             } else {
                 LOGGER.info("生成邮件验证code失败！", handler.cause());
+                future.fail(handler.cause());
             }
         });
+        future.setHandler(resultHandler);
         return this;
     }
 

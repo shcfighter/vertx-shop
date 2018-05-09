@@ -57,11 +57,12 @@
     "keepAlive" : true           // boolean
   },
   "mail" : {
-    "hostname" : "smtp.mail.com",
-    "port" : 25,
+    "hostname" : "smtp-mail.outlook.com",
+    "port" : 587,
     "starttls" : "REQUIRED",
-    "username" : "shc_fighter@mail.com",
-    "password" : "1234567890a"
+    "username" : "shcfighter@hotmail.com",
+    "password" : "Hh123456",
+    "fromUser" : "shcfighter@hotmail.com"
   },
 
   // Server Settings

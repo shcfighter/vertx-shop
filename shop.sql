@@ -318,6 +318,7 @@ CREATE TABLE public.t_user_info
     user_info_id bigint NOT NULL,
     user_id bigint,
     real_name character varying(20) COLLATE pg_catalog."default",
+    id_card character varying(18),
     sex integer default 0,
     birthday date,
     photo_url character varying(512) COLLATE pg_catalog."default",
@@ -346,6 +347,9 @@ COMMENT ON COLUMN public.t_user_info.user_id
 
 COMMENT ON COLUMN public.t_user_info.real_name
     IS '真实姓名';
+
+COMMENT ON COLUMN public.t_user_info.id_card
+    IS '身份证号';
 
 COMMENT ON COLUMN public.t_user_info.sex
     IS '性别   0-保密；1-女；2-男';
