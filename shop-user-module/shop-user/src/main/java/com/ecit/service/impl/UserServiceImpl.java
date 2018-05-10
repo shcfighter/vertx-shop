@@ -150,23 +150,34 @@ public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserSer
     }
 
     @Override
-    public IUserService updateIdcard(long userId, String realName, String idCard, Handler<AsyncResult<Integer>> handler) {
+    public IUserService updateIdcard(long userId, String realName, String idCard, String idCardPositive, String idCardNegative, Handler<AsyncResult<Integer>> handler) {
         Future<JsonObject> future = Future.future();
         this.retrieveOne(new JsonArray().add(userId), UserSql.SELECT_USER_INFO_BY_USERID_SQL)
             .subscribe(future::complete, future::fail);
         future.compose(userInfo -> {
            if (Objects.isNull(userInfo) || userInfo.size() == 0) {
                Future<Integer> insertFuture = Future.future();
-               this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(realName).add(idCard), UserSql.INSERT_USER_INFO_IDCARD_SQL)
+               this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(realName).add(idCard).add(idCardPositive).add(idCardNegative)
+                       , UserSql.INSERT_USER_INFO_IDCARD_SQL)
                        .subscribe(insertFuture::complete, insertFuture::fail);
                return insertFuture;
            } else {
                Future<Integer> updateFuture = Future.future();
-               this.execute(new JsonArray().add(realName).add(idCard).add(userId).add(userInfo.getLong("versions")), UserSql.UPDATE_USER_IDCARD_SQL)
+               this.execute(new JsonArray().add(realName).add(idCard).add(idCardPositive).add(idCardNegative).add(userId).add(userInfo.getLong("versions")),
+                       UserSql.UPDATE_USER_IDCARD_SQL)
                        .subscribe(updateFuture::complete, updateFuture::fail);
                return updateFuture;
            }
         }).setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public IUserService getIdcardInfo(long userId, Handler<AsyncResult<JsonObject>> handler) {
+        Future<JsonObject> future = Future.future();
+        this.retrieveOne(new JsonArray().add(userId), UserSql.GET_USER_IDCARD_INFO_SQL)
+                .subscribe(future::complete, future::fail);
+        future.setHandler(handler);
         return this;
     }
 

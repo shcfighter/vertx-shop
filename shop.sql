@@ -320,6 +320,8 @@ CREATE TABLE public.t_user_info
     real_name character varying(20) COLLATE pg_catalog."default",
     id_card character varying(18),
     sex integer default 0,
+    id_card_positive_url text,
+    id_card_negative_url text,
     birthday date,
     photo_url character varying(512) COLLATE pg_catalog."default",
     address character varying(512) COLLATE pg_catalog."default",
@@ -350,6 +352,12 @@ COMMENT ON COLUMN public.t_user_info.real_name
 
 COMMENT ON COLUMN public.t_user_info.id_card
     IS '身份证号';
+
+COMMENT ON COLUMN public.t_user_info.id_card_positive_url
+    IS '身份证正面照片';
+
+COMMENT ON COLUMN public.t_user_info.id_card_negative_url
+    IS '身份证反面照片';
 
 COMMENT ON COLUMN public.t_user_info.sex
     IS '性别   0-保密；1-女；2-男';

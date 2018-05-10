@@ -1,0 +1,28 @@
+/*  模态框样式 */
+.loading {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.4;
+    z-index: 9999999999999;
+}
+
+/* 动图样式 */
+.loading .gif {
+    height: 32px;
+    width: 32px;
+    background: url('../images/loader.gif');
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -16px;
+    margin-top: -16px;
+    z-index: 1001;
+}
+
+.hide {
+    display: none;
+}

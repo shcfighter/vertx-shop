@@ -75,21 +75,27 @@ public interface UserSql {
             "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
 
     /**
+     * 查询认证信息
+     */
+    static final String GET_USER_IDCARD_INFO_SQL = "select user_info_id, id_card, real_name, id_card_positive_url, id_card_negative_url from t_user_info " +
+            "where user_id = ? and is_deleted = 0";
+
+    /**
      *  实名认证
      */
-    static final String UPDATE_USER_IDCARD_SQL = "update t_user_info set real_name = ?, id_card = ?, " +
+    static final String UPDATE_USER_IDCARD_SQL = "update t_user_info set real_name = ?, id_card = ?, id_card_positive_url = ?, id_card_negative_url = ?, " +
             "versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
 
     /**
      * 实名认证时插入
      */
-    static final String INSERT_USER_INFO_IDCARD_SQL = "insert into t_user_info(user_info_id, user_id, real_name, id_card, is_deleted, create_time) " +
-            "values (?, ?, ?, ?, 0, now())";
+    static final String INSERT_USER_INFO_IDCARD_SQL = "insert into t_user_info(user_info_id, user_id, real_name, id_card, id_card_positive_url, id_card_negative_url, is_deleted, create_time) " +
+            "values (?, ?, ?, ?, ?, ?, 0, now())";
 
     /**
      * 通过userid查询用户详情信息
      */
-    static final String SELECT_USER_INFO_BY_USERID_SQL = "select * from t_user_info where user_id =? and is_deleted = 0";
+    static final String SELECT_USER_INFO_BY_USERID_SQL = "select * from t_user_info where user_id = ? and is_deleted = 0";
 
     /**
      *  保存用户认证信息

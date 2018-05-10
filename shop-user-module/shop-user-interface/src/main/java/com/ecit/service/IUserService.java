@@ -47,7 +47,10 @@ public interface IUserService {
     IUserService updateEmail(long userId, String email, long versions, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IUserService updateIdcard(long userId, String realName, String idCard, Handler<AsyncResult<Integer>> handler);
+    IUserService updateIdcard(long userId, String realName, String idCard, String idCardPositive, String idCardNegative, Handler<AsyncResult<Integer>> handler);
+
+    @Fluent
+    IUserService getIdcardInfo(long userId, Handler<AsyncResult<JsonObject>> handler);
 
 
 }

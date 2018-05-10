@@ -9,8 +9,12 @@
     <link href="../AmazeUI-2.4.2/assets/css/amazeui.css" rel="stylesheet" type="text/css">
     <link href="../css/personal.css" rel="stylesheet" type="text/css">
     <link href="../css/stepstyle.css" rel="stylesheet" type="text/css">
+    <link href="../css/loading.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="../AmazeUI-2.4.2/assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="../js/commons.js"></script>
     <script type="text/javascript" src="../js/dynamic/search.input.js"></script>
+    <script type="text/javascript" src="../js/xcConfirm.js"></script>
+    <script type="text/javascript" src="../js/dynamic/person/idcard.js"></script>
 </head>
 
 <body>
@@ -124,7 +128,8 @@
                     <ul class="cardlist">
                         <li>
                             <div class="cardPic">
-                                <img src="../images/cardbg.jpg">
+                                <img src="../images/cardbg.jpg" id="id_card_positive_url">
+                                <input type="file" class="inputPic" name="file" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*" />
                                 <div class="cardText"><i class="am-icon-plus"></i>
                                     <p>正面照片</p>
                                 </div>
@@ -138,7 +143,8 @@
                         </li>
                         <li>
                             <div class="cardPic">
-                                <img src="../images/cardbg.jpg">
+                                <img src="../images/cardbg.jpg" id="id_card_negative_url">
+                                <input type="file" class="inputPic" name="file" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*" />
                                 <div class="cardText"><i class="am-icon-plus"></i>
                                     <p>背面照片</p>
                                 </div>
@@ -237,6 +243,10 @@
     </aside>
 </div>
 
+<!-- 模态框部分 -->
+<div class="loading hide">
+    <div class="gif"></div>
+</div>
 </body>
 
 </html>

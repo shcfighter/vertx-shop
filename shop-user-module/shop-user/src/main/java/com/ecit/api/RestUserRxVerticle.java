@@ -60,6 +60,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.get("/findAddress").handler(context -> this.requireLogin(context, this::findAddressHandler));
         router.get("/getAddressById/:addressId").handler(context -> this.requireLogin(context, this::getAddressByIdHandler));
         router.put("/idcardCertified").handler(context -> this.requireLogin(context, this::idcardCertifiedHandler));
+        router.get("/getIdcardCertified").handler(context -> this.requireLogin(context, this::getIdcardCertifiedHandler));
 
         //全局异常处理
         this.globalVerticle(router);
@@ -494,7 +495,9 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     private void idcardCertifiedHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         JsonObject params = context.getBodyAsJson();
-        userService.updateIdcard(userId, params.getString("real_name"), params.getString("id_card"), handler -> {
+        userService.updateIdcard(userId, params.getString("real_name"), params.getString("id_card"),
+                params.getString("id_card_positive_url"), params.getString("id_card_negative_url"),
+                handler -> {
             if(handler.failed()){
                 LOGGER.error("更新实名认证失败！", handler.cause());
                 this.returnWithFailureMessage(context, "实名认证失败！");
@@ -502,6 +505,18 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             }
 
             this.returnWithSuccessMessage(context, "实名认证成功", handler.result());
+        });
+    }
+
+    private void getIdcardCertifiedHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        userService.getIdcardInfo(userId, handler -> {
+            if(handler.failed()){
+                LOGGER.error("查询实名认证信息失败！", handler.cause());
+                this.returnWithFailureMessage(context, "查询认证信息失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "查询实名认证信息成功", handler.result());
         });
     }
 }

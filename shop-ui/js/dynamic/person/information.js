@@ -69,6 +69,9 @@ function submitform(){
             } else {
                 $.Pop(result.message, "alert", function(){});
             }
+        },
+        error: function () {
+            console.log("网络异常");
         }
     });
 }

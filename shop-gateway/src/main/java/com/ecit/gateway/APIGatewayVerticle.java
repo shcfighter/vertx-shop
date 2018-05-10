@@ -275,9 +275,10 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         for (FileUpload avatar : fileUploads) {
             FileSystem fs = vertx.fileSystem();
             final String[] images = StringUtils.split(avatar.fileName(), ".");
-            fs.copy(avatar.uploadedFileName(), "/data/shop/images/avatar/" + UuidUtil.createClusterUuid() + "." + images[images.length - 1], res -> {
+            String fileName = UuidUtil.createClusterUuid() + "." + images[images.length - 1];
+            fs.copy(avatar.uploadedFileName(), "/data/shop/images/avatar/" + fileName, res -> {
                 if (res.succeeded()) {
-                    this.returnWithSuccessMessage(context, "上传成功！", "http://111.231.132.168:8080/images/avatar/" + avatar.fileName());
+                    this.returnWithSuccessMessage(context, "上传成功！", "http://111.231.132.168:8080/images/avatar/" + fileName);
                 } else {
                     LOGGER.error("头像上传失败！", res.cause());
                     this.returnWithFailureMessage(context, "上传失败，请重试！");
