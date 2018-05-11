@@ -4,6 +4,7 @@ import com.ecit.common.enmu.RegisterType;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.IMessageService;
 import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
@@ -30,7 +31,8 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
         // body handler
         router.route().handler(BodyHandler.create());
         // API route handler
-        router.post("/sendEmailMessage").handler(this::sendEmailMessageHandler);
+        router.post("/sendEmailMessage").handler(context -> this.requireLogin(context, this::sendEmailMessageHandler));
+        router.post("/sendMobileMessage").handler(context -> this.requireLogin(context, this::sendMobileMessageHandler));
         router.post("/insertMessage").handler(this::insertMessageHandler);
         //全局异常处理
         this.globalVerticle(router);
@@ -49,10 +51,10 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
     }
 
     /**
-     *  邮件发送验证码
+     *  发送邮件验证码
      * @param context
      */
-    private void sendEmailMessageHandler(RoutingContext context){
+    private void sendEmailMessageHandler(RoutingContext context, JsonObject principal){
         messageService.registerEmailMessage(context.getBodyAsJson().getString("destination"), handler ->{
             if(handler.succeeded()){
                 LOGGER.info("邮箱发送成功，code:{}", handler.result());
@@ -60,6 +62,22 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
             } else {
                 LOGGER.error("邮箱发送失败", handler.cause());
                 this.returnWithFailureMessage(context, "邮箱发送失败");
+            }
+        });
+    }
+
+    /**
+     *  发送手机验证码
+     * @param context
+     */
+    private void sendMobileMessageHandler(RoutingContext context, JsonObject principal){
+        messageService.registerMobileMessage(context.getBodyAsJson().getString("destination"), handler ->{
+            if(handler.succeeded()){
+                LOGGER.info("手机验证码发送成功，code:{}", handler.result());
+                this.returnWithSuccessMessage(context, "手机验证码发送成功");
+            } else {
+                LOGGER.error("手机验证码发送失败", handler.cause());
+                this.returnWithFailureMessage(context, "手机验证码发送失败");
             }
         });
     }

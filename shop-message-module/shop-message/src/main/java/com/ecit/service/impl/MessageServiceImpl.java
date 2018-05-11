@@ -122,9 +122,22 @@ public class MessageServiceImpl implements IMessageService{
     }
 
     @Override
-    public IMessageService registerMobileMessage(String destination, String code, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
-        //todo 调用短信发送平台
-        LOGGER.info("短信【{}】发送成功！", destination);
+    public IMessageService registerMobileMessage(String destination, Handler<AsyncResult<String>> resultHandler) {
+        Future future = Future.future();
+        this.saveMessage(destination, RegisterType.mobile, handler -> {
+            if(handler.succeeded()){
+                final String code = handler.result();
+                LOGGER.info("短信【{}】发送成功！", destination);
+                //todo 调用短信发送平台
+                future.complete(code);
+
+
+            } else {
+                LOGGER.info("生成验证code失败！", handler.cause());
+                future.fail(handler.cause());
+            }
+        });
+        future.setHandler(resultHandler);
         return this;
     }
 }

@@ -2,9 +2,14 @@ package com.ecit.service.impl;
 
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
 import com.ecit.common.enmu.IsDeleted;
+import com.ecit.common.enmu.RegisterType;
 import com.ecit.common.utils.FormatUtils;
+import com.ecit.common.utils.JsonUtils;
 import com.ecit.constants.UserSql;
+import com.ecit.enmu.CertifiedType;
 import com.ecit.enmu.UserStatus;
+import com.ecit.service.ICertifiedService;
+import com.ecit.service.IMessageService;
 import com.ecit.service.IUserService;
 import com.ecit.service.IdBuilder;
 import io.reactivex.Single;
@@ -16,6 +21,8 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.redis.impl.MessageHandler;
+import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.logging.log4j.LogManager;
@@ -31,8 +38,10 @@ import java.util.Objects;
 public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserService{
 
     private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
+    final Vertx vertx;
     public UserServiceImpl(Vertx vertx, JsonObject config) {
         super(vertx, config);
+        this.vertx = vertx;
     }
 
     @Override
@@ -178,6 +187,49 @@ public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserSer
         this.retrieveOne(new JsonArray().add(userId), UserSql.GET_USER_IDCARD_INFO_SQL)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public IUserService getBindMobile(long userId, Handler<AsyncResult<JsonObject>> handler) {
+        return null;
+    }
+
+    @Override
+    public IUserService bindMobile(long userId, String mobile, String code, Handler<AsyncResult<Integer>> handler) {
+        Future<JsonObject> userFuture = Future.future();
+        this.getMemberById(userId, userFuture);
+        IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate())
+                .setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+        userFuture.compose(user -> {
+            if(JsonUtils.isNull(user)){
+                LOGGER.error("【绑定手机号】查询用户【{}】信息不存在！", userId);
+                return Future.failedFuture("用户信息不存在！");
+            }
+            Future<JsonObject> messageFuture = Future.future();
+            messageService.findMessage(mobile, RegisterType.mobile, messageFuture);
+            return messageFuture;
+        }).compose(message -> {
+            if(JsonUtils.isNull(message)){
+                LOGGER.error("【绑定手机号】{}查询验证码信息不存在！", mobile);
+                return Future.failedFuture("查询验证码信息不存在！");
+            }
+            if(!StringUtils.equals(code, message.getString("code"))){
+                LOGGER.error("【绑定手机号】{}, 验证码【{}】不正确！", mobile, message.getString("code"));
+                return Future.failedFuture("验证码错误！");
+            }
+            return Future.succeededFuture(code);
+        }).compose(messageCode -> {
+            JsonObject user = userFuture.result();
+            Future<Integer> future = Future.future();
+            this.execute(new JsonArray().add(mobile).add(userId).add(user.getLong("versions")), UserSql.BIND_MOBILE_SQL)
+                    .subscribe(future::complete, future::fail);
+            ICertifiedService certifiedService = new ServiceProxyBuilder(vertx.getDelegate())
+                    .setAddress(ICertifiedService.CERTIFIED_SERVICE_ADDRESS).build(ICertifiedService.class);
+            certifiedService.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), mobile, certifiedHandler -> {});
+            messageService.updateMessage(mobile, RegisterType.mobile, messageHandler -> {});
+            return future;
+        }).setHandler(handler);
         return this;
     }
 

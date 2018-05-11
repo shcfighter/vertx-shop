@@ -61,6 +61,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.get("/getAddressById/:addressId").handler(context -> this.requireLogin(context, this::getAddressByIdHandler));
         router.put("/idcardCertified").handler(context -> this.requireLogin(context, this::idcardCertifiedHandler));
         router.get("/getIdcardCertified").handler(context -> this.requireLogin(context, this::getIdcardCertifiedHandler));
+        router.put("/bindMobile").handler(context -> this.requireLogin(context, this::bindMobileHandler));
 
         //全局异常处理
         this.globalVerticle(router);
@@ -400,7 +401,6 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      * @param principal
      */
     private void updateAddressHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
         final JsonObject params = context.getBodyAsJson();
         addressService.updateAddress(params.getLong("address_id"), params.getString("receiver"), params.getString("mobile"),
                 params.getString("province_code"), params.getString("city_code"), params.getString("county_code"),
@@ -508,6 +508,11 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         });
     }
 
+    /**
+     * 获取身份认证信息
+     * @param context
+     * @param principal
+     */
     private void getIdcardCertifiedHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         userService.getIdcardInfo(userId, handler -> {
@@ -517,6 +522,19 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                 return ;
             }
             this.returnWithSuccessMessage(context, "查询实名认证信息成功", handler.result());
+        });
+    }
+
+    private void bindMobileHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        JsonObject params = context.getBodyAsJson();
+        userService.bindMobile(userId, params.getString("mobile"), params.getString("code"), handler -> {
+            if(handler.failed()){
+                LOGGER.error("绑定手机号码失败！", handler.cause());
+                this.returnWithFailureMessage(context, "绑定手机号码失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "绑定手机号码成功", handler.result());
         });
     }
 }

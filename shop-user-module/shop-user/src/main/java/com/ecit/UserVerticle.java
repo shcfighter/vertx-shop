@@ -31,9 +31,8 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
         IUserService userService = new UserServiceImpl(vertx, this.config());
         ICertifiedService certifiedService = new CertifiedServiceImpl(vertx, this.config(), userService);
         IAddressService addressService = new AddressServiceImpl(vertx, this.config());
-        new ServiceBinder(vertx.getDelegate())
-                .setAddress(IUserService.USER_SERVICE_ADDRESS)
-                .register(IUserService.class, userService);
+        new ServiceBinder(vertx.getDelegate()).setAddress(IUserService.USER_SERVICE_ADDRESS).register(IUserService.class, userService);
+        new ServiceBinder(vertx.getDelegate()).setAddress(ICertifiedService.CERTIFIED_SERVICE_ADDRESS).register(ICertifiedService.class, certifiedService);
         this.publishEventBusService(USER_SERVICE_NAME, IUserService.USER_SERVICE_ADDRESS, IUserService.class).subscribe();
         vertx.getDelegate().deployVerticle(new RestUserRxVerticle(userService, certifiedService, addressService), new DeploymentOptions().setConfig(this.config()));
     }

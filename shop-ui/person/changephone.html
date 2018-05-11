@@ -14,7 +14,6 @@
     <script type="text/javascript" src="../js/commons.js"></script>
     <script type="text/javascript" src="../js/dynamic/search.input.js"></script>
     <script type="text/javascript" src="../js/xcConfirm.js"></script>
-    <script type="text/javascript" src="../js/dynamic/person/bindmobile.js"></script>
 </head>
 
 <body>
@@ -107,16 +106,21 @@
             <!--进度条-->
             <div class="m-progress">
                 <div class="m-progress-list">
-							<span class="step-1 step">
-                                <em class="u-progress-stage-bg"></em>
-                                <i class="u-stage-icon-inner">1<em class="bg"></em></i>
-                                <p class="stage-name">绑定手机</p>
-                            </span>
+                    <span class="step-1 step">
+                        <em class="u-progress-stage-bg"></em>
+                        <i class="u-stage-icon-inner">1<em class="bg"></em></i>
+                        <p class="stage-name">验证手机</p>
+                    </span>
                     <span class="step-2 step">
-                                <em class="u-progress-stage-bg"></em>
-                                <i class="u-stage-icon-inner">2<em class="bg"></em></i>
-                                <p class="stage-name">完成</p>
-                            </span>
+                        <em class="u-progress-stage-bg"></em>
+                        <i class="u-stage-icon-inner">2<em class="bg"></em></i>
+                        <p class="stage-name">绑定手机</p>
+                    </span>
+                    <span class="step-3 step">
+                        <em class="u-progress-stage-bg"></em>
+                        <i class="u-stage-icon-inner">3<em class="bg"></em></i>
+                        <p class="stage-name">完成</p>
+                    </span>
                     <span class="u-progress-placeholder"></span>
                 </div>
                 <div class="u-progress-bar total-steps-2">
@@ -124,6 +128,21 @@
                 </div>
             </div>
             <form class="am-form am-form-horizontal">
+                <div class="am-form-group bind">
+                    <label for="user-phone" class="am-form-label">验证手机</label>
+                    <div class="am-form-content">
+                        <span id="user-phone">186XXXX0531</span>
+                    </div>
+                </div>
+                <div class="am-form-group code">
+                    <label for="user-code" class="am-form-label">验证码</label>
+                    <div class="am-form-content">
+                        <input type="tel" id="user-code" placeholder="短信验证码">
+                    </div>
+                    <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();" id="sendMobileCode">
+                        <div class="am-btn am-btn-danger">验证码</div>
+                    </a>
+                </div>
                 <div class="am-form-group">
                     <label for="user-new-phone" class="am-form-label">验证手机</label>
                     <div class="am-form-content">
@@ -135,12 +154,12 @@
                     <div class="am-form-content">
                         <input type="tel" id="user-new-code" placeholder="短信验证码">
                     </div>
-                    <a class="botton" href="javascript:void(0);" id="sendMobileCode">
+                    <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();" id="sendMobileCode">
                         <div class="am-btn am-btn-danger">验证码</div>
                     </a>
                 </div>
                 <div class="info-btn">
-                    <div class="am-btn am-btn-danger am-btn-save">保存修改</div>
+                    <div class="am-btn am-btn-danger">保存修改</div>
                 </div>
 
             </form>

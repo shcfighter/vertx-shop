@@ -16,6 +16,8 @@ import java.util.List;
 @VertxGen
 public interface ICertifiedService {
 
+    public static final String CERTIFIED_SERVICE_ADDRESS = "certified-service-address";
+
     @Fluent
     ICertifiedService sendUserCertified(long userId, int certifiedType, String remarks, Handler<AsyncResult<Void>> resultHandler);
 

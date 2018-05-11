@@ -52,5 +52,11 @@ public interface IUserService {
     @Fluent
     IUserService getIdcardInfo(long userId, Handler<AsyncResult<JsonObject>> handler);
 
+    @Fluent
+    IUserService getBindMobile(long userId, Handler<AsyncResult<JsonObject>> handler);
+
+    @Fluent
+    IUserService bindMobile(long userId, String mobile, String code, Handler<AsyncResult<Integer>> handler);
+
 
 }

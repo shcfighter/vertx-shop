@@ -158,4 +158,6 @@ public interface UserSql {
     static final String GET_ADDRESS_BY_ID_SQL = "select shipping_information_id, user_id, receiver, mobile, province_code, city_code, county_code, address, versions " +
             "from t_shipping_information where shipping_information_id = ? ";
 
+    static final String BIND_MOBILE_SQL = "update t_user set mobile = ?, versions = versions + 1, update_time = now() where user_id = ? and versions = ?";
+
 }
