@@ -10,8 +10,13 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AccountServiceImpl extends JdbcRxRepositoryWrapper implements IAccountService {
+
+    private static final Logger LOGGER = LogManager.getLogger(AccountServiceImpl.class);
+
     public AccountServiceImpl(Vertx vertx, JsonObject config) {
         super(vertx, config);
     }
@@ -27,7 +32,7 @@ public class AccountServiceImpl extends JdbcRxRepositoryWrapper implements IAcco
         Future future = Future.future();
         this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId), AccountSql.INSERT_ACCOUNT_SQL)
                 .subscribe(future::complete, future::fail);
-        future.setHandler(future);
+        future.setHandler(handler);
         return this;
     }
 
@@ -42,7 +47,7 @@ public class AccountServiceImpl extends JdbcRxRepositoryWrapper implements IAcco
         Future future = Future.future();
         this.retrieveOne(new JsonArray().add(userId), AccountSql.FIND_ACCOUNT_BY_USERID_SQL)
                 .subscribe(future::complete, future::fail);
-        future.setHandler(future);
+        future.setHandler(handler);
         return this;
     }
 }

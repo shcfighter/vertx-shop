@@ -8,10 +8,7 @@ import com.ecit.common.utils.JsonUtils;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.CertifiedType;
 import com.ecit.enmu.UserStatus;
-import com.ecit.service.ICertifiedService;
-import com.ecit.service.IMessageService;
-import com.ecit.service.IUserService;
-import com.ecit.service.IdBuilder;
+import com.ecit.service.*;
 import io.reactivex.Single;
 import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.AsyncResult;
@@ -45,12 +42,18 @@ public class UserServiceImpl extends JdbcRxRepositoryWrapper implements IUserSer
     @Override
     public IUserService register(long userId, String loginName, String mobile, String email, String pwd, String salt,
                                  Handler<AsyncResult<Integer>> resultHandler) {
-        Future<Integer> future = Future.future();
-        this.execute(new JsonArray().add(userId).add(StringUtils.isEmpty(loginName) ? "member_" + userId : loginName).add(pwd)
-                        .add(Objects.isNull(email) ? UserStatus.ACTIVATION.getStatus() : UserStatus.INACTIVATED.getStatus()).add(IsDeleted.NO.getValue())
-                        .add(Objects.isNull(mobile) ? "" : mobile).add(Objects.isNull(email) ? "" : email).add(salt),
-                UserSql.REGISTER_SQL).subscribe(future::complete, future::fail);
-        future.setHandler(resultHandler);
+        Future<Integer> accountFuture = Future.future();
+        IAccountService accountService = new ServiceProxyBuilder(vertx.getDelegate())
+                .setAddress(IAccountService.ACCOUNT_SERVICE_ADDRESS).build(IAccountService.class);
+        accountService.insertAccount(userId, accountFuture);
+        Future<Integer> future = accountFuture.compose(account -> {
+            Future<Integer> userFuture = Future.future();
+            this.execute(new JsonArray().add(userId).add(StringUtils.isEmpty(loginName) ? "member_" + userId : loginName).add(pwd)
+                            .add(Objects.isNull(email) ? UserStatus.ACTIVATION.getStatus() : UserStatus.INACTIVATED.getStatus()).add(IsDeleted.NO.getValue())
+                            .add(Objects.isNull(mobile) ? "" : mobile).add(Objects.isNull(email) ? "" : email).add(salt),
+                    UserSql.REGISTER_SQL).subscribe(userFuture::complete, userFuture::fail);
+            return userFuture;
+        }).setHandler(resultHandler);
         return this;
     }
 
