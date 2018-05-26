@@ -1,8 +1,11 @@
 package com.ecit;
 
+import com.ecit.api.RestCollectionRxVerticle;
 import com.ecit.api.RestMessageRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
+import com.ecit.service.ICollectionService;
 import com.ecit.service.IMessageService;
+import com.ecit.service.impl.CollectionServiceImpl;
 import com.ecit.service.impl.MessageServiceImpl;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
@@ -25,11 +28,12 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
     public void start() throws Exception {
         super.start();
         IMessageService messageService = new MessageServiceImpl(vertx, this.config());
-        new ServiceBinder(vertx.getDelegate())
-                .setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS)
-                .register(IMessageService.class, messageService);
+        ICollectionService collectionService = new CollectionServiceImpl(vertx, this.config());
+        new ServiceBinder(vertx.getDelegate()).setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).register(IMessageService.class, messageService);
+        new ServiceBinder(vertx.getDelegate()).setAddress(ICollectionService.COLLECTION_SERVICE_ADDRESS).register(ICollectionService.class, collectionService);
         this.publishEventBusService(SERVICE_MESSAGE_SERVICE_NAME, IMessageService.MESSAGE_SERVICE_ADDRESS, IMessageService.class).subscribe();
         vertx.getDelegate().deployVerticle(new RestMessageRxVerticle(messageService), new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(new RestCollectionRxVerticle(collectionService), new DeploymentOptions().setConfig(this.config()));
     }
 
     public static void main(String[] args) {
@@ -44,6 +48,7 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
         Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(MessageVerticle.class.getName(),
                 new DeploymentOptions().setConfig(new JsonObject()
                         .put("message.api.name", "message")
+                        .put("collection.api.name", "collection")
                         .put("mongodb", new JsonObject()
                                 .put("host", "111.231.132.168")
                                 .put("port", 27017)
@@ -56,6 +61,12 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
                                 .put("username", "shc_fighter@mail.com")
                                 .put("password", "1234567890a")
                                 .put("starttls", "REQUIRED"))
+                        .put("rabbitmq", new JsonObject()
+                                .put("host", "111.231.132.168")
+                                .put("port", 5672)
+                                .put("username", "guest")
+                                .put("password", "guest")
+                                .put("virtualHost", "/"))
                 )));
     }
 }

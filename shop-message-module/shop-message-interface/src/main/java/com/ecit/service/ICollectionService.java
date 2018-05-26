@@ -9,29 +9,24 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 
+import java.util.List;
+
 /**
  * Created by za-wangshenhua on 2018/2/28.
  */
 @VertxGen
 @ProxyGen
-public interface IMessageService {
+public interface ICollectionService {
 
-    static final String MESSAGE_SERVICE_ADDRESS = "message_service_address";
-
-    static final String MONGODB_COLLECTION = "verification_code";
+    static final String COLLECTION_SERVICE_ADDRESS = "collection_service_address";
 
     @Fluent
-    IMessageService saveMessage(String destination, RegisterType type, Handler<AsyncResult<String>> resultHandler);
+    ICollectionService sendCollection(JsonObject params, Handler<AsyncResult<String>> resultHandler);
 
     @Fluent
-    IMessageService findMessage(String destination, RegisterType type, Handler<AsyncResult<JsonObject>> resultHandler);
+    ICollectionService findCollection(long userId, int page, Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
     @Fluent
-    IMessageService updateMessage(String destination, RegisterType type, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);
+    ICollectionService updateCollection(long userId, String id, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);
 
-    @Fluent
-    IMessageService registerEmailMessage(String destination, Handler<AsyncResult<String>> resultHandler);
-
-    @Fluent
-    IMessageService registerMobileMessage(String destination, Handler<AsyncResult<String>> resultHandler);
 }

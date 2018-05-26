@@ -1,11 +1,27 @@
 $(function () {
 
+    $.ajax({
+        type: 'GET',
+        contentType: "application/json;",
+        url: domain + "api/user/getUserInfo",
+        success: function(result){
+            if(result.status == 0) {
+                $("#user-phone").html(result.items.mobile);
+            } else {
+                $.Pop(result.message, "alert", function(){});
+            }
+        },
+        error: function () {
+            console.log("网络异常");
+        }
+    });
+
     /**
      * 发送邮箱
      */
     $("#sendMobileCode").click(function() {
         var data = {
-            destination: $("#user-new-phone").val()
+            destination: $("#user-phone").html()
         }
         $.ajax({
             type: "POST",

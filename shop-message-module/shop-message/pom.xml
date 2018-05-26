@@ -28,6 +28,10 @@
             <artifactId>vertx-mongo-client</artifactId>
             <version>${vertx-version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-rabbitmq-client</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

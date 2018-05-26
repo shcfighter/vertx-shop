@@ -16,6 +16,8 @@ $(function () {
                             break;
                         }
                         case 3: {
+                            $(".i-safety-iphone").parent("li").find(".fore3").find("a").attr("href", "changephone.html");
+                            $(".i-safety-iphone").parent("li").find(".fore3").find("div").val("换绑");
                             $(".i-safety-iphone").parent("li").find(".fore2").find("small").html("您验证的手机：" + value.remarks + " 若已丢失或停用，请立即更换")
                             break;
                         }

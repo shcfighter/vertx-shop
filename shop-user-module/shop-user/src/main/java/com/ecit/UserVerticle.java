@@ -1,10 +1,13 @@
 package com.ecit;
 
+import com.ecit.api.RestAccountRxVerticle;
 import com.ecit.api.RestUserRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
+import com.ecit.service.IAccountService;
 import com.ecit.service.IAddressService;
 import com.ecit.service.ICertifiedService;
 import com.ecit.service.IUserService;
+import com.ecit.service.impl.AccountServiceImpl;
 import com.ecit.service.impl.AddressServiceImpl;
 import com.ecit.service.impl.CertifiedServiceImpl;
 import com.ecit.service.impl.UserServiceImpl;
@@ -31,10 +34,14 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
         IUserService userService = new UserServiceImpl(vertx, this.config());
         ICertifiedService certifiedService = new CertifiedServiceImpl(vertx, this.config(), userService);
         IAddressService addressService = new AddressServiceImpl(vertx, this.config());
+        IAccountService accountService = new AccountServiceImpl(vertx, this.config());
         new ServiceBinder(vertx.getDelegate()).setAddress(IUserService.USER_SERVICE_ADDRESS).register(IUserService.class, userService);
         new ServiceBinder(vertx.getDelegate()).setAddress(ICertifiedService.CERTIFIED_SERVICE_ADDRESS).register(ICertifiedService.class, certifiedService);
-        this.publishEventBusService(USER_SERVICE_NAME, IUserService.USER_SERVICE_ADDRESS, IUserService.class).subscribe();
+        new ServiceBinder(vertx.getDelegate()).setAddress(IAddressService.ADDRESS_SERVICE_ADDRESS).register(IAddressService.class, addressService);
+        new ServiceBinder(vertx.getDelegate()).setAddress(IAccountService.ACCOUNT_SERVICE_ADDRESS).register(IAccountService.class, accountService);
+        //this.publishEventBusService(USER_SERVICE_NAME, IUserService.USER_SERVICE_ADDRESS, IUserService.class).subscribe();
         vertx.getDelegate().deployVerticle(new RestUserRxVerticle(userService, certifiedService, addressService), new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(new RestAccountRxVerticle(accountService), new DeploymentOptions().setConfig(this.config()));
     }
 
     public static void main(String[] args) {
@@ -49,6 +56,7 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
         Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(UserVerticle.class.getName(),
                 new DeploymentOptions().setConfig(new JsonObject()
                         .put("user.api.name", "user")
+                        .put("account.api.name", "account")
                         .put("host", "111.231.132.168")
                         .put("port", 5432)
                         .put("maxPoolSize", 50)

@@ -1,11 +1,57 @@
 $(function () {
 
-    loadAddress();
     /**
-     * 地区控件
+     * 初始化收货地址列表
      */
-    $("#user-address").click(function (e) {
-        SelCity(this,e);
+    $.ajax({
+        type: 'GET',
+        contentType: "application/json;",
+        url: domain + "api/collection/findCollection?pageNum=1",
+        success: function(result){
+            if(result.status == 0) {
+                $(".s-content").html("");
+                $.each(result.items, function (index, value) {
+                    $(".s-content").append("<div class=\"s-item-wrap\">\n" +
+                        "                            <div class=\"s-item\">\n" +
+                        "                                <div class=\"s-pic\">\n" +
+                        "                                    <a href=\"#\" class=\"s-pic-link\">\n" +
+                        "                                        <img src=\"" + value.image_url + "\"\n" +
+                        "                                             alt=\"" + value.commodity_name + "\"\n" +
+                        "                                             title=\"" + value.commodity_name + "\" class=\"s-pic-img s-guess-item-img\">\n" +
+                        "                                    </a>\n" +
+                        "                                </div>\n" +
+                        "                                <div class=\"s-info\">\n" +
+                        "                                    <div class=\"s-title\"><a href=\"#\" title=\"" + value.commodity_name + "\">" + value.commodity_name + "</a>\n" +
+                        "                                    </div>\n" +
+                        "                                    <div class=\"s-price-box\">\n" +
+                        "                                        <span class=\"s-price\"><em class=\"s-price-sign\">¥</em><em\n" +
+                        "                                                class=\"s-value\">" + value.price + "</em></span>\n" +
+                        "                                        <span class=\"s-history-price\"><em class=\"s-price-sign\">¥</em><em\n" +
+                        "                                                class=\"s-value\">" + value.original_price + "</em></span>\n" +
+                        "                                    </div>\n" +
+                        "                                    <div class=\"s-extra-box\">\n" +
+                        "                                        <span class=\"s-comment\">好评: 98.03%</span>\n" +
+                        "                                        <span class=\"s-sales\">月销: 219</span>\n" +
+                        "                                    </div>\n" +
+                        "                                </div>\n" +
+                        "                                <div class=\"s-tp\">\n" +
+                        "                                    <span class=\"ui-btn-loading-before\">找相似</span>\n" +
+                        "                                    <i class=\"am-icon-shopping-cart\"></i>\n" +
+                        "                                    <span class=\"ui-btn-loading-before buy\">加入购物车</span>\n" +
+                        "                                    <p>\n" +
+                        "                                        <a href=\"javascript:;\" class=\"c-nodo J_delFav_btn\">取消收藏</a>\n" +
+                        "                                    </p>\n" +
+                        "                                </div>\n" +
+                        "                            </div>\n" +
+                        "                        </div>");
+                })
+            } else {
+                $.Pop(result.message, "alert", function(){});
+            }
+        },
+        error: function () {
+            console.log("网络异常");
+        }
     });
 
     /**
@@ -89,66 +135,3 @@ $(function () {
         });
     });
 });
-
-function delClick(id){
-    $.ajax({
-        type: 'DELETE',
-        contentType: "application/json;",
-        url: domain + "api/user/deleteAddress/" + id,
-        success: function(result){
-            if(result.status == 0) {
-                loadAddress();
-                $.Pop(result.message, "alert", function(){});
-            } else {
-                $.Pop(result.message, "alert", function(){});
-            }
-        },
-        error: function () {
-            console.log("网络异常");
-        }
-    });
-}
-
-function loadAddress(){
-    /**
-     * 初始化收货地址列表
-     */
-    $.ajax({
-        type: 'GET',
-        contentType: "application/json;",
-        url: domain + "api/user/findAddress",
-        success: function(result){
-            if(result.status == 0) {
-                $(".am-thumbnails").html("");
-                $.each(result.items, function (index, value) {
-                    var defaultAddr = "";
-                    if (value.is_default == 1) {
-                        defaultAddr = "defaultAddr";
-                    }
-                    $(".am-thumbnails").append("<li class=\"user-addresslist " + defaultAddr + "\">\n" +
-                        "                        <span class=\"new-option-r\" id=\"" + value.shipping_information_id + "\"><i class=\"am-icon-check-circle\"></i>默认地址</span>\n" +
-                        "                        <p class=\"new-tit new-p-re\">\n" +
-                        "                            <span class=\"new-txt\">" + value.receiver + "</span>\n" +
-                        "                            <span class=\"new-txt-rd2\">" + value.mobile + "</span>\n" +
-                        "                        </p>\n" +
-                        "                        <div class=\"new-mu_l2a new-p-re\">\n" +
-                        "                            <p class=\"new-mu_l2cw\">\n" +
-                        "                                <span class=\"title\">地址：</span>\n" +
-                        "                                <span class=\"street\">" + value.address_details + "</span></p>\n" +
-                        "                        </div>\n" +
-                        "                        <div class=\"new-addr-btn\">\n" +
-                        /*"                            <a href=\"javascript:void(0);\" id=\"am-icon-edit\"><i class=\"am-icon-edit\"></i>编辑</a>\n" +
-                        "                            <span class=\"new-addr-bar\">|</span>\n" +*/
-                        "                            <a href=\"javascript:void(0);\" onclick=\"delClick('" + value.shipping_information_id + "');\"><i class=\"am-icon-trash\"></i>删除</a>\n" +
-                        "                        </div>\n" +
-                        "                    </li>");
-                })
-            } else {
-                $.Pop(result.message, "alert", function(){});
-            }
-        },
-        error: function () {
-            console.log("网络异常");
-        }
-    });
-}

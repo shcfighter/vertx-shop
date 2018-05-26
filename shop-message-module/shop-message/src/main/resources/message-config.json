@@ -2,6 +2,9 @@
   "message.api.name": "message",
   "api.message.http.port": 8083,
   "api.message.http.address": "0.0.0.0",
+  "collection.api.name": "collection",
+  "collection.http.port": 8086,
+  "collection.http.address": "0.0.0.0",
   "mongodb": {
     // Single Cluster Settings
     "host" : "111.231.132.168", // string
@@ -67,5 +70,12 @@
 
   // Server Settings
   "heartbeatFrequencyMS" :    1000, // long
-  "minHeartbeatFrequencyMS" : 500 // long
+  "minHeartbeatFrequencyMS" : 500, // long,
+  "rabbitmq": {
+    "host": "111.231.132.168",
+    "port": 5672,
+    "username": "guest",
+    "password": "guest",
+    "virtualHost": "/"
+  }
 }

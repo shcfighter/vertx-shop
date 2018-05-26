@@ -16,6 +16,7 @@ $(function(){
                 if(result.status == 0){
                     var items = result.items;
                     $(".tb-detail-hd").attr("commodity_id", items.commodity_id);
+                    $(".collection").attr("id", items.commodity_id);
                     $(".tb-detail-hd h1").html(items.commodity_name);
                     //设置浏览图片
                     $.each(items.image_url, function(index, image_urls) {
@@ -122,25 +123,29 @@ $(function(){
     });
 
     /**
-     * 购物车
+     * 收藏
      */
-    /*$(".addcart").click(function(event) {
-        var offset = $("#shopCart_1").offset();
-        var img = $("#thumblist").find("li").eq(0).find("img").attr("src"); //获取当前点击图片链接
-        var flyer = $('<img class="flyer-img" src="' + img + '">'); //抛物体对象
-        flyer.fly({
-            start: {
-                left: event.clientX,//抛物体起点横坐标
-                top: event.clientY //抛物体起点纵坐标
+    $(".collection").click(function(event) {
+        var data ={
+            commodity_id: parseInt($(".tb-detail-hd").attr("commodity_id")),
+            commodity_name: $(".tb-detail-hd h1").html(),
+            price: $(".sys_item_price").html(),
+            original_price: $(".sys_item_mktprice").html(),
+            image_url: $("#thumblist").find("li:first-child").find("img").attr("src")
+        }
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json;",
+            url: domain + "api/collection/insertCollection",
+            data: JSON.stringify(data),
+            success: function(result){
+                if(result.status == 0){
+                    console.log(result);
+                }
             },
-            end: {
-                left: offset.left,//抛物体终点横坐标
-                top: 250, //抛物体终点纵坐标
-            },
-            onEnd: function() {
-                $("#tip").show().animate({width: '200px'},300).fadeOut(500);////成功加入购物车动画效果
-                this.destory(); //销毁抛物体
+            error: function () {
+                console.log("网络异常");
             }
         });
-    });*/
+    });
 });

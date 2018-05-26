@@ -137,6 +137,15 @@ $(function () {
         });
     });
 
+    $(".user-addresslist").live("click", function () {
+        var user = $(this).find(".buy-user").html();
+        var phone = $(this).find(".buy-phone").html();
+        var address = $(this).find(".street").html();
+        $(".buy-footer-address .buy--address-detail").html(address);
+        $(".buy-footer-address .buy-user").html(user);
+        $(".buy-footer-address .buy-phone").html(phone);
+    });
+
 });
 
 function loadAddress() {
@@ -188,4 +197,5 @@ function loadAddress() {
             console.log("网络异常");
         }
     });
+
 }

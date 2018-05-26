@@ -2,8 +2,7 @@ package com.ecit.api;
 
 import com.ecit.common.enmu.RegisterType;
 import com.ecit.common.rx.RestAPIRxVerticle;
-import com.ecit.service.IMessageService;
-import io.vertx.core.Future;
+import com.ecit.service.ICollectionService;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -14,14 +13,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by za-wangshenhua on 2018/2/2.
  */
-public class RestMessageRxVerticle extends RestAPIRxVerticle{
+public class RestCollectionRxVerticle extends RestAPIRxVerticle{
 
-    private static final Logger LOGGER = LogManager.getLogger(RestMessageRxVerticle.class);
-    private static final String HTTP_MESSAGE_SERVICE = "http_message_service_api";
-    private final IMessageService messageService;
+    private static final Logger LOGGER = LogManager.getLogger(RestCollectionRxVerticle.class);
+    private static final String HTTP_COLLECTION_SERVICE = "http_collection_service_api";
+    private final ICollectionService collectionService;
 
-    public RestMessageRxVerticle(IMessageService messageService) {
-        this.messageService = messageService;
+    public RestCollectionRxVerticle(ICollectionService collectionService) {
+        this.collectionService = collectionService;
     }
 
     @Override
@@ -31,91 +30,55 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
         // body handler
         router.route().handler(BodyHandler.create());
         // API route handler
-        router.post("/sendEmailMessage").handler(context -> this.requireLogin(context, this::sendEmailMessageHandler));
-        router.post("/sendMobileMessage").handler(context -> this.requireLogin(context, this::sendMobileMessageHandler));
-        router.post("/insertMessage").handler(this::insertMessageHandler);
+        router.post("/insertCollection").handler(context -> this.requireLogin(context, this::insertCollectionHandler));
+        router.get("/findCollection").handler(context -> this.requireLogin(context, this::findMessageHandler));
         //全局异常处理
         this.globalVerticle(router);
 
         // get HTTP host and port from configuration, or use default value
-        String host = config().getString("api.message.http.address", "localhost");
-        int port = config().getInteger("api.message.http.port", 8083);
+        String host = config().getString("collection.http.address", "localhost");
+        int port = config().getInteger("collection.http.port", 8086);
 
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {
-            this.publishHttpEndpoint(HTTP_MESSAGE_SERVICE, host, port, "message.api.name").subscribe();
-            LOGGER.info("shop-message server started!");
+            this.publishHttpEndpoint(HTTP_COLLECTION_SERVICE, host, port, "collection.api.name").subscribe();
+            LOGGER.info("shop-collection server started!");
         }, error -> {
-            LOGGER.info("shop-message server start fail!", error);
+            LOGGER.info("shop-collection server start fail!", error);
         });
     }
 
     /**
-     *  发送邮件验证码
+     *  保存收藏商品
      * @param context
      */
-    private void sendEmailMessageHandler(RoutingContext context, JsonObject principal){
-        messageService.registerEmailMessage(context.getBodyAsJson().getString("destination"), handler ->{
+    private void insertCollectionHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        JsonObject params = context.getBodyAsJson();
+        params.put("user_id", userId);
+        params.put("is_deleted", 0);
+        params.put("create_time", System.currentTimeMillis());
+        collectionService.sendCollection(params, handler ->{
             if(handler.succeeded()){
-                LOGGER.info("邮箱发送成功，code:{}", handler.result());
-                this.returnWithSuccessMessage(context, "邮箱发送成功");
+                LOGGER.info("商品收藏成功，code:{}", handler.result());
+                this.returnWithSuccessMessage(context, "商品收藏成功");
             } else {
-                LOGGER.error("邮箱发送失败", handler.cause());
-                this.returnWithFailureMessage(context, "邮箱发送失败");
+                LOGGER.error("商品收藏失败", handler.cause());
+                this.returnWithFailureMessage(context, "商品收藏失败");
             }
         });
     }
 
-    /**
-     *  发送手机验证码
-     * @param context
-     */
-    private void sendMobileMessageHandler(RoutingContext context, JsonObject principal){
-        messageService.registerMobileMessage(context.getBodyAsJson().getString("destination"), handler ->{
+    private void findMessageHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        collectionService.findCollection(userId, Integer.parseInt(context.request().getParam("pageNum")), handler ->{
             if(handler.succeeded()){
-                LOGGER.info("手机验证码发送成功，code:{}", handler.result());
-                this.returnWithSuccessMessage(context, "手机验证码发送成功");
+                this.returnWithSuccessMessage(context, "查询收藏成功", handler.result());
             } else {
-                LOGGER.error("手机验证码发送失败", handler.cause());
-                this.returnWithFailureMessage(context, "手机验证码发送失败");
+                LOGGER.info("查询收藏失败", handler.cause());
+                this.returnWithFailureMessage(context, "查询收藏失败");
             }
         });
     }
-
-    /**
-     *
-     * @param context
-     */
-    private void insertMessageHandler(RoutingContext context){
-        messageService.saveMessage(context.getBodyAsJson().getString("destination"), RegisterType.email, handler ->{
-            if(handler.succeeded()){
-                LOGGER.info("插入成功，code:{}", handler.result());
-                this.returnWithSuccessMessage(context, "插入成功");
-            } else {
-                LOGGER.error("插入失败", handler.cause());
-                this.returnWithFailureMessage(context, "插入失败");
-            }
-        });
-    }
-
-    /*private void findMessageHandler(RoutingContext context){
-        final String destination = context.getBodyAsJson().getString("destination");
-        messageService.findMessage(destination, RegisterType.mobile, handler ->{
-            if(handler.succeeded()){
-                messageService.updateMessage(destination, RegisterType.mobile, deleteHandler -> {
-                    if (deleteHandler.succeeded()) {
-                        LOGGER.info("数据删除成功！");
-                    } else {
-                        LOGGER.info("数据删除失败！", deleteHandler.cause());
-                    }
-                });
-                this.Ok(context, ResultItems.getReturnItemsSuccess(0, handler.result()));
-                //this.returnWithSuccessMessage(context, "插入成功");
-            } else {
-                LOGGER.info("查询失败", handler.cause());
-                this.returnWithFailureMessage(context, "查询失败");
-            }
-        });
-    }*/
 
 }

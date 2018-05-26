@@ -513,5 +513,7 @@ html[xmlns] .flexslider .slides {
   cursor: default;
 }
 
-
+.iteminfo_mktprice .collection {
+  float:right;
+}
 

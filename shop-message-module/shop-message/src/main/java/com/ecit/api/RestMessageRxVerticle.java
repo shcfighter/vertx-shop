@@ -38,8 +38,8 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
         this.globalVerticle(router);
 
         // get HTTP host and port from configuration, or use default value
-        String host = config().getString("api.message.http.address", "localhost");
-        int port = config().getInteger("api.message.http.port", 8083);
+        String host = config().getString("message.http.address", "localhost");
+        int port = config().getInteger("message.http.port", 8083);
 
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {

@@ -14,6 +14,8 @@ import java.util.List;
 @VertxGen
 public interface IAddressService {
 
+    public static final String ADDRESS_SERVICE_ADDRESS = "address-service-address";
+
     @Fluent
     IAddressService insertAddress(long userId, String receiver, String mobile, String provinceCode, String cityCode, String countyCode, String address, String addressDetails, Handler<AsyncResult<Integer>> handler);
 

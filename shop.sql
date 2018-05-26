@@ -471,3 +471,45 @@ COMMENT ON COLUMN public.t_shipping_information.is_default
 
 COMMENT ON COLUMN public.t_shipping_information.is_deleted
     IS '0-未删除；1-删除';
+
+
+
+-- Table: public.t_account
+
+-- DROP TABLE public.t_account;
+
+CREATE TABLE public.t_account
+(
+    account_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    amount money DEFAULT 0,
+    freeze_amount money DEFAULT 0,
+    status smallint DEFAULT 0,
+    is_deleted smallint DEFAULT 0,
+    create_time timestamp without time zone,
+    update_time timestamp without time zone,
+    remarks text COLLATE pg_catalog."default",
+    versions bigint DEFAULT 0,
+    CONSTRAINT t_account_pkey PRIMARY KEY (account_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.t_account
+    OWNER to postgres;
+COMMENT ON TABLE public.t_account
+    IS '资金账户表';
+
+COMMENT ON COLUMN public.t_account.user_id
+    IS '用户编号';
+
+COMMENT ON COLUMN public.t_account.amount
+    IS '账户余额';
+
+COMMENT ON COLUMN public.t_account.freeze_amount
+    IS '冻结金额';
+
+COMMENT ON COLUMN public.t_account.status
+    IS '状态：0-正常；1-冻结；';

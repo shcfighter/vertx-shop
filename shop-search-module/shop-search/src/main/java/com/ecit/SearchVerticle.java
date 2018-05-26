@@ -55,7 +55,7 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
                             .put("search.api.name", "search")
                             .put("address", "eb.elasticsearch")
                             .put("transportAddresses", new JsonArray().add(new JsonObject()
-                                    .put("hostname", "47.98.232.164")
+                                    .put("hostname", "111.231.132.168")
                                     .put("port", 9300)))
                             .put("cluster_name", "vertx_shop")
                             .put("client_transport_sniff", false)
