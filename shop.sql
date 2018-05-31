@@ -240,7 +240,7 @@ COMMENT ON COLUMN public.t_order.total_price
     IS '总价格';
 
 COMMENT ON COLUMN public.t_order.order_status
-    IS '订单状态	1=有效	2=已取消订单	3=已退款	4=已发货	0=订单失效';
+    IS '订单状态	1=有效	2=已付款	3=已退款	4=已发货	0=订单失效  -1=已取消订单';
 
 COMMENT ON COLUMN public.t_order.cancel_time
     IS '订单取消时间';
@@ -473,7 +473,6 @@ COMMENT ON COLUMN public.t_shipping_information.is_deleted
     IS '0-未删除；1-删除';
 
 
-
 -- Table: public.t_account
 
 -- DROP TABLE public.t_account;
@@ -490,6 +489,7 @@ CREATE TABLE public.t_account
     update_time timestamp without time zone,
     remarks text COLLATE pg_catalog."default",
     versions bigint DEFAULT 0,
+    pay_pwd character varying(200) COLLATE pg_catalog."default",
     CONSTRAINT t_account_pkey PRIMARY KEY (account_id)
 )
 WITH (
@@ -513,3 +513,51 @@ COMMENT ON COLUMN public.t_account.freeze_amount
 
 COMMENT ON COLUMN public.t_account.status
     IS '状态：0-正常；1-冻结；';
+
+COMMENT ON COLUMN public.t_account.pay_pwd
+    IS '支付密码';
+
+
+-- Table: public.t_pay_log
+
+-- DROP TABLE public.t_pay_log;
+
+CREATE TABLE public.t_pay_log
+(
+    log_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    business_id character varying(200) COLLATE pg_catalog."default",
+    type smallint,
+    money money DEFAULT 0,
+    balance money DEFAULT 0,
+    status smallint DEFAULT 0,
+    is_deleted smallint DEFAULT 0,
+    create_time timestamp without time zone,
+    remarks text COLLATE pg_catalog."default",
+    versions bigint DEFAULT 0,
+    CONSTRAINT t_pay_log_pkey PRIMARY KEY (log_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.t_pay_log
+    OWNER to postgres;
+COMMENT ON TABLE public.t_pay_log
+    IS '支付记录';
+
+COMMENT ON COLUMN public.t_pay_log.business_id
+    IS '业务id';
+
+COMMENT ON COLUMN public.t_pay_log.type
+    IS '业务类型 1-余额支付;2-支付宝;3-微信;4-银行卡;';
+
+COMMENT ON COLUMN public.t_pay_log.money
+    IS '支付金额';
+
+COMMENT ON COLUMN public.t_pay_log.balance
+    IS '余额';
+
+COMMENT ON COLUMN public.t_pay_log.status
+    IS '0-准备支付；1-支付完成；';

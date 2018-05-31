@@ -1,8 +1,8 @@
 package com.ecit.service.impl;
 
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
-import com.ecit.common.enmu.IsDeleted;
-import com.ecit.common.enmu.RegisterType;
+import com.ecit.common.enums.IsDeleted;
+import com.ecit.common.enums.RegisterType;
 import com.ecit.common.utils.FormatUtils;
 import com.ecit.common.utils.JsonUtils;
 import com.ecit.constants.UserSql;

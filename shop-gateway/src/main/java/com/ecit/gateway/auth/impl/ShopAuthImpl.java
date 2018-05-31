@@ -1,7 +1,7 @@
 
 package com.ecit.gateway.auth.impl;
 
-import com.ecit.common.enmu.IsDeleted;
+import com.ecit.common.enums.IsDeleted;
 import com.ecit.common.utils.salt.DefaultHashStrategy;
 import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.gateway.auth.ShopAuth;

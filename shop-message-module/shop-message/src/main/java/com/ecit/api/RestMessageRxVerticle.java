@@ -1,9 +1,8 @@
 package com.ecit.api;
 
-import com.ecit.common.enmu.RegisterType;
+import com.ecit.common.enums.RegisterType;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.IMessageService;
-import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;

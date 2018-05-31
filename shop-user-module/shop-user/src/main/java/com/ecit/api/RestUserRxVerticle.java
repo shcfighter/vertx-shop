@@ -1,6 +1,6 @@
 package com.ecit.api;
 
-import com.ecit.common.enmu.RegisterType;
+import com.ecit.common.enums.RegisterType;
 import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.salt.DefaultHashStrategy;

@@ -35,6 +35,7 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
         router.route().handler(BodyHandler.create());
         // API route handler
         router.get("/getAccount").handler(context -> this.requireLogin(context, this::getAccountHandler));
+        router.post("/payOrder/:orderId").handler(context -> this.requireLogin(context, this::payOrderHandler));
 
         //全局异常处理
         this.globalVerticle(router);
@@ -45,7 +46,7 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
 
         // create HTTP server and publish REST service
         createHttpServer(router, host, port).subscribe(server -> {
-            //this.publishHttpEndpoint(HTTP_ACCOUNT_SERVICE, host, port, "account.api.name").subscribe();
+            this.publishHttpEndpoint(HTTP_ACCOUNT_SERVICE, host, port, "account.api.name").subscribe();
             LOGGER.info("shop-account server started!");
         }, error -> {
             LOGGER.info("shop-account server start fail!", error);
@@ -66,6 +67,21 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
                 return ;
             }
             this.returnWithSuccessMessage(context, "查询账户金额成功", handler.result());
+
+        });
+    }
+
+    private void payOrderHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        JsonObject params = context.getBodyAsJson();
+        accountService.payOrder(userId, Long.parseLong(context.pathParam("orderId")), params.getString("pay_pwd"),
+                handler -> {
+            if(handler.failed()){
+                LOGGER.error("支付订单失败", handler.cause());
+                this.returnWithFailureMessage(context, handler.cause().getMessage());
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "支付订单成功", handler.result());
 
         });
     }

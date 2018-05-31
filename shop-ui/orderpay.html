@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>安全支付</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="stylesheet" type="text/css" href="AmazeUI-2.4.2/assets/css/amazeui.css"/>
+    <link href="css/dlstyle.css" rel="stylesheet" type="text/css">
+    <link href="AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css">
+    <link href="basic/css/demo.css" rel="stylesheet" type="text/css"/>
+    <link href="css/sustyle.css" rel="stylesheet" type="text/css"/>
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/commons.js"></script>
+    <script src="js/xcConfirm.js"></script>
+    <style>
+        .pay-blance {
+            float:right;
+            margin-right:60px;
+        }
+        .pay-blance em {
+            color: #f00;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+        .pay-pwd {
+            margin-top: 20px;
+        }
+        .successInfo{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="login-boxtitle">
+    <a href="/index.html"><img alt="logo" src="images/logobig.png"/></a>
+</div>
+
+<div class="clear"></div>
+
+<div class="take-delivery2" style="border:0px solid #000">
+    <div>
+        <span>订单提交成功，请尽快付款！订单号：<h2 id="order-id"></h2></span>
+        <span class="pay-blance">付款金额<em>¥9.90</em></span>
+    </div>
+
+    <div class="successInfo">
+        <ul>
+            <div class="user-info">
+                <p>收货人：艾迪</p>
+                <p>联系电话：15871145629</p>
+                <p>收货地址：湖北省 武汉市 武昌区 东湖路75号众环大厦</p>
+            </div>
+            请认真核对您的收货信息，如有错误请联系客服
+
+        </ul>
+        <div class="pay-pwd">
+            支付密码：
+            <input type="password" name="pay_pwd">
+            <a href="javascript:void(0);">忘记密码？</a>
+            <br/>
+            <br/>
+            <button id="pay">确认付款</button>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var id = getQueryVariable("order_id");
+        if(undefined == id || null == id || "" == id){
+            $.Pop("支付异常！", "alert", function(){
+                //window.location.href = "/index.html";
+            });
+        }
+        $("#order-id").val(id);
+        $("#pay").click(function () {
+            var data = {
+                pay_pwd: $("input[name='pay_pwd']").val()
+            }
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json;",
+                url: domain + "api/account/payOrder/" + id,
+                data: JSON.stringify(data),
+                success: function(result){
+                    if(result.status == 0){
+                        window.location.href = "/person/order.html";
+                    } else {
+                        $.Pop(result.message,"alert",function(){});
+                    }
+                },
+                error: function () {
+                    console.log("网络错误！");
+                }
+            });
+        });
+    });
+</script>
+
+
+<div class="footer ">
+    <div class="footer-hd ">
+        <p>
+            <a href="# ">恒望科技</a>
+            <b>|</b>
+            <a href="# ">商城首页</a>
+            <b>|</b>
+            <a href="# ">支付宝</a>
+            <b>|</b>
+            <a href="# ">物流</a>
+        </p>
+    </div>
+    <div class="footer-bd ">
+        <p>
+            <a href="# ">关于恒望</a>
+            <a href="# ">合作伙伴</a>
+            <a href="# ">联系我们</a>
+            <a href="# ">网站地图</a>
+            <em>© 2015-2025 Hengwang.com 版权所有</em>
+        </p>
+    </div>
+</div>
+</body>
+
+</html>

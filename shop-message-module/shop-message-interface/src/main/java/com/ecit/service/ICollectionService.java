@@ -1,6 +1,5 @@
 package com.ecit.service;
 
-import com.ecit.common.enmu.RegisterType;
 import io.vertx.codegen.annotations.Fluent;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;

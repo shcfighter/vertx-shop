@@ -11,11 +11,14 @@ import io.vertx.core.json.JsonObject;
 @ProxyGen
 public interface IAccountService {
 
-    public static final String ACCOUNT_SERVICE_ADDRESS = "account-service-address";
+    static final String ACCOUNT_SERVICE_ADDRESS = "account-service-address";
 
     @Fluent
     IAccountService insertAccount(long userId, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
     IAccountService findAccount(long userId, Handler<AsyncResult<JsonObject>> handler);
+
+    @Fluent
+    IAccountService payOrder(long userId, long orderId, String payPwd, Handler<AsyncResult<Integer>> handler);
 }

@@ -1,6 +1,6 @@
 package com.ecit.service.impl;
 
-import com.ecit.common.enmu.RegisterType;
+import com.ecit.common.enums.RegisterType;
 import com.ecit.service.IMessageService;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;

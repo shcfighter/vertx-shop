@@ -11,6 +11,7 @@ h2, #success-pay h2 {font-size: 14px;height: 40px;line-height: 40px;margin-top:0
 .successInfo a span{font-size: 13px; margin: 0 10px 0 10px;color: #f00;}
 .take-delivery {background: url(../images/T13iv.XiFdXXa94Hfd-32-32.png) no-repeat scroll 10px 30px transparent;padding: 27px 0 27px 60px;color: #333;
 width:100% ;max-width:1000px;margin:0px auto;margin-top: 50px;}
+.take-delivery2 {padding: 27px 0 27px 60px;color: #333;width:100% ;max-width:1000px;margin:0px auto;margin-top: 50px;}
 
 .successInfo li{font-size:18px;}
 .footer{max-width:1000px; margin:0px auto; margin-top:10px;}
@@ -20,6 +21,7 @@ width:100% ;max-width:1000px;margin:0px auto;margin-top: 50px;}
 {
 .take-delivery{background: url(../images/T13iv.XiFdXXa94Hfd-32-32.png) no-repeat scroll 30px 30px transparent;padding: 27px 0 27px 76px;border: 1px solid #e5e5e5;margin-top: 10px;border: none;}
 .user-info{border:1px solid #F00}
+  .take-delivery2 {padding: 27px 0 27px 76px;border: 1px solid #e5e5e5;margin-top: 10px;border: none;}
 .successInfo {padding: 0 65px 0 56px;}
 .user-info p{ font-size:14px; padding:10px;}
 

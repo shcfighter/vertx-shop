@@ -1,6 +1,5 @@
 package com.ecit.api;
 
-import com.ecit.common.enmu.RegisterType;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.service.ICollectionService;
 import io.vertx.core.json.JsonObject;

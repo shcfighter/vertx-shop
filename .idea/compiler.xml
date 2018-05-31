@@ -2,65 +2,30 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="shop-account" />
-        <module name="shop-gateway" />
-        <module name="shop-message" />
-        <module name="shop-search" />
-      </profile>
-      <profile name="Annotation profile for shop-common" enabled="true">
+      <profile name="Annotation profile for vertx-shop" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-common" />
-      </profile>
-      <profile name="Annotation profile for shop-order" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
+        <module name="shop-message-interface" />
         <module name="shop-order" />
-      </profile>
-      <profile name="Annotation profile for shop-pay" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
+        <module name="shop-order (1)" />
+        <module name="shop-order-interface" />
         <module name="shop-pay" />
-      </profile>
-      <profile name="Annotation profile for shop-user" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
+        <module name="shop-search-interface" />
         <module name="shop-user" />
-      </profile>
-      <profile name="Annotation profile for shop-user-interface" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
         <module name="shop-user-interface" />
       </profile>
-      <profile name="Annotation profile for shop-message-interface" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
-        <module name="shop-message-interface" />
+        <module name="shop-gateway" />
+        <module name="shop-message" />
+        <module name="shop-search" />
       </profile>
-      <profile name="Annotation profile for shop-search-interface" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
-        <module name="shop-search-interface" />
-      </profile>
-      <profile name="Annotation profile for vertx-shop" enabled="true">
+      <profile name="Annotation profile for shop-elasticsearch-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -68,6 +33,23 @@
         <module name="shop-elasticsearch-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="9" />
+    <bytecodeTargetLevel target="9">
+      <module name="shop-account" target="9" />
+      <module name="shop-common" target="9" />
+      <module name="shop-elasticsearch-service" target="9" />
+      <module name="shop-gateway" target="9" />
+      <module name="shop-message" target="9" />
+      <module name="shop-message-interface" target="9" />
+      <module name="shop-order" target="9" />
+      <module name="shop-order (1)" target="9" />
+      <module name="shop-order-interface" target="9" />
+      <module name="shop-order-module" target="9" />
+      <module name="shop-pay" target="9" />
+      <module name="shop-search" target="9" />
+      <module name="shop-search-interface" target="9" />
+      <module name="shop-user" target="9" />
+      <module name="shop-user-interface" target="9" />
+      <module name="vertx-shop" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
