@@ -4,11 +4,11 @@ package com.ecit.enmu;
  * 订单状态
  */
 public enum OrderStatus {
-    effective(1, "有效"),
-    cancel(2, "已取消订单"),
-    Refund(3, "已退款"),
-    Ship(4, "已发货"),
-    invalid(0, "订单失效");
+    EFFECTIVE(1, "有效"),
+    CANCEL(2, "已取消订单"),
+    REFUND(3, "已退款"),
+    SHIP(4, "已发货"),
+    INVALID(0, "订单失效");
 
     private int key;
     private String desc;

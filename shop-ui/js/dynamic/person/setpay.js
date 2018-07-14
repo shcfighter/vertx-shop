@@ -1,11 +1,16 @@
 $(function () {
-
     $.ajax({
         type: 'GET',
         contentType: "application/json;",
         url: domain + "api/user/getUserInfo",
         success: function(result){
             if(result.status == 0) {
+                var user = result.items;
+                if(null == user.mobile || "" == user.mobile){
+                    $.Pop("未绑定手机号码，请先绑定手机号！", "alert", function(){
+                        window.location.href = "bindphone.html";
+                    });
+                }
                 $("#user-phone").html(result.items.mobile);
             } else {
                 $.Pop(result.message, "alert", function(){});
@@ -15,7 +20,6 @@ $(function () {
             console.log("网络异常");
         }
     });
-
     /**
      * 发送手机验证码
      */
@@ -41,31 +45,28 @@ $(function () {
         });
     });
 
-    /**
-     *  修改手机号
-     */
-    $(".am-btn-save").click(function () {
+    $("#setPayPwd").click(function() {
         var data = {
-            mobile: $("#user-new-phone").val(),
-            code: $("#user-new-code").val()
+            mobile: $("#user-phone").html(),
+            code: $("#user-code").val(),
+            pay_pwd: $("#user-password").val(),
+            confirm_pwd: $("#user-confirm-password").val(),
         }
         $.ajax({
-            type: 'PUT',
+            type: "PUT",
             contentType: "application/json;",
-            url: domain + "api/user/bindMobile",
+            url: domain + "api/account/setPayPwd",
             data: JSON.stringify(data),
             success: function(result){
-                if(result.status == 0) {
-                    $(".m-progress-list").find("em").removeClass("bg").toggleClass("bg2");
-                    $.Pop(result.message, "alert", function(){});
+                if (result.status == 0) {
+                    $.Pop("设置支付密码成功", "alert",function(){});
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    $.Pop(result.message, "alert",function(){});
                 }
             },
             error: function () {
-                console.log("网络异常");
+                console.log("网络错误！");
             }
         });
     });
-
 });

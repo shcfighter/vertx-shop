@@ -62,6 +62,36 @@ $(function () {
                             "    </li>\n" +
                             "</ul>";
                         });
+                        var status = "";
+                        switch (value.status) {
+                            case 1: {
+                                status = "<p class=\"Mystatus\">等待买家付款</p>\n" +
+                                    "<p class=\"order-info\"><a href=\"#\">取消订单</a></p>";
+                                break;
+                            }
+                            case 2: {
+                                status = "<p class=\"Mystatus\">买家已付款</p>\n" +
+                                    "<p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>";
+                                break;
+                            }
+                            case 3: {
+                                status = "<p class=\"Mystatus\">交易关闭</p>";
+                                break;
+                            }
+                            case 4: {
+                                status = "<p class=\"Mystatus\">卖家已发货</p>\n" +
+                                    "<p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>\n" +
+                                    "<p class=\"order-info\"><a href=\"logistics.html\">查看物流</a></p>\n" +
+                                    "<p class=\"order-info\"><a href=\"#\">延长收货</a></p>";
+                                break;
+                            }
+                            case 5: {
+                                status = "<p class=\"Mystatus\">交易成功</p>\n" +
+                                    "<p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>\n" +
+                                    "<p class=\"order-info\"><a href=\"logistics.html\">查看物流</a></p>";
+                                break;
+                            }
+                        }
                         $($order_list).append("<div class=\"order-status3\">\n" +
                             "    <div class=\"order-title\">\n" +
                             "        <div class=\"dd-num\">订单编号：<a href=\"javascript:void(0);\">" + value.order_id + "</a></div>\n" +
@@ -81,6 +111,7 @@ $(function () {
                             "            <div class=\"move-right\">\n" +
                             "                <li class=\"td td-status\">\n" +
                             "                    <div class=\"item-status\">\n" +
+
                             "                        <p class=\"Mystatus\">卖家已发货</p>\n" +
                             "                        <p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>\n" +
                             "                        <p class=\"order-info\"><a href=\"logistics.html\">查看物流</a></p>\n" +

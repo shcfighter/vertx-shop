@@ -16,9 +16,10 @@
     <link href="AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css">
     <link href="basic/css/demo.css" rel="stylesheet" type="text/css"/>
     <link href="css/sustyle.css" rel="stylesheet" type="text/css"/>
-    <script src="js/jquery-2.2.4.min.js"></script>
-    <script src="js/commons.js"></script>
-    <script src="js/xcConfirm.js"></script>
+    <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="js/commons.js"></script>
+    <script type="text/javascript" src="js/xcConfirm.js"></script>
+    <script type="text/javascript" src="js/dynamic/orderpay.js"></script>
     <style>
         .pay-blance {
             float:right;
@@ -30,7 +31,29 @@
             margin-left: 5px;
         }
         .pay-pwd {
+            margin-top: 50px;
+        }
+        .pay-pwd input{
+            font-size: 14px;
+            font-size: 1.6rem;
+            line-height: 1.2;
+            color: #555555;
+            vertical-align: middle;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            -webkit-appearance: none;
+        }
+        .pay-pwd #pay{
             margin-top: 20px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            padding: 0px 10px;
+            background: #F03726;
+            color: #fff;
+            border-radius: 5px;
         }
         .successInfo{
             margin-top: 20px;
@@ -46,19 +69,18 @@
 
 <div class="take-delivery2" style="border:0px solid #000">
     <div>
-        <span>订单提交成功，请尽快付款！订单号：<h2 id="order-id"></h2></span>
-        <span class="pay-blance">付款金额<em>¥9.90</em></span>
+        <span>订单提交成功，请尽快付款！订单号：<span id="order-id"></span></span>
+        <span class="pay-blance">付款金额<em>¥0.00</em></span>
     </div>
 
     <div class="successInfo">
         <ul>
             <div class="user-info">
-                <p>收货人：艾迪</p>
-                <p>联系电话：15871145629</p>
-                <p>收货地址：湖北省 武汉市 武昌区 东湖路75号众环大厦</p>
+                <p>收货人：<span id="receiver"></span></p>
+                <p>联系电话：<span id="phone"></span></p>
+                <p>收货地址：<span id="address"></span></p>
             </div>
             请认真核对您的收货信息，如有错误请联系客服
-
         </ul>
         <div class="pay-pwd">
             支付密码：
@@ -70,39 +92,6 @@
         </div>
     </div>
 </div>
-<script>
-    $(function () {
-        var id = getQueryVariable("order_id");
-        if(undefined == id || null == id || "" == id){
-            $.Pop("支付异常！", "alert", function(){
-                //window.location.href = "/index.html";
-            });
-        }
-        $("#order-id").val(id);
-        $("#pay").click(function () {
-            var data = {
-                pay_pwd: $("input[name='pay_pwd']").val()
-            }
-            $.ajax({
-                type: 'POST',
-                contentType: "application/json;",
-                url: domain + "api/account/payOrder/" + id,
-                data: JSON.stringify(data),
-                success: function(result){
-                    if(result.status == 0){
-                        window.location.href = "/person/order.html";
-                    } else {
-                        $.Pop(result.message,"alert",function(){});
-                    }
-                },
-                error: function () {
-                    console.log("网络错误！");
-                }
-            });
-        });
-    });
-</script>
-
 
 <div class="footer ">
     <div class="footer-hd ">

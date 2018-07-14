@@ -2,10 +2,7 @@ package com.ecit.api;
 
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.IpUtils;
-import com.ecit.service.ICartService;
-import com.ecit.service.ICommodityService;
-import com.ecit.service.IOrderService;
-import com.ecit.service.IdBuilder;
+import com.ecit.service.*;
 import com.google.common.collect.Lists;
 import com.hazelcast.util.CollectionUtil;
 import io.vertx.core.CompositeFuture;
@@ -56,6 +53,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         router.post("/findOrder").handler(context -> this.requireLogin(context, this::findOrderHandler));
         router.get("/findPreparedOrder/:orderId").handler(context -> this.requireLogin(context, this::findPreparedOrderHandler));
         router.get("/getOrder/:orderId").handler(context -> this.requireLogin(context, this::getOrderHandler));
+        router.get("/getAddress/:orderId").handler(context -> this.requireLogin(context, this::getAddressHandler));
         //全局异常处理
         this.globalVerticle(router);
 
@@ -110,7 +108,9 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                     }
                     totalPrice.add(freight);
                     totalFreight.add(freight);
-                    return CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails, IpUtils.getIpAddr(context.request().getDelegate()),
+                    return CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails
+                            , "0.0.0.0",
+                            //, IpUtils.getIpAddr(context.request().getDelegate()),
                             params.getString("logistics"), params.getString("pay_way")));
                 })
                 .compose(msg ->{
@@ -132,7 +132,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                     }
                     cartService.removeCartByCommodityId(userId, ids, c -> {});
                 }
-                this.returnWithSuccessMessage(context, "下单成功！");
+                this.returnWithSuccessMessage(context, "下单成功！", orderId + "");
             } else {
                 LOGGER.error("下单失败: ", orderHandler.cause());
                 this.returnWithFailureMessage(context, "下单失败！");
@@ -341,6 +341,37 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                 return ;
             }
             this.returnWithSuccessMessage(context, "查询订单信息成功！", handler.result());
+        });
+    }
+
+    private void getAddressHandler(RoutingContext context, JsonObject principal) {
+        final Long userId = principal.getLong("userId");
+        if (Objects.isNull(userId)) {
+            LOGGER.error("登录id【{}】不存在", userId);
+            this.returnWithFailureMessage(context, "用户登录信息不存在");
+            return;
+        }
+        final String orderId = context.pathParam("orderId");
+        Future<JsonObject> orderFuture = Future.future();
+        orderService.getOrderById(Long.parseLong(orderId), userId, orderFuture);
+        orderFuture.compose(order -> {
+            if(Objects.isNull(order)){
+                LOGGER.error("获取订单【{}】信息失败！", orderId);
+                return Future.failedFuture("获取订单信息失败！");
+            }
+            final IAddressService addressService = new ServiceProxyBuilder(vertx.getDelegate())
+                    .setAddress(IAddressService.ADDRESS_SERVICE_ADDRESS).build(IAddressService.class);
+            Future<JsonObject> addressFuture = Future.future();
+            addressService.getAddressById(order.getLong("shipping_information_id"), addressFuture);
+            return addressFuture;
+        }).setHandler(handler -> {
+            if (handler.failed()) {
+                LOGGER.error("查询订单信息失败：", handler.cause());
+                this.returnWithFailureMessage(context, "查询订单信息失败！");
+                return ;
+            }
+            JsonObject orderJson = orderFuture.result().put("information", handler.result());
+            this.returnWithSuccessMessage(context, "查询订单信息成功！", orderJson);
         });
     }
 

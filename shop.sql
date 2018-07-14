@@ -240,7 +240,7 @@ COMMENT ON COLUMN public.t_order.total_price
     IS '总价格';
 
 COMMENT ON COLUMN public.t_order.order_status
-    IS '订单状态	1=有效	2=已付款	3=已退款	4=已发货	0=订单失效  -1=已取消订单';
+    IS '订单状态	1=有效	2=已付款	3=已退款	4=已发货	5=订单完成  -1=已取消订单';
 
 COMMENT ON COLUMN public.t_order.cancel_time
     IS '订单取消时间';

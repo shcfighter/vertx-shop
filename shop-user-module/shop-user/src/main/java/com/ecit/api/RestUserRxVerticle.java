@@ -536,4 +536,6 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             this.returnWithSuccessMessage(context, "绑定手机号码成功", handler.result());
         });
     }
+
+
 }

@@ -1,16 +1,15 @@
 package com.ecit.api;
 
+import com.ecit.common.enums.RegisterType;
 import com.ecit.common.rx.RestAPIRxVerticle;
-import com.ecit.common.utils.salt.DefaultHashStrategy;
-import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.service.IAccountService;
-import com.ecit.service.IAddressService;
-import com.ecit.service.ICertifiedService;
-import com.ecit.service.IUserService;
+import com.ecit.service.IMessageService;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
+import io.vertx.serviceproxy.ServiceProxyBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +35,7 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
         // API route handler
         router.get("/getAccount").handler(context -> this.requireLogin(context, this::getAccountHandler));
         router.post("/payOrder/:orderId").handler(context -> this.requireLogin(context, this::payOrderHandler));
+        router.put("/setPayPwd").handler(context -> this.requireLogin(context, this::setPayPwdHandler));
 
         //全局异常处理
         this.globalVerticle(router);
@@ -78,11 +78,39 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
                 handler -> {
             if(handler.failed()){
                 LOGGER.error("支付订单失败", handler.cause());
-                this.returnWithFailureMessage(context, handler.cause().getMessage());
+                String resultMessage = handler.cause().getMessage();
+                if(StringUtils.isEmpty(resultMessage)){
+                    resultMessage = "支付订单失败！";
+                }
+                this.returnWithFailureMessage(context, resultMessage);
                 return ;
             }
             this.returnWithSuccessMessage(context, "支付订单成功", handler.result());
 
+        });
+    }
+
+    /**
+     * 设置支付密码
+     * @param context
+     * @param principal
+     */
+    private void setPayPwdHandler(RoutingContext context, JsonObject principal){
+        final Long userId = principal.getLong("userId");
+        JsonObject params = context.getBodyAsJson();
+        String payPwd = params.getString("pay_pwd");
+        String confirmPwd = params.getString("confirm_pwd");
+        if(!StringUtils.equals(payPwd, confirmPwd)){
+            this.returnWithFailureMessage(context, "两次密码不一致！");
+            return ;
+        }
+        accountService.changePayPwd(userId, payPwd, params.getString("code"), handler -> {
+            if(handler.failed()){
+                LOGGER.error("设置支付密码失败！", handler.cause());
+                this.returnWithFailureMessage(context, "设置支付密码失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "设置支付密码成功", handler.result());
         });
     }
 }

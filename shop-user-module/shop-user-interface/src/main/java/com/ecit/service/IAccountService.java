@@ -21,4 +21,7 @@ public interface IAccountService {
 
     @Fluent
     IAccountService payOrder(long userId, long orderId, String payPwd, Handler<AsyncResult<Integer>> handler);
+
+    @Fluent
+    IAccountService changePayPwd(long userId, String payPwd, String code, Handler<AsyncResult<Integer>> handler);
 }

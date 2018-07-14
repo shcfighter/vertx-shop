@@ -27,7 +27,9 @@ $.ajaxSetup({
 });
 
 $(function(){
-    loadCartNum();
+    if(undefined == $("#J_MiniCartNum") && undefined == $(".cart_num ")){
+        loadCartNum();
+    }
     var sessionLoginUser = sessionStorage.getItem("loginUser");
     if(undefined == sessionLoginUser ||
         null == sessionLoginUser ||

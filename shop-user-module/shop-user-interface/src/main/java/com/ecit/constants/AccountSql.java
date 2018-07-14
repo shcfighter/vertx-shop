@@ -15,11 +15,16 @@ public interface AccountSql {
     /**
      *  扣款
      */
-    static final String LESS_ACCOUNT = "update t_account set amount = (amount - ?), update_time = now(), versions = (versions + 1)" +
+    static final String LESS_ACCOUNT_SQL = "update t_account set amount = (amount - ?), update_time = now(), versions = (versions + 1)" +
             "where is_deleted = 0 and amount >= ? and user_id = ? and versions = ?";
 
     /**
      * 保存资金变动记录
      */
-    static final String INSERT_PAY_LOG = "insert into t_pay_log(log_id, user_id, business_id, type, money, balance, status, create_time) values (?, ?, ?, ?, ?, ?, ?, now())";
+    static final String INSERT_PAY_LOG_SQL = "insert into t_pay_log(log_id, user_id, business_id, type, money, balance, status, create_time) values (?, ?, ?, ?, ?, ?, ?, now())";
+
+    /**
+     * 修改支付密码
+     */
+    static final String CHANGE_PAY_PWD_SQL = "update t_account set pay_pwd = ?, update_time = now(), versions = (versions + 1) where user_id = ? and versions = ?";
 }

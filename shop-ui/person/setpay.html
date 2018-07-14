@@ -12,7 +12,9 @@
     <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
     <script src="../AmazeUI-2.4.2/assets/js/amazeui.js"></script>
     <script type="text/javascript" src="../js/commons.js"></script>
+    <script type="text/javascript" src="../js/xcConfirm.js"></script>
     <script type="text/javascript" src="../js/dynamic/search.input.js"></script>
+    <script type="text/javascript" src="../js/dynamic/person/setpay.js"></script>
 </head>
 
 <body>
@@ -125,7 +127,7 @@
                 <div class="am-form-group bind">
                     <label for="user-phone" class="am-form-label">验证手机</label>
                     <div class="am-form-content">
-                        <span id="user-phone">186XXXX0531</span>
+                        <span id="user-phone"></span>
                     </div>
                 </div>
                 <div class="am-form-group code">
@@ -133,7 +135,7 @@
                     <div class="am-form-content">
                         <input type="tel" id="user-code" placeholder="短信验证码">
                     </div>
-                    <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();" id="sendMobileCode">
+                    <a class="botton" href="javascript:void(0);" id="sendMobileCode">
                         <div class="am-btn am-btn-danger">验证码</div>
                     </a>
                 </div>
@@ -150,7 +152,7 @@
                     </div>
                 </div>
                 <div class="info-btn">
-                    <div class="am-btn am-btn-danger">保存修改</div>
+                    <div class="am-btn am-btn-danger" id="setPayPwd">保存修改</div>
                 </div>
 
             </form>
