@@ -73,7 +73,9 @@ public class CommodityServiceImpl extends JdbcRxRepositoryWrapper implements ICo
                         .setDefinition(new JsonObject().put("field", "brand_name").put("size", 5)))
                 .addAggregation(new AggregationOption().setName("category_name")
                         .setType(AggregationOption.AggregationType.TERMS)
-                        .setDefinition(new JsonObject().put("field", "category_name").put("size", 5)));
+                        .setDefinition(new JsonObject().put("field", "category_name").put("size", 5)))
+                //.addFieldSort("commodity_id", SortOrder.DESC)
+                .addScripSort("Math.random()", ScriptSortOption.Type.NUMBER, new JsonObject(), SortOrder.DESC); //随机排序
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);

@@ -7,6 +7,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.UpdateResult;
 
 import java.util.List;
 
@@ -39,4 +40,10 @@ public interface IOrderService {
 
     @Fluent
     IOrderService payOrder(long orderId, int versions, Handler<AsyncResult<Integer>> handler);
+
+    @Fluent
+    IOrderService refund(long orderId, long userId, int refundType, String refundReason, String refundMoney, String refundDescription, Handler<AsyncResult<UpdateResult>> handler);
+
+    @Fluent
+    IOrderService undoRefund(long orderId, long userId, Handler<AsyncResult<UpdateResult>> handler);
 }

@@ -25,73 +25,121 @@ $(function () {
                     $($order_list).html("");
                     $.each(items, function (index, value) {
                         var orderDetails = JSON.parse(value.order_details);
-                        var orderDetailsHtml = "";
-                        $.each(orderDetails, function (orderIndex, orderValue) {
-                            orderDetailsHtml += "<ul class=\"item-list\">\n" +
-                            "    <li class=\"td td-item\">\n" +
-                            "        <div class=\"item-pic\">\n" +
-                            "            <a href=\"#\" class=\"J_MakePoint\">\n" +
-                            "                <img src=\"" + orderValue.image_url + "\"\n" +
-                            "                     class=\"itempic J_ItemImg\">\n" +
-                            "            </a>\n" +
-                            "        </div>\n" +
-                            "        <div class=\"item-info\">\n" +
-                            "            <div class=\"item-basic-info\">\n" +
-                            "                <a href=\"#\">\n" +
-                            "                    <p>" + orderValue.commodity_name + "</p>\n" +
-                            "                    <p class=\"info-little\">颜色：12#川南玛瑙\n" +
-                            "                        <br/>包装：裸装 </p>\n" +
-                            "                </a>\n" +
-                            "            </div>\n" +
-                            "        </div>\n" +
-                            "    </li>\n" +
-                            "    <li class=\"td td-price\">\n" +
-                            "        <div class=\"item-price\">\n" +
-                            "            ￥" + orderValue.price + "\n" +
-                            "        </div>\n" +
-                            "    </li>\n" +
-                            "    <li class=\"td td-number\">\n" +
-                            "        <div class=\"item-number\">\n" +
-                            "            <span>×</span>" + orderValue.order_num + "\n" +
-                            "        </div>\n" +
-                            "    </li>\n" +
-                            "    <li class=\"td td-operation\">\n" +
-                            "        <div class=\"item-operation\">\n" +
-                            "            <a href=\"refund.html\">退款/退货</a>\n" +
-                            "        </div>\n" +
-                            "    </li>\n" +
-                            "</ul>";
-                        });
+
                         var status = "";
-                        switch (value.status) {
+                        var button = "";
+                        var operation = "";
+                        switch (value.order_status) {
                             case 1: {
+                                //1-有效
                                 status = "<p class=\"Mystatus\">等待买家付款</p>\n" +
                                     "<p class=\"order-info\"><a href=\"#\">取消订单</a></p>";
+                                button = "<div class=\"am-btn am-btn-danger anniu\">\n" +
+                                    "                        付款\n" +
+                                    "                    </div>\n";
                                 break;
                             }
                             case 2: {
+                                //2=已付款
                                 status = "<p class=\"Mystatus\">买家已付款</p>\n" +
                                     "<p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>";
+                                button = "<div class=\"am-btn am-btn-danger anniu\">\n" +
+                                    "                        确认收货\n" +
+                                    "                    </div>\n";
+                                operation = "        <div class=\"item-operation\">\n" +
+                                    "            <a href=\"refund.html?order_id=" + value.order_id + "\">退款/退货</a>\n" +
+                                    "        </div>\n";
                                 break;
                             }
                             case 3: {
+                                //3=已退款
                                 status = "<p class=\"Mystatus\">交易关闭</p>";
                                 break;
                             }
                             case 4: {
+                                //4=已发货
                                 status = "<p class=\"Mystatus\">卖家已发货</p>\n" +
                                     "<p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>\n" +
                                     "<p class=\"order-info\"><a href=\"logistics.html\">查看物流</a></p>\n" +
                                     "<p class=\"order-info\"><a href=\"#\">延长收货</a></p>";
+                                button = "<div class=\"am-btn am-btn-danger anniu\">\n" +
+                                    "                        确认收货\n" +
+                                    "                    </div>\n";
+                                operation = "        <div class=\"item-operation\">\n" +
+                                    "            <a href=\"refund.html?order_id=" + value.order_id + "\">退款/退货</a>\n" +
+                                    "        </div>\n";
                                 break;
                             }
                             case 5: {
+                                //5=订单完成
                                 status = "<p class=\"Mystatus\">交易成功</p>\n" +
                                     "<p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>\n" +
                                     "<p class=\"order-info\"><a href=\"logistics.html\">查看物流</a></p>";
                                 break;
                             }
+                            case 6: {
+                                //6=评价
+                                status = "<p class=\"Mystatus\">交易成功</p>\n" +
+                                    "<p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>\n" +
+                                    "<p class=\"order-info\"><a href=\"logistics.html\">查看物流</a></p>";
+                                button = "<div class=\"am-btn am-btn-danger anniu\">\n" +
+                                    "                        评价\n" +
+                                    "                    </div>\n";
+                                break;
+                            }
+                            case 7: {
+                                //7=退款申请
+                                status = "<p class=\"Mystatus\">退款中</p>\n" +
+                                    "<p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>\n" +
+                                    "<p class=\"order-info\"><a href=\"logistics.html\">查看物流</a></p>";
+                                operation = "        <div class=\"item-operation\">\n" +
+                                    "            <a href=\"refund.html?order_id=" + value.order_id + "\">取消退款</a>\n" +
+                                    "        </div>\n";
+                                break;
+                            }
+                            case -1: {
+                                //-1=已取消订单
+                                status = "<p class=\"Mystatus\">交易关闭</p>";
+                                break;
+                            }
                         }
+
+                        var orderDetailsHtml = "";
+                        $.each(orderDetails, function (orderIndex, orderValue) {
+                            orderDetailsHtml += "<ul class=\"item-list\">\n" +
+                                "    <li class=\"td td-item\">\n" +
+                                "        <div class=\"item-pic\">\n" +
+                                "            <a href=\"#\" class=\"J_MakePoint\">\n" +
+                                "                <img src=\"" + orderValue.image_url + "\"\n" +
+                                "                     class=\"itempic J_ItemImg\">\n" +
+                                "            </a>\n" +
+                                "        </div>\n" +
+                                "        <div class=\"item-info\">\n" +
+                                "            <div class=\"item-basic-info\">\n" +
+                                "                <a href=\"#\">\n" +
+                                "                    <p>" + orderValue.commodity_name + "</p>\n" +
+                                "                    <p class=\"info-little\">颜色：12#川南玛瑙\n" +
+                                "                        <br/>包装：裸装 </p>\n" +
+                                "                </a>\n" +
+                                "            </div>\n" +
+                                "        </div>\n" +
+                                "    </li>\n" +
+                                "    <li class=\"td td-price\">\n" +
+                                "        <div class=\"item-price\">\n" +
+                                "            ￥" + orderValue.price + "\n" +
+                                "        </div>\n" +
+                                "    </li>\n" +
+                                "    <li class=\"td td-number\">\n" +
+                                "        <div class=\"item-number\">\n" +
+                                "            <span>×</span>" + orderValue.order_num + "\n" +
+                                "        </div>\n" +
+                                "    </li>\n" +
+                                "    <li class=\"td td-operation\">\n" +
+                                operation +
+                                "    </li>\n" +
+                                "</ul>";
+                        });
+
                         $($order_list).append("<div class=\"order-status3\">\n" +
                             "    <div class=\"order-title\">\n" +
                             "        <div class=\"dd-num\">订单编号：<a href=\"javascript:void(0);\">" + value.order_id + "</a></div>\n" +
@@ -111,17 +159,11 @@ $(function () {
                             "            <div class=\"move-right\">\n" +
                             "                <li class=\"td td-status\">\n" +
                             "                    <div class=\"item-status\">\n" +
-
-                            "                        <p class=\"Mystatus\">卖家已发货</p>\n" +
-                            "                        <p class=\"order-info\"><a href=\"orderinfo.html\">订单详情</a></p>\n" +
-                            "                        <p class=\"order-info\"><a href=\"logistics.html\">查看物流</a></p>\n" +
-                            "                        <p class=\"order-info\"><a href=\"#\">延长收货</a></p>\n" +
+                            status +
                             "                    </div>\n" +
                             "                </li>\n" +
                             "                <li class=\"td td-change\">\n" +
-                            "                    <div class=\"am-btn am-btn-danger anniu\">\n" +
-                            "                        确认收货\n" +
-                            "                    </div>\n" +
+                            button +
                             "                </li>\n" +
                             "            </div>\n" +
                             "        </div>\n" +

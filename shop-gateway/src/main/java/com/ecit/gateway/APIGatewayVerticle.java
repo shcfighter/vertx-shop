@@ -1,8 +1,6 @@
 package com.ecit.gateway;
 
 import com.ecit.common.RestAPIVerticle;
-import com.ecit.common.id.IdWorker;
-import com.ecit.common.result.ResultItems;
 import com.ecit.common.utils.IpUtils;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.UserStatus;
@@ -15,7 +13,6 @@ import com.hazelcast.util.UuidUtil;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.*;
 import io.vertx.core.json.JsonObject;
@@ -25,8 +22,6 @@ import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.client.HttpRequest;
-import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.UserSessionHandler;
 import io.vertx.servicediscovery.Record;

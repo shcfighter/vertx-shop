@@ -49,7 +49,22 @@ public interface OrderSql {
     /**
      * 取消订单
      */
-    static final String CANCEL_ORDER_SQL = "update t_order cancel_time = now(), order_status = ?, versions = (versions + 1) where order_id = ? and versions = ?";
+    static final String CANCEL_ORDER_SQL = "update t_order set cancel_time = now(), order_status = ?, versions = (versions + 1) where order_id = ? and versions = ?";
+
+    /**
+     * 取消退款
+     */
+    static final String CANCEL_REFUND_SQL = "update t_order set cancel_time = null, order_status = ?, versions = (versions + 1) where order_id = ? and versions = ?";
+
+    /**
+     *  退货
+     */
+    static final String REFUND_SQL = "insert into t_order_refund(refund_id, order_id, refund_type, refund_reason, refund_money, refund_description, user_id, create_time) values(?, ?, ?, ?, ?, ?, ?, now())";
+
+    /**
+     * 删除退货单
+     */
+    static final String DELETE_REFUND_SQL = "update t_order_refund set is_deleted = 1, update_time = now(), versions = (versions + 1) where order_id = ? and is_deleted = 0";
 
 
 }

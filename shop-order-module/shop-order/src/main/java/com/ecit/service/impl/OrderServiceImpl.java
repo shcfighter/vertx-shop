@@ -4,11 +4,15 @@ import com.ecit.common.db.JdbcRxRepositoryWrapper;
 import com.ecit.constants.OrderSql;
 import com.ecit.enums.OrderStatus;
 import com.ecit.service.IOrderService;
+import com.ecit.service.IdBuilder;
+import io.reactivex.Single;
+import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 
@@ -133,6 +137,82 @@ public class OrderServiceImpl extends JdbcRxRepositoryWrapper implements IOrderS
         this.execute(new JsonArray().add(OrderStatus.PAY.getValue()).add(orderId).add(versions), OrderSql.PAY_ORDER_SQL)
                 .subscribe(future::complete, future::fail);
         future.setHandler(handler);
+        return this;
+    }
+
+    /**
+     * 退货
+     * @param orderId
+     * @param userId
+     * @param refundType
+     * @param refundReason
+     * @param refundMoney
+     * @param handler
+     * @return
+     */
+    @Override
+    public IOrderService refund(long orderId, long userId, int refundType, String refundReason, String refundMoney, String refundDescription, Handler<AsyncResult<UpdateResult>> handler) {
+        Future<JsonObject> orderFuture = Future.future();
+        this.getOrderById(orderId, userId, orderFuture);
+        orderFuture.compose(order -> {
+           if(Objects.isNull(order)){
+               return Future.failedFuture("order_not_found");
+           }
+           if(order.getInteger("order_status").intValue() != OrderStatus.PAY.getValue() &&
+                   order.getInteger("order_status").intValue() != OrderStatus.SHIP.getValue()){
+                return Future.failedFuture("order_status_error");
+           }
+           Future<UpdateResult> future = Future.future();
+            postgreSQLClient.rxGetConnection().flatMap(conn ->
+                    conn.rxSetAutoCommit(false).toSingleDefault(false)
+                            .flatMap(autoCommit -> conn.rxUpdateWithParams(OrderSql.CANCEL_ORDER_SQL,
+                                    new JsonArray().add(OrderStatus.AUDIT_REFUND.getValue()).add(orderId).add(order.getInteger("versions"))))
+                            .flatMap(updateResult -> conn.rxUpdateWithParams(OrderSql.REFUND_SQL,
+                                    new JsonArray().add(IdBuilder.getUniqueId()).add(orderId).add(refundType).add(refundReason)
+                                            .add(refundMoney).add(refundDescription).add(userId)))
+                            // Rollback if any failed with exception propagation
+                            .onErrorResumeNext(ex -> conn.rxRollback()
+                                    .toSingleDefault(true)
+                                    .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
+                                    .flatMap(ignore -> Single.error(ex))
+                            )
+                            // close the connection regardless succeeded or failed
+                            .doAfterTerminate(conn::close)
+            ).subscribe(future::complete, future::fail);
+            return future;
+        }).setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public IOrderService undoRefund(long orderId, long userId, Handler<AsyncResult<UpdateResult>> handler) {
+        Future<JsonObject> orderFuture = Future.future();
+        this.getOrderById(orderId, userId, orderFuture);
+        orderFuture.compose(order -> {
+            if(Objects.isNull(order)){
+                return Future.failedFuture("order_not_found");
+            }
+            if(order.getInteger("order_status").intValue() != OrderStatus.AUDIT_REFUND.getValue()){
+                return Future.failedFuture("order_status_error");
+            }
+            Future<UpdateResult> future = Future.future();
+            postgreSQLClient.rxGetConnection().flatMap(conn ->
+                    conn.rxSetAutoCommit(false).toSingleDefault(false)
+                            .flatMap(autoCommit -> conn.rxUpdateWithParams(OrderSql.CANCEL_REFUND_SQL,
+                                    new JsonArray().add(OrderStatus.AUDIT_REFUND.getValue()).add(orderId).add(order.getInteger("versions"))))
+                            .flatMap(updateResult -> conn.rxUpdateWithParams(OrderSql.DELETE_REFUND_SQL,
+                                    new JsonArray().add(orderId)))
+                            // Rollback if any failed with exception propagation
+                            .onErrorResumeNext(ex -> conn.rxRollback()
+                                    .toSingleDefault(true)
+                                    .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
+                                    .flatMap(ignore -> Single.error(ex))
+                            )
+                            // close the connection regardless succeeded or failed
+                            .doAfterTerminate(conn::close)
+            ).subscribe(future::complete, future::fail);
+            return future;
+        }).setHandler(handler);
         return this;
     }
 }

@@ -56,7 +56,7 @@ $(function() {
                         window.location.href = "/index.html";
                     });
                 } else {
-                    alert(result.message);
+                    $.Pop(result.message, "alert", function(){});
                 }
             },
             error: function () {
@@ -74,7 +74,7 @@ $(function() {
         $.ajax({
             type: 'POST',
             contentType: "application/json;",
-            url: domain + "api/message/insertMessage",
+            url: domain + "api/message/sendMobileMessage",
             data: JSON.stringify(data),
             success: function(result){
                 if (result.status == 0) {

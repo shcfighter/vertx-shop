@@ -240,7 +240,7 @@ COMMENT ON COLUMN public.t_order.total_price
     IS '总价格';
 
 COMMENT ON COLUMN public.t_order.order_status
-    IS '订单状态	1=有效	2=已付款	3=已退款	4=已发货	5=订单完成  -1=已取消订单';
+    IS '订单状态	1=有效	2=已付款	3=已退款	4=已发货	5=订单完成  6=评价  7=申请退货退款  -1=已取消订单';
 
 COMMENT ON COLUMN public.t_order.cancel_time
     IS '订单取消时间';
@@ -561,3 +561,50 @@ COMMENT ON COLUMN public.t_pay_log.balance
 
 COMMENT ON COLUMN public.t_pay_log.status
     IS '0-准备支付；1-支付完成；';
+
+
+-- Table: public.t_order_refund
+
+-- DROP TABLE public.t_order_refund;
+
+CREATE TABLE public.t_order_refund
+(
+    refund_id bigint NOT NULL,
+    order_id bigint NOT NULL,
+    user_id bigint,
+    refund_type smallint,
+    refund_reason character varying(100) COLLATE pg_catalog."default",
+    refund_money money,
+    refund_description text COLLATE pg_catalog."default",
+    is_deleted smallint DEFAULT 0,
+    create_time timestamp without time zone,
+    update_time timestamp without time zone,
+    remarks text COLLATE pg_catalog."default",
+    versions bigint DEFAULT 0,
+    CONSTRAINT t_order_refund_pkey PRIMARY KEY (refund_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.t_order_refund
+    OWNER to postgres;
+
+COMMENT ON COLUMN public.t_order_refund.order_id
+    IS '订单id';
+
+COMMENT ON COLUMN public.t_order_refund.refund_type
+    IS '退货类型  1-仅退款；2-退款/退货';
+
+COMMENT ON COLUMN public.t_order_refund.refund_reason
+    IS '退货原因';
+
+COMMENT ON COLUMN public.t_order_refund.refund_money
+    IS '退货金额';
+
+COMMENT ON COLUMN public.t_order_refund.refund_description
+    IS '退货说明';
+
+COMMENT ON COLUMN public.t_order_refund.user_id
+    IS '用户编号';

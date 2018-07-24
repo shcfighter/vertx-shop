@@ -6,9 +6,9 @@ import com.ecit.common.utils.salt.DefaultHashStrategy;
 import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.constants.AccountSql;
 import com.ecit.enmu.CertifiedType;
-import com.ecit.enmu.OrderStatus;
 import com.ecit.enmu.PayStatus;
 import com.ecit.enmu.PayType;
+import com.ecit.enums.OrderStatus;
 import com.ecit.service.*;
 import io.reactivex.Single;
 import io.reactivex.exceptions.CompositeException;
@@ -87,7 +87,7 @@ public class AccountServiceImpl extends JdbcRxRepositoryWrapper implements IAcco
                 LOGGER.error("用户【{}】支付订单【{}】不存在！", userId, orderId);
                 return Future.failedFuture("订单不存在！");
             }
-            if(OrderStatus.EFFECTIVE.getKey() != order.getInteger("order_status").intValue()){
+            if(OrderStatus.VALID.getValue() != order.getInteger("order_status").intValue()){
                 LOGGER.error("订单【{}】状态【{}】不正确！", orderId, order.getInteger("order_status"));
                 return Future.failedFuture("订单状态不正确！");
             }

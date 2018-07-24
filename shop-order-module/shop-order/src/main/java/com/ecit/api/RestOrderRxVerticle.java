@@ -6,10 +6,10 @@ import com.ecit.service.*;
 import com.google.common.collect.Lists;
 import com.hazelcast.util.CollectionUtil;
 import io.vertx.core.CompositeFuture;
-import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
@@ -19,13 +19,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.beans.FeatureDescriptor;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by za-wangshenhua on 2018/4/5.
@@ -54,6 +52,8 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         router.get("/findPreparedOrder/:orderId").handler(context -> this.requireLogin(context, this::findPreparedOrderHandler));
         router.get("/getOrder/:orderId").handler(context -> this.requireLogin(context, this::getOrderHandler));
         router.get("/getAddress/:orderId").handler(context -> this.requireLogin(context, this::getAddressHandler));
+        router.put("/refund/:orderId").handler(context -> this.requireLogin(context, this::refundHandler));
+        router.put("/undoRefund/:orderId").handler(context -> this.requireLogin(context, this::undoRefundHandler));
         //全局异常处理
         this.globalVerticle(router);
 
@@ -109,8 +109,8 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                     totalPrice.add(freight);
                     totalFreight.add(freight);
                     return CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails
-                            , "0.0.0.0",
-                            //, IpUtils.getIpAddr(context.request().getDelegate()),
+                            //, "0.0.0.0",
+                            , IpUtils.getIpAddr(context.request().getDelegate()),
                             params.getString("logistics"), params.getString("pay_way")));
                 })
                 .compose(msg ->{
@@ -334,7 +334,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             return;
         }
         final String orderId = context.pathParam("orderId");
-       orderService.getOrderById(Integer.parseInt(orderId), userId, handler -> {
+       orderService.getOrderById(Long.parseLong(orderId), userId, handler -> {
             if (handler.failed()) {
                 LOGGER.error("查询订单信息失败：", handler.cause());
                 this.returnWithFailureMessage(context, "查询订单信息失败！");
@@ -372,6 +372,60 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             }
             JsonObject orderJson = orderFuture.result().put("information", handler.result());
             this.returnWithSuccessMessage(context, "查询订单信息成功！", orderJson);
+        });
+    }
+
+    /**
+     * 退货
+     * @param context
+     * @param principal
+     */
+    private void refundHandler(RoutingContext context, JsonObject principal) {
+        final Long userId = principal.getLong("userId");
+        if (Objects.isNull(userId)) {
+            LOGGER.error("登录id【{}】不存在", userId);
+            this.returnWithFailureMessage(context, "用户登录信息不存在");
+            return;
+        }
+        final String orderId = context.pathParam("orderId");
+        final JsonObject params = context.getBodyAsJson();
+        Future<UpdateResult> future = Future.future();
+        orderService.refund(Long.parseLong(orderId), userId, params.getInteger("refund_type"), params.getString("refund_reason"),
+                params.getString("refund_money"), params.getString("refund_description"), future);
+        future.setHandler(handler -> {
+            if (handler.failed()) {
+                LOGGER.error("退货申请提交失败：", handler.cause());
+                this.returnWithFailureMessage(context, "退货申请提交失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "退货申请提交成功！");
+        });
+    }
+
+    /**
+     * 取消退货
+     * @param context
+     * @param principal
+     */
+    private void undoRefundHandler(RoutingContext context, JsonObject principal) {
+        final Long userId = principal.getLong("userId");
+        if (Objects.isNull(userId)) {
+            LOGGER.error("登录id【{}】不存在", userId);
+            this.returnWithFailureMessage(context, "用户登录信息不存在");
+            return;
+        }
+        final String orderId = context.pathParam("orderId");
+        final JsonObject params = context.getBodyAsJson();
+        Future<UpdateResult> future = Future.future();
+        orderService.refund(Long.parseLong(orderId), userId, params.getInteger("refund_type"), params.getString("refund_reason"),
+                params.getString("refund_money"), params.getString("refund_description"), future);
+        future.setHandler(handler -> {
+            if (handler.failed()) {
+                LOGGER.error("退货申请提交失败：", handler.cause());
+                this.returnWithFailureMessage(context, "退货申请提交失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "退货申请提交成功！");
         });
     }
 
