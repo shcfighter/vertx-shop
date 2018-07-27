@@ -4,8 +4,8 @@ import com.ecit.SearchType;
 import com.ecit.common.constants.Constants;
 import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
-import com.ecit.service.ICommodityService;
-import com.ecit.service.IPreferencesService;
+import com.ecit.handler.ICommodityHandler;
+import com.ecit.handler.IPreferencesHandler;
 import com.google.common.collect.Lists;
 import com.hubrick.vertx.elasticsearch.model.Hits;
 import com.hubrick.vertx.elasticsearch.model.SearchResponse;
@@ -16,6 +16,7 @@ import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.ext.web.handler.CookieHandler;
+import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,23 +28,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Created by za-wangshenhua on 2018/2/2.
+ * Created by shwang on 2018/2/2.
  */
 public class RestSearchRxVerticle extends RestAPIRxVerticle{
 
     private static final Logger LOGGER = LogManager.getLogger(RestSearchRxVerticle.class);
     private static final String HTTP_SEARCH_SERVICE = "http_search_service_api";
-    private final ICommodityService commodityService;
-    private final IPreferencesService preferencesService;
-
-    public RestSearchRxVerticle(ICommodityService commodityService, IPreferencesService preferencesService) {
-        this.commodityService = commodityService;
-        this.preferencesService = preferencesService;
-    }
+    private ICommodityHandler commodityService;
+    private IPreferencesHandler preferencesService;
 
     @Override
     public void start() throws Exception {
         super.start();
+        this.commodityService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
+        this.preferencesService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).build(IPreferencesHandler.class);
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
@@ -61,7 +59,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         String host = config().getString("search.http.address", "localhost");
         int port = config().getInteger("search.http.port", 8082);
 
-        // create HTTP server and publish REST service
+        // create HTTP server and publish REST handler
         createHttpServer(router, host, port).subscribe(server -> {
             this.publishHttpEndpoint(HTTP_SEARCH_SERVICE, host, port, "search.api.name").subscribe();
             LOGGER.info("shop-search server started!");

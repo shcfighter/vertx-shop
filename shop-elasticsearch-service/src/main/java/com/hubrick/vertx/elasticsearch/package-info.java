@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@ModuleGen(name = "vertx-elasticsearch-service", groupPackage = "com.hubrick.vertx")
+@ModuleGen(name = "vertx-elasticsearch-handler", groupPackage = "com.hubrick.vertx")
 package com.hubrick.vertx.elasticsearch;
 
 import io.vertx.codegen.annotations.ModuleGen;

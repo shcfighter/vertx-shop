@@ -1,7 +1,7 @@
 package com.ecit.api;
 
 import com.ecit.common.rx.RestAPIRxVerticle;
-import com.ecit.service.ICartService;
+import com.ecit.handler.ICartHandler;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
@@ -9,6 +9,7 @@ import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.ext.web.handler.CookieHandler;
+import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,21 +20,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Created by za-wangshenhua on 2018/4/5.
+ * Created by shwang on 2018/4/5.
  */
 public class RestCartRxVerticle extends RestAPIRxVerticle {
 
     private static final Logger LOGGER = LogManager.getLogger(RestCartRxVerticle.class);
     private static final String HTTP_CART_SERVICE = "http_cart_service_api";
-    private final ICartService cartService;
-
-    public RestCartRxVerticle(ICartService cartService) {
-        this.cartService = cartService;
-    }
+    private ICartHandler cartHandler;
 
     @Override
     public void start() throws Exception {
         super.start();
+        this.cartHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICartHandler.CART_SERVICE_ADDRESS).build(ICartHandler.class);
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
@@ -50,7 +48,7 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
         String host = config().getString("cart.http.address", "localhost");
         int port = config().getInteger("cart.http.port", 8085);
 
-        // create HTTP server and publish REST service
+        // create HTTP server and publish REST handler
         createHttpServer(router, host, port).subscribe(server -> {
             this.publishHttpEndpoint(HTTP_CART_SERVICE, host, port, "cart.api.name").subscribe();
             LOGGER.info("cart-order server started!");
@@ -72,7 +70,7 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
             this.returnWithFailureMessage(context, "商品购物信息为空");
             return;
         }
-        cartService.insertCart(userId, params, handler -> {
+        cartHandler.insertCart(userId, params, handler -> {
             if (handler.failed()) {
                 LOGGER.error("添加购物信息失败：", handler.cause());
                 this.returnWithFailureMessage(context, "加入购物车失败");
@@ -93,9 +91,9 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
         final int pageSize = Integer.parseInt(Optional.ofNullable(context.request().getParam("pageSize")).orElse("0"));
         final int page = Integer.parseInt(Optional.ofNullable(context.request().getParam("page")).orElse("0"));
         Future<Long> future = Future.future();
-        cartService.findCartRowNum(userId, future);
+        cartHandler.findCartRowNum(userId, future);
         future.compose(rowNum -> {
-            cartService.findCartPage(userId, pageSize, page, handler -> {
+            cartHandler.findCartPage(userId, pageSize, page, handler -> {
                 if (handler.failed()) {
                     LOGGER.error("查询购物信息失败：", handler.cause());
                     this.returnWithFailureMessage(context, "查询购物车失败");
@@ -122,7 +120,7 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
     private void findCartRowNumHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         this.checkUser(context, userId);
-        cartService.findCartRowNum(userId, handler -> {
+        cartHandler.findCartRowNum(userId, handler -> {
             if (handler.failed()) {
                 LOGGER.error("查询购物信息失败：", handler.cause());
                 this.returnWithFailureMessage(context, "查询购物车失败！");
@@ -148,7 +146,7 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
             this.returnWithFailureMessage(context, "商品购物信息为空");
             return;
         }
-        cartService.removeCart(userId, Stream.of(StringUtils.split(params.getString("ids"), ",")).collect(Collectors.toList()),
+        cartHandler.removeCart(userId, Stream.of(StringUtils.split(params.getString("ids"), ",")).collect(Collectors.toList()),
                 handler -> {
                     if (handler.failed()) {
                         LOGGER.error("删除购物信息失败：", handler.cause());

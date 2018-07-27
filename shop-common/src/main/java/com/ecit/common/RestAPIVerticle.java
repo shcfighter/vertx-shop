@@ -38,7 +38,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
   private static final String SPECIALURL = "findCartRowNum";
 
   /**
-   * Create http server for the REST service.
+   * Create http server for the REST handler.
    *
    * @param router router instance
    * @param host   http host

@@ -3,10 +3,10 @@ package com.ecit;
 import com.ecit.api.RestCollectionRxVerticle;
 import com.ecit.api.RestMessageRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
-import com.ecit.service.ICollectionService;
-import com.ecit.service.IMessageService;
-import com.ecit.service.impl.CollectionServiceImpl;
-import com.ecit.service.impl.MessageServiceImpl;
+import com.ecit.handler.ICollectionHandler;
+import com.ecit.handler.IMessageHandler;
+import com.ecit.handler.impl.CollectionHandler;
+import com.ecit.handler.impl.MessageHandler;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import io.vertx.core.DeploymentOptions;
@@ -18,7 +18,7 @@ import io.vertx.serviceproxy.ServiceBinder;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
 /**
- * Created by za-wangshenhua on 2018/2/2.
+ * Created by shwang on 2018/2/2.
  */
 public class MessageVerticle extends BaseMicroserviceRxVerticle{
 
@@ -27,13 +27,13 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
     @Override
     public void start() throws Exception {
         super.start();
-        IMessageService messageService = new MessageServiceImpl(vertx, this.config());
-        ICollectionService collectionService = new CollectionServiceImpl(vertx, this.config());
-        new ServiceBinder(vertx.getDelegate()).setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).register(IMessageService.class, messageService);
-        new ServiceBinder(vertx.getDelegate()).setAddress(ICollectionService.COLLECTION_SERVICE_ADDRESS).register(ICollectionService.class, collectionService);
-        this.publishEventBusService(SERVICE_MESSAGE_SERVICE_NAME, IMessageService.MESSAGE_SERVICE_ADDRESS, IMessageService.class).subscribe();
-        vertx.getDelegate().deployVerticle(new RestMessageRxVerticle(messageService), new DeploymentOptions().setConfig(this.config()));
-        vertx.getDelegate().deployVerticle(new RestCollectionRxVerticle(collectionService), new DeploymentOptions().setConfig(this.config()));
+        IMessageHandler messageHandler = new MessageHandler(vertx, this.config());
+        ICollectionHandler collectionHandler = new CollectionHandler(vertx, this.config());
+        new ServiceBinder(vertx.getDelegate()).setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).register(IMessageHandler.class, messageHandler);
+        new ServiceBinder(vertx.getDelegate()).setAddress(ICollectionHandler.COLLECTION_SERVICE_ADDRESS).register(ICollectionHandler.class, collectionHandler);
+        this.publishEventBusService(SERVICE_MESSAGE_SERVICE_NAME, IMessageHandler.MESSAGE_SERVICE_ADDRESS, IMessageHandler.class).subscribe();
+        vertx.getDelegate().deployVerticle(RestMessageRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(RestCollectionRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
     }
 
     public static void main(String[] args) {

@@ -1,7 +1,7 @@
 package com.ecit.common.constants;
 
 /**
- * Created by za-wangshenhua on 2018/3/25.
+ * Created by shwang on 2018/3/25.
  */
 public class Constants {
 

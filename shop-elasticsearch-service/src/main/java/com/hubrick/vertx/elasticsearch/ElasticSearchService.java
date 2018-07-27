@@ -51,7 +51,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ElasticSearch service
+ * ElasticSearch handler
  */
 @VertxGen
 @ProxyGen

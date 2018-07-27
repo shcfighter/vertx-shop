@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Admin service
+ * Admin handler
  */
 @VertxGen
 @ProxyGen

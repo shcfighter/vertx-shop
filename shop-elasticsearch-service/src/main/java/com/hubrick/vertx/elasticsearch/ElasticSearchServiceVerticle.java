@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * ElasticSearch event bus service verticle
+ * ElasticSearch event bus handler verticle
  */
 public class ElasticSearchServiceVerticle extends AbstractVerticle {
 
@@ -50,20 +50,20 @@ public class ElasticSearchServiceVerticle extends AbstractVerticle {
 
         String address = config().getString("address");
         if (address == null || address.isEmpty()) {
-            throw new IllegalStateException("address field must be specified in config for service verticle");
+            throw new IllegalStateException("address field must be specified in config for handler verticle");
         }
         String adminAddress = config().getString("address.admin");
         if (adminAddress == null || adminAddress.isEmpty()) {
             adminAddress = address + ".admin";
         }
 
-        // Register service as an event bus proxy
+        // Register handler as an event bus proxy
         new ServiceBinder(vertx).setAddress(address).register(ElasticSearchService.class, service);
         new ServiceBinder(vertx).setAddress(adminAddress).register(ElasticSearchAdminService.class, adminService);
 
-        // Start the service
+        // Start the handler
         service.start();
-        LOGGER.info("shop-elasticsearch-service server started!");
+        LOGGER.info("shop-elasticsearch-handler server started!");
     }
 
     @Override

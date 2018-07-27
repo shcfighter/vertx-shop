@@ -2,14 +2,13 @@ package com.ecit.api;
 
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.IpUtils;
-import com.ecit.service.*;
+import com.ecit.handler.*;
 import com.google.common.collect.Lists;
 import com.hazelcast.util.CollectionUtil;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
@@ -26,21 +25,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Created by za-wangshenhua on 2018/4/5.
+ * Created by shwang on 2018/4/5.
  */
 public class RestOrderRxVerticle extends RestAPIRxVerticle {
 
     private static final Logger LOGGER = LogManager.getLogger(RestOrderRxVerticle.class);
     private static final String HTTP_ORDER_SERVICE = "http_order_service_api";
-    private final IOrderService orderService;
-
-    public RestOrderRxVerticle(IOrderService orderService) {
-        this.orderService = orderService;
-    }
+    private IOrderHandler orderHandler;
 
     @Override
     public void start() throws Exception {
         super.start();
+        this.orderHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IOrderHandler.ORDER_SERVICE_ADDRESS).build(IOrderHandler.class);
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
@@ -52,8 +48,9 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         router.get("/findPreparedOrder/:orderId").handler(context -> this.requireLogin(context, this::findPreparedOrderHandler));
         router.get("/getOrder/:orderId").handler(context -> this.requireLogin(context, this::getOrderHandler));
         router.get("/getAddress/:orderId").handler(context -> this.requireLogin(context, this::getAddressHandler));
-        router.put("/refund/:orderId").handler(context -> this.requireLogin(context, this::refundHandler));
-        router.put("/undoRefund/:orderId").handler(context -> this.requireLogin(context, this::undoRefundHandler));
+        /*router.put("/refund/:orderId").handler(context -> this.requireLogin(context, this::refundHandler));
+        router.put("/undoRefund/:orderId").handler(context -> this.requireLogin(context, this::undoRefundHandler));*/
+        vertx.getDelegate().deployVerticle(new RestRefundRxVerticle(orderHandler, router));
         //全局异常处理
         this.globalVerticle(router);
 
@@ -61,7 +58,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         String host = config().getString("order.http.address", "localhost");
         int port = config().getInteger("order.http.port", 8084);
 
-        // create HTTP server and publish REST service
+        // create HTTP server and publish REST handler
         createHttpServer(router, host, port).subscribe(server -> {
             this.publishHttpEndpoint(HTTP_ORDER_SERVICE, host, port, "order.api.name").subscribe();
             LOGGER.info("shop-order server started!");
@@ -90,8 +87,8 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             return;
         }
 
-        final ICommodityService commodityService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityService.SEARCH_SERVICE_ADDRESS).build(ICommodityService.class);
-        final ICartService cartService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICartService.CART_SERVICE_ADDRESS).build(ICartService.class);
+        final ICommodityHandler commodityService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
+        final ICartHandler cartService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICartHandler.CART_SERVICE_ADDRESS).build(ICartHandler.class);
         final long orderId = IdBuilder.getUniqueId();
         List<BigDecimal> totalPrice = Lists.newArrayList();
         List<BigDecimal> totalFreight = Lists.newArrayList();
@@ -115,7 +112,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                 })
                 .compose(msg ->{
                     Future<Integer> orderFuture = Future.future();
-                    orderService.insertOrder(orderId, userId, totalPrice.stream().reduce(BigDecimal::add).orElse(new BigDecimal("0.00")).toString(),
+                    orderHandler.insertOrder(orderId, userId, totalPrice.stream().reduce(BigDecimal::add).orElse(new BigDecimal("0.00")).toString(),
                             CollectionUtil.isEmpty(totalFreight) ? "0.00" : totalFreight.get(0).toString(), Long.parseLong(params.getString("shipping_information_id")),
                             params.getString("leave_message"), orderDetails, orderFuture);
                     return orderFuture;
@@ -153,7 +150,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             return;
         }
         final JsonArray orderParams = context.getBodyAsJsonArray();
-        orderService.preparedInsertOrder(orderParams, handler -> {
+        orderHandler.preparedInsertOrder(orderParams, handler -> {
             if (handler.failed()) {
                 LOGGER.error("预下单失败！",handler.cause());
                 this.returnWithFailureMessage(context, "下单失败！");
@@ -170,7 +167,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
      * @param orderDetails
      * @return
      */
-    private List<Future> preparedDecrCommodity(ICommodityService commodityService, long orderId, JsonArray orderDetails, String ip, String logistics, String payWay) {
+    private List<Future> preparedDecrCommodity(ICommodityHandler commodityService, long orderId, JsonArray orderDetails, String ip, String logistics, String payWay) {
         final List<Future> isOk = new ArrayList<>(orderDetails.size());
         for (int i = 0; i < orderDetails.size(); i++) {
             Future future = Future.future();
@@ -196,7 +193,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
      * @param orderDetails
      * @return
      */
-    private List<Future> checkCommodity(ICommodityService commodityService, JsonArray orderDetails){
+    private List<Future> checkCommodity(ICommodityHandler commodityService, JsonArray orderDetails){
         final List<Future> isOk = new ArrayList<>(orderDetails.size());
         for (int i = 0; i < orderDetails.size(); i++) {
             Future future = Future.future();
@@ -244,9 +241,9 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         final int page = Optional.ofNullable(params.getInteger("page")).orElse(1);
         final int pageSize = Optional.ofNullable(params.getInteger("pageSize")).orElse(10);
         Future<JsonObject> future = Future.future();
-        orderService.findOrderRowNum(userId, params.containsKey("status") ? params.getInteger("status") : null, future);
+        orderHandler.findOrderRowNum(userId, params.containsKey("status") ? params.getInteger("status") : null, future);
         future.compose(rowNum -> {
-            orderService.findPageOrder(userId, params.containsKey("status") ? params.getInteger("status") : null, pageSize, page,
+            orderHandler.findPageOrder(userId, params.containsKey("status") ? params.getInteger("status") : null, pageSize, page,
                     handler -> {
                         if (handler.succeeded()) {
                             this.returnWithSuccessMessage(context, "查询订单信息成功！", rowNum.getInteger("rownum"), handler.result(), page);
@@ -278,10 +275,10 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         }
         final String orderId = context.request().getParam("orderId");
         Future<JsonObject> future = Future.future();
-        orderService.findPreparedOrder(orderId, future);
+        orderHandler.findPreparedOrder(orderId, future);
         future.compose(preparedOrder -> {
             Future<List<JsonObject>> commodifyFuture = Future.future();
-            final ICommodityService commodityService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityService.SEARCH_SERVICE_ADDRESS).build(ICommodityService.class);
+            final ICommodityHandler commodityService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
             final JsonArray orderArray = preparedOrder.getJsonArray("order");
             List<Long> ids = Lists.newArrayList();
             for (int i = 0; i < orderArray.size(); i++) {
@@ -334,7 +331,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             return;
         }
         final String orderId = context.pathParam("orderId");
-       orderService.getOrderById(Long.parseLong(orderId), userId, handler -> {
+        orderHandler.getOrderById(Long.parseLong(orderId), userId, handler -> {
             if (handler.failed()) {
                 LOGGER.error("查询订单信息失败：", handler.cause());
                 this.returnWithFailureMessage(context, "查询订单信息失败！");
@@ -353,14 +350,14 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         }
         final String orderId = context.pathParam("orderId");
         Future<JsonObject> orderFuture = Future.future();
-        orderService.getOrderById(Long.parseLong(orderId), userId, orderFuture);
+        orderHandler.getOrderById(Long.parseLong(orderId), userId, orderFuture);
         orderFuture.compose(order -> {
             if(Objects.isNull(order)){
                 LOGGER.error("获取订单【{}】信息失败！", orderId);
                 return Future.failedFuture("获取订单信息失败！");
             }
-            final IAddressService addressService = new ServiceProxyBuilder(vertx.getDelegate())
-                    .setAddress(IAddressService.ADDRESS_SERVICE_ADDRESS).build(IAddressService.class);
+            final IAddressHandler addressService = new ServiceProxyBuilder(vertx.getDelegate())
+                    .setAddress(IAddressHandler.ADDRESS_SERVICE_ADDRESS).build(IAddressHandler.class);
             Future<JsonObject> addressFuture = Future.future();
             addressService.getAddressById(order.getLong("shipping_information_id"), addressFuture);
             return addressFuture;
@@ -380,7 +377,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
      * @param context
      * @param principal
      */
-    private void refundHandler(RoutingContext context, JsonObject principal) {
+    /*private void refundHandler(RoutingContext context, JsonObject principal) {
         final Long userId = principal.getLong("userId");
         if (Objects.isNull(userId)) {
             LOGGER.error("登录id【{}】不存在", userId);
@@ -390,7 +387,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         final String orderId = context.pathParam("orderId");
         final JsonObject params = context.getBodyAsJson();
         Future<UpdateResult> future = Future.future();
-        orderService.refund(Long.parseLong(orderId), userId, params.getInteger("refund_type"), params.getString("refund_reason"),
+        orderHandler.refund(Long.parseLong(orderId), userId, params.getInteger("refund_type"), params.getString("refund_reason"),
                 params.getString("refund_money"), params.getString("refund_description"), future);
         future.setHandler(handler -> {
             if (handler.failed()) {
@@ -402,11 +399,11 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         });
     }
 
-    /**
+    *//**
      * 取消退货
      * @param context
      * @param principal
-     */
+     *//*
     private void undoRefundHandler(RoutingContext context, JsonObject principal) {
         final Long userId = principal.getLong("userId");
         if (Objects.isNull(userId)) {
@@ -417,7 +414,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         final String orderId = context.pathParam("orderId");
         final JsonObject params = context.getBodyAsJson();
         Future<UpdateResult> future = Future.future();
-        orderService.refund(Long.parseLong(orderId), userId, params.getInteger("refund_type"), params.getString("refund_reason"),
+        orderHandler.refund(Long.parseLong(orderId), userId, params.getInteger("refund_type"), params.getString("refund_reason"),
                 params.getString("refund_money"), params.getString("refund_description"), future);
         future.setHandler(handler -> {
             if (handler.failed()) {
@@ -427,6 +424,6 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             }
             this.returnWithSuccessMessage(context, "退货申请提交成功！");
         });
-    }
+    }*/
 
 }

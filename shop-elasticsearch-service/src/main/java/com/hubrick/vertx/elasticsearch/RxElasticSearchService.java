@@ -48,7 +48,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ElasticSearch RX service
+ * ElasticSearch RX handler
  *
  * @author Emir Dizdarevic
  * @since 1.0.0

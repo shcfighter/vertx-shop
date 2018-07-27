@@ -10963,7 +10963,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Share.SNS = {
 	  weibo: {
 	    title: '新浪微博',
-	    url: 'http://service.weibo.com/share/share.php',
+	    url: 'http://handler.weibo.com/share/share.php',
 	    width: 620,
 	    height: 450,
 	    icon: 'weibo'

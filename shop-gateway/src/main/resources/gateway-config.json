@@ -10,5 +10,6 @@
   "driver_class": "org.postgresql.Driver",
   "max_pool_size": 50,
   "user": "postgres",
-  "password": "h123456"
+  "password": "h123456",
+  "tcpKeepAlive ": true
 }

@@ -3,14 +3,14 @@ package com.ecit;
 import com.ecit.api.RestAccountRxVerticle;
 import com.ecit.api.RestUserRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
-import com.ecit.service.IAccountService;
-import com.ecit.service.IAddressService;
-import com.ecit.service.ICertifiedService;
-import com.ecit.service.IUserService;
-import com.ecit.service.impl.AccountServiceImpl;
-import com.ecit.service.impl.AddressServiceImpl;
-import com.ecit.service.impl.CertifiedServiceImpl;
-import com.ecit.service.impl.UserServiceImpl;
+import com.ecit.handler.IAccountHandler;
+import com.ecit.handler.IAddressHandler;
+import com.ecit.handler.ICertifiedHandler;
+import com.ecit.handler.IUserHandler;
+import com.ecit.handler.impl.AccountHandler;
+import com.ecit.handler.impl.AddressHandler;
+import com.ecit.handler.impl.CertifiedHandler;
+import com.ecit.handler.impl.UserHandler;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import io.vertx.core.DeploymentOptions;
@@ -22,7 +22,7 @@ import io.vertx.serviceproxy.ServiceBinder;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
 /**
- * Created by za-wangshenhua on 2018/2/2.
+ * Created by shwang on 2018/2/2.
  */
 public class UserVerticle extends BaseMicroserviceRxVerticle{
 
@@ -31,17 +31,17 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
     @Override
     public void start() throws Exception {
         super.start();
-        IUserService userService = new UserServiceImpl(vertx, this.config());
-        ICertifiedService certifiedService = new CertifiedServiceImpl(vertx, this.config(), userService);
-        IAddressService addressService = new AddressServiceImpl(vertx, this.config());
-        IAccountService accountService = new AccountServiceImpl(vertx, this.config());
-        new ServiceBinder(vertx.getDelegate()).setAddress(IUserService.USER_SERVICE_ADDRESS).register(IUserService.class, userService);
-        new ServiceBinder(vertx.getDelegate()).setAddress(ICertifiedService.CERTIFIED_SERVICE_ADDRESS).register(ICertifiedService.class, certifiedService);
-        new ServiceBinder(vertx.getDelegate()).setAddress(IAddressService.ADDRESS_SERVICE_ADDRESS).register(IAddressService.class, addressService);
-        new ServiceBinder(vertx.getDelegate()).setAddress(IAccountService.ACCOUNT_SERVICE_ADDRESS).register(IAccountService.class, accountService);
-        //this.publishEventBusService(USER_SERVICE_NAME, IUserService.USER_SERVICE_ADDRESS, IUserService.class).subscribe();
-        vertx.getDelegate().deployVerticle(new RestUserRxVerticle(userService, certifiedService, addressService), new DeploymentOptions().setConfig(this.config()));
-        vertx.getDelegate().deployVerticle(new RestAccountRxVerticle(accountService), new DeploymentOptions().setConfig(this.config()));
+        IUserHandler userHandler = new UserHandler(vertx, this.config());
+        ICertifiedHandler certifiedHandler = new CertifiedHandler(vertx, this.config());
+        IAddressHandler addressHandler = new AddressHandler(vertx, this.config());
+        IAccountHandler accountHandler = new AccountHandler(vertx, this.config());
+        new ServiceBinder(vertx.getDelegate()).setAddress(IUserHandler.USER_SERVICE_ADDRESS).register(IUserHandler.class, userHandler);
+        new ServiceBinder(vertx.getDelegate()).setAddress(ICertifiedHandler.CERTIFIED_SERVICE_ADDRESS).register(ICertifiedHandler.class, certifiedHandler);
+        new ServiceBinder(vertx.getDelegate()).setAddress(IAddressHandler.ADDRESS_SERVICE_ADDRESS).register(IAddressHandler.class, addressHandler);
+        new ServiceBinder(vertx.getDelegate()).setAddress(IAccountHandler.ACCOUNT_SERVICE_ADDRESS).register(IAccountHandler.class, accountHandler);
+        //this.publishEventBusService(USER_SERVICE_NAME, IUserHandler.USER_SERVICE_ADDRESS, IUserHandler.class).subscribe();
+        vertx.getDelegate().deployVerticle(RestUserRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(RestAccountRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
     }
 
     public static void main(String[] args) {

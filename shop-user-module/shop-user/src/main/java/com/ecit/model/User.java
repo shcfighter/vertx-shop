@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by za-wangshenhua on 2018/2/2.
+ * Created by shwang on 2018/2/2.
  */
 @Setter
 @Getter

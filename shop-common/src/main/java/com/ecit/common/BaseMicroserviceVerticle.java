@@ -25,7 +25,7 @@ import java.util.Set;
 
 /**
  * This verticle provides support for various microservice functionality
- * like service discovery, circuit breaker and simple log publisher.
+ * like handler discovery, circuit breaker and simple log publisher.
  *
  * @author Eric Zhao
  */
@@ -41,7 +41,7 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
 
   @Override
   public void start() throws Exception {
-    // init service discovery instance
+    // init handler discovery instance
     discovery = ServiceDiscovery.create(vertx, new ServiceDiscoveryOptions().setBackendConfiguration(config()));
 
     // init circuit breaker instance
@@ -88,9 +88,9 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
   }
 
   /**
-   * Publish a service with record.
+   * Publish a handler with record.
    *
-   * @param record service record
+   * @param record handler record
    * @return async result
    */
   private Future<Void> publish(Record record) {
@@ -98,12 +98,12 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
       try {
         start();
       } catch (Exception e) {
-        throw new IllegalStateException("Cannot create discovery service");
+        throw new IllegalStateException("Cannot create discovery handler");
       }
     }
 
     Future<Void> future = Future.future();
-    // publish the service
+    // publish the handler
     discovery.publish(record, ar -> {
       if (ar.succeeded()) {
         registeredRecords.add(record);
@@ -120,7 +120,7 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
       if (ar.succeeded()) {
         System.out.println("获取服务发现2：" + ar.result());
         if (ar.result() != null) {
-          // Retrieve the service reference
+          // Retrieve the handler reference
           ServiceReference reference = discovery.getReference(ar.result());
           System.out.println("获取服务发现3：" + reference.record().getName());
         }
@@ -151,7 +151,7 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
 
   @Override
   public void stop(Future<Void> future) throws Exception {
-    // In current design, the publisher is responsible for removing the service
+    // In current design, the publisher is responsible for removing the handler
     List<Future> futures = new ArrayList<>();
     registeredRecords.forEach(record -> {
       Future<Void> cleanupFuture = Future.future();

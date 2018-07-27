@@ -7,7 +7,7 @@ import com.ecit.common.utils.salt.DefaultHashStrategy;
 import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.enmu.CertifiedType;
 import com.ecit.enmu.UserSex;
-import com.ecit.service.*;
+import com.ecit.handler.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -21,26 +21,23 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Created by za-wangshenhua on 2018/2/2.
+ * Created by shwang on 2018/2/2.
  */
 public class RestUserRxVerticle extends RestAPIRxVerticle{
 
     private static final Logger LOGGER = LogManager.getLogger(RestUserRxVerticle.class);
     private static final String HTTP_USER_SERVICE = "http_user_service_api";
     private ShopHashStrategy hashStrategy;
-    private final IUserService userService;
-    private final ICertifiedService certifiedService;
-    private final IAddressService addressService;
-
-    public RestUserRxVerticle(IUserService userService, ICertifiedService certifiedService, IAddressService addressService) {
-        this.userService = userService;
-        this.certifiedService = certifiedService;
-        this.addressService = addressService;
-    }
+    private IUserHandler userHandler;
+    private ICertifiedHandler certifiedHandler;
+    private IAddressHandler addressHandler;
 
     @Override
     public void start() throws Exception {
         super.start();
+        this.userHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IUserHandler.USER_SERVICE_ADDRESS).build(IUserHandler.class);
+        this.certifiedHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICertifiedHandler.CERTIFIED_SERVICE_ADDRESS).build(ICertifiedHandler.class);
+        this.addressHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IAddressHandler.ADDRESS_SERVICE_ADDRESS).build(IAddressHandler.class);
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
@@ -69,7 +66,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         String host = config().getString("user.http.address", "localhost");
         int port = config().getInteger("user.http.port", 8080);
 
-        // create HTTP server and publish REST service
+        // create HTTP server and publish REST handler
         createHttpServer(router, host, port).subscribe(server -> {
             this.hashStrategy = new DefaultHashStrategy(vertx.getDelegate());
             this.publishHttpEndpoint(HTTP_USER_SERVICE, host, port, "user.api.name").subscribe();
@@ -96,7 +93,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         final String salt = hashStrategy.generateSalt();
         final String type = Optional.ofNullable(params.getString("type")).orElse(RegisterType.loginName.name());
         //如果为手机注册验证手机验证码
-        IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+        IMessageHandler messageService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).build(IMessageHandler.class);
         if(StringUtils.equals(type, RegisterType.mobile.name())) {
             messageService.findMessage(loginName, RegisterType.mobile, handler -> {
                 if (handler.succeeded()) {
@@ -139,7 +136,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      */
     private void register(RoutingContext context, String type, String loginName, String salt, String password){
         final long userId = IdBuilder.getUniqueId();
-        userService.register(userId, StringUtils.equals(type, RegisterType.loginName.name()) ? loginName : null,
+        userHandler.register(userId, StringUtils.equals(type, RegisterType.loginName.name()) ? loginName : null,
                 StringUtils.equals(type, RegisterType.mobile.name()) ? loginName : null,
                 StringUtils.equals(type, RegisterType.email.name()) ? loginName : null,
                 hashStrategy.computeHash(password, salt, -1),
@@ -147,11 +144,11 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                 registerHandler -> {
                     if (registerHandler.succeeded()) {
                         if (registerHandler.result() >= 1) {
-                            certifiedService.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler -> {});
+                            certifiedHandler.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler -> {});
                             if (StringUtils.equals(type, RegisterType.mobile.name())) {
-                                certifiedService.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), loginName, handler -> {});
+                                certifiedHandler.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), loginName, handler -> {});
                             } else if (StringUtils.equals(type, RegisterType.email.name())) {
-                                certifiedService.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), loginName, handler -> {});
+                                certifiedHandler.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), loginName, handler -> {});
                             }
                             this.Ok(context, ResultItems.getReturnItemsSuccess("注册成功"));
                         } else {
@@ -171,7 +168,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         final JsonObject params = context.getBodyAsJson();
         final String loginName = params.getString("loginName");
         LOGGER.info("邮箱激活账号：{}, 验证码：{}", loginName, params.getString("code"));
-        userService.findEmailUser(loginName, handler -> {
+        userHandler.findEmailUser(loginName, handler -> {
             if (handler.failed()) {
                 LOGGER.error("查询邮箱激活账户异常【{}】", loginName);
                 this.returnWithFailureMessage(context, "账户不存在");
@@ -183,8 +180,8 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                     return ;
                 }
                 ;
-                IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate())
-                        .setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+                IMessageHandler messageService = new ServiceProxyBuilder(vertx.getDelegate())
+                        .setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).build(IMessageHandler.class);
                 messageService.findMessage(loginName, RegisterType.email, emailHandler -> {
                     if(emailHandler.failed()){
                         LOGGER.error("调用短信验证码信息错误，", emailHandler.cause());
@@ -192,7 +189,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                     } else {
                         if(StringUtils.equals(emailHandler.result().getString("code"), params.getString("code"))){
                             this.returnWithSuccessMessage(context, "激活成功");
-                            userService.activateEmailUser(user.getLong("user_id"), user.getLong("versions"), activateHandler -> {});
+                            userHandler.activateEmailUser(user.getLong("user_id"), user.getLong("versions"), activateHandler -> {});
                             messageService.updateMessage(loginName, RegisterType.email, messageHandler -> {});
                             return ;
                         }
@@ -220,7 +217,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             this.returnWithFailureMessage(context, "新密码和确认密码不一致！");
             return ;
         }
-        userService.getMemberById(userId, handler -> {
+        userHandler.getMemberById(userId, handler -> {
             if(handler.failed()){
                 LOGGER.error("获取用户信息失败", handler.cause());
                 this.returnWithFailureMessage(context, "修改密码失败!");
@@ -238,14 +235,14 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
              * 密码加密
              */
             final String password = hashStrategy.computeHash(params.getString("pwd"), user.getString("salt"), -1);
-            userService.changePwd(userId, password,
+            userHandler.changePwd(userId, password,
                     user.getLong("versions"), handler2 -> {
                         if(handler2.failed()){
                             LOGGER.error("修改密码失败", handler2.cause());
                             this.returnWithFailureMessage(context, "修改密码失败!");
                             return ;
                         }
-                        certifiedService.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler3 -> {});
+                        certifiedHandler.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler3 -> {});
                         this.returnWithSuccessMessage(context, "修改密码成功");
                     });
         });
@@ -264,7 +261,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             return ;
         }
         JsonObject params = context.getBodyAsJson();
-        userService.getMemberById(userId, handler -> {
+        userHandler.getMemberById(userId, handler -> {
             if(handler.failed()){
                 LOGGER.error("获取用户信息失败", handler.cause());
                 this.returnWithFailureMessage(context, "修改邮箱失败!");
@@ -274,21 +271,21 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             final String email = params.getString("email");
             final String code = params.getString("code");
 
-            IMessageService messageService = new ServiceProxyBuilder(vertx.getDelegate())
-                    .setAddress(IMessageService.MESSAGE_SERVICE_ADDRESS).build(IMessageService.class);
+            IMessageHandler messageService = new ServiceProxyBuilder(vertx.getDelegate())
+                    .setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).build(IMessageHandler.class);
             messageService.findMessage(email, RegisterType.email, handler2 -> {
                 if (handler2.succeeded()) {
                     final JsonObject message = handler2.result();
                     if (Objects.nonNull(message)
                             && StringUtils.endsWithIgnoreCase(message.getString("code"), code)) {
-                        userService.updateEmail(userId, email,
+                        userHandler.updateEmail(userId, email,
                                 user.getLong("versions"), handler3 -> {
                                     if(handler2.failed()){
                                         LOGGER.error("修改邮箱失败", handler3.cause());
                                         this.returnWithFailureMessage(context, "修改邮箱失败!");
                                         return ;
                                     }
-                                    certifiedService.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), email, handler4 -> {});
+                                    certifiedHandler.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), email, handler4 -> {});
                                     this.returnWithSuccessMessage(context, "修改邮箱成功");
                                 });
                         messageService.updateMessage(email, RegisterType.email, deleteHandler -> {
@@ -319,7 +316,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      */
     private void getUserInfoHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
-        userService.getUserInfo(userId, handler -> {
+        userHandler.getUserInfo(userId, handler -> {
             if(handler.failed()){
                 LOGGER.error("获取用户信息失败", handler.cause());
                 this.returnWithFailureMessage(context, "获取用户信息失败!");
@@ -338,7 +335,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     private void saveUserInfoHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         JsonObject params = context.getBodyAsJson();
-        userService.saveUserInfo(userId, params.getString("login_name"), params.getString("user_name"),params.getString("mobile"),
+        userHandler.saveUserInfo(userId, params.getString("login_name"), params.getString("user_name"),params.getString("mobile"),
                 params.getString("email"),
                 Objects.nonNull(params.getInteger("sex")) ? params.getInteger("sex") : UserSex.CONFIDENTIALITY.getKey(),
                 Objects.isNull(params.getLong("birthday")) ? 0 : params.getLong("birthday"),
@@ -361,7 +358,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      */
     private void findUserCertifiedHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
-        certifiedService.findUserCertifiedByUserId(userId, handler -> {
+        certifiedHandler.findUserCertifiedByUserId(userId, handler -> {
                     if(handler.failed()){
                         LOGGER.error("查询用户认证信息失败！", handler.cause());
                         this.returnWithFailureMessage(context, "查询用户认证信息失败！");
@@ -380,7 +377,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     private void insertAddressHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         final JsonObject params = context.getBodyAsJson();
-        addressService.insertAddress(userId, params.getString("receiver"), params.getString("mobile"),
+        addressHandler.insertAddress(userId, params.getString("receiver"), params.getString("mobile"),
                 params.getString("province_code"), params.getString("city_code"), params.getString("county_code"),
                 params.getString("address"), params.getString("address_details"),
                 handler -> {
@@ -401,7 +398,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      */
     private void updateAddressHandler(RoutingContext context, JsonObject principal){
         final JsonObject params = context.getBodyAsJson();
-        addressService.updateAddress(params.getLong("address_id"), params.getString("receiver"), params.getString("mobile"),
+        addressHandler.updateAddress(params.getLong("address_id"), params.getString("receiver"), params.getString("mobile"),
                 params.getString("province_code"), params.getString("city_code"), params.getString("county_code"),
                 params.getString("address"), params.getString("address_details"),
                 handler -> {
@@ -422,7 +419,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      */
     private void updateDefaultAddressHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
-        addressService.updateDefaultAddress(userId, Long.parseLong(context.pathParam("addressId")),
+        addressHandler.updateDefaultAddress(userId, Long.parseLong(context.pathParam("addressId")),
                 handler -> {
                     if(handler.failed()){
                         LOGGER.error("设置收货地址失败！", handler.cause());
@@ -440,7 +437,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      * @param principal
      */
     private void deleteAddressHandler(RoutingContext context, JsonObject principal){
-        addressService.deleteAddress(Long.parseLong(context.pathParam("addressId")), handler -> {
+        addressHandler.deleteAddress(Long.parseLong(context.pathParam("addressId")), handler -> {
                     if(handler.failed()){
                         LOGGER.error("删除收货地址失败！", handler.cause());
                         this.returnWithFailureMessage(context, "删除收货地址失败！");
@@ -458,7 +455,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      */
     private void findAddressHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
-        addressService.findAddress(userId, handler -> {
+        addressHandler.findAddress(userId, handler -> {
             if(handler.failed()){
                 LOGGER.error("查询收货地址失败！", handler.cause());
                 this.returnWithFailureMessage(context, "查询收货地址失败！");
@@ -475,7 +472,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      * @param principal
      */
     private void getAddressByIdHandler(RoutingContext context, JsonObject principal){
-        addressService.getAddressById(Long.parseLong(context.pathParam("addressId")), handler -> {
+        addressHandler.getAddressById(Long.parseLong(context.pathParam("addressId")), handler -> {
             if(handler.failed()){
                 LOGGER.error("查询收货地址失败！", handler.cause());
                 this.returnWithFailureMessage(context, "查询收货地址失败！");
@@ -494,7 +491,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     private void idcardCertifiedHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
         JsonObject params = context.getBodyAsJson();
-        userService.updateIdcard(userId, params.getString("real_name"), params.getString("id_card"),
+        userHandler.updateIdcard(userId, params.getString("real_name"), params.getString("id_card"),
                 params.getString("id_card_positive_url"), params.getString("id_card_negative_url"),
                 handler -> {
             if(handler.failed()){
@@ -514,7 +511,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      */
     private void getIdcardCertifiedHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
-        userService.getIdcardInfo(userId, handler -> {
+        userHandler.getIdcardInfo(userId, handler -> {
             if(handler.failed()){
                 LOGGER.error("查询实名认证信息失败！", handler.cause());
                 this.returnWithFailureMessage(context, "查询认证信息失败！");
@@ -526,8 +523,8 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
 
     private void bindMobileHandler(RoutingContext context, JsonObject principal){
         final Long userId = principal.getLong("userId");
-        JsonObject params = context.getBodyAsJson();
-        userService.bindMobile(userId, params.getString("mobile"), params.getString("code"), handler -> {
+        final JsonObject params = context.getBodyAsJson();
+        userHandler.bindMobile(userId, params.getString("mobile"), params.getString("code"), handler -> {
             if(handler.failed()){
                 LOGGER.error("绑定手机号码失败！", handler.cause());
                 this.returnWithFailureMessage(context, "绑定手机号码失败！");

@@ -20,7 +20,7 @@ import io.vertx.codegen.annotations.ProxyIgnore;
 import org.elasticsearch.client.AdminClient;
 
 /**
- * Internal admin service
+ * Internal admin handler
  */
 public interface InternalElasticSearchAdminService extends ElasticSearchAdminService {
 

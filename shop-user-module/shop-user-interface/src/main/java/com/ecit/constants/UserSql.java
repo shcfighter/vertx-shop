@@ -1,7 +1,7 @@
 package com.ecit.constants;
 
 /**
- * Created by za-wangshenhua on 2018/2/5.
+ * Created by shwang on 2018/2/5.
  */
 public interface UserSql {
 

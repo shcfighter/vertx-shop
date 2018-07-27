@@ -1,7 +1,7 @@
 package com.ecit.common.enums;
 
 /**
- * Created by za-wangshenhua on 2018/2/23.
+ * Created by shwang on 2018/2/23.
  */
 public enum IsDeleted {
     /**

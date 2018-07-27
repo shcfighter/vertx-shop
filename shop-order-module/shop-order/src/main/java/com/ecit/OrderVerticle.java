@@ -1,12 +1,10 @@
 package com.ecit;
 
-import com.ecit.api.RestCartRxVerticle;
-import com.ecit.api.RestOrderRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
-import com.ecit.service.ICartService;
-import com.ecit.service.IOrderService;
-import com.ecit.service.impl.CartServiceImpl;
-import com.ecit.service.impl.OrderServiceImpl;
+import com.ecit.handler.ICartHandler;
+import com.ecit.handler.IOrderHandler;
+import com.ecit.handler.impl.CartHandler;
+import com.ecit.handler.impl.OrderHandler;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import io.vertx.core.DeploymentOptions;
@@ -18,7 +16,7 @@ import io.vertx.serviceproxy.ServiceBinder;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
 /**
- * Created by za-wangshenhua on 2018/2/2.
+ * Created by shwang on 2018/2/2.
  */
 public class OrderVerticle extends BaseMicroserviceRxVerticle{
 
@@ -28,18 +26,14 @@ public class OrderVerticle extends BaseMicroserviceRxVerticle{
     @Override
     public void start() throws Exception {
         super.start();
-        IOrderService orderService = new OrderServiceImpl(vertx, this.config());
-        ICartService cartService = new CartServiceImpl(vertx, this.config());
-        new ServiceBinder(vertx.getDelegate())
-                .setAddress(IOrderService.ORDER_SERVICE_ADDRESS)
-                .register(IOrderService.class, orderService);
-        new ServiceBinder(vertx.getDelegate())
-                .setAddress(ICartService.CART_SERVICE_ADDRESS)
-                .register(ICartService.class, cartService);
-        this.publishEventBusService(ORDER_SERVICE_NAME, IOrderService.ORDER_SERVICE_ADDRESS, IOrderService.class).subscribe();
-        this.publishEventBusService(CART_SERVICE_NAME, ICartService.CART_SERVICE_ADDRESS, ICartService.class).subscribe();
-        vertx.getDelegate().deployVerticle(new RestOrderRxVerticle(orderService), new DeploymentOptions().setConfig(this.config()));
-        vertx.getDelegate().deployVerticle(new RestCartRxVerticle(cartService), new DeploymentOptions().setConfig(this.config()));
+        IOrderHandler orderService = new OrderHandler(vertx, this.config());
+        ICartHandler cartService = new CartHandler(vertx, this.config());
+        new ServiceBinder(vertx.getDelegate()).setAddress(IOrderHandler.ORDER_SERVICE_ADDRESS).register(IOrderHandler.class, orderService);
+        new ServiceBinder(vertx.getDelegate()).setAddress(ICartHandler.CART_SERVICE_ADDRESS).register(ICartHandler.class, cartService);
+        this.publishEventBusService(ORDER_SERVICE_NAME, IOrderHandler.ORDER_SERVICE_ADDRESS, IOrderHandler.class).subscribe();
+        this.publishEventBusService(CART_SERVICE_NAME, ICartHandler.CART_SERVICE_ADDRESS, ICartHandler.class).subscribe();
+        vertx.getDelegate().deployVerticle("com.ecit.api.RestOrderRxVerticle", new DeploymentOptions().setConfig(this.config()).setInstances(2));
+        vertx.getDelegate().deployVerticle("com.ecit.api.RestCartRxVerticle", new DeploymentOptions().setConfig(this.config()).setInstances(2));
     }
 
     public static void main(String[] args) {

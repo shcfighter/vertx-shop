@@ -1,7 +1,7 @@
 package com.ecit.constants;
 
 /**
- * Created by za-wangshenhua on 2018/3/19.
+ * Created by shwang on 2018/3/19.
  */
 public interface CommoditySql {
 

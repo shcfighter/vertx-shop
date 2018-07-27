@@ -2,15 +2,14 @@ package com.ecit;
 
 import com.ecit.api.RestSearchRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
-import com.ecit.service.ICommodityService;
-import com.ecit.service.IPreferencesService;
-import com.ecit.service.impl.CommodityServiceImpl;
-import com.ecit.service.impl.PreferencesServiceImpl;
+import com.ecit.handler.ICommodityHandler;
+import com.ecit.handler.IPreferencesHandler;
+import com.ecit.handler.impl.CommodityHandler;
+import com.ecit.handler.impl.PreferencesHandler;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import com.hubrick.vertx.elasticsearch.ElasticSearchServiceVerticle;
 import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -20,7 +19,7 @@ import io.vertx.serviceproxy.ServiceBinder;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
 /**
- * Created by za-wangshenhua on 2018/2/2.
+ * Created by shwang on 2018/2/2.
  */
 public class SearchVerticle extends BaseMicroserviceRxVerticle{
 
@@ -29,15 +28,13 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
     @Override
     public void start() throws Exception {
         super.start();
-        ICommodityService commodityService = new CommodityServiceImpl(vertx, this.config());
-        IPreferencesService preferencesService = new PreferencesServiceImpl(vertx, this.config());
-        new ServiceBinder(vertx.getDelegate())
-                .setAddress(ICommodityService.SEARCH_SERVICE_ADDRESS)
-                .register(ICommodityService.class, commodityService);
-        this.publishEventBusService(SEARCH_SERVICE_NAME, ICommodityService.SEARCH_SERVICE_ADDRESS, ICommodityService.class).subscribe();
-        vertx.getDelegate().deployVerticle(new RestSearchRxVerticle(commodityService, preferencesService), new DeploymentOptions().setConfig(this.config()));
-        vertx.deployVerticle(ElasticSearchServiceVerticle.class.getName(),
-                new DeploymentOptions().setConfig(this.config()));
+        ICommodityHandler commodityHandler = new CommodityHandler(vertx, this.config());
+        IPreferencesHandler preferencesHandler = new PreferencesHandler(vertx, this.config());
+        new ServiceBinder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).register(ICommodityHandler.class, commodityHandler);
+        new ServiceBinder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).register(IPreferencesHandler.class, preferencesHandler);
+        this.publishEventBusService(SEARCH_SERVICE_NAME, ICommodityHandler.SEARCH_SERVICE_ADDRESS, ICommodityHandler.class).subscribe();
+        vertx.getDelegate().deployVerticle(RestSearchRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
+        vertx.deployVerticle(ElasticSearchServiceVerticle.class.getName(), new DeploymentOptions().setConfig(this.config()));
     }
 
     public static void main(String[] args) {

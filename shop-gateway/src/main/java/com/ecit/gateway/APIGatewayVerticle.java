@@ -181,7 +181,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
     }
 
     /**
-     * Get all REST endpoints from the service discovery infrastructure.
+     * Get all REST endpoints from the handler discovery infrastructure.
      *
      * @return async result
      */

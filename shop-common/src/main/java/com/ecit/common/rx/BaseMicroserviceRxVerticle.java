@@ -22,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Set;
 
 /**
- * This Rx-fied verticle provides support for service discovery.
+ * This Rx-fied verticle provides support for handler discovery.
  *
  */
 public class BaseMicroserviceRxVerticle extends AbstractVerticle {
