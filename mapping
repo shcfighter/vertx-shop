@@ -32,6 +32,10 @@
             "category_name": {
                "type": "keyword"
             },
+	    "large_class": {
+		"analyzer": "ik_smart",
+               "type": "text"
+            },
             "price": {
                "type": "keyword"
             },

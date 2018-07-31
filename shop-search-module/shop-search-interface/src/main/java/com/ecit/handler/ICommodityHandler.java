@@ -24,6 +24,9 @@ public interface ICommodityHandler {
     ICommodityHandler searchCommodity(String keyword, int pageSize, int page, Handler<AsyncResult<SearchResponse>> handler);
 
     @Fluent
+    ICommodityHandler searchLargeClassCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler);
+
+    @Fluent
     ICommodityHandler findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler);
 
     @Fluent

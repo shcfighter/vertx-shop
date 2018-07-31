@@ -60,7 +60,7 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
             searchJson = new JsonObject("{\n" +
                 "    \"multi_match\" : {\n" +
                 "      \"query\":    \"" + keyword + "\",\n" +
-                "      \"fields\": [ \"commodity_name\", \"brand_name\", \"category_name\", \"remarks\", \"description\" ] \n" +
+                "      \"fields\": [ \"commodity_name\", \"brand_name\", \"category_name\", \"remarks\", \"description\", \"large_class\" ] \n" +
                 "    }\n" +
                 "}");
         }
@@ -74,6 +74,32 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
                 .addAggregation(new AggregationOption().setName("category_name")
                         .setType(AggregationOption.AggregationType.TERMS)
                         .setDefinition(new JsonObject().put("field", "category_name").put("size", 5)))
+                //.addFieldSort("commodity_id", SortOrder.DESC)
+                .addScripSort("Math.random()", ScriptSortOption.Type.NUMBER, new JsonObject(), SortOrder.DESC); //随机排序
+        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
+                .subscribe(future::complete, future::fail);
+        future.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public ICommodityHandler searchLargeClassCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler) {
+        Future<SearchResponse> future = Future.future();
+        JsonObject searchJson = null;
+        if (StringUtils.isBlank(keyword)) {
+            searchJson = new JsonObject("{\"match_all\": {}}");
+        } else {
+            searchJson = new JsonObject("{\n" +
+                    "    \"multi_match\" : {\n" +
+                    "      \"query\":    \"" + keyword + "\",\n" +
+                    "      \"fields\": [ \"brand_name\", \"category_name\", \"large_class\" ] \n" +
+                    "    }\n" +
+                    "}");
+        }
+        final SearchOptions searchOptions = new SearchOptions()
+                .setQuery(searchJson)
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setFetchSource(true).setSize(7)
                 //.addFieldSort("commodity_id", SortOrder.DESC)
                 .addScripSort("Math.random()", ScriptSortOption.Type.NUMBER, new JsonObject(), SortOrder.DESC); //随机排序
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)

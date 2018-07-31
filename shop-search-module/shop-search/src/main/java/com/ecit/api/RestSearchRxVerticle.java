@@ -9,6 +9,7 @@ import com.ecit.handler.IPreferencesHandler;
 import com.google.common.collect.Lists;
 import com.hubrick.vertx.elasticsearch.model.Hits;
 import com.hubrick.vertx.elasticsearch.model.SearchResponse;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Future;
@@ -16,6 +17,8 @@ import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.ext.web.handler.CookieHandler;
+import io.vertx.reactivex.redis.RedisClient;
+import io.vertx.redis.RedisOptions;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -36,18 +39,26 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
     private static final String HTTP_SEARCH_SERVICE = "http_search_service_api";
     private ICommodityHandler commodityService;
     private IPreferencesHandler preferencesService;
+    private RedisClient redis;
 
     @Override
     public void start() throws Exception {
         super.start();
         this.commodityService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
         this.preferencesService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).build(IPreferencesHandler.class);
+        JsonObject redisObject = this.config().getJsonObject("redis");
+        RedisOptions config = new RedisOptions()
+                .setHost(redisObject.getString("host"))
+                .setPort(redisObject.getInteger("port"))
+                .setAuth(redisObject.getString("auth"));
+        this.redis = RedisClient.create(vertx, config);
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
         router.route().handler(CookieHandler.create());
         // API route handler
         router.post("/search").handler(this::searchHandler);
+        router.post("/searchLargeClass").handler(this::searchLargeClassHandler);
         router.get("/findCommodityById/:id").handler(this::findCommodityByIdHandler);
         router.get("/findCommodityFromESById/:id").handler(this::findCommodityFromESByIdHandler);
         router.get("/findFavoriteCommodity").handler(this::findFavoriteCommodityHandler);
@@ -108,11 +119,46 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     brandList.add(brand.getJsonObject(i).getString("key"));
                 }
                 resultJsonObject.put("brand", brandList);
-                /*this.Ok(context, new ResultItems(0, result.getHits().getTotal().intValue(),
-                        resultJsonObject, "查询成功", page));*/
                 this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultJsonObject, page);
             }
         });
+    }
+
+    private void searchLargeClassHandler(RoutingContext context){
+        final JsonObject params = context.getBodyAsJson();
+        final String key = params.getString("keyword");
+        redis.get("search_large_class_key_" + key, redisHandler -> {
+            if(redisHandler.succeeded() && Objects.nonNull(redisHandler.result())){
+                List<JsonObject> resultList = Json.decodeValue(redisHandler.result(), List.class);
+                LOGGER.info("redis cache: {}", resultList.toString());
+                this.returnWithSuccessMessage(context, "查询成功", resultList.size(), resultList);
+            }else {
+                commodityService.searchLargeClassCommodity(key, handler -> {
+                    if(handler.failed()){
+                        this.returnWithFailureMessage(context, "暂无该商品！");
+                        LOGGER.error("搜索商品异常：", handler.cause());
+                        return ;
+                    } else {
+                        if(Objects.isNull(handler.result())){
+                            this.returnWithFailureMessage(context, "暂无该商品！");
+                            return ;
+                        }
+                        final SearchResponse result = handler.result();
+                        final List<JsonObject> resultList = result.getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList());
+                        //redis.rxSet("search_large_class_key_" + key, Json.encodePrettily(resultList));
+                        redis.set("search_large_class_key_" + key, Json.encodePrettily(resultList), handler2 -> {
+                            if (handler2.succeeded()){
+                                LOGGER.info("redis cache 成功");
+                            }else {
+                                LOGGER.info("redis cache: 失败");
+                            }
+                        });
+                        this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultList);
+                    }
+                });
+            }
+        });
+
     }
 
     /**

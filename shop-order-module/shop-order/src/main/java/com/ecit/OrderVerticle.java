@@ -1,5 +1,7 @@
 package com.ecit;
 
+import com.ecit.api.RestCartRxVerticle;
+import com.ecit.api.RestOrderRxVerticle;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
 import com.ecit.handler.ICartHandler;
 import com.ecit.handler.IOrderHandler;
@@ -32,8 +34,8 @@ public class OrderVerticle extends BaseMicroserviceRxVerticle{
         new ServiceBinder(vertx.getDelegate()).setAddress(ICartHandler.CART_SERVICE_ADDRESS).register(ICartHandler.class, cartService);
         this.publishEventBusService(ORDER_SERVICE_NAME, IOrderHandler.ORDER_SERVICE_ADDRESS, IOrderHandler.class).subscribe();
         this.publishEventBusService(CART_SERVICE_NAME, ICartHandler.CART_SERVICE_ADDRESS, ICartHandler.class).subscribe();
-        vertx.getDelegate().deployVerticle("com.ecit.api.RestOrderRxVerticle", new DeploymentOptions().setConfig(this.config()).setInstances(2));
-        vertx.getDelegate().deployVerticle("com.ecit.api.RestCartRxVerticle", new DeploymentOptions().setConfig(this.config()).setInstances(2));
+        vertx.getDelegate().deployVerticle(RestOrderRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(2));
+        vertx.getDelegate().deployVerticle(RestCartRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(2));
     }
 
     public static void main(String[] args) {
