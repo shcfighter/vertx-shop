@@ -40,8 +40,8 @@ public class UserVerticle extends BaseMicroserviceRxVerticle{
         new ServiceBinder(vertx.getDelegate()).setAddress(IAddressHandler.ADDRESS_SERVICE_ADDRESS).register(IAddressHandler.class, addressHandler);
         new ServiceBinder(vertx.getDelegate()).setAddress(IAccountHandler.ACCOUNT_SERVICE_ADDRESS).register(IAccountHandler.class, accountHandler);
         //this.publishEventBusService(USER_SERVICE_NAME, IUserHandler.USER_SERVICE_ADDRESS, IUserHandler.class).subscribe();
-        vertx.getDelegate().deployVerticle(RestUserRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
-        vertx.getDelegate().deployVerticle(RestAccountRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(RestUserRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
+        vertx.getDelegate().deployVerticle(RestAccountRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
     }
 
     public static void main(String[] args) {

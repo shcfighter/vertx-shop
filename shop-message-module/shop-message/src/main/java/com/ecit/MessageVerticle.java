@@ -32,8 +32,8 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
         new ServiceBinder(vertx.getDelegate()).setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).register(IMessageHandler.class, messageHandler);
         new ServiceBinder(vertx.getDelegate()).setAddress(ICollectionHandler.COLLECTION_SERVICE_ADDRESS).register(ICollectionHandler.class, collectionHandler);
         this.publishEventBusService(SERVICE_MESSAGE_SERVICE_NAME, IMessageHandler.MESSAGE_SERVICE_ADDRESS, IMessageHandler.class).subscribe();
-        vertx.getDelegate().deployVerticle(RestMessageRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
-        vertx.getDelegate().deployVerticle(RestCollectionRxVerticle.class, new DeploymentOptions().setConfig(this.config()));
+        vertx.getDelegate().deployVerticle(RestMessageRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
+        vertx.getDelegate().deployVerticle(RestCollectionRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
     }
 
     public static void main(String[] args) {

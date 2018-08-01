@@ -1,4 +1,5 @@
 {
+  "instances": 2,
   "order.api.name":"order",
   "order.http.address":"0.0.0.0",
   "order.http.port":8084,

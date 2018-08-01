@@ -1,4 +1,5 @@
 {
+  "instances": 2,
   "api.gateway.http.port": 8787,
   "api.gateway.http.address": "0.0.0.0",
   "circuit-breaker": {

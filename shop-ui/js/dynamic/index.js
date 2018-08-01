@@ -5,7 +5,7 @@ $(function() {
 
     var condition = {
         f1: "家用电器",
-        f2: "手机/数码",
+        f2: "手机/数码/电视/笔记本电脑",
         f3: "家具/厨具/家居",
         f4: "男装/女装",
         f5: "美妆/护肤品",
@@ -155,5 +155,7 @@ $(function() {
         });
     });
 
-
+    $(".dl-sort").find("dd").find("a").click(function () {
+        window.location.href = "/search.html?keyword=" + $(this).attr("title");
+    });
 });

@@ -1,4 +1,5 @@
 {
+  "instances": 2,
   "message.api.name": "message",
   "api.message.http.port": 8083,
   "api.message.http.address": "0.0.0.0",

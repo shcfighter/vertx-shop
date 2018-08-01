@@ -33,8 +33,8 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
         new ServiceBinder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).register(ICommodityHandler.class, commodityHandler);
         new ServiceBinder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).register(IPreferencesHandler.class, preferencesHandler);
         this.publishEventBusService(SEARCH_SERVICE_NAME, ICommodityHandler.SEARCH_SERVICE_ADDRESS, ICommodityHandler.class).subscribe();
-        vertx.getDelegate().deployVerticle(RestSearchRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances")));
-        vertx.getDelegate().deployVerticle(ElasticSearchServiceVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances")));
+        vertx.getDelegate().deployVerticle(RestSearchRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
+        vertx.getDelegate().deployVerticle(ElasticSearchServiceVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
     }
 
     public static void main(String[] args) {

@@ -27,14 +27,14 @@ $.ajaxSetup({
 });
 
 $(function(){
-    if(undefined == $("#J_MiniCartNum") && undefined == $(".cart_num ")){
-        loadCartNum();
-    }
     var sessionLoginUser = sessionStorage.getItem("loginUser");
     if(undefined == sessionLoginUser ||
         null == sessionLoginUser ||
         "" == sessionLoginUser){
         return ;
+    }
+    if($("#J_MiniCartNum") && $(".cart_num ")){
+        loadCartNum();
     }
     var loginUser = jQuery.parseJSON(sessionLoginUser);
     $(".login_user").html("亲，<a href=\"/person/index.html\" target=\"_top\" class=\"h\">" + loginUser.loginName + "</a> " +

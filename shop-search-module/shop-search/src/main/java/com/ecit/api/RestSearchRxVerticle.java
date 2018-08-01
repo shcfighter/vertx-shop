@@ -48,9 +48,9 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         this.preferencesService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).build(IPreferencesHandler.class);
         JsonObject redisObject = this.config().getJsonObject("redis");
         RedisOptions config = new RedisOptions()
-                .setHost(redisObject.getString("host"))
-                .setPort(redisObject.getInteger("port"))
-                .setAuth(redisObject.getString("auth"));
+                .setHost(redisObject.getString("host", "localhost"))
+                .setPort(redisObject.getInteger("port", 6379))
+                .setAuth(redisObject.getString("auth", "h123456"));
         this.redis = RedisClient.create(vertx, config);
         final Router router = Router.router(vertx);
         // body handler
@@ -130,7 +130,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         redis.get("search_large_class_key_" + key, redisHandler -> {
             if(redisHandler.succeeded() && Objects.nonNull(redisHandler.result())){
                 List<JsonObject> resultList = Json.decodeValue(redisHandler.result(), List.class);
-                LOGGER.info("redis cache: {}", resultList.toString());
+                LOGGER.info("redis cache: {}", Thread.currentThread().getName());
                 this.returnWithSuccessMessage(context, "查询成功", resultList.size(), resultList);
             }else {
                 commodityService.searchLargeClassCommodity(key, handler -> {
@@ -146,13 +146,8 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                         final SearchResponse result = handler.result();
                         final List<JsonObject> resultList = result.getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList());
                         //redis.rxSet("search_large_class_key_" + key, Json.encodePrettily(resultList));
-                        redis.set("search_large_class_key_" + key, Json.encodePrettily(resultList), handler2 -> {
-                            if (handler2.succeeded()){
-                                LOGGER.info("redis cache 成功");
-                            }else {
-                                LOGGER.info("redis cache: 失败");
-                            }
-                        });
+                        redis.set("search_large_class_key_" + key, Json.encodePrettily(resultList), handler2 -> {});
+                        redis.expire("search_large_class_key_" + key, 24 * 60 * 60L, handler3 -> {});
                         this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultList);
                     }
                 });

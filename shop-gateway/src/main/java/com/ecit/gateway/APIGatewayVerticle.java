@@ -6,18 +6,13 @@ import com.ecit.constants.UserSql;
 import com.ecit.enmu.UserStatus;
 import com.ecit.gateway.auth.ShopAuth;
 import com.ecit.gateway.auth.impl.ShopUser;
-import com.hazelcast.config.Config;
-import com.hazelcast.config.GroupConfig;
 import com.hazelcast.util.CollectionUtil;
 import com.hazelcast.util.UuidUtil;
-import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
-import io.vertx.core.VertxOptions;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
-import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
@@ -27,7 +22,6 @@ import io.vertx.ext.web.handler.UserSessionHandler;
 import io.vertx.servicediscovery.Record;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.types.HttpEndpoint;
-import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -283,21 +277,5 @@ public class APIGatewayVerticle extends RestAPIVerticle {
     }
 
 
-    public static void main(String[] args) {
-        Config cfg = new Config();
-        GroupConfig group = new GroupConfig();
-        group.setName("p-dev");
-        group.setPassword("p-dev");
-        cfg.setGroupConfig(group);
-        // 申明集群管理器
-        ClusterManager mgr = new HazelcastClusterManager(cfg);
-        VertxOptions options = new VertxOptions().setClusterManager(mgr);
-        io.vertx.reactivex.core.Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(APIGatewayVerticle.class.getName(),
-                new DeploymentOptions().setConfig(new JsonObject()
-                        .put("url", "jdbc:postgresql://111.231.132.168:5432/vertx_shop")
-                        .put("driver_class", "org.postgresql.Driver")
-                        .put("max_pool_size", 50)
-                        .put("user", "postgres")
-                        .put("password", "h123456"))));
-    }
+
 }

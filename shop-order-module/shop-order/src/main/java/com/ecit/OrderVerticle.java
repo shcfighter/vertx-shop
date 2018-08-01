@@ -34,8 +34,8 @@ public class OrderVerticle extends BaseMicroserviceRxVerticle{
         new ServiceBinder(vertx.getDelegate()).setAddress(ICartHandler.CART_SERVICE_ADDRESS).register(ICartHandler.class, cartService);
         this.publishEventBusService(ORDER_SERVICE_NAME, IOrderHandler.ORDER_SERVICE_ADDRESS, IOrderHandler.class).subscribe();
         this.publishEventBusService(CART_SERVICE_NAME, ICartHandler.CART_SERVICE_ADDRESS, ICartHandler.class).subscribe();
-        vertx.getDelegate().deployVerticle(RestOrderRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(2));
-        vertx.getDelegate().deployVerticle(RestCartRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(2));
+        vertx.getDelegate().deployVerticle(RestOrderRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
+        vertx.getDelegate().deployVerticle(RestCartRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
     }
 
     public static void main(String[] args) {
