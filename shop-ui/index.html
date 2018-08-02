@@ -14,10 +14,10 @@
     <link href="css/skin.css" rel="stylesheet" type="text/css"/>
     <script src="AmazeUI-2.4.2/assets/js/jquery.min.js"></script>
     <script src="AmazeUI-2.4.2/assets/js/amazeui.min.js"></script>
+    <script src="js/aTpl.min.js"></script>
     <script src="js/commons.js"></script>
     <script src="js/dynamic/search.input.js"></script>
     <script src="js/xcConfirm.js"></script>
-    <script src="js/aTpl.min.js"></script>
     <script src="js/dynamic/index.js"></script>
 </head>
 <body>
@@ -902,7 +902,8 @@
         </div>
 
         <div class="clear "></div>
-        <div class="f1">
+        <div class="f1"></div>
+        <script id="f1" type="text/aTpl">
             <!--甜点-->
             <div class="am-container ">
                 <div class="shopTitle ">
@@ -944,7 +945,7 @@
                                 class="text">核桃</b></span></a>
                     </div>
                     <a href="# ">
-                        <img src=""/>
+                        <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
                                 零食大礼包开抢啦
@@ -960,13 +961,13 @@
                 <div class="am-u-sm-7 am-u-md-5 am-u-lg-2 text-two big">
                     <div class="outer-con ">
                         <div class="title ">
-
+                            {{ aTpl.items[0] ? aTpl.items[0].category_name: '' }}
                         </div>
                         <div class="sub-title ">
-
+                            ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src=""/></a>
+                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -974,14 +975,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[1] ? aTpl.items[1].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=" "/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -989,14 +989,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[2] ? aTpl.items[2].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=" "/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1004,14 +1003,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[3] ? aTpl.items[3].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1019,14 +1017,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[4] ? aTpl.items[4].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1034,21 +1031,20 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                   {{ aTpl.items[5] ? aTpl.items[5].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                    ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
-
             <div class="clear "></div>
-        </div>
-        <div class="f2">
+        </script>
+        <div class="f2"></div>
+        <script id="f2" type="text/aTpl">
             <!--甜点-->
             <div class="am-container ">
                 <div class="shopTitle ">
@@ -1090,7 +1086,7 @@
                                 class="text">核桃</b></span></a>
                     </div>
                     <a href="# ">
-                        <img src=""/>
+                        <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
                                 零食大礼包开抢啦
@@ -1106,13 +1102,13 @@
                 <div class="am-u-sm-7 am-u-md-5 am-u-lg-2 text-two big">
                     <div class="outer-con ">
                         <div class="title ">
-
+                            {{ aTpl.items[0] ? aTpl.items[0].category_name: '' }}
                         </div>
                         <div class="sub-title ">
-
+                            ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src=""/></a>
+                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1120,14 +1116,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[1] ? aTpl.items[1].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1135,14 +1130,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[2] ? aTpl.items[2].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1150,14 +1144,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[3] ? aTpl.items[3].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1165,14 +1158,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[4] ? aTpl.items[4].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1180,21 +1172,21 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                   {{ aTpl.items[5] ? aTpl.items[5].category_name: '' }}
                             </div>
                             <div class="sub-title ">
+                                    ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
-
             <div class="clear "></div>
-        </div>
+        </script>
 
-        <div class="f3">
+        <div class="f3"></div>
+        <script id="f3" type="text/aTpl">
             <!--甜点-->
             <div class="am-container ">
                 <div class="shopTitle ">
@@ -1236,7 +1228,7 @@
                                 class="text">核桃</b></span></a>
                     </div>
                     <a href="# ">
-                        <img src=""/>
+                        <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
                                 零食大礼包开抢啦
@@ -1252,13 +1244,13 @@
                 <div class="am-u-sm-7 am-u-md-5 am-u-lg-2 text-two big">
                     <div class="outer-con ">
                         <div class="title ">
-
+                            {{ aTpl.items[0] ? aTpl.items[0].category_name: '' }}
                         </div>
                         <div class="sub-title ">
-
+                            ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src=""/></a>
+                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1266,14 +1258,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[1] ? aTpl.items[1].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1281,14 +1272,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[2] ? aTpl.items[2].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1296,14 +1286,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[3] ? aTpl.items[3].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1311,14 +1300,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[4] ? aTpl.items[4].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1326,21 +1314,20 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                   {{ aTpl.items[5] ? aTpl.items[5].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                    ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
-
             <div class="clear "></div>
-        </div>
-        <div class="f4">
+        </script>
+        <div class="f4"></div>
+        <script id="f4" type="text/aTpl">
             <!--甜点-->
             <div class="am-container ">
                 <div class="shopTitle ">
@@ -1382,7 +1369,7 @@
                                 class="text">核桃</b></span></a>
                     </div>
                     <a href="# ">
-                        <img src=""/>
+                        <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
                                 零食大礼包开抢啦
@@ -1398,13 +1385,13 @@
                 <div class="am-u-sm-7 am-u-md-5 am-u-lg-2 text-two big">
                     <div class="outer-con ">
                         <div class="title ">
-
+                            {{ aTpl.items[0] ? aTpl.items[0].category_name: '' }}
                         </div>
                         <div class="sub-title ">
-
+                            ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src=""/></a>
+                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1412,14 +1399,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[1] ? aTpl.items[1].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=" "/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1427,14 +1413,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[2] ? aTpl.items[2].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=" "/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1442,14 +1427,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[3] ? aTpl.items[3].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1457,14 +1441,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[4] ? aTpl.items[4].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1472,22 +1455,21 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                   {{ aTpl.items[5] ? aTpl.items[5].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                    ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
-
             <div class="clear "></div>
-        </div>
+        </script>
 
-        <div class="f5">
+        <div class="f5"></div>
+        <script id="f5" type="text/aTpl">
             <!--甜点-->
             <div class="am-container ">
                 <div class="shopTitle ">
@@ -1529,7 +1511,7 @@
                                 class="text">核桃</b></span></a>
                     </div>
                     <a href="# ">
-                        <img src=""/>
+                        <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
                                 零食大礼包开抢啦
@@ -1545,13 +1527,13 @@
                 <div class="am-u-sm-7 am-u-md-5 am-u-lg-2 text-two big">
                     <div class="outer-con ">
                         <div class="title ">
-
+                            {{ aTpl.items[0] ? aTpl.items[0].category_name: '' }}
                         </div>
                         <div class="sub-title ">
-
+                            ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src=""/></a>
+                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1559,14 +1541,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[1] ? aTpl.items[1].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1574,14 +1555,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[2] ? aTpl.items[2].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1589,13 +1569,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[3] ? aTpl.items[3].category_name: '' }}
                             </div>
                             <div class="sub-title ">
+                                ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1603,14 +1583,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[4] ? aTpl.items[4].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1618,21 +1597,20 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                   {{ aTpl.items[5] ? aTpl.items[5].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                    ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
-
             <div class="clear "></div>
-        </div>
-        <div class="f6">
+        </script>
+        <div class="f6"></div>
+        <script id="f6" type="text/aTpl">
             <!--甜点-->
             <div class="am-container ">
                 <div class="shopTitle ">
@@ -1674,7 +1652,7 @@
                                 class="text">核桃</b></span></a>
                     </div>
                     <a href="# ">
-                        <img src=""/>
+                        <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
                                 零食大礼包开抢啦
@@ -1690,13 +1668,13 @@
                 <div class="am-u-sm-7 am-u-md-5 am-u-lg-2 text-two big">
                     <div class="outer-con ">
                         <div class="title ">
-
+                            {{ aTpl.items[0] ? aTpl.items[0].category_name: '' }}
                         </div>
                         <div class="sub-title ">
-
+                            ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src=""/></a>
+                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1704,14 +1682,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[1] ? aTpl.items[1].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=" "/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1719,14 +1696,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[2] ? aTpl.items[2].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1734,14 +1710,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[3] ? aTpl.items[3].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1749,14 +1724,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[4] ? aTpl.items[4].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1764,22 +1738,21 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                   {{ aTpl.items[5] ? aTpl.items[5].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                    ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
-
             <div class="clear "></div>
-        </div>
+        </script>
 
-        <div class="f7">
+        <div class="f7"></div>
+        <script id="f7" type="text/aTpl">
             <!--甜点-->
             <div class="am-container ">
                 <div class="shopTitle ">
@@ -1821,7 +1794,7 @@
                                 class="text">核桃</b></span></a>
                     </div>
                     <a href="# ">
-                        <img src=""/>
+                        <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
                                 零食大礼包开抢啦
@@ -1837,13 +1810,13 @@
                 <div class="am-u-sm-7 am-u-md-5 am-u-lg-2 text-two big">
                     <div class="outer-con ">
                         <div class="title ">
-
+                            {{ aTpl.items[0] ? aTpl.items[0].category_name: '' }}
                         </div>
                         <div class="sub-title ">
-
+                            ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src=""/></a>
+                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1851,14 +1824,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[1] ? aTpl.items[1].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=" "/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1866,14 +1838,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[2] ? aTpl.items[2].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=" "/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1881,14 +1852,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[3] ? aTpl.items[3].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1896,14 +1866,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[4] ? aTpl.items[4].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1911,21 +1880,20 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                   {{ aTpl.items[5] ? aTpl.items[5].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                    ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
-
             <div class="clear "></div>
-        </div>
-        <div class="f8">
+        </script>
+        <div class="f8"></div>
+        <script id="f8" type="text/aTpl">
             <!--甜点-->
             <div class="am-container ">
                 <div class="shopTitle ">
@@ -1967,7 +1935,7 @@
                                 class="text">核桃</b></span></a>
                     </div>
                     <a href="# ">
-                        <img src=""/>
+                        <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
                                 零食大礼包开抢啦
@@ -1983,13 +1951,13 @@
                 <div class="am-u-sm-7 am-u-md-5 am-u-lg-2 text-two big">
                     <div class="outer-con ">
                         <div class="title ">
-
+                            {{ aTpl.items[0] ? aTpl.items[0].category_name: '' }}
                         </div>
                         <div class="sub-title ">
-
+                            ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src=""/></a>
+                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1997,14 +1965,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[1] ? aTpl.items[1].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -2012,14 +1979,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[2] ? aTpl.items[2].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -2027,14 +1993,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[3] ? aTpl.items[3].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -2042,14 +2007,13 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                {{ aTpl.items[4] ? aTpl.items[4].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                 ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src="images/3.jpg"/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -2057,20 +2021,18 @@
                         <div class="boxLi"></div>
                         <div class="outer-con ">
                             <div class="title ">
-
+                                   {{ aTpl.items[5] ? aTpl.items[5].category_name: '' }}
                             </div>
                             <div class="sub-title ">
-
+                                    ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
-
                         </div>
-                        <a href="javascript:void(0);"><img src=""/></a>
+                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
-
             <div class="clear "></div>
-        </div>
+        </script>
 
         <div class="footer ">
             <div class="footer-hd ">
