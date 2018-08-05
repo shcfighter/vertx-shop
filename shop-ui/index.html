@@ -14,10 +14,10 @@
     <link href="css/skin.css" rel="stylesheet" type="text/css"/>
     <script src="AmazeUI-2.4.2/assets/js/jquery.min.js"></script>
     <script src="AmazeUI-2.4.2/assets/js/amazeui.min.js"></script>
-    <script src="js/aTpl.min.js"></script>
     <script src="js/commons.js"></script>
     <script src="js/dynamic/search.input.js"></script>
     <script src="js/xcConfirm.js"></script>
+    <script src="js/aTpl.min.js"></script>
     <script src="js/dynamic/index.js"></script>
 </head>
 <body>
@@ -58,10 +58,12 @@
     <!--悬浮搜索框-->
 
     <div class="nav white">
-        <div class="logo"><img src="images/logo.png"/></div>
-        <div class="logoBig">
-            <li><img src="images/logobig.png"/></li>
-        </div>
+        <a href="/index.html"><div class="logo"><img src="images/logo.png"/></div></a>
+        <a href="/index.html">
+            <div class="logoBig">
+                <li><img src="images/logobig.png"/></li>
+            </div>
+        </a>
 
         <div class="search-bar pr">
             <div>
@@ -944,7 +946,7 @@
                         <a class="outer" href="javascript:void(0);"><span class="inner"><b
                                 class="text">核桃</b></span></a>
                     </div>
-                    <a href="# ">
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[6] ? aTpl.items[6].commodity_id: '' }}">
                         <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
@@ -967,7 +969,7 @@
                             ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[0] ? aTpl.items[0].commodity_id: '' }}"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -981,7 +983,7 @@
                                 ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[1] ? aTpl.items[1].commodity_id: '' }}"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -995,7 +997,7 @@
                                  ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[2] ? aTpl.items[2].commodity_id: '' }}"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1009,7 +1011,7 @@
                                 ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[3] ? aTpl.items[3].commodity_id: '' }}"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1023,7 +1025,7 @@
                                  ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[4] ? aTpl.items[4].commodity_id: '' }}"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1037,7 +1039,7 @@
                                     ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
@@ -1085,7 +1087,7 @@
                         <a class="outer" href="javascript:void(0);"><span class="inner"><b
                                 class="text">核桃</b></span></a>
                     </div>
-                    <a href="# ">
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[6] ? aTpl.items[6].commodity_id: '' }}">
                         <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
@@ -1108,7 +1110,7 @@
                             ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[0] ? aTpl.items[0].commodity_id: '' }}"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1122,7 +1124,7 @@
                                 ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[1] ? aTpl.items[1].commodity_id: '' }}"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1136,7 +1138,7 @@
                                  ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[2] ? aTpl.items[2].commodity_id: '' }}"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1150,7 +1152,7 @@
                                 ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[3] ? aTpl.items[3].commodity_id: '' }}"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1164,7 +1166,7 @@
                                  ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[4] ? aTpl.items[4].commodity_id: '' }}"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1178,7 +1180,7 @@
                                     ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
@@ -1227,7 +1229,7 @@
                         <a class="outer" href="javascript:void(0);"><span class="inner"><b
                                 class="text">核桃</b></span></a>
                     </div>
-                    <a href="# ">
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[6] ? aTpl.items[6].commodity_id: '' }}">
                         <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
@@ -1250,7 +1252,7 @@
                             ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[0] ? aTpl.items[0].commodity_id: '' }}"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1264,7 +1266,7 @@
                                 ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[1] ? aTpl.items[1].commodity_id: '' }}"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1278,7 +1280,7 @@
                                  ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[2] ? aTpl.items[2].commodity_id: '' }}"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1292,7 +1294,7 @@
                                 ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[3] ? aTpl.items[3].commodity_id: '' }}"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1306,7 +1308,7 @@
                                  ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[4] ? aTpl.items[4].commodity_id: '' }}"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1320,7 +1322,7 @@
                                     ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
@@ -1391,7 +1393,7 @@
                             ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[0] ? aTpl.items[0].commodity_id: '' }}"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1405,7 +1407,7 @@
                                 ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[1] ? aTpl.items[1].commodity_id: '' }}"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1419,7 +1421,7 @@
                                  ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[2] ? aTpl.items[2].commodity_id: '' }}"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1433,7 +1435,7 @@
                                 ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[3] ? aTpl.items[3].commodity_id: '' }}"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1447,7 +1449,7 @@
                                  ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[4] ? aTpl.items[4].commodity_id: '' }}"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1461,7 +1463,7 @@
                                     ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
@@ -1510,7 +1512,7 @@
                         <a class="outer" href="javascript:void(0);"><span class="inner"><b
                                 class="text">核桃</b></span></a>
                     </div>
-                    <a href="# ">
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}">
                         <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
@@ -1533,7 +1535,7 @@
                             ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[0] ? aTpl.items[0].commodity_id: '' }}"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1547,7 +1549,7 @@
                                 ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[1] ? aTpl.items[1].commodity_id: '' }}"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1561,7 +1563,7 @@
                                  ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[2] ? aTpl.items[2].commodity_id: '' }}"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1575,7 +1577,7 @@
                                 ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[3] ? aTpl.items[3].commodity_id: '' }}"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1589,7 +1591,7 @@
                                  ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[4] ? aTpl.items[4].commodity_id: '' }}"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1603,7 +1605,7 @@
                                     ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
@@ -1651,7 +1653,7 @@
                         <a class="outer" href="javascript:void(0);"><span class="inner"><b
                                 class="text">核桃</b></span></a>
                     </div>
-                    <a href="# ">
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[6] ? aTpl.items[6].commodity_id: '' }}">
                         <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
@@ -1674,7 +1676,7 @@
                             ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[0] ? aTpl.items[0].commodity_id: '' }}"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1688,7 +1690,7 @@
                                 ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[1] ? aTpl.items[1].commodity_id: '' }}"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1702,7 +1704,7 @@
                                  ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[2] ? aTpl.items[2].commodity_id: '' }}"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1716,7 +1718,7 @@
                                 ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[3] ? aTpl.items[3].commodity_id: '' }}"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1730,7 +1732,7 @@
                                  ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[4] ? aTpl.items[4].commodity_id: '' }}"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1744,7 +1746,7 @@
                                     ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
@@ -1793,7 +1795,7 @@
                         <a class="outer" href="javascript:void(0);"><span class="inner"><b
                                 class="text">核桃</b></span></a>
                     </div>
-                    <a href="# ">
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[6] ? aTpl.items[6].commodity_id: '' }}">
                         <img src="{{ aTpl.items[6] ? aTpl.items[6].image_url[0]: '' }}"/>
                         <div class="outer-con ">
                             <div class="title ">
@@ -1816,7 +1818,7 @@
                             ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[0] ? aTpl.items[0].commodity_id: '' }}"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1830,7 +1832,7 @@
                                 ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[1] ? aTpl.items[1].commodity_id: '' }}"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1844,7 +1846,7 @@
                                  ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[2] ? aTpl.items[2].commodity_id: '' }}"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1858,7 +1860,7 @@
                                 ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[3] ? aTpl.items[3].commodity_id: '' }}"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1872,7 +1874,7 @@
                                  ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[4] ? aTpl.items[4].commodity_id: '' }}"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1886,7 +1888,7 @@
                                     ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
@@ -1957,7 +1959,7 @@
                             ￥{{ aTpl.items[0] ? aTpl.items[0].price: '' }}
                         </div>
                     </div>
-                    <a href="javascript:void(0);"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
+                    <a href="/introduction.html?commodity_id={{ aTpl.items[0] ? aTpl.items[0].commodity_id: '' }}"><img src="{{ aTpl.items[0] ? aTpl.items[0].image_url[0]: '' }}"/></a>
                 </div>
 
                 <li>
@@ -1971,7 +1973,7 @@
                                 ￥{{ aTpl.items[1] ? aTpl.items[1].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[1] ? aTpl.items[1].commodity_id: '' }}"><img src="{{ aTpl.items[1] ? aTpl.items[1].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1985,7 +1987,7 @@
                                  ￥{{ aTpl.items[2] ? aTpl.items[2].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[2] ? aTpl.items[2].commodity_id: '' }}"><img src="{{ aTpl.items[2] ? aTpl.items[2].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -1999,7 +2001,7 @@
                                 ￥{{ aTpl.items[3] ? aTpl.items[3].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[3] ? aTpl.items[3].commodity_id: '' }}"><img src="{{ aTpl.items[3] ? aTpl.items[3].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -2013,7 +2015,7 @@
                                  ￥{{ aTpl.items[4] ? aTpl.items[4].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[4] ? aTpl.items[4].commodity_id: '' }}"><img src="{{ aTpl.items[4] ? aTpl.items[4].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
                 <li>
@@ -2027,7 +2029,7 @@
                                     ￥{{ aTpl.items[5] ? aTpl.items[5].price: '' }}
                             </div>
                         </div>
-                        <a href="javascript:void(0);"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
+                        <a href="/introduction.html?commodity_id={{ aTpl.items[5] ? aTpl.items[5].commodity_id: '' }}"><img src="{{ aTpl.items[5] ? aTpl.items[5].image_url[0]: '' }}"/></a>
                     </div>
                 </li>
             </div>
