@@ -7,10 +7,12 @@
     "timeout": 10000,
     "max-failures": 5
   },
-  "url": "jdbc:postgresql://111.231.132.168:5432/vertx_shop",
-  "driver_class": "org.postgresql.Driver",
-  "max_pool_size": 50,
-  "user": "postgres",
+  "provider_class": "io.vertx.ext.jdbc.spi.impl.HikariCPDataSourceProvider",
+  "jdbcUrl": "jdbc:postgresql://111.231.132.168:5432/vertx_shop",
+  "driverClassName": "org.postgresql.Driver",
+  "username": "postgres",
   "password": "h123456",
+  "maximumPoolSize": 50,
+  "min_pool_size": 10,
   "tcpKeepAlive ": true
 }
