@@ -19,20 +19,9 @@ public class RestRefundRxVerticle extends RestAPIRxVerticle {
 
     private static final Logger LOGGER = LogManager.getLogger(RestRefundRxVerticle.class);
     private final IOrderHandler orderHandler;
-    private final Router router;
 
-    public RestRefundRxVerticle(IOrderHandler orderHandler, Router router) {
+    public RestRefundRxVerticle(IOrderHandler orderHandler) {
         this.orderHandler = orderHandler;
-        this.router = router;
-    }
-
-    @Override
-    public void start() throws Exception {
-        super.start();
-        // API route handler
-        router.put("/refund/:orderId").handler(context -> this.requireLogin(context, this::refundHandler));
-        router.put("/undoRefund/:orderId").handler(context -> this.requireLogin(context, this::undoRefundHandler));
-
     }
 
     /**
@@ -40,7 +29,7 @@ public class RestRefundRxVerticle extends RestAPIRxVerticle {
      * @param context
      * @param principal
      */
-    private void refundHandler(RoutingContext context, JsonObject principal) {
+    protected void refundHandler(RoutingContext context, JsonObject principal) {
         final Long userId = principal.getLong("userId");
         if (Objects.isNull(userId)) {
             LOGGER.error("登录id【{}】不存在", userId);
@@ -67,7 +56,7 @@ public class RestRefundRxVerticle extends RestAPIRxVerticle {
      * @param context
      * @param principal
      */
-    private void undoRefundHandler(RoutingContext context, JsonObject principal) {
+    protected void undoRefundHandler(RoutingContext context, JsonObject principal) {
         final Long userId = principal.getLong("userId");
         if (Objects.isNull(userId)) {
             LOGGER.error("登录id【{}】不存在", userId);

@@ -4,40 +4,17 @@
 $(function() {
     var pageSize = 12;
 
+    var key = getQueryVariable("keyword");
+    if(undefined != key && null != key && "" != key){
+        $("input[name='index_none_header_sysc']").val(decodeURI(key));
+    }
+    $("#ai-topsearch").click();
+
     /**
      * 搜索
      */
     $("#ai-topsearch").click(function() {
         search();
-
-        /**
-         * 猜你喜欢
-         */
-        $.ajax({
-            type: 'GET',
-            contentType: "application/json;",
-            url: domain + "api/search/findFavoriteCommodity",
-            success: function(result){
-                if(result.status == 0){
-                    var items = result.items;
-                    var $li = $(".side-title");
-                    $li.siblings().html("");
-                    $.each(items, function(index, value) {
-                        $li.after("<li><div class=\"i-pic check\" commodity_id=\"" + value.commodity_id + "\">" +
-                            "<img src=\"" + value.image_url[0] + "\"/>" +
-                            "<p class=\"title fl\">" + value.commodity_name + "</p>" +
-                            "<p class=\"price fl\">" +
-                            "<b>¥</b><strong>" + value.price + "</strong>" +
-                            "</p><p class=\"number fl\">销量<span>" +
-                            value.sales_volume +
-                            "</span></p></div></li>");
-                    });
-                }
-            },
-            error: function () {
-                console.log("网络异常");
-            }
-        });
     });
 
     function search(){
@@ -104,18 +81,41 @@ $(function() {
     }
 
     /**
+     * 猜你喜欢
+     */
+    $.ajax({
+        type: 'GET',
+        contentType: "application/json;",
+        url: domain + "api/search/findFavoriteCommodity",
+        success: function(result){
+            if(result.status == 0){
+                var items = result.items;
+                var $li = $(".side-title");
+                $li.siblings().html("");
+                $.each(items, function(index, value) {
+                    $li.after("<li><div class=\"i-pic check\" commodity_id=\"" + value.commodity_id + "\">" +
+                        "<img src=\"" + value.image_url[0] + "\"/>" +
+                        "<p class=\"title fl\">" + value.commodity_name + "</p>" +
+                        "<p class=\"price fl\">" +
+                        "<b>¥</b><strong>" + value.price + "</strong>" +
+                        "</p><p class=\"number fl\">销量<span>" +
+                        value.sales_volume +
+                        "</span></p></div></li>");
+                });
+            }
+        },
+        error: function () {
+            console.log("网络异常");
+        }
+    });
+
+    /**
      * 点击具体商品
      */
     $(".i-pic").live("click", function () {
         var commodity_id = $(this).attr("commodity_id");
         window.location.href = "/introduction.html?commodity_id=" + commodity_id;
     });
-
-    var key = getQueryVariable("keyword");
-    if(undefined != key && null != key && "" != key){
-        $("input[name='index_none_header_sysc']").val(decodeURI(key));
-    }
-    $("#ai-topsearch").click();
 
     /**
      * enter键自动提交

@@ -95,8 +95,9 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         }
         final int page = Optional.ofNullable(params.getInteger("page")).orElse(1);
         long start = System.currentTimeMillis();
+        LOGGER.info("搜索商品线程：{}", Thread.currentThread().getName());
         commodityService.searchCommodity(keyword, Optional.ofNullable(params.getInteger("pageSize")).orElse(12), page, handler -> {
-            LOGGER.info("search time:{}", System.currentTimeMillis() - start);
+            LOGGER.info("查询商品结束线程：{}, search time:{}", Thread.currentThread().getName(), System.currentTimeMillis() - start);
             if(handler.failed()){
                 this.returnWithFailureMessage(context, "暂无该商品！");
                 LOGGER.error("搜索商品异常：", handler.cause());

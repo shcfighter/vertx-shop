@@ -37,6 +37,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
     public void start() throws Exception {
         super.start();
         this.orderHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IOrderHandler.ORDER_SERVICE_ADDRESS).build(IOrderHandler.class);
+        final RestRefundRxVerticle restRefundRxVerticle = new RestRefundRxVerticle(orderHandler);
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
@@ -48,9 +49,8 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
         router.get("/findPreparedOrder/:orderId").handler(context -> this.requireLogin(context, this::findPreparedOrderHandler));
         router.get("/getOrder/:orderId").handler(context -> this.requireLogin(context, this::getOrderHandler));
         router.get("/getAddress/:orderId").handler(context -> this.requireLogin(context, this::getAddressHandler));
-        /*router.put("/refund/:orderId").handler(context -> this.requireLogin(context, this::refundHandler));
-        router.put("/undoRefund/:orderId").handler(context -> this.requireLogin(context, this::undoRefundHandler));*/
-        vertx.getDelegate().deployVerticle(new RestRefundRxVerticle(orderHandler, router));
+        router.put("/refund/:orderId").handler(context -> this.requireLogin(context, restRefundRxVerticle::refundHandler));
+        router.put("/undoRefund/:orderId").handler(context -> this.requireLogin(context, restRefundRxVerticle::undoRefundHandler));
         //全局异常处理
         this.globalVerticle(router);
 
@@ -371,59 +371,5 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             this.returnWithSuccessMessage(context, "查询订单信息成功！", orderJson);
         });
     }
-
-    /**
-     * 退货
-     * @param context
-     * @param principal
-     */
-    /*private void refundHandler(RoutingContext context, JsonObject principal) {
-        final Long userId = principal.getLong("userId");
-        if (Objects.isNull(userId)) {
-            LOGGER.error("登录id【{}】不存在", userId);
-            this.returnWithFailureMessage(context, "用户登录信息不存在");
-            return;
-        }
-        final String orderId = context.pathParam("orderId");
-        final JsonObject params = context.getBodyAsJson();
-        Future<UpdateResult> future = Future.future();
-        orderHandler.refund(Long.parseLong(orderId), userId, params.getInteger("refund_type"), params.getString("refund_reason"),
-                params.getString("refund_money"), params.getString("refund_description"), future);
-        future.setHandler(handler -> {
-            if (handler.failed()) {
-                LOGGER.error("退货申请提交失败：", handler.cause());
-                this.returnWithFailureMessage(context, "退货申请提交失败！");
-                return ;
-            }
-            this.returnWithSuccessMessage(context, "退货申请提交成功！");
-        });
-    }
-
-    *//**
-     * 取消退货
-     * @param context
-     * @param principal
-     *//*
-    private void undoRefundHandler(RoutingContext context, JsonObject principal) {
-        final Long userId = principal.getLong("userId");
-        if (Objects.isNull(userId)) {
-            LOGGER.error("登录id【{}】不存在", userId);
-            this.returnWithFailureMessage(context, "用户登录信息不存在");
-            return;
-        }
-        final String orderId = context.pathParam("orderId");
-        final JsonObject params = context.getBodyAsJson();
-        Future<UpdateResult> future = Future.future();
-        orderHandler.refund(Long.parseLong(orderId), userId, params.getInteger("refund_type"), params.getString("refund_reason"),
-                params.getString("refund_money"), params.getString("refund_description"), future);
-        future.setHandler(handler -> {
-            if (handler.failed()) {
-                LOGGER.error("退货申请提交失败：", handler.cause());
-                this.returnWithFailureMessage(context, "退货申请提交失败！");
-                return ;
-            }
-            this.returnWithSuccessMessage(context, "退货申请提交成功！");
-        });
-    }*/
 
 }
