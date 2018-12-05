@@ -25,8 +25,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java-version>9</java-version>
-        <vertx-version>3.5.3</vertx-version>
+        <java-version>11</java-version>
+        <vertx-version>3.6.0</vertx-version>
         <mysql-version>6.0.6</mysql-version>
         <log4j-version>2.10.0</log4j-version>
         <slf4j-log4j12-version>1.7.25</slf4j-log4j12-version>
@@ -74,11 +74,6 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-auth-oauth2</artifactId>
-            <version>${vertx-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-hazelcast</artifactId>
             <version>${vertx-version}</version>
         </dependency>
         <dependency>

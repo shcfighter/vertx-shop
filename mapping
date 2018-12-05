@@ -17,7 +17,7 @@
                "type": "long"
             },
             "commodity_name": {
-		"analyzer": "ik_smart",
+		        "analyzer": "ik_smart",
                "type": "text"
             },
             "brand_id": {
@@ -32,8 +32,8 @@
             "category_name": {
                "type": "keyword"
             },
-	    "large_class": {
-		"analyzer": "ik_smart",
+	        "large_class": {
+		        "analyzer": "ik_smart",
                "type": "text"
             },
             "price": {
@@ -55,7 +55,7 @@
                "type": "integer"
             },
             "commodity_params": {
-		    "analyzer": "ik_smart",
+		        "analyzer": "ik_smart",
                 "type": "text"
             },
             "status": {
@@ -82,11 +82,11 @@
                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
             },
             "description": {
-		"analyzer": "ik_smart",
+		        "analyzer": "ik_smart",
                "type": "text"
             },
             "remarks": {
-		"analyzer": "ik_smart",
+		        "analyzer": "ik_smart",
                "type": "text"
             },
             "versions": {

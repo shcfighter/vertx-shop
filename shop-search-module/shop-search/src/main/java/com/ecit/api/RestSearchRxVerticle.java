@@ -130,7 +130,22 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
     private void searchLargeClassHandler(RoutingContext context){
         final JsonObject params = context.getBodyAsJson();
         final String key = params.getString("keyword");
-        redis.get("search_large_class_key_" + key, redisHandler -> {
+        commodityService.searchLargeClassCommodity(key, handler -> {
+            if(handler.failed()){
+                this.returnWithFailureMessage(context, "暂无该商品！");
+                LOGGER.error("搜索商品异常：", handler.cause());
+                return ;
+            } else {
+                if(Objects.isNull(handler.result())){
+                    this.returnWithFailureMessage(context, "暂无该商品！");
+                    return ;
+                }
+                final SearchResponse result = handler.result();
+                final List<JsonObject> resultList = result.getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList());
+                this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultList);
+            }
+        });
+        /*redis.get("search_large_class_key_" + key, redisHandler -> {
             if(redisHandler.succeeded() && Objects.nonNull(redisHandler.result())){
                 List<JsonObject> resultList = Json.decodeValue(redisHandler.result(), List.class);
                 LOGGER.info("redis cache: {}", Thread.currentThread().getName());
@@ -155,7 +170,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     }
                 });
             }
-        });
+        });*/
 
     }
 
