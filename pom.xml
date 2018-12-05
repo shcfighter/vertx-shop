@@ -30,11 +30,11 @@
         <mysql-version>6.0.6</mysql-version>
         <log4j-version>2.10.0</log4j-version>
         <slf4j-log4j12-version>1.7.25</slf4j-log4j12-version>
-        <lombok-version>1.16.20</lombok-version>
         <commons-lang3.version>3.7</commons-lang3.version>
         <guava-version>24.0-jre</guava-version>
         <es.version>6.2.2</es.version>
-        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>3.2.0</maven-shade-plugin.version>
         <mustache.java.version>0.9.5</mustache.java.version>
     </properties>
 
@@ -151,12 +151,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok-version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

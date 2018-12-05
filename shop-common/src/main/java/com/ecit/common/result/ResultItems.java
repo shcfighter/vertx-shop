@@ -2,11 +2,7 @@ package com.ecit.common.result;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.vertx.core.json.JsonObject;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ResultItems<T> {
 
@@ -26,6 +22,46 @@ public class ResultItems<T> {
 	private String message;
 
 	private int page = 0;
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	public T getItems() {
+		return items;
+	}
+
+	public void setItems(T items) {
+		this.items = items;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
 
 	public ResultItems() {
 	}
