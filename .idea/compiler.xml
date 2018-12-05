@@ -7,15 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processor name="io.vertx.serviceproxy.ServiceProxyProcessor" />
-        <module name="shop-common" />
-        <module name="shop-message-interface" />
-        <module name="shop-order" />
         <module name="shop-order (1)" />
-        <module name="shop-order-interface" />
-        <module name="shop-pay" />
-        <module name="shop-search-interface" />
-        <module name="shop-user" />
-        <module name="shop-user-interface" />
       </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -32,23 +24,76 @@
         <processor name="io.vertx.codegen.CodeGenProcessor" />
         <module name="shop-elasticsearch-service" />
       </profile>
+      <profile name="Annotation profile for shop-pay" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-pay" />
+      </profile>
+      <profile name="Annotation profile for shop-common" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-common" />
+      </profile>
+      <profile name="Annotation profile for shop-user" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-user" />
+      </profile>
+      <profile name="Annotation profile for shop-user-interface" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-user-interface" />
+      </profile>
+      <profile name="Annotation profile for shop-search-interface" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-search-interface" />
+      </profile>
+      <profile name="Annotation profile for shop-message-interface" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-message-interface" />
+      </profile>
+      <profile name="Annotation profile for shop-order" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-order" />
+      </profile>
+      <profile name="Annotation profile for shop-order-interface" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="shop-order-interface" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="9">
-      <module name="shop-account" target="9" />
-      <module name="shop-common" target="9" />
-      <module name="shop-elasticsearch-service" target="9" />
-      <module name="shop-gateway" target="9" />
-      <module name="shop-message" target="9" />
-      <module name="shop-message-interface" target="9" />
-      <module name="shop-order" target="9" />
-      <module name="shop-order (1)" target="9" />
-      <module name="shop-order-interface" target="9" />
-      <module name="shop-order-module" target="9" />
-      <module name="shop-pay" target="9" />
-      <module name="shop-search" target="9" />
-      <module name="shop-search-interface" target="9" />
-      <module name="shop-user" target="9" />
-      <module name="shop-user-interface" target="9" />
+    <bytecodeTargetLevel target="11">
+      <module name="shop-common" target="11" />
+      <module name="shop-elasticsearch-service" target="11" />
+      <module name="shop-gateway" target="11" />
+      <module name="shop-message" target="11" />
+      <module name="shop-message-interface" target="11" />
+      <module name="shop-order" target="11" />
+      <module name="shop-order-interface" target="11" />
+      <module name="shop-pay" target="11" />
+      <module name="shop-search" target="11" />
+      <module name="shop-search-interface" target="11" />
+      <module name="shop-user" target="11" />
+      <module name="shop-user-interface" target="11" />
       <module name="vertx-shop" target="1.5" />
     </bytecodeTargetLevel>
   </component>

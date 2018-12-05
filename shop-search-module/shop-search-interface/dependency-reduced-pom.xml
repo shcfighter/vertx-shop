@@ -19,7 +19,7 @@
           <target>${java-version}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
           <annotationProcessors>
-            <annotationProcessor>io.vertx.serviceproxy.ServiceProxyProcessor</annotationProcessor>
+            <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
           </annotationProcessors>
         </configuration>
       </plugin>
