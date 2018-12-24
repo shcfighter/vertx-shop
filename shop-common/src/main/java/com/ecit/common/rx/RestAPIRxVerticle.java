@@ -1,6 +1,5 @@
 package com.ecit.common.rx;
 
-import com.ecit.common.constants.Constants;
 import com.ecit.common.result.ResultItems;
 import io.reactivex.Single;
 import io.vertx.core.AsyncResult;

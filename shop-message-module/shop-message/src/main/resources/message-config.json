@@ -78,5 +78,10 @@
     "username": "guest",
     "password": "guest",
     "virtualHost": "/"
+  },
+  "redis": {
+    "host": "111.231.132.168",
+    "port": 6379,
+    "auth": "h123456"
   }
 }

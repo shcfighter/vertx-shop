@@ -1,5 +1,7 @@
 package com.ecit.api;
 
+import com.ecit.common.auth.ShopUserSessionHandler;
+import com.ecit.common.constants.Constants;
 import com.ecit.common.enums.RegisterType;
 import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
@@ -16,7 +18,6 @@ import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,7 +45,10 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         // API route handler
         router.post("/register").handler(this::registerHandler);
         router.get("/activate/:loginName/:code").handler(this::activateHandler);
-        router.put("/changepwd").handler(context -> this.requireLogin(context, this::changePwdHandler));
+
+        router.getDelegate().route().handler(ShopUserSessionHandler.create(vertx.getDelegate(), this.config()));
+
+        router.put("/changepwd").handler(this::changePwdHandler);
         router.put("/changeEmail").handler(context -> this.requireLogin(context, this::changeEmailHandler));
         router.get("/getUserInfo").handler(context -> this.requireLogin(context, this::getUserInfoHandler));
         router.post("/saveUserInfo").handler(context -> this.requireLogin(context, this::saveUserInfoHandler));
@@ -204,47 +208,21 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
      * 修改密码
      * @param context 上下文
      */
-    private void changePwdHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        if(Objects.isNull(userId) ){
-            LOGGER.error("登录id【{}】不存在", userId);
-            this.returnWithFailureMessage(context, "登录id【" + userId + "】不存在");
-            return ;
-        }
+    private void changePwdHandler(RoutingContext context){
         JsonObject params = context.getBodyAsJson();
         if (!StringUtils.equals(params.getString("pwd"), params.getString("confirm_pwd"))) {
             LOGGER.error("新密码和确认密码不一致！");
             this.returnWithFailureMessage(context, "新密码和确认密码不一致！");
             return ;
         }
-        userHandler.getMemberById(userId, handler -> {
-            if(handler.failed()){
-                LOGGER.error("获取用户信息失败", handler.cause());
-                this.returnWithFailureMessage(context, "修改密码失败!");
-                return ;
-            }
-            JsonObject user = handler.result();
-            final String originalPwd = hashStrategy.computeHash(params.getString("original_pwd"), user.getString("salt"), -1);
-            if(!StringUtils.equals(originalPwd, user.getString("password"))){
-                LOGGER.error("原密码错误！");
-                this.returnWithFailureMessage(context, "原密码错误！");
-                return ;
-            }
-
-            /**
-             * 密码加密
-             */
-            final String password = hashStrategy.computeHash(params.getString("pwd"), user.getString("salt"), -1);
-            userHandler.changePwd(userId, password,
-                    user.getLong("versions"), handler2 -> {
-                        if(handler2.failed()){
-                            LOGGER.error("修改密码失败", handler2.cause());
-                            this.returnWithFailureMessage(context, "修改密码失败!");
-                            return ;
-                        }
-                        certifiedHandler.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler3 -> {});
-                        this.returnWithSuccessMessage(context, "修改密码成功");
-                    });
+        String token = context.request().getHeader(Constants.TOKEN);
+        userHandler.changePwd(token, params, hashStrategy, handler -> {
+           if(handler.failed()){
+               this.returnWithFailureMessage(context, "修改密码失败，请重试！");
+               return ;
+           }
+           this.returnWithSuccessMessage(context, "修改密码成功！");
+           return ;
         });
     }
 

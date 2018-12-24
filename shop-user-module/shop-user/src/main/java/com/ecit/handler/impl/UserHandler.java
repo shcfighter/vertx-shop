@@ -5,6 +5,7 @@ import com.ecit.common.enums.IsDeleted;
 import com.ecit.common.enums.RegisterType;
 import com.ecit.common.utils.FormatUtils;
 import com.ecit.common.utils.JsonUtils;
+import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.CertifiedType;
 import com.ecit.enmu.UserStatus;
@@ -34,9 +35,15 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
 
     private static final Logger LOGGER = LogManager.getLogger(UserHandler.class);
     final Vertx vertx;
+    private IUserHandler userHandler;
+    private ICertifiedHandler certifiedHandler;
+    private IAddressHandler addressHandler;
     public UserHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
         this.vertx = vertx;
+        this.userHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IUserHandler.USER_SERVICE_ADDRESS).build(IUserHandler.class);
+        this.certifiedHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICertifiedHandler.CERTIFIED_SERVICE_ADDRESS).build(ICertifiedHandler.class);
+        this.addressHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IAddressHandler.ADDRESS_SERVICE_ADDRESS).build(IAddressHandler.class);
     }
 
     @Override
@@ -231,6 +238,40 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
             messageService.updateMessage(mobile, RegisterType.mobile, messageHandler -> {});
             return future;
         }).setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public IUserHandler changePwd(String token, JsonObject params, ShopHashStrategy hashStrategy, Handler<AsyncResult<Integer>> handler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<Integer> resultFuture = sessionFuture.compose(session -> {
+            if(JsonUtils.isNull(session)){
+                return Future.failedFuture("current user fail");
+            }
+            final long userId = session.getLong("userId");
+            Future<JsonObject> userFuture = Future.future();
+            userHandler.getMemberById(userId, userFuture);
+            return userFuture.compose(user -> {
+                final String originalPwd = hashStrategy.computeHash(params.getString("original_pwd"), user.getString("salt"), -1);
+                if(!StringUtils.equals(originalPwd, user.getString("password"))){
+                    LOGGER.error("原密码错误！");
+                    return Future.failedFuture("原密码错误！");
+                }
+                /**
+                 * 密码加密
+                 */
+                final String password = hashStrategy.computeHash(params.getString("pwd"), user.getString("salt"), -1);
+                Future<Integer> changePwdFuture = Future.future();
+                userHandler.changePwd(userId, password, user.getLong("versions"), changePwdFuture);
+                return changePwdFuture.compose(change -> {
+                    if(change > 0){
+                        certifiedHandler.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler3 -> {});
+                    }
+                    return changePwdFuture;
+                });
+            });
+        });
+        resultFuture.setHandler(handler);
         return this;
     }
 

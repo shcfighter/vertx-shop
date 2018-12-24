@@ -5,7 +5,7 @@
 
 package com.ecit.common.utils.salt;
 
-import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
@@ -14,13 +14,13 @@ public interface ShopHashStrategy {
 
     String computeHash(String var1, String var2, int var3);
 
-    String getHashedStoredPwd(JsonArray var1);
+    String getHashedStoredPwd(JsonObject var1);
 
-    String getSalt(JsonArray var1);
+    String getSalt(JsonObject var1);
 
-    Long getUserId(JsonArray var1);
+    Long getUserId(JsonObject var1);
 
-    String getLoginName(JsonArray var1);
+    String getLoginName(JsonObject var1);
 
     void setNonces(List<String> var1);
 }

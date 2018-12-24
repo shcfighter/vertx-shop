@@ -1,26 +1,26 @@
 package com.ecit.gateway;
 
-import com.ecit.common.RestAPIVerticle;
+import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.IpUtils;
-import com.ecit.constants.UserSql;
 import com.ecit.enmu.UserStatus;
-import com.ecit.gateway.auth.ShopAuth;
-import com.ecit.gateway.auth.impl.ShopUser;
+import com.ecit.gateway.auth.ShopAuthHandler;
 import com.hazelcast.util.CollectionUtil;
 import com.hazelcast.util.UuidUtil;
 import io.vertx.core.Future;
-import io.vertx.core.file.FileSystem;
-import io.vertx.core.http.*;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
-import io.vertx.ext.jdbc.JDBCClient;
-import io.vertx.ext.web.FileUpload;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.UserSessionHandler;
+import io.vertx.reactivex.core.file.FileSystem;
+import io.vertx.reactivex.core.http.HttpClient;
+import io.vertx.reactivex.core.http.HttpClientRequest;
+import io.vertx.reactivex.core.http.HttpServerResponse;
+import io.vertx.reactivex.ext.web.FileUpload;
+import io.vertx.reactivex.ext.web.Router;
+import io.vertx.reactivex.ext.web.RoutingContext;
+import io.vertx.reactivex.ext.web.handler.BodyHandler;
+import io.vertx.reactivex.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.Record;
-import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.types.HttpEndpoint;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -33,22 +33,19 @@ import java.util.*;
  * This API gateway uses HTTP-HTTP pattern. It's also responsible for
  * load balance and failure handling.
  *
- * @author Eric Zhao
+ * @author shwang
  */
-public class APIGatewayVerticle extends RestAPIVerticle {
+public class APIGatewayVerticle extends RestAPIRxVerticle {
 
     private static final Logger LOGGER = LogManager.getLogger(APIGatewayVerticle.class);
     private static final int DEFAULT_PORT = 8787;
-
-    private ShopAuth shopAuthProvider;
-    private JDBCClient jdbcClient;
+    private ShopAuthHandler authHandler;
 
     @Override
     public void start(Future<Void> future) throws Exception {
         super.start();
 
-        jdbcClient = JDBCClient.createShared(vertx, this.config());
-        shopAuthProvider = ShopAuth.create(vertx, jdbcClient);
+        authHandler = ShopAuthHandler.create(vertx, this.config());
 
         // get HTTP host and port from configuration, or use default value
         String host = config().getString("api.gateway.http.address", "localhost");
@@ -56,12 +53,10 @@ public class APIGatewayVerticle extends RestAPIVerticle {
 
         Router router = Router.router(vertx);
         // cookie and session handler
-        this.enableLocalSession(router);
+        this.enableLocalSession(router, "shop_session");
         this.enableCorsSupport(router);
-
         // body handler
         router.route().handler(BodyHandler.create());
-        router.route().handler(UserSessionHandler.create(shopAuthProvider));
 
         // version handler
         router.get("/api/v").handler(this::apiVersion);
@@ -136,7 +131,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
      * @param path    relative path
      * @param client  relevant HTTP client
      */
-    private void doDispatch(RoutingContext context, String path, HttpClient client, Future<Object> cbFuture) {
+    private void doDispatch(RoutingContext context, String path, HttpClient client, io.vertx.reactivex.core.Future<Object> cbFuture) {
         HttpClientRequest toReq = client
                 .request(context.request().method(), path, response -> {
                     response.bodyHandler(body -> {
@@ -145,7 +140,7 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                         } else {
                             HttpServerResponse toRsp = context.response()
                                     .setStatusCode(response.statusCode());
-                            response.headers().forEach(header -> {
+                            response.getDelegate().headers().forEach(header -> {
                                 toRsp.putHeader(header.getKey(), header.getValue());
                             });
                             // send response
@@ -156,16 +151,14 @@ public class APIGatewayVerticle extends RestAPIVerticle {
                     });
                 });
         // set headers
-        context.request().headers().forEach(header -> {
+        context.request().getDelegate().headers().forEach(header -> {
             toReq.putHeader(header.getKey(), header.getValue());
         });
         context.cookies().forEach(cookie -> {
             toReq.putHeader(cookie.getName(), cookie.getValue());
         });
-        if (context.user() != null) {
-            toReq.putHeader("user-principal", context.user().principal().encode())
-                .putHeader("ip", IpUtils.getIpAddr(context.request()));
-        }
+        //set ip
+        toReq.putHeader("ip", IpUtils.getIpAddr(context.request()));
         // send request
         if (context.getBody() == null) {
             toReq.end();
@@ -223,18 +216,17 @@ public class APIGatewayVerticle extends RestAPIVerticle {
         final JsonObject params = context.getBodyAsJson();
         final String loginName = params.getString("loginName");
         LOGGER.info("用户【{}】登录系统", loginName);
-        shopAuthProvider.setAuthenticationQuery(UserSql.LOGIN_SQL);
-        shopAuthProvider.authenticate(new JsonObject().put("status", UserStatus.ACTIVATION.getStatus())
+        authHandler.login(new JsonObject().put("status", UserStatus.ACTIVATION.getStatus())
                 .put("loginName", loginName).put("password", params.getString("pwd")), handler -> {
             if (handler.succeeded()) {
-                ShopUser userSession = (ShopUser) handler.result();
-                context.setUser(userSession);
+                JsonObject userSession = handler.result();
+
                 if(Objects.isNull(userSession)){
                     LOGGER.info("用户【{}】登录，用户不存在", loginName);
                     this.returnWithFailureMessage(context, "用户名或密码错误");
                 } else {
-                    LOGGER.info("用户【{}】登录成功", userSession.principal());
-                    this.returnWithSuccessMessage(context, "登录成功", userSession.principal());
+                    LOGGER.info("用户【{}】登录成功", userSession);
+                    this.returnWithSuccessMessage(context, "登录成功", userSession);
                 }
             } else {
                 LOGGER.error("调用远程登录方法错误！", handler.cause());

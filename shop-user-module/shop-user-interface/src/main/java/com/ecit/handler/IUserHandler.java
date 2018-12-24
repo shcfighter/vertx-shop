@@ -1,5 +1,6 @@
 package com.ecit.handler;
 
+import com.ecit.common.utils.salt.ShopHashStrategy;
 import io.vertx.codegen.annotations.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -54,5 +55,6 @@ public interface IUserHandler {
     @Fluent
     IUserHandler bindMobile(long userId, String mobile, String code, Handler<AsyncResult<Integer>> handler);
 
-
+    @Fluent
+    IUserHandler changePwd(String token, JsonObject params, ShopHashStrategy hashStrategy, Handler<AsyncResult<Integer>> handler);
 }

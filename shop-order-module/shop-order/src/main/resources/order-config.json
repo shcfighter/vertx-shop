@@ -20,5 +20,10 @@
     "username":"shop_user",
     "password":"h123456",
     "db_name":"vertx_shop"
+  },
+  "redis": {
+    "host": "111.231.132.168",
+    "port": 6379,
+    "auth": "h123456"
   }
 }

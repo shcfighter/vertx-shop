@@ -3,6 +3,7 @@ package com.ecit.common.utils.salt;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxException;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.PRNG;
 
 import java.nio.charset.StandardCharsets;
@@ -46,20 +47,20 @@ public class DefaultHashStrategy
         }
     }
 
-    public String getHashedStoredPwd(JsonArray row) {
-        return row.getString(2);
+    public String getHashedStoredPwd(JsonObject row) {
+        return row.getString("pwd");
     }
 
-    public String getSalt(JsonArray row) {
-        return row.getString(3);
+    public String getSalt(JsonObject row) {
+        return row.getString("salt");
     }
 
-    public Long getUserId(JsonArray row) {
-        return Long.parseLong(row.getString(0));
+    public Long getUserId(JsonObject row) {
+        return Long.parseLong(row.getString("loginName"));
     }
 
-    public String getLoginName(JsonArray row) {
-        return row.getString(1);
+    public String getLoginName(JsonObject row) {
+        return row.getString("userId");
     }
 
     public void setNonces(List<String> nonces) {
