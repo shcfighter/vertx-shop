@@ -56,5 +56,5 @@ public interface IUserHandler {
     IUserHandler bindMobile(long userId, String mobile, String code, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IUserHandler changePwd(String token, JsonObject params, ShopHashStrategy hashStrategy, Handler<AsyncResult<Integer>> handler);
+    IUserHandler changePwdHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
 }

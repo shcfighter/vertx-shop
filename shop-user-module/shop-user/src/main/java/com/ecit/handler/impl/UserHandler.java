@@ -242,8 +242,9 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
     }
 
     @Override
-    public IUserHandler changePwd(String token, JsonObject params, ShopHashStrategy hashStrategy, Handler<AsyncResult<Integer>> handler) {
+    public IUserHandler changePwdHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
+        final ShopHashStrategy hashStrategy = (ShopHashStrategy) params.getValue("strategy");
         Future<Integer> resultFuture = sessionFuture.compose(session -> {
             if(JsonUtils.isNull(session)){
                 return Future.failedFuture("current user fail");

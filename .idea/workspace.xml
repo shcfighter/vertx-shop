@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b87a96f5-9f66-412e-b409-b8b4bce6104a" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/auth/package-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/auth/ShopUserSessionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/auth/ShopUserSessionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/shop-user-module/shop-user/target/" />
     <ignored path="$PROJECT_DIR$/shop-elasticsearch-service/target/" />
@@ -45,72 +46,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="RestUserRxVerticle.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="RestUserRxVerticle.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="51" selection-start-line="51" selection-end-line="51" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="APIGatewayVerticle.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="41" column="40" lean-forward="true" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserSessionHandler.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-web/3.6.0/vertx-web-3.6.0.jar!/io/vertx/ext/web/handler/UserSessionHandler.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserSessionHandlerImpl.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-web/3.6.0/vertx-web-3.6.0.jar!/io/vertx/ext/web/handler/impl/UserSessionHandlerImpl.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="46" column="13" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
-              <folding>
-                <element signature="e#627#628#0" expanded="true" />
-                <element signature="e#675#676#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ShopAuthHandlerImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthHandlerImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="80" column="13" lean-forward="true" selection-start-line="80" selection-start-column="13" selection-end-line="80" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ShopUserSessionHandler.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/auth/ShopUserSessionHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="3" column="45" lean-forward="true" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package-info.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/auth/package-info.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="7" column="46" lean-forward="true" selection-start-line="7" selection-start-column="46" selection-end-line="7" selection-end-column="46" />
+            <state relative-caret-position="317">
+              <caret line="219" column="36" selection-start-line="219" selection-start-column="36" selection-end-line="219" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -118,8 +58,31 @@
       <file leaf-file-name="UserHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="274" column="20" selection-start-line="274" selection-start-column="20" selection-end-line="274" selection-end-column="20" />
+            <state relative-caret-position="44">
+              <caret line="244" column="40" selection-start-line="244" selection-start-column="40" selection-end-line="244" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlowfishUtil.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/BlowfishUtil.java">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="BlowfishTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/BlowfishTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IUserHandler.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="464">
+              <caret line="58" column="33" selection-start-line="58" selection-start-column="17" selection-end-line="58" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -179,8 +142,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/shop-ui/person/address.html" />
-        <option value="$PROJECT_DIR$/shop-ui/search.html" />
         <option value="$PROJECT_DIR$/shop-ui/index.html" />
         <option value="$PROJECT_DIR$/shop-ui/introduction.html" />
         <option value="$PROJECT_DIR$/shop-ui/pay.html" />
@@ -216,9 +177,6 @@
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/constants/Constants.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/db/JdbcRxRepositoryWrapper.java" />
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java" />
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java" />
-        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" />
         <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" />
         <option value="$PROJECT_DIR$/shop-order-module/shop-order/src/main/resources/order-config.json" />
         <option value="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" />
@@ -230,6 +188,11 @@
         <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/log4j2.xml" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/auth/package-info.java" />
         <option value="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/auth/ShopUserSessionHandler.java" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/BlowfishUtil.java" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/BlowfishTest.java" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java" />
+        <option value="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java" />
       </list>
     </option>
   </component>
@@ -283,93 +246,34 @@
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="ecit" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="ecit" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-common" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="ecit" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="auth" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
@@ -377,7 +281,8 @@
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
@@ -386,7 +291,8 @@
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
@@ -396,102 +302,23 @@
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="com" type="462c0819:PsiDirectoryNode" />
               <item name="ecit" type="462c0819:PsiDirectoryNode" />
-              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
               <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="ecit" type="462c0819:PsiDirectoryNode" />
-              <item name="gateway" type="462c0819:PsiDirectoryNode" />
-              <item name="auth" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="ecit" type="462c0819:PsiDirectoryNode" />
-              <item name="gateway" type="462c0819:PsiDirectoryNode" />
-              <item name="auth" type="462c0819:PsiDirectoryNode" />
-              <item name="impl" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user-module" type="462c0819:PsiDirectoryNode" />
+              <item name="shop-user" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-module" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-module" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-interface" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-module" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-interface" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-module" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-interface" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-module" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-interface" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-module" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-interface" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vertx-shop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vertx-shop" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-module" type="462c0819:PsiDirectoryNode" />
-              <item name="shop-message-interface" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="ecit" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -542,7 +369,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.SearchVerticle">
+  <component name="RunManager" selected="Application.BlowfishTest">
     <configuration name="APIGatewayVerticle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.ecit.gateway.APIGatewayVerticle" />
       <module name="shop-gateway" />
@@ -550,6 +377,17 @@
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.ecit.gateway.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+    </configuration>
+    <configuration name="BlowfishTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.ecit.BlowfishTest" />
+      <module name="shop-user" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ecit.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -579,17 +417,6 @@
     <configuration name="SearchVerticle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.ecit.SearchVerticle" />
       <module name="shop-search" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.ecit.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-    </configuration>
-    <configuration name="UserVerticle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.ecit.UserVerticle" />
-      <module name="shop-user" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
@@ -931,17 +758,17 @@
     <list>
       <item itemvalue="Application.OrderVerticle" />
       <item itemvalue="Application.APIGatewayVerticle" />
-      <item itemvalue="Application.UserVerticle" />
       <item itemvalue="Application.GatewayVerticle" />
       <item itemvalue="Application.SearchVerticle" />
+      <item itemvalue="Application.BlowfishTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.BlowfishTest" />
         <item itemvalue="Application.SearchVerticle" />
         <item itemvalue="Application.GatewayVerticle" />
         <item itemvalue="Application.APIGatewayVerticle" />
         <item itemvalue="Application.OrderVerticle" />
-        <item itemvalue="Application.UserVerticle" />
       </list>
     </recent_temporary>
   </component>
@@ -1003,7 +830,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="247031000" />
+    <option name="totallyTimeSpent" value="249595000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1020,6 +847,7 @@
     <layout>
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32838285" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.47029704" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
       <window_info id="Image Layers" order="7" />
       <window_info anchor="right" id="Capture Analysis" order="6" />
@@ -1031,7 +859,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="4" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.34795764" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.34795764" />
       <window_info anchor="right" id="Database" order="9" weight="0.32980332" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.16831683" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -1066,7 +894,6 @@
       <window_info id="UI Designer" order="3" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.16831683" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.68151814" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.47029704" />
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info id="Designer" order="2" />
@@ -1120,27 +947,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-core/3.5.3/vertx-core-3.5.3.jar!/io/vertx/core/http/HttpClient.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="33" column="22" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-core/3.5.3/vertx-core-3.5.3.jar!/io/vertx/core/http/impl/HttpClientImpl.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="864" column="16" selection-start-line="864" selection-start-column="16" selection-end-line="864" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-service-proxy/3.6.0/vertx-service-proxy-3.6.0.jar!/io/vertx/serviceproxy/generator/ServiceProxyProcessor.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="16" column="34" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/model/User.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="47">
@@ -1308,6 +1114,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1188">
           <caret line="77" column="77" selection-start-line="77" selection-start-column="77" selection-end-line="78" selection-end-column="70" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1329,27 +1138,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="616">
           <caret line="47" column="34" selection-start-line="47" selection-start-column="34" selection-end-line="47" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="274" column="20" selection-start-line="274" selection-start-column="20" selection-end-line="274" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
         </state>
       </provider>
     </entry>
@@ -1467,8 +1255,49 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/auth/ShopUserSessionHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="45" lean-forward="true" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
+        <state relative-caret-position="308">
+          <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/vertx/vertx-web/3.6.0/vertx-web-3.6.0.jar!/io/vertx/ext/web/handler/UserSessionHandler.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/BlowfishUtil.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/BlowfishTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="464">
+          <caret line="58" column="33" selection-start-line="58" selection-start-column="17" selection-end-line="58" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="244" column="40" selection-start-line="244" selection-start-column="40" selection-end-line="244" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/api/RestUserRxVerticle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="219" column="36" selection-start-line="219" selection-start-column="36" selection-end-line="219" selection-end-column="36" />
         </state>
       </provider>
     </entry>

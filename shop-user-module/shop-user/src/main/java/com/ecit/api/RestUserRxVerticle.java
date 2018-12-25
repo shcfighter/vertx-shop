@@ -216,7 +216,8 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             return ;
         }
         String token = context.request().getHeader(Constants.TOKEN);
-        userHandler.changePwd(token, params, hashStrategy, handler -> {
+        params.put("strategy", hashStrategy);
+        userHandler.changePwdHandler(token, params, handler -> {
            if(handler.failed()){
                this.returnWithFailureMessage(context, "修改密码失败，请重试！");
                return ;
