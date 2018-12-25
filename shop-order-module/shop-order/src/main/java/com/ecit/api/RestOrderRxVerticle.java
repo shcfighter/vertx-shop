@@ -107,7 +107,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                     totalFreight.add(freight);
                     return CompositeFuture.all(this.preparedDecrCommodity(commodityService, orderId, orderDetails
                             //, "0.0.0.0",
-                            , IpUtils.getIpAddr(context.request().getDelegate()),
+                            , IpUtils.getIpAddr(context.request()),
                             params.getString("logistics"), params.getString("pay_way")));
                 })
                 .compose(msg ->{
