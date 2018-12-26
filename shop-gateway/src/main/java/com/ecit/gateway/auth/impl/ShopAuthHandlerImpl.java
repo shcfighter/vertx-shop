@@ -58,8 +58,8 @@ System.out.println(row);
                                         }
                                     }
                                     if (hashedStoredPwd.equals(this.strategy.computeHash(password, salt, version))) {
-                                        JsonObject user = new JsonObject().put("userId", Long.parseLong(row.getString("userId"))).put("loginName", row.getString("loginName"));
-                                        final String token = MD5Util.toMD5String(StringUtils.join(user.getString("userId"), Constants.UNDERLINE, user.getString("loginName"), Constants.UNDERLINE, System.currentTimeMillis()));
+                                        JsonObject user = new JsonObject().put("userId", Long.parseLong(row.getString("userid"))).put("loginName", row.getString("loginname"));
+                                        final String token = MD5Util.toMD5String(StringUtils.join(user.getString("userid"), Constants.UNDERLINE, user.getString("loginname"), Constants.UNDERLINE, System.currentTimeMillis()));
                                         this.setSession(token, user);
                                         resultHandler.handle(Future.succeededFuture(user));
                                         break;
