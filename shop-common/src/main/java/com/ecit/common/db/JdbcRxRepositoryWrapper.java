@@ -32,7 +32,7 @@ public class JdbcRxRepositoryWrapper {
     this.postgreSQLClient = PostgreSQLClient.createShared(vertx, config);
     JsonObject redisConfig = config.getJsonObject("redis");
     this.redisClient = RedisClient.create(vertx, new RedisOptions().setHost(redisConfig.getString("host", "localhost"))
-            .setPort(redisConfig.getInteger("port", 6379)).setAuth(redisConfig.getString("password")));
+            .setPort(redisConfig.getInteger("port", 6379)).setAuth(redisConfig.getString("auth")));
   }
 
   /**
