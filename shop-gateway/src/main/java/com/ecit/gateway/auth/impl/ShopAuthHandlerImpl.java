@@ -44,6 +44,7 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
                                 }
                                 case 1: {
                                     JsonObject row = rs.get(0);
+System.out.println(row);
                                     String hashedStoredPwd = this.strategy.getHashedStoredPwd(row);
                                     String salt = this.strategy.getSalt(row);
                                     int version = -1;
