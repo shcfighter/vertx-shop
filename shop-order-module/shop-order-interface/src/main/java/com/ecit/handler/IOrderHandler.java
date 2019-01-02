@@ -53,5 +53,6 @@ public interface IOrderHandler {
     @Fluent
     IOrderHandler undoRefund(long orderId, long userId, Handler<AsyncResult<UpdateResult>> handler);
 
+    @Fluent
     IOrderHandler getAddressHandler(String token, long orderId, Handler<AsyncResult<JsonObject>> handler);
 }

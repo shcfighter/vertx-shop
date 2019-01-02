@@ -35,13 +35,11 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
     private static final Logger LOGGER = LogManager.getLogger(RestOrderRxVerticle.class);
     private static final String HTTP_ORDER_SERVICE = "http_order_service_api";
     private IOrderHandler orderHandler;
-    private ICartHandler cartHandler;
 
     @Override
     public void start() throws Exception {
         super.start();
         this.orderHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IOrderHandler.ORDER_SERVICE_ADDRESS).build(IOrderHandler.class);
-        this.cartHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICartHandler.CART_SERVICE_ADDRESS).build(ICartHandler.class);
         final RestRefundRxVerticle restRefundRxVerticle = new RestRefundRxVerticle(orderHandler);
         final Router router = Router.router(vertx);
         // body handler
