@@ -20,16 +20,16 @@ public interface ICartHandler {
     String CART_SERVICE_ADDRESS = "cart_service_address";
 
     @Fluent
-    ICartHandler insertCart(long userId, JsonObject params, Handler<AsyncResult<String>> handler);
+    ICartHandler insertCartHandler(String token, JsonObject params, Handler<AsyncResult<String>> handler);
 
     @Fluent
-    ICartHandler findCartPage(long userId, int pageSize, int page, Handler<AsyncResult<List<JsonObject>>> handler);
+    ICartHandler findCartPage(String token, int pageSize, int page, Handler<AsyncResult<List<JsonObject>>> handler);
 
     @Fluent
-    ICartHandler findCartRowNum(long userId, Handler<AsyncResult<Long>> handler);
+    ICartHandler findCartRowNum(String token, Handler<AsyncResult<Long>> handler);
 
     @Fluent
-    ICartHandler removeCart(long userId, List<String> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler);
+    ICartHandler removeCartHandler(String token, List<String> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler);
 
     @Fluent
     ICartHandler removeCartByCommodityId(long userId, List<Long> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler);

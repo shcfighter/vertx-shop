@@ -35,26 +35,29 @@ public interface IUserHandler {
     IUserHandler findEmailUser(String loginName, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent
-    IUserHandler getUserInfo(long userId, Handler<AsyncResult<JsonObject>> resultHandler);
+    IUserHandler getUserInfoHandler(String token, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent
-    IUserHandler saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, String photoUrl, Handler<AsyncResult<UpdateResult>> resultHandler);
+    IUserHandler saveUserInfoHandler(String token, JsonObject params, Handler<AsyncResult<UpdateResult>> resultHandler);
 
     @Fluent
     IUserHandler updateEmail(long userId, String email, long versions, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IUserHandler updateIdcard(long userId, String realName, String idCard, String idCardPositive, String idCardNegative, Handler<AsyncResult<Integer>> handler);
+    IUserHandler updateIdcardHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IUserHandler getIdcardInfo(long userId, Handler<AsyncResult<JsonObject>> handler);
+    IUserHandler getIdcardInfoHandler(String token, Handler<AsyncResult<JsonObject>> handler);
 
     @Fluent
     IUserHandler getBindMobile(long userId, Handler<AsyncResult<JsonObject>> handler);
 
     @Fluent
-    IUserHandler bindMobile(long userId, String mobile, String code, Handler<AsyncResult<Integer>> handler);
+    IUserHandler bindMobileHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
     IUserHandler changePwdHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
+
+    @Fluent
+    IUserHandler changeEmailHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
 }

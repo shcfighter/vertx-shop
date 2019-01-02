@@ -8,6 +8,7 @@ import com.ecit.common.utils.JsonUtils;
 import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.constants.UserSql;
 import com.ecit.enmu.CertifiedType;
+import com.ecit.enmu.UserSex;
 import com.ecit.enmu.UserStatus;
 import com.ecit.handler.*;
 import io.reactivex.Single;
@@ -26,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,12 +40,16 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
     private IUserHandler userHandler;
     private ICertifiedHandler certifiedHandler;
     private IAddressHandler addressHandler;
+    private IMessageHandler messageService;
+    private ICertifiedHandler certifiedService;
     public UserHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
         this.vertx = vertx;
+        this.certifiedService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICertifiedHandler.CERTIFIED_SERVICE_ADDRESS).build(ICertifiedHandler.class);
         this.userHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IUserHandler.USER_SERVICE_ADDRESS).build(IUserHandler.class);
         this.certifiedHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICertifiedHandler.CERTIFIED_SERVICE_ADDRESS).build(ICertifiedHandler.class);
         this.addressHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IAddressHandler.ADDRESS_SERVICE_ADDRESS).build(IAddressHandler.class);
+        this.messageService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).build(IMessageHandler.class);
     }
 
     @Override
@@ -111,49 +117,69 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
     }
 
     @Override
-    public IUserHandler getUserInfo(long userId, Handler<AsyncResult<JsonObject>> resultHandler) {
-        Future<JsonObject> userFuture = Future.future();
-        this.retrieveOne(new JsonArray().add(userId), UserSql.GET_USER_INFO_SQL)
-                .subscribe(userFuture::complete, userFuture::fail);
-        userFuture.setHandler(resultHandler);
+    public IUserHandler getUserInfoHandler(String token, Handler<AsyncResult<JsonObject>> resultHandler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<JsonObject> resultFuture = sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            long userId = session.getLong("userId");
+            Future<JsonObject> userFuture = Future.future();
+            this.retrieveOne(new JsonArray().add(userId), UserSql.GET_USER_INFO_SQL)
+                    .subscribe(userFuture::complete, userFuture::fail);
+            return userFuture;
+        });
+
+        resultFuture.setHandler(resultHandler);
         return this;
     }
 
     @Override
-    public IUserHandler saveUserInfo(long userId, String loginName, String userName, String mobile, String email, int sex, long birthday, String photoUrl, Handler<AsyncResult<UpdateResult>> resultHandler) {
-        Future<JsonObject> userFuture = Future.future();
-        this.retrieveOne(new JsonArray().add(userId), UserSql.GET_USER_INFO_SQL)
-                .subscribe(userFuture::complete, userFuture::fail);
-        Future future = userFuture.compose(user -> {
-            Future updateFuture = Future.future();
-            postgreSQLClient.rxGetConnection()
+    public IUserHandler saveUserInfoHandler(String token, JsonObject params, Handler<AsyncResult<UpdateResult>> resultHandler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<UpdateResult> resultFuture = sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            final long userId = session.getLong("userId");
+            Future<JsonObject> userFuture = Future.future();
+            this.retrieveOne(new JsonArray().add(userId), UserSql.GET_USER_INFO_SQL)
+                    .subscribe(userFuture::complete, userFuture::fail);
+            return userFuture.compose(user -> {
+                Future updateFuture = Future.future();
+                postgreSQLClient.rxGetConnection()
                     .flatMap(conn ->
-                            conn.rxSetAutoCommit(false).toSingleDefault(false)
-                                    .flatMap(autoCommit -> conn.rxUpdateWithParams(UserSql.UPDATE_USER_SQL,
-                                            new JsonArray().add(loginName).add(userName).add(mobile).add(email).add(userId).add(user.getLong("versions"))))
-                                    .flatMap(updateResult -> {
-                                        if (Objects.isNull(user.getLong("info_versions"))) {
-                                            return conn.rxUpdateWithParams(UserSql.INSERT_USER_INFO_SQL,
-                                                    new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(userName).add(sex)
-                                                            .add(DateFormatUtils.format(new Date(birthday), FormatUtils.DATE_FORMAT)).add(photoUrl));
-                                        } else {
-                                            return conn.rxUpdateWithParams(UserSql.UPDATE_USER_INFO_SQL,
-                                                new JsonArray().add(userName).add(sex).add(DateFormatUtils.format(new Date(birthday), FormatUtils.DATE_FORMAT)).add(photoUrl)
-                                                        .add(userId).add(user.getLong("info_versions")));
-                                        }
-                                    })
-                                    // Rollback if any failed with exception propagation
-                                    .onErrorResumeNext(ex -> conn.rxRollback()
-                                            .toSingleDefault(true)
-                                            .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
-                                            .flatMap(ignore -> Single.error(ex))
-                                    )
-                                    // close the connection regardless succeeded or failed
-                                    .doAfterTerminate(conn::close)
+                        conn.rxSetAutoCommit(false).toSingleDefault(false)
+                            .flatMap(autoCommit -> conn.rxUpdateWithParams(UserSql.UPDATE_USER_SQL,
+                                    new JsonArray().add(params.getString("login_name")).add(params.getString("user_name")).add(params.getString("mobile"))
+                                            .add(params.getString("email")).add(userId).add(user.getLong("versions"))))
+                            .flatMap(updateResult -> {
+                                if (Objects.isNull(user.getLong("info_versions"))) {
+                                    return conn.rxUpdateWithParams(UserSql.INSERT_USER_INFO_SQL,
+                                            new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(params.getString("user_name")).add(Objects.nonNull(params.getInteger("sex")) ? params.getInteger("sex") : UserSex.CONFIDENTIALITY.getKey())
+                                                    .add(DateFormatUtils.format(new Date(Objects.isNull(params.getLong("birthday")) ? 0 : params.getLong("birthday")), FormatUtils.DATE_FORMAT)).add(params.getString("photo_url")));
+                                } else {
+                                    return conn.rxUpdateWithParams(UserSql.UPDATE_USER_INFO_SQL,
+                                        new JsonArray().add(params.getString("user_name")).add(Objects.nonNull(params.getInteger("sex")) ? params.getInteger("sex") : UserSex.CONFIDENTIALITY.getKey())
+                                                .add(DateFormatUtils.format(new Date(Objects.isNull(params.getLong("birthday")) ? 0 : params.getLong("birthday")), FormatUtils.DATE_FORMAT)).add(params.getString("photo_url"))
+                                                .add(userId).add(user.getLong("info_versions")));
+                                }
+                            })
+                            // Rollback if any failed with exception propagation
+                            .onErrorResumeNext(ex -> conn.rxRollback()
+                                    .toSingleDefault(true)
+                                    .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
+                                    .flatMap(ignore -> Single.error(ex))
+                            )
+                            // close the connection regardless succeeded or failed
+                            .doAfterTerminate(conn::close)
                     ).subscribe(updateFuture::complete, updateFuture::fail);
-            return updateFuture;
+                return updateFuture;
+            });
         });
-        future.setHandler(resultHandler);
+        resultFuture.setHandler(resultHandler);
         return this;
     }
 
@@ -167,34 +193,54 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
     }
 
     @Override
-    public IUserHandler updateIdcard(long userId, String realName, String idCard, String idCardPositive, String idCardNegative, Handler<AsyncResult<Integer>> handler) {
-        Future<JsonObject> future = Future.future();
-        this.retrieveOne(new JsonArray().add(userId), UserSql.SELECT_USER_INFO_BY_USERID_SQL)
-            .subscribe(future::complete, future::fail);
-        future.compose(userInfo -> {
-           if (Objects.isNull(userInfo) || userInfo.size() == 0) {
-               Future<Integer> insertFuture = Future.future();
-               this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(realName).add(idCard).add(idCardPositive).add(idCardNegative)
-                       , UserSql.INSERT_USER_INFO_IDCARD_SQL)
-                       .subscribe(insertFuture::complete, insertFuture::fail);
-               return insertFuture;
-           } else {
-               Future<Integer> updateFuture = Future.future();
-               this.execute(new JsonArray().add(realName).add(idCard).add(idCardPositive).add(idCardNegative).add(userId).add(userInfo.getLong("versions")),
-                       UserSql.UPDATE_USER_IDCARD_SQL)
-                       .subscribe(updateFuture::complete, updateFuture::fail);
-               return updateFuture;
-           }
-        }).setHandler(handler);
+    public IUserHandler updateIdcardHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<Integer> resultFuture = sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            long userId = session.getLong("userId");
+            Future<JsonObject> future = Future.future();
+            this.retrieveOne(new JsonArray().add(userId), UserSql.SELECT_USER_INFO_BY_USERID_SQL)
+                    .subscribe(future::complete, future::fail);
+            return future.compose(userInfo -> {
+                if (Objects.isNull(userInfo) || userInfo.size() == 0) {
+                    Future<Integer> insertFuture = Future.future();
+                    this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(params.getString("real_name"))
+                                    .add(params.getString("id_card")).add(params.getString("id_card_positive_url")).add(params.getString("id_card_negative_url"))
+                            , UserSql.INSERT_USER_INFO_IDCARD_SQL)
+                            .subscribe(insertFuture::complete, insertFuture::fail);
+                    return insertFuture;
+                } else {
+                    Future<Integer> updateFuture = Future.future();
+                    this.execute(new JsonArray().add(params.getString("real_name")).add(params.getString("id_card"))
+                                    .add(params.getString("id_card_positive_url")).add(params.getString("id_card_negative_url"))
+                                    .add(userId).add(userInfo.getLong("versions")),
+                            UserSql.UPDATE_USER_IDCARD_SQL)
+                            .subscribe(updateFuture::complete, updateFuture::fail);
+                    return updateFuture;
+                }
+            });
+        });
+        resultFuture.setHandler(handler);
         return this;
     }
 
     @Override
-    public IUserHandler getIdcardInfo(long userId, Handler<AsyncResult<JsonObject>> handler) {
-        Future<JsonObject> future = Future.future();
-        this.retrieveOne(new JsonArray().add(userId), UserSql.GET_USER_IDCARD_INFO_SQL)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+    public IUserHandler getIdcardInfoHandler(String token, Handler<AsyncResult<JsonObject>> handler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<JsonObject> resultFuture = sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            Future<JsonObject> future = Future.future();
+            this.retrieveOne(new JsonArray().add(session.getLong("userId")), UserSql.GET_USER_IDCARD_INFO_SQL)
+                    .subscribe(future::complete, future::fail);
+            return future;
+        });
+        resultFuture.setHandler(handler);
         return this;
     }
 
@@ -204,40 +250,45 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
     }
 
     @Override
-    public IUserHandler bindMobile(long userId, String mobile, String code, Handler<AsyncResult<Integer>> handler) {
-        Future<JsonObject> userFuture = Future.future();
-        this.getMemberById(userId, userFuture);
-        IMessageHandler messageService = new ServiceProxyBuilder(vertx.getDelegate())
-                .setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).build(IMessageHandler.class);
-        userFuture.compose(user -> {
-            if(JsonUtils.isNull(user)){
-                LOGGER.error("【绑定手机号】查询用户【{}】信息不存在！", userId);
-                return Future.failedFuture("用户信息不存在！");
+    public IUserHandler bindMobileHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<Integer> resultFuture = sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
             }
-            Future<JsonObject> messageFuture = Future.future();
-            messageService.findMessage(mobile, RegisterType.mobile, messageFuture);
-            return messageFuture;
-        }).compose(message -> {
-            if(JsonUtils.isNull(message)){
-                LOGGER.error("【绑定手机号】{}查询验证码信息不存在！", mobile);
-                return Future.failedFuture("查询验证码信息不存在！");
-            }
-            if(!StringUtils.equals(code, message.getString("code"))){
-                LOGGER.error("【绑定手机号】{}, 验证码【{}】不正确！", mobile, message.getString("code"));
-                return Future.failedFuture("验证码错误！");
-            }
-            return Future.succeededFuture(code);
-        }).compose(messageCode -> {
-            JsonObject user = userFuture.result();
-            Future<Integer> future = Future.future();
-            this.execute(new JsonArray().add(mobile).add(userId).add(user.getLong("versions")), UserSql.BIND_MOBILE_SQL)
-                    .subscribe(future::complete, future::fail);
-            ICertifiedHandler certifiedService = new ServiceProxyBuilder(vertx.getDelegate())
-                    .setAddress(ICertifiedHandler.CERTIFIED_SERVICE_ADDRESS).build(ICertifiedHandler.class);
-            certifiedService.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), mobile, certifiedHandler -> {});
-            messageService.updateMessage(mobile, RegisterType.mobile, messageHandler -> {});
-            return future;
-        }).setHandler(handler);
+            long userId = session.getLong("userId");
+            Future<JsonObject> userFuture = Future.future();
+            this.getMemberById(userId, userFuture);
+            return userFuture.compose(user -> {
+                if(JsonUtils.isNull(user)){
+                    LOGGER.error("【绑定手机号】查询用户【{}】信息不存在！", userId);
+                    return Future.failedFuture("用户信息不存在！");
+                }
+                Future<JsonObject> messageFuture = Future.future();
+                messageService.findMessage(params.getString("mobile"), RegisterType.mobile, messageFuture);
+                return messageFuture;
+            }).compose(message -> {
+                if(JsonUtils.isNull(message)){
+                    LOGGER.error("【绑定手机号】{}查询验证码信息不存在！", params.getString("mobile"));
+                    return Future.failedFuture("查询验证码信息不存在！");
+                }
+                if(!StringUtils.equals(params.getString("code"), message.getString("code"))){
+                    LOGGER.error("【绑定手机号】{}, 验证码【{}】不正确！", params.getString("mobile"), message.getString("code"));
+                    return Future.failedFuture("验证码错误！");
+                }
+                return Future.succeededFuture(params.getString("code"));
+            }).compose(messageCode -> {
+                JsonObject user = userFuture.result();
+                Future<Integer> future = Future.future();
+                this.execute(new JsonArray().add(params.getString("mobile")).add(userId).add(user.getLong("versions")), UserSql.BIND_MOBILE_SQL)
+                        .subscribe(future::complete, future::fail);
+                certifiedService.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), params.getString("mobile"), certifiedHandler -> {});
+                messageService.updateMessage(params.getString("mobile"), RegisterType.mobile, messageHandler -> {});
+                return future;
+            });
+        });
+        resultFuture.setHandler(handler);
         return this;
     }
 
@@ -247,7 +298,8 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
         final ShopHashStrategy hashStrategy = (ShopHashStrategy) params.getValue("strategy");
         Future<Integer> resultFuture = sessionFuture.compose(session -> {
             if(JsonUtils.isNull(session)){
-                return Future.failedFuture("current user fail");
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
             Future<JsonObject> userFuture = Future.future();
@@ -269,6 +321,53 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
                         certifiedHandler.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler3 -> {});
                     }
                     return changePwdFuture;
+                });
+            });
+        });
+        resultFuture.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public IUserHandler changeEmailHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<Integer> resultFuture = sessionFuture.compose(session -> {
+            if(JsonUtils.isNull(session)){
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            final long userId = session.getLong("userId");
+            Future<JsonObject> userFuture = Future.future();
+            userHandler.getMemberById(userId, userFuture);
+            return userFuture.compose(user -> {
+                if(JsonUtils.isNull(user)){
+                    LOGGER.info("无法获取user信息");
+                    return Future.failedFuture("can not get user");
+                }
+                final String email = params.getString("email");
+                final String code = params.getString("code");
+                Future<JsonObject> messageFuture = Future.future();
+                messageService.findMessage(email, RegisterType.email, messageFuture);
+                return messageFuture.compose(message -> {
+                    if(JsonUtils.isNull(message)){
+                        LOGGER.info("无法获取验证码信息");
+                        return Future.failedFuture("can not get check message");
+                    }
+                    if (Objects.nonNull(message)
+                            && StringUtils.endsWithIgnoreCase(message.getString("code"), code)) {
+                        Future<Integer> updateFuture = Future.future();
+                        userHandler.updateEmail(userId, email, user.getLong("versions"), updateFuture);
+                        return updateFuture.compose(update -> {
+                            certifiedHandler.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), email, certifiedHandler -> {
+                            });
+                            messageService.updateMessage(email, RegisterType.email, deleteHandler -> {
+                            });
+                            return updateFuture;
+                        });
+                    } else {
+                        LOGGER.info("验证码错误");
+                        return Future.failedFuture("check code error");
+                    }
                 });
             });
         });

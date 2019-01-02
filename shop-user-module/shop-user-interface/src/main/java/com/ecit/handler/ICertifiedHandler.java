@@ -28,7 +28,7 @@ public interface ICertifiedHandler {
     ICertifiedHandler updateUserCertified(long certifiedId, String remarks, long updateTime, Handler<AsyncResult<Integer>> resultHandler);
 
     @Fluent
-    ICertifiedHandler findUserCertifiedByUserId(long userId, Handler<AsyncResult<List<JsonObject>>> resultHandler);
+    ICertifiedHandler findUserCertifiedByUserIdHandler(String token, Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
     @Fluent
     ICertifiedHandler findUserCertifiedByUserIdAndType(long userId, int certifiedType, Handler<AsyncResult<JsonObject>> resultHandler);

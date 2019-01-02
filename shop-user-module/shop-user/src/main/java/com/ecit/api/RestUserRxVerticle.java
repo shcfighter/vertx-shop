@@ -46,22 +46,25 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
         router.post("/register").handler(this::registerHandler);
         router.get("/activate/:loginName/:code").handler(this::activateHandler);
 
+        /**
+         * 登录拦截
+         */
         router.getDelegate().route().handler(ShopUserSessionHandler.create(vertx.getDelegate(), this.config()));
 
         router.put("/changepwd").handler(this::changePwdHandler);
-        router.put("/changeEmail").handler(context -> this.requireLogin(context, this::changeEmailHandler));
-        router.get("/getUserInfo").handler(context -> this.requireLogin(context, this::getUserInfoHandler));
-        router.post("/saveUserInfo").handler(context -> this.requireLogin(context, this::saveUserInfoHandler));
-        router.get("/findUserCertified").handler(context -> this.requireLogin(context, this::findUserCertifiedHandler));
-        router.post("/insertAddress").handler(context -> this.requireLogin(context, this::insertAddressHandler));
-        router.put("/updateAddress").handler(context -> this.requireLogin(context, this::updateAddressHandler));
-        router.put("/updateDefaultAddress/:addressId").handler(context -> this.requireLogin(context, this::updateDefaultAddressHandler));
-        router.delete("/deleteAddress/:addressId").handler(context -> this.requireLogin(context, this::deleteAddressHandler));
-        router.get("/findAddress").handler(context -> this.requireLogin(context, this::findAddressHandler));
-        router.get("/getAddressById/:addressId").handler(context -> this.requireLogin(context, this::getAddressByIdHandler));
-        router.put("/idcardCertified").handler(context -> this.requireLogin(context, this::idcardCertifiedHandler));
-        router.get("/getIdcardCertified").handler(context -> this.requireLogin(context, this::getIdcardCertifiedHandler));
-        router.put("/bindMobile").handler(context -> this.requireLogin(context, this::bindMobileHandler));
+        router.put("/changeEmail").handler(this::changeEmailHandler);
+        router.get("/getUserInfo").handler(this::getUserInfoHandler);
+        router.post("/saveUserInfo").handler(this::saveUserInfoHandler);
+        router.get("/findUserCertified").handler(this::findUserCertifiedHandler);
+        router.post("/insertAddress").handler(this::insertAddressHandler);
+        router.put("/updateAddress").handler(this::updateAddressHandler);
+        router.put("/updateDefaultAddress/:addressId").handler(this::updateDefaultAddressHandler);
+        router.delete("/deleteAddress/:addressId").handler(this::deleteAddressHandler);
+        router.get("/findAddress").handler(this::findAddressHandler);
+        router.get("/getAddressById/:addressId").handler(this::getAddressByIdHandler);
+        router.put("/idcardCertified").handler(this::idcardCertifiedHandler);
+        router.get("/getIdcardCertified").handler(this::getIdcardCertifiedHandler);
+        router.put("/bindMobile").handler(this::bindMobileHandler);
 
         //全局异常处理
         this.globalVerticle(router);
@@ -215,7 +218,7 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
             this.returnWithFailureMessage(context, "新密码和确认密码不一致！");
             return ;
         }
-        String token = context.request().getHeader(Constants.TOKEN);
+        final String token = context.request().getHeader(Constants.TOKEN);
         params.put("strategy", hashStrategy);
         userHandler.changePwdHandler(token, params, handler -> {
            if(handler.failed()){
@@ -230,72 +233,28 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     /**
      * 修改密码
      * @param context
-     * @param principal
      */
-    private void changeEmailHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        if(Objects.isNull(userId) ){
-            LOGGER.error("登录id【{}】不存在", userId);
-            this.returnWithFailureMessage(context, "登录id【" + userId + "】不存在");
-            return ;
-        }
+    private void changeEmailHandler(RoutingContext context){
         JsonObject params = context.getBodyAsJson();
-        userHandler.getMemberById(userId, handler -> {
+        final String token = context.request().getHeader(Constants.TOKEN);
+        userHandler.changeEmailHandler(token, params, handler -> {
             if(handler.failed()){
-                LOGGER.error("获取用户信息失败", handler.cause());
+                LOGGER.error("修改用户信息失败", handler.cause());
                 this.returnWithFailureMessage(context, "修改邮箱失败!");
                 return ;
             }
-            JsonObject user = handler.result();
-            final String email = params.getString("email");
-            final String code = params.getString("code");
-
-            IMessageHandler messageService = new ServiceProxyBuilder(vertx.getDelegate())
-                    .setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).build(IMessageHandler.class);
-            messageService.findMessage(email, RegisterType.email, handler2 -> {
-                if (handler2.succeeded()) {
-                    final JsonObject message = handler2.result();
-                    if (Objects.nonNull(message)
-                            && StringUtils.endsWithIgnoreCase(message.getString("code"), code)) {
-                        userHandler.updateEmail(userId, email,
-                                user.getLong("versions"), handler3 -> {
-                                    if(handler2.failed()){
-                                        LOGGER.error("修改邮箱失败", handler3.cause());
-                                        this.returnWithFailureMessage(context, "修改邮箱失败!");
-                                        return ;
-                                    }
-                                    certifiedHandler.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), email, handler4 -> {});
-                                    this.returnWithSuccessMessage(context, "修改邮箱成功");
-                                });
-                        messageService.updateMessage(email, RegisterType.email, deleteHandler -> {
-                            if (deleteHandler.succeeded()) {
-                                LOGGER.info("数据删除成功！");
-                            } else {
-                                LOGGER.info("数据删除失败！", deleteHandler.cause());
-                            }
-                        });
-                    } else {
-                        LOGGER.info("验证码不匹配！");
-                        this.returnWithFailureMessage(context, "验证码错误");
-                        return ;
-                    }
-                } else {
-                    LOGGER.info("查询验证码失败", handler2.cause());
-                    this.returnWithFailureMessage(context, "验证码错误");
-                    return ;
-                }
-            });
+            this.returnWithSuccessMessage(context, "修改邮箱成功");
+            return ;
         });
     }
 
     /**
      * 获取用户详情信息
      * @param context
-     * @param principal
      */
-    private void getUserInfoHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        userHandler.getUserInfo(userId, handler -> {
+    private void getUserInfoHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        userHandler.getUserInfoHandler(token, handler -> {
             if(handler.failed()){
                 LOGGER.error("获取用户信息失败", handler.cause());
                 this.returnWithFailureMessage(context, "获取用户信息失败!");
@@ -309,96 +268,81 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     /**
      * 保存个人信息
      * @param context
-     * @param principal
      */
-    private void saveUserInfoHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
+    private void saveUserInfoHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
         JsonObject params = context.getBodyAsJson();
-        userHandler.saveUserInfo(userId, params.getString("login_name"), params.getString("user_name"),params.getString("mobile"),
-                params.getString("email"),
-                Objects.nonNull(params.getInteger("sex")) ? params.getInteger("sex") : UserSex.CONFIDENTIALITY.getKey(),
-                Objects.isNull(params.getLong("birthday")) ? 0 : params.getLong("birthday"),
-                params.getString("photo_url"),
-                handler -> {
+        userHandler.saveUserInfoHandler(token, params, handler -> {
             if(handler.failed()){
                 LOGGER.error("更新用户信息失败", handler.cause());
                 this.returnWithFailureMessage(context, "更新用户信息失败!");
                 return ;
             }
             this.returnWithSuccessMessage(context, "更新用户详情成功", handler.result());
-
+            return ;
         });
     }
 
     /**
      * 查询用户认证信息
      * @param context
-     * @param principal
      */
-    private void findUserCertifiedHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        certifiedHandler.findUserCertifiedByUserId(userId, handler -> {
+    private void findUserCertifiedHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        certifiedHandler.findUserCertifiedByUserIdHandler(token, handler -> {
                     if(handler.failed()){
                         LOGGER.error("查询用户认证信息失败！", handler.cause());
                         this.returnWithFailureMessage(context, "查询用户认证信息失败！");
                         return ;
                     }
                     this.returnWithSuccessMessage(context, "查询用户认证信息成功", handler.result());
-
+                    return;
                 });
     }
 
     /**
      *  新增收货地址
      * @param context
-     * @param principal
      */
-    private void insertAddressHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
+    private void insertAddressHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
         final JsonObject params = context.getBodyAsJson();
-        addressHandler.insertAddress(userId, params.getString("receiver"), params.getString("mobile"),
-                params.getString("province_code"), params.getString("city_code"), params.getString("county_code"),
-                params.getString("address"), params.getString("address_details"),
-                handler -> {
-                    if(handler.failed()){
-                        LOGGER.error("保存收货地址信息失败！", handler.cause());
-                        this.returnWithFailureMessage(context, "保存收货地址信息失败！");
-                        return ;
-                    }
-                    this.returnWithSuccessMessage(context, "保存收货地址信息成功", handler.result());
-
-                });
+        addressHandler.insertAddressHandler(token, params, handler -> {
+            if(handler.failed()){
+                LOGGER.error("保存收货地址信息失败！", handler.cause());
+                this.returnWithFailureMessage(context, "保存收货地址信息失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "保存收货地址信息成功", handler.result());
+            return ;
+        });
     }
 
     /**
      *  更新收货地址
      * @param context
-     * @param principal
      */
-    private void updateAddressHandler(RoutingContext context, JsonObject principal){
+    private void updateAddressHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
         final JsonObject params = context.getBodyAsJson();
-        addressHandler.updateAddress(params.getLong("address_id"), params.getString("receiver"), params.getString("mobile"),
-                params.getString("province_code"), params.getString("city_code"), params.getString("county_code"),
-                params.getString("address"), params.getString("address_details"),
-                handler -> {
-                    if(handler.failed()){
-                        LOGGER.error("修改收货地址信息失败！", handler.cause());
-                        this.returnWithFailureMessage(context, "修改收货地址信息失败！");
-                        return ;
-                    }
-                    this.returnWithSuccessMessage(context, "修改收货地址信息成功", handler.result());
+        addressHandler.updateAddressHandler(token, params, handler -> {
+            if(handler.failed()){
+                LOGGER.error("修改收货地址信息失败！", handler.cause());
+                this.returnWithFailureMessage(context, "修改收货地址信息失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "修改收货地址信息成功", handler.result());
 
-                });
+        });
     }
 
     /**
      *  收货地址置为默认地址
      * @param context
-     * @param principal
      */
-    private void updateDefaultAddressHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        addressHandler.updateDefaultAddress(userId, Long.parseLong(context.pathParam("addressId")),
+    private void updateDefaultAddressHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        addressHandler.updateDefaultAddress(token, Long.parseLong(context.pathParam("addressId")),
                 handler -> {
                     if(handler.failed()){
                         LOGGER.error("设置收货地址失败！", handler.cause());
@@ -406,51 +350,48 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
                         return ;
                     }
                     this.returnWithSuccessMessage(context, "设置收货地址成功", handler.result());
-
+                    return ;
                 });
     }
 
     /**
      *  删除收货地址
      * @param context
-     * @param principal
      */
-    private void deleteAddressHandler(RoutingContext context, JsonObject principal){
+    private void deleteAddressHandler(RoutingContext context){
         addressHandler.deleteAddress(Long.parseLong(context.pathParam("addressId")), handler -> {
-                    if(handler.failed()){
-                        LOGGER.error("删除收货地址失败！", handler.cause());
-                        this.returnWithFailureMessage(context, "删除收货地址失败！");
-                        return ;
-                    }
-                    this.returnWithSuccessMessage(context, "删除收货地址成功", handler.result());
-
-                });
+            if(handler.failed()){
+                LOGGER.error("删除收货地址失败！", handler.cause());
+                this.returnWithFailureMessage(context, "删除收货地址失败！");
+                return ;
+            }
+            this.returnWithSuccessMessage(context, "删除收货地址成功", handler.result());
+            return ;
+        });
     }
 
     /**
      *  查询收货地址
      * @param context
-     * @param principal
      */
-    private void findAddressHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        addressHandler.findAddress(userId, handler -> {
+    private void findAddressHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        addressHandler.findAddress(token, handler -> {
             if(handler.failed()){
                 LOGGER.error("查询收货地址失败！", handler.cause());
                 this.returnWithFailureMessage(context, "查询收货地址失败！");
                 return ;
             }
             this.returnWithSuccessMessage(context, "查询收货地址成功", handler.result());
-
+            return ;
         });
     }
 
     /**
      *
      * @param context
-     * @param principal
      */
-    private void getAddressByIdHandler(RoutingContext context, JsonObject principal){
+    private void getAddressByIdHandler(RoutingContext context){
         addressHandler.getAddressById(Long.parseLong(context.pathParam("addressId")), handler -> {
             if(handler.failed()){
                 LOGGER.error("查询收货地址失败！", handler.cause());
@@ -465,45 +406,44 @@ public class RestUserRxVerticle extends RestAPIRxVerticle{
     /**
      * 实名认证
      * @param context
-     * @param principal
      */
-    private void idcardCertifiedHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        JsonObject params = context.getBodyAsJson();
-        userHandler.updateIdcard(userId, params.getString("real_name"), params.getString("id_card"),
-                params.getString("id_card_positive_url"), params.getString("id_card_negative_url"),
-                handler -> {
+    private void idcardCertifiedHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        userHandler.updateIdcardHandler(token, context.getBodyAsJson(), handler -> {
             if(handler.failed()){
                 LOGGER.error("更新实名认证失败！", handler.cause());
                 this.returnWithFailureMessage(context, "实名认证失败！");
                 return ;
             }
-
             this.returnWithSuccessMessage(context, "实名认证成功", handler.result());
+            return ;
         });
     }
 
     /**
      * 获取身份认证信息
      * @param context
-     * @param principal
      */
-    private void getIdcardCertifiedHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        userHandler.getIdcardInfo(userId, handler -> {
+    private void getIdcardCertifiedHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        userHandler.getIdcardInfoHandler(token, handler -> {
             if(handler.failed()){
                 LOGGER.error("查询实名认证信息失败！", handler.cause());
                 this.returnWithFailureMessage(context, "查询认证信息失败！");
                 return ;
             }
             this.returnWithSuccessMessage(context, "查询实名认证信息成功", handler.result());
+            return ;
         });
     }
 
-    private void bindMobileHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        final JsonObject params = context.getBodyAsJson();
-        userHandler.bindMobile(userId, params.getString("mobile"), params.getString("code"), handler -> {
+    /**
+     * 绑定手机号码
+     * @param context
+     */
+    private void bindMobileHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        userHandler.bindMobileHandler(token, context.getBodyAsJson(), handler -> {
             if(handler.failed()){
                 LOGGER.error("绑定手机号码失败！", handler.cause());
                 this.returnWithFailureMessage(context, "绑定手机号码失败！");

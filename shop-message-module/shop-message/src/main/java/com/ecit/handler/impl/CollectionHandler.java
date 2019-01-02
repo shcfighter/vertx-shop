@@ -1,5 +1,7 @@
 package com.ecit.handler.impl;
 
+import com.ecit.common.db.JdbcRxRepositoryWrapper;
+import com.ecit.common.utils.JsonUtils;
 import com.ecit.handler.ICollectionHandler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -16,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class CollectionHandler implements ICollectionHandler {
+public class CollectionHandler extends JdbcRxRepositoryWrapper implements ICollectionHandler {
 
     static final String MONGODB_COLLECTION = "collection";
 
@@ -43,6 +45,7 @@ public class CollectionHandler implements ICollectionHandler {
     final Vertx vertx;
 
     public CollectionHandler(Vertx vertx, JsonObject config) {
+        super(vertx, config);
         this.vertx = vertx;
         this.mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
         this.rabbitMQClient = RabbitMQClient.create(vertx, new RabbitMQOptions(config.getJsonObject("rabbitmq")));
@@ -73,26 +76,44 @@ public class CollectionHandler implements ICollectionHandler {
     }
 
     @Override
-    public ICollectionHandler sendCollection(JsonObject params, Handler<AsyncResult<String>> resultHandler) {
-        Future<String> future = Future.future();
-        JsonObject message = new JsonObject().put("body", params.encodePrettily());
-        rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, message)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(resultHandler);
+    public ICollectionHandler sendCollection(String token, JsonObject params, Handler<AsyncResult<String>> resultHandler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<String> resultFuture = sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            params.put("user_id", session.getLong("userId"));
+            Future<String> future = Future.future();
+            JsonObject message = new JsonObject().put("body", params.encodePrettily());
+            rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, message)
+                    .subscribe(future::complete, future::fail);
+            return future;
+        });
+        resultFuture.setHandler(resultHandler);
         return this;
     }
 
     @Override
-    public ICollectionHandler findCollection(long userId, int page, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+    public ICollectionHandler findCollection(String token, int page, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
         final int pageSize = 10;
-        Future<List<JsonObject>> future = Future.future();
-        JsonObject query = new JsonObject()
-                .put("user_id", userId)
-                .put("is_deleted", 0);
-        mongoClient.rxFindWithOptions(MONGODB_COLLECTION, query, new FindOptions().setLimit(pageSize).setSkip(((page - 1) * pageSize))
-                .setSort(new JsonObject().put("create_time", -1)))
-                .subscribe(future::complete, future::fail);
-        future.setHandler(resultHandler);
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<List<JsonObject>> resultFuture = sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            final long userId = session.getLong("userId");
+            Future<List<JsonObject>> future = Future.future();
+            JsonObject query = new JsonObject()
+                    .put("user_id", userId)
+                    .put("is_deleted", 0);
+            mongoClient.rxFindWithOptions(MONGODB_COLLECTION, query, new FindOptions().setLimit(pageSize).setSkip(((page - 1) * pageSize))
+                    .setSort(new JsonObject().put("create_time", -1)))
+                    .subscribe(future::complete, future::fail);
+            return future;
+        });
+        resultFuture.setHandler(resultHandler);
         return this;
     }
 

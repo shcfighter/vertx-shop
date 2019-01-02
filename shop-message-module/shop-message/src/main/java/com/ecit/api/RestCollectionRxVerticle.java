@@ -1,5 +1,7 @@
 package com.ecit.api;
 
+import com.ecit.common.auth.ShopUserSessionHandler;
+import com.ecit.common.constants.Constants;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.handler.ICollectionHandler;
 import io.vertx.core.json.JsonObject;
@@ -26,9 +28,15 @@ public class RestCollectionRxVerticle extends RestAPIRxVerticle{
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
+
+        /**
+         * 登录拦截
+         */
+        router.getDelegate().route().handler(ShopUserSessionHandler.create(vertx.getDelegate(), this.config()));
+
         // API route handler
-        router.post("/insertCollection").handler(context -> this.requireLogin(context, this::insertCollectionHandler));
-        router.get("/findCollection").handler(context -> this.requireLogin(context, this::findMessageHandler));
+        router.post("/insertCollection").handler(this::insertCollectionHandler);
+        router.get("/findCollection").handler(this::findMessageHandler);
         //全局异常处理
         this.globalVerticle(router);
 
@@ -49,13 +57,12 @@ public class RestCollectionRxVerticle extends RestAPIRxVerticle{
      *  保存收藏商品
      * @param context
      */
-    private void insertCollectionHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
+    private void insertCollectionHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
         JsonObject params = context.getBodyAsJson();
-        params.put("user_id", userId);
         params.put("is_deleted", 0);
         params.put("create_time", System.currentTimeMillis());
-        collectionHandler.sendCollection(params, handler ->{
+        collectionHandler.sendCollection(token, params, handler ->{
             if(handler.succeeded()){
                 LOGGER.info("商品收藏成功，code:{}", handler.result());
                 this.returnWithSuccessMessage(context, "商品收藏成功");
@@ -66,9 +73,9 @@ public class RestCollectionRxVerticle extends RestAPIRxVerticle{
         });
     }
 
-    private void findMessageHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        collectionHandler.findCollection(userId, Integer.parseInt(context.request().getParam("pageNum")), handler ->{
+    private void findMessageHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        collectionHandler.findCollection(token, Integer.parseInt(context.request().getParam("pageNum")), handler ->{
             if(handler.succeeded()){
                 this.returnWithSuccessMessage(context, "查询收藏成功", handler.result());
             } else {

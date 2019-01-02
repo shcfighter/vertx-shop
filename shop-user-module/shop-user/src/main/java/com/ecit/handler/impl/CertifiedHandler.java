@@ -2,6 +2,7 @@ package com.ecit.handler.impl;
 
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
 import com.ecit.common.utils.FormatUtils;
+import com.ecit.common.utils.JsonUtils;
 import com.ecit.constants.UserSql;
 import com.ecit.handler.ICertifiedHandler;
 import com.ecit.handler.IdBuilder;
@@ -161,11 +162,20 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
     }
 
     @Override
-    public ICertifiedHandler findUserCertifiedByUserId(long userId, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
-        Future<List<JsonObject>> userFuture = Future.future();
-        this.retrieveMany(new JsonArray().add(userId), UserSql.SELECT_USER_CERTIFIED_SQL)
-                .subscribe(userFuture::complete, userFuture::fail);
-        userFuture.setHandler(resultHandler);
+    public ICertifiedHandler findUserCertifiedByUserIdHandler(String token, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        Future<List<JsonObject>> resultFuture = sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            long userId = session.getLong("userId");
+            Future<List<JsonObject>> userFuture = Future.future();
+            this.retrieveMany(new JsonArray().add(userId), UserSql.SELECT_USER_CERTIFIED_SQL)
+                    .subscribe(userFuture::complete, userFuture::fail);
+            return userFuture;
+        });
+        resultFuture.setHandler(resultHandler);
         return this;
     }
 

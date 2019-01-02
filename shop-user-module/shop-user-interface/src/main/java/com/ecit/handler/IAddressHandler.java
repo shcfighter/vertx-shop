@@ -17,16 +17,16 @@ public interface IAddressHandler {
     public static final String ADDRESS_SERVICE_ADDRESS = "address-handler-address";
 
     @Fluent
-    IAddressHandler insertAddress(long userId, String receiver, String mobile, String provinceCode, String cityCode, String countyCode, String address, String addressDetails, Handler<AsyncResult<Integer>> handler);
+    IAddressHandler insertAddressHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IAddressHandler updateAddress(long addressId, String receiver, String mobile, String provinceCode, String cityCode, String countyCode, String address, String addressDetails, Handler<AsyncResult<Integer>> handler);
+    IAddressHandler updateAddressHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IAddressHandler updateDefaultAddress(long userId, long addressId, Handler<AsyncResult<UpdateResult>> handler);
+    IAddressHandler updateDefaultAddress(String token, long addressId, Handler<AsyncResult<UpdateResult>> handler);
 
     @Fluent
-    IAddressHandler findAddress(long userId, Handler<AsyncResult<List<JsonObject>>> handler);
+    IAddressHandler findAddress(String token, Handler<AsyncResult<List<JsonObject>>> handler);
 
     @Fluent
     IAddressHandler deleteAddress(long addressId, Handler<AsyncResult<Integer>> handler);

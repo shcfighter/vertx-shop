@@ -1,5 +1,7 @@
 package com.ecit.api;
 
+import com.ecit.common.auth.ShopUserSessionHandler;
+import com.ecit.common.constants.Constants;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.handler.ICartHandler;
 import io.vertx.core.Future;
@@ -8,7 +10,6 @@ import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
-import io.vertx.reactivex.ext.web.handler.CookieHandler;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -35,12 +36,16 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
-        router.route().handler(CookieHandler.create());
+        /**
+         * 登录拦截
+         */
+        router.getDelegate().route().handler(ShopUserSessionHandler.create(vertx.getDelegate(), this.config()));
+
         // API route handler
-        router.post("/insertCart").handler(context -> this.requireLogin(context, this::insertCartHandler));
-        router.get("/findCartPage").handler(context -> this.requireLogin(context, this::findCartPageHandler));
-        router.get("/findCartRowNum").handler(context -> this.requireLogin(context, this::findCartRowNumHandler));
-        router.post("/removeCart").handler(context -> this.requireLogin(context, this::removeCartHandler));
+        router.post("/insertCart").handler(this::insertCartHandler);
+        router.get("/findCartPage").handler(this::findCartPageHandler);
+        router.get("/findCartRowNum").handler(this::findCartRowNumHandler);
+        router.post("/removeCart").handler(this::removeCartHandler);
         //全局异常处理
         this.globalVerticle(router);
 
@@ -61,39 +66,38 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
      * 加入购物车
      * @param context 上下文
      */
-    private void insertCartHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        this.checkUser(context, userId);
+    private void insertCartHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
         final JsonObject params = context.getBodyAsJson();
         if (Objects.isNull(params)) {
             LOGGER.error("商品购物信息为空");
             this.returnWithFailureMessage(context, "商品购物信息为空");
             return;
         }
-        cartHandler.insertCart(userId, params, handler -> {
+
+        cartHandler.insertCartHandler(token, params, handler -> {
             if (handler.failed()) {
                 LOGGER.error("添加购物信息失败：", handler.cause());
                 this.returnWithFailureMessage(context, "加入购物车失败");
                 return;
             }
             this.returnWithSuccessMessage(context, "成功加入购物车");
+            return ;
         });
     }
 
     /**
      * 查询购物车
      * @param context
-     * @param principal
      */
-    private void findCartPageHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        this.checkUser(context, userId);
+    private void findCartPageHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
         final int pageSize = Integer.parseInt(Optional.ofNullable(context.request().getParam("pageSize")).orElse("0"));
         final int page = Integer.parseInt(Optional.ofNullable(context.request().getParam("page")).orElse("0"));
         Future<Long> future = Future.future();
-        cartHandler.findCartRowNum(userId, future);
+        cartHandler.findCartRowNum(token, future);
         future.compose(rowNum -> {
-            cartHandler.findCartPage(userId, pageSize, page, handler -> {
+            cartHandler.findCartPage(token, pageSize, page, handler -> {
                 if (handler.failed()) {
                     LOGGER.error("查询购物信息失败：", handler.cause());
                     this.returnWithFailureMessage(context, "查询购物车失败");
@@ -115,12 +119,10 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
     /**
      * 购物车商品数量
      * @param context
-     * @param principal
      */
-    private void findCartRowNumHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        this.checkUser(context, userId);
-        cartHandler.findCartRowNum(userId, handler -> {
+    private void findCartRowNumHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        cartHandler.findCartRowNum(token, handler -> {
             if (handler.failed()) {
                 LOGGER.error("查询购物信息失败：", handler.cause());
                 this.returnWithFailureMessage(context, "查询购物车失败！");
@@ -135,40 +137,31 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
     /**
      *
      * @param context
-     * @param principal
      */
-    private void removeCartHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        this.checkUser(context, userId);
+    private void removeCartHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
         final JsonObject params = context.getBodyAsJson();
         if (Objects.isNull(params)) {
             LOGGER.error("商品购物信息为空");
             this.returnWithFailureMessage(context, "商品购物信息为空");
             return;
         }
-        cartHandler.removeCart(userId, Stream.of(StringUtils.split(params.getString("ids"), ",")).collect(Collectors.toList()),
+        cartHandler.removeCartHandler(token, Stream.of(StringUtils.split(params.getString("ids"), ",")).collect(Collectors.toList()),
                 handler -> {
                     if (handler.failed()) {
                         LOGGER.error("删除购物信息失败：", handler.cause());
                         this.returnWithFailureMessage(context, "删除购物车失败");
                         return;
-                    } else {
-                        MongoClientUpdateResult updateResult = handler.result();
-                        if(Objects.isNull(updateResult) || 0 == updateResult.getDocModified()){
-                            LOGGER.error("删除购物信息失败：{}", updateResult.toJson());
-                            this.returnWithFailureMessage(context, "删除购物车失败");
-                            return;
-                        }
-                        this.returnWithSuccessMessage(context, "删除购物车成功");
                     }
+                    MongoClientUpdateResult updateResult = handler.result();
+                    if(Objects.isNull(updateResult) || 0 == updateResult.getDocModified()){
+                        LOGGER.error("删除购物信息失败：{}", updateResult.toJson());
+                        this.returnWithFailureMessage(context, "删除购物车失败");
+                        return;
+                    }
+                    this.returnWithSuccessMessage(context, "删除购物车成功");
+                    return ;
         });
     }
 
-    private void checkUser(RoutingContext context, long userId){
-        if (Objects.isNull(userId)) {
-            LOGGER.error("登录id【{}】不存在", userId);
-            this.returnWithFailureMessage(context, "用户登录信息不存在");
-            return;
-        }
-    }
 }

@@ -20,10 +20,10 @@ public interface ICollectionHandler {
     static final String COLLECTION_SERVICE_ADDRESS = "collection_service_address";
 
     @Fluent
-    ICollectionHandler sendCollection(JsonObject params, Handler<AsyncResult<String>> resultHandler);
+    ICollectionHandler sendCollection(String token, JsonObject params, Handler<AsyncResult<String>> resultHandler);
 
     @Fluent
-    ICollectionHandler findCollection(long userId, int page, Handler<AsyncResult<List<JsonObject>>> resultHandler);
+    ICollectionHandler findCollection(String token, int page, Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
     @Fluent
     ICollectionHandler updateCollection(long userId, String id, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);

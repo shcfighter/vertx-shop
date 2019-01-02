@@ -24,26 +24,34 @@ public interface IOrderHandler {
     IOrderHandler insertOrder(long orderId, long userId, String price, String freight, long shippingInformationId, String leaveMessage, JsonArray orderDetails, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IOrderHandler findPageOrder(long userId, Integer status, int size, int offset, Handler<AsyncResult<List<JsonObject>>> handler);
+    IOrderHandler insertOrderHandler(String token, JsonObject params, Handler<AsyncResult<Long>> handler);
 
     @Fluent
-    IOrderHandler findOrderRowNum(long userId, Integer status, Handler<AsyncResult<JsonObject>> handler);
+    IOrderHandler findPageOrder(String token, JsonObject params, Handler<AsyncResult<List<JsonObject>>> handler);
 
     @Fluent
-    IOrderHandler preparedInsertOrder(JsonArray params, Handler<AsyncResult<String>> handler);
+    IOrderHandler findOrderRowNum(String token, JsonObject params, Handler<AsyncResult<JsonObject>> handler);
 
     @Fluent
-    IOrderHandler findPreparedOrder(String id, Handler<AsyncResult<JsonObject>> handler);
+    IOrderHandler preparedInsertOrder(String token, JsonArray params, Handler<AsyncResult<String>> handler);
+
+    @Fluent
+    IOrderHandler findPreparedOrder(String id, Handler<AsyncResult<List<JsonObject>>> handler);
 
     @Fluent
     IOrderHandler getOrderById(long orderId, long userId, Handler<AsyncResult<JsonObject>> handler);
 
     @Fluent
+    IOrderHandler getOrderByIdHandler(String token, long orderId, Handler<AsyncResult<JsonObject>> handler);
+
+    @Fluent
     IOrderHandler payOrder(long orderId, int versions, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IOrderHandler refund(long orderId, long userId, int refundType, String refundReason, String refundMoney, String refundDescription, Handler<AsyncResult<UpdateResult>> handler);
+    IOrderHandler refundHandler(String token, long orderId, JsonObject params, Handler<AsyncResult<UpdateResult>> handler);
 
     @Fluent
     IOrderHandler undoRefund(long orderId, long userId, Handler<AsyncResult<UpdateResult>> handler);
+
+    IOrderHandler getAddressHandler(String token, long orderId, Handler<AsyncResult<JsonObject>> handler);
 }

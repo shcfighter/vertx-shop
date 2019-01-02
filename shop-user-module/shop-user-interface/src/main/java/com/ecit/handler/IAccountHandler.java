@@ -20,8 +20,11 @@ public interface IAccountHandler {
     IAccountHandler findAccount(long userId, Handler<AsyncResult<JsonObject>> handler);
 
     @Fluent
-    IAccountHandler payOrder(long userId, long orderId, String payPwd, Handler<AsyncResult<Integer>> handler);
+    IAccountHandler findAccountHandler(String token, Handler<AsyncResult<JsonObject>> handler);
 
     @Fluent
-    IAccountHandler changePayPwd(long userId, String payPwd, String code, Handler<AsyncResult<Integer>> handler);
+    IAccountHandler payOrderHandler(String token, long orderId, JsonObject params, Handler<AsyncResult<Integer>> handler);
+
+    @Fluent
+    IAccountHandler changePayPwdHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
 }

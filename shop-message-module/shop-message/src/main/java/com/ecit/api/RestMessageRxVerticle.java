@@ -1,5 +1,6 @@
 package com.ecit.api;
 
+import com.ecit.common.auth.ShopUserSessionHandler;
 import com.ecit.common.enums.RegisterType;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.handler.IMessageHandler;
@@ -27,10 +28,16 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
+
+        /**
+         * 登录拦截
+         */
+        router.getDelegate().route().handler(ShopUserSessionHandler.create(vertx.getDelegate(), this.config()));
+
         // API route handler
-        router.post("/sendEmailMessage").handler(context -> this.requireLogin(context, this::sendEmailMessageHandler));
-        router.post("/sendMobileMessage").handler(context -> this.requireLogin(context, this::sendMobileMessageHandler));
         router.post("/insertMessage").handler(this::insertMessageHandler);
+        router.post("/sendEmailMessage").handler(this::sendEmailMessageHandler);
+        router.post("/sendMobileMessage").handler(this::sendMobileMessageHandler);
         //全局异常处理
         this.globalVerticle(router);
 
@@ -51,7 +58,7 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
      *  发送邮件验证码
      * @param context
      */
-    private void sendEmailMessageHandler(RoutingContext context, JsonObject principal){
+    private void sendEmailMessageHandler(RoutingContext context){
         messageHandler.registerEmailMessage(context.getBodyAsJson().getString("destination"), handler ->{
             if(handler.succeeded()){
                 LOGGER.info("邮箱发送成功，code:{}", handler.result());
@@ -67,7 +74,7 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
      *  发送手机验证码
      * @param context
      */
-    private void sendMobileMessageHandler(RoutingContext context, JsonObject principal){
+    private void sendMobileMessageHandler(RoutingContext context){
         messageHandler.registerMobileMessage(context.getBodyAsJson().getString("destination"), handler ->{
             if(handler.succeeded()){
                 LOGGER.info("手机验证码发送成功，code:{}", handler.result());

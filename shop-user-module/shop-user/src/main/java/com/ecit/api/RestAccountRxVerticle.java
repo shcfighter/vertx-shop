@@ -1,5 +1,7 @@
 package com.ecit.api;
 
+import com.ecit.common.auth.ShopUserSessionHandler;
+import com.ecit.common.constants.Constants;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.handler.IAccountHandler;
 import io.vertx.core.json.JsonObject;
@@ -28,9 +30,15 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
         // body handler
         router.route().handler(BodyHandler.create());
         // API route handler
-        router.get("/getAccount").handler(context -> this.requireLogin(context, this::getAccountHandler));
-        router.post("/payOrder/:orderId").handler(context -> this.requireLogin(context, this::payOrderHandler));
-        router.put("/setPayPwd").handler(context -> this.requireLogin(context, this::setPayPwdHandler));
+
+        /**
+         * 登录拦截
+         */
+        router.getDelegate().route().handler(ShopUserSessionHandler.create(vertx.getDelegate(), this.config()));
+
+        router.get("/getAccount").handler(this::getAccountHandler);
+        router.post("/payOrder/:orderId").handler(this::payOrderHandler);
+        router.put("/setPayPwd").handler(this::setPayPwdHandler);
 
         //全局异常处理
         this.globalVerticle(router);
@@ -51,26 +59,24 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
     /**
      * 获取账户金额
      * @param context
-     * @param principal
      */
-    private void getAccountHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
-        accountHandler.findAccount(userId, handler -> {
+    private void getAccountHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        accountHandler.findAccountHandler(token, handler -> {
             if(handler.failed()){
                 LOGGER.error("获取用户信息失败", handler.cause());
                 this.returnWithFailureMessage(context, "获取账户金额失败!");
                 return ;
             }
             this.returnWithSuccessMessage(context, "查询账户金额成功", handler.result());
-
+            return ;
         });
     }
 
-    private void payOrderHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
+    private void payOrderHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
         JsonObject params = context.getBodyAsJson();
-        accountHandler.payOrder(userId, Long.parseLong(context.pathParam("orderId")), params.getString("pay_pwd"),
-                handler -> {
+        accountHandler.payOrderHandler(token, Long.parseLong(context.pathParam("orderId")), params, handler -> {
             if(handler.failed()){
                 LOGGER.error("支付订单失败", handler.cause());
                 String resultMessage = handler.cause().getMessage();
@@ -81,17 +87,15 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
                 return ;
             }
             this.returnWithSuccessMessage(context, "支付订单成功", handler.result());
-
+            return ;
         });
     }
 
     /**
      * 设置支付密码
      * @param context
-     * @param principal
      */
-    private void setPayPwdHandler(RoutingContext context, JsonObject principal){
-        final Long userId = principal.getLong("userId");
+    private void setPayPwdHandler(RoutingContext context){
         JsonObject params = context.getBodyAsJson();
         String payPwd = params.getString("pay_pwd");
         String confirmPwd = params.getString("confirm_pwd");
@@ -99,13 +103,15 @@ public class RestAccountRxVerticle extends RestAPIRxVerticle{
             this.returnWithFailureMessage(context, "两次密码不一致！");
             return ;
         }
-        accountHandler.changePayPwd(userId, payPwd, params.getString("code"), handler -> {
+        final String token = context.request().getHeader(Constants.TOKEN);
+        accountHandler.changePayPwdHandler(token, params, handler -> {
             if(handler.failed()){
                 LOGGER.error("设置支付密码失败！", handler.cause());
                 this.returnWithFailureMessage(context, "设置支付密码失败！");
                 return ;
             }
             this.returnWithSuccessMessage(context, "设置支付密码成功", handler.result());
+            return ;
         });
     }
 }
