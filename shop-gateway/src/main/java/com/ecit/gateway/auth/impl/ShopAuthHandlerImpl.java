@@ -61,6 +61,7 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
                                         JsonObject user = new JsonObject().put("userId", Long.parseLong(row.getString("userid"))).put("loginName", row.getString("loginname"));
                                         final String token = MD5Util.toMD5String(StringUtils.join(user.getString("userid"), Constants.UNDERLINE, user.getString("loginname"), Constants.UNDERLINE, System.currentTimeMillis()));
                                         this.setSession(token, user);
+                                        user.put(Constants.TOKEN, token);
                                         resultHandler.handle(Future.succeededFuture(user));
                                         break;
                                     }

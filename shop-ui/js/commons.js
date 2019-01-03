@@ -4,9 +4,20 @@
 var domain = "http://localhost:8787/";
 //var domain = "http://111.231.132.168/";
 
+var token = null;
+var sessionLoginUser = sessionStorage.getItem("loginUser");
+if(!sessionLoginUser){
+    var loginUser = jQuery.parseJSON(sessionLoginUser);
+    token = loginUser.token;
+}
+console.log("token: " + token);
+
 //全局ajax拦截处理
 $.ajaxSetup({
     contentType:"application/json;charset=utf-8",
+    headers: {
+        'token': token
+    },
     statusCode: {
         401: function() {
             $.Pop('未登录，请先登录', 'confirm', function(){window.location.href = "/login.html";});
