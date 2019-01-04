@@ -6,7 +6,7 @@
   "address":"eb.elasticsearch",
   "transportAddresses":[
     {
-      "hostname":"111.231.132.168",
+      "hostname":"localhost",
       "port":9300
     }
   ],

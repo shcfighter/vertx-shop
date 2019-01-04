@@ -31,13 +31,16 @@ public class ShopUserSessionHandlerImpl extends JdbcRxRepositoryWrapper implemen
         future.compose(user -> {
             LOGGER.info("session user: {}", user);
             if (JsonUtils.isNull(user)) {
-                this.noAuth(routingContext);
-                return Future.succeededFuture();
+                return Future.failedFuture("can not get session");
             }
             return Future.succeededFuture();
+        }).setHandler(handler -> {
+            if(handler.failed()){
+                this.noAuth(routingContext);
+                return ;
+            }
         });
         routingContext.next();
-
     }
 
     private void noAuth(RoutingContext routingContext){
