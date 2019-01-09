@@ -42,10 +42,12 @@ public class ShopUserSessionHandlerImpl extends JdbcRxRepositoryWrapper implemen
                 this.noAuth(routingContext);
                 LOGGER.info("return before .........................................................");
                 return ;
+            } else {
+                LOGGER.info("next .........................................................");
+                routingContext.next();
             }
         });
         LOGGER.info("return after .........................................................");
-        routingContext.next();
     }
 
     private void noAuth(RoutingContext routingContext){
