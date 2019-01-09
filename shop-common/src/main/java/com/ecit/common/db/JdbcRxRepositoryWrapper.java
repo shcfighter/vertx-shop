@@ -16,6 +16,8 @@ import io.vertx.reactivex.ext.sql.SQLConnection;
 import io.vertx.reactivex.redis.RedisClient;
 import io.vertx.redis.RedisOptions;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.List;
  */
 public class JdbcRxRepositoryWrapper {
 
+  private static final Logger LOGGER = LogManager.getLogger(JdbcRxRepositoryWrapper.class);
   protected final SQLClient postgreSQLClient;
   protected final RedisClient redisClient;
 
@@ -154,15 +157,22 @@ public class JdbcRxRepositoryWrapper {
    * @return
    */
   protected Future<JsonObject> getSession(String token){
+    LOGGER.info("get session .........................................................");
     if(StringUtils.isEmpty(token)){
+      LOGGER.info("token empty .........................................................");
       return Future.failedFuture("token empty!");
     }
+    LOGGER.info("token not empty .........................................................");
     Future<String> redisResult = Future.future();
     redisClient.rxHget(Constants.VERTX_WEB_SESSION, token).subscribe(redisResult::complete, redisResult::fail);
+    LOGGER.info("get session future .........................................................");
     return redisResult.compose(user -> {
+      LOGGER.info("get session user .........................................................");
       if(StringUtils.isEmpty(user)){
+        LOGGER.info("get no session .........................................................");
         return Future.failedFuture("user session empty!");
       }
+      LOGGER.info("get user .........................................................");
       return Future.succeededFuture(new JsonObject(user));
     });
   }

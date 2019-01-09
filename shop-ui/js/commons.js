@@ -6,7 +6,7 @@ var domain = "http://localhost:8787/";
 
 var token = null;
 var sessionLoginUser = sessionStorage.getItem("loginUser");
-if(!sessionLoginUser){
+if(undefined == sessionLoginUser || null == sessionLoginUser || "" == sessionLoginUser){
     var loginUser = jQuery.parseJSON(sessionLoginUser);
     token = loginUser.token;
 }

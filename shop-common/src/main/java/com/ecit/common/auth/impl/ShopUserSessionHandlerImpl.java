@@ -28,6 +28,7 @@ public class ShopUserSessionHandlerImpl extends JdbcRxRepositoryWrapper implemen
         String token = routingContext.request().getHeader("token");
         LOGGER.debug("token: {}", token);
         Future<JsonObject> future = this.getSession(token);
+        LOGGER.info("get session return future .........................................................");
         future.compose(user -> {
             LOGGER.info("session user: {}", user);
             if (JsonUtils.isNull(user)) {
@@ -35,6 +36,7 @@ public class ShopUserSessionHandlerImpl extends JdbcRxRepositoryWrapper implemen
             }
             return Future.succeededFuture();
         }).setHandler(handler -> {
+            LOGGER.info("get session handler .........................................................");
             if(handler.failed()){
                 this.noAuth(routingContext);
                 return ;
