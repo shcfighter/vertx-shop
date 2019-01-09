@@ -38,10 +38,13 @@ public class ShopUserSessionHandlerImpl extends JdbcRxRepositoryWrapper implemen
         }).setHandler(handler -> {
             LOGGER.info("get session handler .........................................................");
             if(handler.failed()){
+                LOGGER.info("no auth .........................................................");
                 this.noAuth(routingContext);
+                LOGGER.info("return before .........................................................");
                 return ;
             }
         });
+        LOGGER.info("return after .........................................................");
         routingContext.next();
     }
 
