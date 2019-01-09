@@ -204,8 +204,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                 this.returnWithFailureMessage(context, "查询订单信息失败！");
                 return ;
             }
-            JsonObject orderJson = handler.result().put("information", handler.result());
-            this.returnWithSuccessMessage(context, "查询订单信息成功！", orderJson);
+            this.returnWithSuccessMessage(context, "查询订单信息成功！", handler.result());
         });
     }
 

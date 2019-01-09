@@ -377,7 +377,7 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
                 }
                 Future<JsonObject> addressFuture = Future.future();
                 addressHandler.getAddressById(order.getLong("shipping_information_id"), addressFuture);
-                return addressFuture;
+                return addressFuture.compose(address -> Future.succeededFuture(orderFuture.result().put("information", address)));
             });
         });
         resultFuture.setHandler(handler);
