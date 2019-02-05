@@ -54,7 +54,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         Router router = Router.router(vertx);
         // cookie and session handler
         this.enableLocalSession(router, "shop_session");
-        //this.enableCorsSupport(router);
+        this.enableCorsSupport(router);
         // body handler
         router.route().handler(BodyHandler.create());
 
