@@ -7,14 +7,16 @@
     "timeout": 10000,
     "max-failures": 5
   },
-  "host" : "111.231.132.168",
-  "port" : 5432,
-  "maxPoolSize" : 50,
-  "username" : "postgres",
-  "password" : "h123456",
-  "database" : "vertx_shop",
-  "charset" : "UTF-8",
-  "queryTimeout" : 10000,
+  "postgresql": {
+    "host" : "111.231.132.168",
+    "port" : 5432,
+    "maxPoolSize" : 50,
+    "username" : "postgres",
+    "password" : "h123456",
+    "database" : "vertx_shop",
+    "charset" : "UTF-8",
+    "queryTimeout" : 10000
+  },
   "redis": {
     "host": "111.231.132.168",
     "port": 6379,

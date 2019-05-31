@@ -32,10 +32,19 @@ public class GatewayVerticle extends BaseMicroserviceRxVerticle{
         VertxOptions options = new VertxOptions().setClusterManager(mgr);
         io.vertx.reactivex.core.Vertx.rxClusteredVertx(options).subscribe(v -> v.deployVerticle(APIGatewayVerticle.class.getName(),
                 new DeploymentOptions().setConfig(new JsonObject()
-                        .put("url", "jdbc:postgresql://111.231.132.168:5432/vertx_shop")
-                        .put("driver_class", "org.postgresql.Driver")
-                        .put("max_pool_size", 50)
-                        .put("user", "postgres")
-                        .put("password", "h123456"))));
+                        .put("postgresql", new JsonObject()
+                                .put("host", "111.231.132.168")
+                                .put("port", 5432)
+                                .put("maxPoolSize", 50)
+                                .put("username", "postgres")
+                                .put("password", "h123456")
+                                .put("database", "vertx_shop")
+                                .put("charset", "UTF-8")
+                                .put("queryTimeout", 10000))
+                        .put("redis", new JsonObject()
+                                .put("host", "111.231.132.168")
+                                .put("port", 6379)
+                                .put("auth", "h123456"))
+                )));
     }
 }

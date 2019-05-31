@@ -32,8 +32,9 @@ public class JdbcRxRepositoryWrapper {
   protected final RedisClient redisClient;
 
   public JdbcRxRepositoryWrapper(Vertx vertx, JsonObject config) {
-    this.postgreSQLClient = PostgreSQLClient.createShared(vertx, config);
-    JsonObject redisConfig = config.getJsonObject("redis");
+    JsonObject postgresqlConfig = config.getJsonObject("postgresql", new JsonObject());
+    this.postgreSQLClient = PostgreSQLClient.createShared(vertx, postgresqlConfig);
+    JsonObject redisConfig = config.getJsonObject("redis", new JsonObject());
     this.redisClient = RedisClient.create(vertx, new RedisOptions().setHost(redisConfig.getString("host", "localhost"))
             .setPort(redisConfig.getInteger("port", 6379)).setAuth(redisConfig.getString("auth")));
   }
@@ -157,24 +158,24 @@ public class JdbcRxRepositoryWrapper {
    * @return
    */
   protected Future<JsonObject> getSession(String token){
-    LOGGER.info("get session .........................................................");
     if(StringUtils.isEmpty(token)){
-      LOGGER.info("token empty .........................................................");
       return Future.failedFuture("token empty!");
     }
-    LOGGER.info("token not empty .........................................................");
-    Future<String> redisResult = Future.future();
-    redisClient.rxHget(Constants.VERTX_WEB_SESSION, token).subscribe(redisResult::complete, redisResult::fail);
-    LOGGER.info("get session future .........................................................");
-    return redisResult.compose(user -> {
-      LOGGER.info("get session user .........................................................");
-      if(StringUtils.isEmpty(user)){
-        LOGGER.info("get no session .........................................................");
-        return Future.failedFuture("user session empty!");
+    Future<JsonObject> redisResult = Future.future();
+    redisClient.hget(Constants.VERTX_WEB_SESSION, token, re -> {
+      if (re.failed()) {
+        LOGGER.error("redis hget : ", re.cause());
+        redisResult.fail(re.cause());
+      } else {
+        String user = re.result();
+        if(StringUtils.isEmpty(user)){
+          redisResult.fail("user session empty!");
+          return ;
+        }
+        redisResult.complete(new JsonObject(user));
       }
-      LOGGER.info("get user .........................................................");
-      return Future.succeededFuture(new JsonObject(user));
     });
+    return redisResult;
   }
 
   /**

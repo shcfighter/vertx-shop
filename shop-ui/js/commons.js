@@ -1,7 +1,7 @@
 /**
  * Created by shwang on 2018/2/27.
  */
-var domain = "http://localhost:8787/";
+var domain = "http://localhost/";
 //var domain = "http://111.231.132.168/";
 
 var token = null;
@@ -20,19 +20,41 @@ $.ajaxSetup({
     },
     statusCode: {
         401: function() {
-            $.Pop('未登录，请先登录', 'confirm', function(){window.location.href = "/login.html";});
+            if(!$(".xw-pop-modalbox").html()){
+                xw.confirm("未登录，请先登录",function(){
+                    window.location.href = "/login.html"
+                },function(){
+                    //alert('你点击了取消')
+                });
+            }
         },
         404: function() {
-            $.Pop("数据获取/输入失败，没有此服务。404", "alert", function(){});
+            xw.confirm("数据获取/输入失败，没有此服务。404",function(){
+                window.location.href = "/login.html"
+            },function(){
+                //alert('你点击了取消')
+            });
         },
         504: function() {
-            $.Pop("数据获取/输入失败，服务器没有响应。504", "alert", function(){});
+            xw.confirm("数据获取/输入失败，服务器没有响应。504",function(){
+                window.location.href = "/login.html"
+            },function(){
+                //alert('你点击了取消')
+            });
         },
         500: function() {
-            $.Pop("服务器有误。500", "alert", function(){});
+            xw.confirm("服务器有误。500",function(){
+                window.location.href = "/login.html"
+            },function(){
+                //alert('你点击了取消')
+            });
         },
         502: function() {
-            $.Pop("网关超时。502", "alert", function(){});
+            xw.confirm("网关超时。502",function(){
+                window.location.href = "/login.html"
+            },function(){
+                //alert('你点击了取消')
+            });
         }
     }
 });

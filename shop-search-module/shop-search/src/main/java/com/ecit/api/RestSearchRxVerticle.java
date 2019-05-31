@@ -45,7 +45,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         super.start();
         this.commodityHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
         this.preferencesHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).build(IPreferencesHandler.class);
-        JsonObject redisObject = this.config().getJsonObject("redis");
+        JsonObject redisObject = this.config().getJsonObject("redis", new JsonObject());
         RedisOptions config = new RedisOptions()
                 .setHost(redisObject.getString("host", "localhost"))
                 .setPort(redisObject.getInteger("port", 6379))

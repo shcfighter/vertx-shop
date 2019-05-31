@@ -12,6 +12,8 @@ done
 echo "remove logs"
 rm -rf /data/logs/shop-*.log
 
+mvn clean install
+
 #启动服务
 nohup java -Xms64m -Xmx64m -jar /root/vertx-shop/shop-gateway/target/shop-gateway-1.0-SNAPSHOT-fat.jar -conf /root/vertx-shop/shop-gateway/src/main/resources/gateway-config.json -cluster >> /data/logs/shop-gateway.log &
 echo 'Gateway Micro Services start ...'

@@ -26,4 +26,7 @@ public interface ShopAuthHandler {
     @Fluent
     ShopAuthHandler logout(String token, Handler<AsyncResult<Long>> handler);
 
+    @Fluent
+    ShopAuthHandler auth(String token, Handler<AsyncResult<String>> handler);
+
 }

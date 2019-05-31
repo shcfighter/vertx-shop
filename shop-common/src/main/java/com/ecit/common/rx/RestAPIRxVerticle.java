@@ -74,23 +74,6 @@ public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
     router.route().handler(SessionHandler.create(ClusteredSessionStore.create(vertx, name)));
   }
 
-  protected void requireLogin(RoutingContext context, BiConsumer<RoutingContext, JsonObject> biHandler) {
-      /*context.request().headers().add("user-principal", new JsonObject().put("loginName", "test")
-              .put("userId", 217024117029867520L).encodePrettily());*/
-    Optional<JsonObject> principal = Optional.ofNullable(context.request().getHeader("user-principal"))
-      .map(JsonObject::new);
-    if (principal.isPresent()) {
-      biHandler.accept(context, principal.get());
-    } else {
-      if (StringUtils.contains(context.request().uri(), SPECIALURL)) {
-        this.returnWithSuccessMessage(context, null, 0);
-        return ;
-      }
-      LOGGER.info("未登录，无权访问！");
-      this.noAuth(context);
-    }
-  }
-
   protected void noAuth(RoutingContext context) {
     context.response().setStatusCode(401)
             .putHeader("content-type", "application/json")

@@ -16,8 +16,11 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements ShopAuthHandler {
+    private static final Logger LOGGER = LogManager.getLogger(ShopAuthHandlerImpl.class);
     private ShopHashStrategy strategy;
 
     public ShopAuthHandlerImpl(Vertx vertx, JsonObject config) {
@@ -88,6 +91,26 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
         }
         Future<Long> future = Future.future();
         redisClient.rxHdel(Constants.VERTX_WEB_SESSION, token).subscribe(future::complete, future::fail);
+        future.setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public ShopAuthHandler auth(String token, Handler<AsyncResult<String>> handler) {
+        if(StringUtils.isEmpty(token)){
+            handler.handle(Future.failedFuture("token empty!"));
+            return this;
+        }
+        Future<String> future = Future.future();
+        redisClient.hget(Constants.VERTX_WEB_SESSION, token, re -> {
+          if (re.failed()) {
+              LOGGER.error("redis hget : ", re.cause());
+              future.fail(re.cause());
+          } else {
+              LOGGER.info("redis info: ", re.result());
+              future.complete(re.result());
+          }
+        });
         future.setHandler(handler);
         return this;
     }

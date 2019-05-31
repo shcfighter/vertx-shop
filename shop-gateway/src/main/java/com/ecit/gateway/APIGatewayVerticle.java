@@ -1,5 +1,6 @@
 package com.ecit.gateway;
 
+import com.ecit.common.auth.ShopUserSessionHandler;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.IpUtils;
 import com.ecit.enmu.UserStatus;
@@ -67,13 +68,14 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         router.get("/api/user/logout").handler(this::logoutHandler);
         // api dispatcher
         router.route("/api/*").handler(this::dispatchRequests);
+
         //全局异常处理
         this.globalVerticle(router);
 
         // enable HTTPS
-        HttpServerOptions httpServerOptions = new HttpServerOptions()
+        /*HttpServerOptions httpServerOptions = new HttpServerOptions()
                 .setSsl(true)
-                .setKeyStoreOptions(new JksOptions().setPath("server.jks").setPassword("123456"));
+                .setKeyStoreOptions(new JksOptions().setPath("server.jks").setPassword("123456"));*/
 
         // create http server
         vertx.createHttpServer(/*httpServerOptions*/)
@@ -81,8 +83,10 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
                 .listen(port, host, ar -> {
                     if (ar.succeeded()) {
                         future.complete();
+                        LOGGER.info("shop-gateway server started!");
                     } else {
                         future.fail(ar.cause());
+                        LOGGER.info("shop-gateway server fail!", ar.cause());
                     }
                 });
     }
@@ -201,11 +205,20 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
     }
 
     private void authUaaHandler(RoutingContext context) {
-        if (context.user() != null) {
-            this.returnWithSuccessMessage(context, context.user().principal().encodePrettily());
-        } else {
-            context.fail(401);
-        }
+        authHandler.auth(context.request().getHeader("token"), handler -> {
+            if (handler.failed()) {
+                LOGGER.error("no login: ", handler.cause());
+                this.noAuth(context);
+                return ;
+            }
+            if (StringUtils.isEmpty(handler.result())) {
+                LOGGER.error("no login, user is empty!");
+                this.noAuth(context);
+                return ;
+            }
+            this.returnWithSuccessMessage(context, handler.result());
+            return ;
+        });
     }
 
     /**
