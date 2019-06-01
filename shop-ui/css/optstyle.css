@@ -1,6 +1,6 @@
 @charset "utf-8";
 *{margin:0;padding:0;list-style-type:none;}
-a,img{border:0;width: 100%;}
+a,img{border:0;/*width: 100%;*/}
 body{font:12px/180% microsoft yahei;}
 a{text-decoration:none;cursor:pointer}
 .clear{clear: both;}
