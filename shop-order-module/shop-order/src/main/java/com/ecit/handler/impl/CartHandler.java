@@ -3,7 +3,9 @@ package com.ecit.handler.impl;
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
 import com.ecit.common.utils.JsonUtils;
 import com.ecit.handler.ICartHandler;
+import com.ecit.handler.ICommodityHandler;
 import com.ecit.handler.IdBuilder;
+import io.reactivex.disposables.Disposable;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -14,6 +16,7 @@ import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.ext.mongo.UpdateOptions;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.mongo.MongoClient;
+import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,10 +34,12 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
      */
     private static final String CART_COLLECTION = "cart";
     final MongoClient mongoClient;
+    private ICommodityHandler commodityHandler;
 
     public CartHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
-        mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
+        mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb", new JsonObject()));
+        this.commodityHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
     }
 
     /**
@@ -44,23 +49,78 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
      * @return
      */
     @Override
-    public ICartHandler insertCartHandler(String token, JsonObject params, Handler<AsyncResult<String>> handler) {
+    public ICartHandler insertCartHandler(String token, JsonObject params, Handler<AsyncResult<Void>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<String> resultFuture = sessionFuture.compose(session -> {
+        sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<String> future = Future.future();
-            mongoClient.rxInsert(CART_COLLECTION, params.put("cart_id", IdBuilder.getUniqueId())
-                    .put("user_id", userId)
-                    .put("create_time", new Date().getTime())
-                    .put("is_deleted", 0))
-                    .subscribe(future::complete, future::fail);
+            Future<Void> future = Future.future();
+            commodityHandler.findCommodityById(params.getLong("commodity_id"), commodityHandler -> {
+                if (commodityHandler.failed()) {
+                    LOGGER.error("insert cart fail, find commodity error: ", commodityHandler.cause());
+                    future.fail(commodityHandler.cause());
+                    return ;
+                }
+                JsonObject commodity = commodityHandler.result();
+                if (JsonUtils.isNull(commodity)) {
+                    LOGGER.error("insert cart fail, find commodity[{}] error: ", params.getLong("commodity_id"));
+                    future.fail("commodity empty!");
+                    return ;
+                }
+                mongoClient.findOne(CART_COLLECTION, new JsonObject()
+                        .put("user_id", userId)
+                        .put("commodity_id", params.getLong("commodity_id"))
+                        .put("is_deleted", 0), null, cartHandler -> {
+                    if (cartHandler.failed()) {
+                        LOGGER.error("find cart failed: ", cartHandler.cause());
+                        future.fail(cartHandler.cause());
+                        return ;
+                    }
+                    JsonObject cart = cartHandler.result();
+                    if (JsonUtils.isNull(cart)) {
+                        mongoClient.insert(CART_COLLECTION, params
+                                .put("brand_name", commodity.getString("brand_name"))
+                                .put("category_name", commodity.getString("category_name"))
+                                .put("commodity_name", commodity.getString("commodity_name"))
+                                .put("price", commodity.getString("price"))
+                                .put("original_price", commodity.getString("original_price"))
+                                .put("image_url", commodity.getString("image_url"))
+                                .put("order_num", params.getInteger("order_num", 1))
+                                .put("cart_id", IdBuilder.getUniqueId())
+                                .put("user_id", userId)
+                                .put("create_time", new Date().getTime())
+                                .put("is_deleted", 0), h -> {
+                            if (h.failed()) {
+                                LOGGER.error("insert cart fail: ", h.cause());
+                                future.fail(h.cause());
+                                return ;
+                            } else {
+                                future.complete();
+                                return ;
+                            }
+                        });
+                    } else {
+                        mongoClient.updateCollectionWithOptions(CART_COLLECTION, new JsonObject().put("user_id", userId)
+                                        .put("cart_id", cart.getLong("cart_id")).put("is_deleted", 0),
+                                new JsonObject().put("$set", new JsonObject().put("order_num", cart.getInteger("order_num") + params.getInteger("order_num", 1))),
+                                new UpdateOptions().setMulti(true), h -> {
+                            if (h.failed()) {
+                                LOGGER.error("update cart failed: ", h.cause());
+                                future.fail(h.cause());
+                                return ;
+                            } else {
+                                future.complete();
+                                return ;
+                            }
+                        });
+                    }
+                });
+            });
             return future;
-        });
-        resultFuture.setHandler(handler);
+        }).setHandler(handler);
         return this;
     }
 

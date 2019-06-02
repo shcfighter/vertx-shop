@@ -41,9 +41,9 @@ $(function () {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0) {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -67,7 +67,7 @@ function submitform(){
             if(result.status == 0) {
                 $(".am-img-thumbnail").attr("src", result.items);
             } else {
-                $.Pop(result.message, "alert", function(){});
+                xw.alert(result.message)
             }
         },
         error: function () {

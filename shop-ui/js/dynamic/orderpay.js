@@ -1,9 +1,9 @@
 $(function () {
     var id = getQueryVariable("order_id");
     if(undefined == id || null == id || "" == id){
-        $.Pop("支付异常！", "alert", function(){
+        xw.confirm("支付异常!",function(){
             //window.location.href = "/index.html";
-        });
+        },function(){});
     }
     $("#order-id").html(id);
     $.ajax({
@@ -19,7 +19,7 @@ $(function () {
                 $(".user-info").find("p").eq(1).find("span").html(information.mobile);
                 $(".user-info").find("p").eq(2).find("span").html(information.address_details);
             } else {
-                $.Pop(result.message,"alert",function(){});
+                xw.alert(result.message)
             }
         },
         error: function () {
@@ -42,11 +42,11 @@ $(function () {
                     window.location.href = "/person/order.html";
                 } else {
                     if ("not_pay_pwd" == result.message) {
-                        $.Pop("为设置支付密码，前往设置","alert",function(){
+                        xw.confirm("为设置支付密码，前往设置",function(){
                             window.location.href = "/person/setpay.html";
-                        });
+                        },function(){});
                     } else {
-                        $.Pop(result.message,"alert",function(){});
+                        xw.alert(result.message)
                     }
                 }
             },

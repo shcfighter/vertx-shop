@@ -7,13 +7,13 @@ $(function () {
             if(result.status == 0) {
                 var user = result.items;
                 if(null == user.mobile || "" == user.mobile){
-                    $.Pop("未绑定手机号码，请先绑定手机号！", "alert", function(){
+                    xw.confirm("未绑定手机号码，请先绑定手机号!",function(){
                         window.location.href = "bindphone.html";
-                    });
+                    },function(){});
                 }
                 $("#user-phone").html(result.items.mobile);
             } else {
-                $.Pop(result.message, "alert", function(){});
+                xw.alert(result.message)
             }
         },
         error: function () {
@@ -34,9 +34,9 @@ $(function () {
             data: JSON.stringify(data),
             success: function(result){
                 if (result.status == 0) {
-                    $.Pop("发送成功","alert",function(){});
+                    xw.alert("发送成功")
                 } else {
-                    $.Pop("发送失败","alert",function(){});
+                    xw.alert("发送失败")
                 }
             },
             error: function () {
@@ -59,9 +59,9 @@ $(function () {
             data: JSON.stringify(data),
             success: function(result){
                 if (result.status == 0) {
-                    $.Pop("设置支付密码成功", "alert",function(){});
+                    xw.alert("设置支付密码成功")
                 } else {
-                    $.Pop(result.message, "alert",function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {

@@ -96,7 +96,7 @@ $(function () {
                 if(result.status == 0){
                     window.location.href = "/pay.html?order_id=" + result.items;
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -199,7 +199,7 @@ function loadCart(page){
                         "</ul>");
                 });
             } else {
-                $.Pop(result.message, "alert", function(){});
+                xw.alert(result.message)
             }
         },
         error: function () {

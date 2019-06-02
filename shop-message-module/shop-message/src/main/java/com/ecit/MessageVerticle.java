@@ -23,6 +23,7 @@ import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 public class MessageVerticle extends BaseMicroserviceRxVerticle{
 
     private static final String SERVICE_MESSAGE_SERVICE_NAME = "service_message_service_api_name";
+    private static final String SERVICE_COLLECTION_SERVICE_NAME = "service_collection_service_api_name";
 
     @Override
     public void start() throws Exception {
@@ -32,6 +33,7 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
         new ServiceBinder(vertx.getDelegate()).setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).register(IMessageHandler.class, messageHandler);
         new ServiceBinder(vertx.getDelegate()).setAddress(ICollectionHandler.COLLECTION_SERVICE_ADDRESS).register(ICollectionHandler.class, collectionHandler);
         this.publishEventBusService(SERVICE_MESSAGE_SERVICE_NAME, IMessageHandler.MESSAGE_SERVICE_ADDRESS, IMessageHandler.class).subscribe();
+        this.publishEventBusService(SERVICE_COLLECTION_SERVICE_NAME, ICollectionHandler.COLLECTION_SERVICE_ADDRESS, ICollectionHandler.class).subscribe();
         vertx.getDelegate().deployVerticle(RestMessageRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
         vertx.getDelegate().deployVerticle(RestCollectionRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
     }
@@ -67,6 +69,10 @@ public class MessageVerticle extends BaseMicroserviceRxVerticle{
                                 .put("username", "guest")
                                 .put("password", "guest")
                                 .put("virtualHost", "/"))
+                        .put("redis", new JsonObject()
+                                .put("host", "111.231.132.168")
+                                .put("port", 6379)
+                                .put("auth", "h123456"))
                 )));
     }
 }

@@ -35,7 +35,7 @@ $(function () {
                     })
                     $(".item-info").before(details);
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -43,7 +43,7 @@ $(function () {
             }
         });
     } else {
-        $.Pop("获取订单信息失败！", "alert", function(){});
+        xw.alert("获取订单信息失败!")
     }
 
 
@@ -61,9 +61,9 @@ $(function () {
             data: JSON.stringify(data),
             success: function(result){
                 if (result.status == 0) {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {

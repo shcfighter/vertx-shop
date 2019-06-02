@@ -47,7 +47,7 @@ $(function () {
             }
         });
     } else {
-        $.Pop("获取商品信息失败！", "alert", function(){});
+        xw.alert("获取商品信息失败")
     }
 
     loadAddress();
@@ -65,7 +65,7 @@ $(function () {
         var logistics = $(".op_express_delivery_hot").find(".selected").attr("data-value");
         var pay_way = $(".pay-list").find(".selected").attr("data-value");
         if (undefined == shipping_information_id || null == shipping_information_id) {
-            $.Pop("请先选择收货地址！", "alert", function(){});
+            xw.alert("请先选择收货地址")
             return ;
         }
         var data = {
@@ -84,11 +84,8 @@ $(function () {
             success: function(result){
                 if(result.status == 0) {
                     window.location.href = "/orderpay.html?order_id=" + result.items;
-                    /*$.Pop("下单成功！</br>查看订单列表", "confirm", function(){
-                        window.location.href = "/success.html"
-                    });*/
                 } else {
-                    $.Pop("下单失败，请重试！", "alert", function(){});
+                    xw.alert("下单失败，请重试！")
                 }
             },
             error: function () {
@@ -126,9 +123,9 @@ $(function () {
                 if(result.status == 0) {
                     loadAddress();
                     $('.theme-poptit .close,.btn-op .close').click();
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -190,7 +187,7 @@ function loadAddress() {
                         "                </li>");
                 })
             } else {
-                $.Pop(result.message, "alert", function(){});
+                xw.alert(result.message)
             }
         },
         error: function () {

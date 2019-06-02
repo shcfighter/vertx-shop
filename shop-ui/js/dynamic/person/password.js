@@ -16,9 +16,9 @@ $(function () {
             success: function(result){
                 if(result.status == 0) {
                     $(".u-stage-icon-inner").find("em").removeClass("bg").toggleClass("bg2");
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {

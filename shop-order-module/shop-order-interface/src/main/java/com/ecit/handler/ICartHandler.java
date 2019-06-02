@@ -20,7 +20,7 @@ public interface ICartHandler {
     String CART_SERVICE_ADDRESS = "cart_service_address";
 
     @Fluent
-    ICartHandler insertCartHandler(String token, JsonObject params, Handler<AsyncResult<String>> handler);
+    ICartHandler insertCartHandler(String token, JsonObject params, Handler<AsyncResult<Void>> handler);
 
     @Fluent
     ICartHandler findCartPage(String token, int pageSize, int page, Handler<AsyncResult<List<JsonObject>>> handler);

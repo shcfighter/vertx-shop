@@ -15,7 +15,7 @@ $(function () {
                 $("#id_card_positive_url").attr("src", item.id_card_positive_url);
                 $("#id_card_negative_url").attr("src", item.id_card_negative_url);
             } else {
-                $.Pop(result.message, "alert", function(){});
+                xw.alert(result.message)
             }
         },
         error: function () {
@@ -43,7 +43,7 @@ $(function () {
                     $(_this).closest(".cardPic").find("img").attr("src", result.items);
                     $(_this).closest("li").find(".cardExample").find("img").attr("src", result.items);
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -70,9 +70,9 @@ $(function () {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0) {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {

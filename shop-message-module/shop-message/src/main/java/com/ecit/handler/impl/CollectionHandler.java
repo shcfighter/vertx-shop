@@ -3,6 +3,7 @@ package com.ecit.handler.impl;
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
 import com.ecit.common.utils.JsonUtils;
 import com.ecit.handler.ICollectionHandler;
+import com.ecit.handler.ICommodityHandler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -13,6 +14,7 @@ import io.vertx.rabbitmq.RabbitMQOptions;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import io.vertx.reactivex.rabbitmq.RabbitMQClient;
+import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,11 +46,14 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
     final MongoClient mongoClient;
     final Vertx vertx;
 
+    private ICommodityHandler commodityHandler;
+
     public CollectionHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
         this.vertx = vertx;
         this.mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
         this.rabbitMQClient = RabbitMQClient.create(vertx, new RabbitMQOptions(config.getJsonObject("rabbitmq")));
+        this.commodityHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
         /**
          * 创建rabbitmq连接
          */
@@ -67,8 +72,21 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             JsonObject json = (JsonObject) msg.body();
             LOGGER.debug("Got collection message: {}", json);
             JsonObject collection = new JsonObject(json.getString("body"));
-            if (collection.containsKey("user_id")) {
-                mongoClient.rxInsert(MONGODB_COLLECTION, collection).subscribe();
+            if (!JsonUtils.isNull(collection) && collection.containsKey("user_id")) {
+                commodityHandler.findCommodityById(collection.getLong("commodity_id"), handler -> {
+                   if (handler.failed()) {
+                       LOGGER.error("collection fail, get commodity error: ", handler.cause());
+                       return ;
+                   }
+                   JsonObject commodity = handler.result();
+                   mongoClient.rxInsert(MONGODB_COLLECTION, collection
+                           .put("brand_name", commodity.getString("brand_name"))
+                           .put("category_name", commodity.getString("category_name"))
+                           .put("commodity_name", commodity.getString("commodity_name"))
+                           .put("price", commodity.getString("price"))
+                           .put("original_price", commodity.getString("original_price"))
+                           .put("image_url", commodity.getString("image_url"))).subscribe();
+                });
             }
         });
         rabbitMQClient.rxBasicConsume(QUEUES, EVENTBUS_QUEUES).subscribe();
@@ -78,7 +96,7 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
     @Override
     public ICollectionHandler sendCollection(String token, JsonObject params, Handler<AsyncResult<String>> resultHandler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<String> resultFuture = sessionFuture.compose(session -> {
+        sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
@@ -89,8 +107,7 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, message)
                     .subscribe(future::complete, future::fail);
             return future;
-        });
-        resultFuture.setHandler(resultHandler);
+        }).setHandler(resultHandler);
         return this;
     }
 

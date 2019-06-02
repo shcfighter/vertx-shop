@@ -21,7 +21,7 @@ $(function() {
                     window.location.href = "/index.html";
                 } else {
                     //alert(result.message);
-                    $.Pop(result.message,"alert",function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -52,11 +52,11 @@ $(function() {
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0){
-                    $.Pop("注册成功！", "alert", function(){
+                    xw.confirm("注册成功!",function(){
                         window.location.href = "/index.html";
-                    });
+                    },function(){});
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -78,9 +78,9 @@ $(function() {
             data: JSON.stringify(data),
             success: function(result){
                 if (result.status == 0) {
-                    $.Pop("发送成功","alert",function(){});
+                    xw.alert("发送成功")
                 } else {
-                    $.Pop("发送失败","alert",function(){});
+                    xw.alert("发送失败")
                 }
             },
             error: function () {

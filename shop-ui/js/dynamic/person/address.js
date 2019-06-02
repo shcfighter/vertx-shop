@@ -29,9 +29,9 @@ $(function () {
             success: function(result){
                 if(result.status == 0) {
                     loadAddress();
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -53,7 +53,7 @@ $(function () {
                 if(result.status == 0) {
                     $($default_address).addClass("defaultAddr").siblings().removeClass("defaultAddr");
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -80,7 +80,7 @@ $(function () {
                     //$("#user-address").after("<input type=\"hidden\" name=\"harea\" data-id=\"420704\" id=\"harea\" value=\"鄂城区\"><input type=\"hidden\" name=\"hproper\" data-id=\"420700\" id=\"hproper\" value=\"鄂州市\"><input type=\"hidden\" name=\"hcity\" data-id=\"420000\" id=\"hcity\" value=\"湖北省\">");
                     $("#user-intro").val(items.address);
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
@@ -98,9 +98,9 @@ function delClick(id){
         success: function(result){
             if(result.status == 0) {
                 loadAddress();
-                $.Pop(result.message, "alert", function(){});
+                xw.alert(result.message)
             } else {
-                $.Pop(result.message, "alert", function(){});
+                xw.alert(result.message)
             }
         },
         error: function () {
@@ -144,7 +144,7 @@ function loadAddress(){
                         "                    </li>");
                 })
             } else {
-                $.Pop(result.message, "alert", function(){});
+                xw.alert(result.message)
             }
         },
         error: function () {

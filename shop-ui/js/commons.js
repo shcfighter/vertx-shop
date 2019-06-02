@@ -29,32 +29,16 @@ $.ajaxSetup({
             }
         },
         404: function() {
-            xw.confirm("数据获取/输入失败，没有此服务。404",function(){
-                window.location.href = "/login.html"
-            },function(){
-                //alert('你点击了取消')
-            });
+            xw.alert("数据获取/输入失败，没有此服务。404");
         },
         504: function() {
-            xw.confirm("数据获取/输入失败，服务器没有响应。504",function(){
-                window.location.href = "/login.html"
-            },function(){
-                //alert('你点击了取消')
-            });
+            xw.alert("数据获取/输入失败，服务器没有响应。504")
         },
         500: function() {
-            xw.confirm("服务器有误。500",function(){
-                window.location.href = "/login.html"
-            },function(){
-                //alert('你点击了取消')
-            });
+            xw.alert("服务器有误。500");
         },
         502: function() {
-            xw.confirm("网关超时。502",function(){
-                window.location.href = "/login.html"
-            },function(){
-                //alert('你点击了取消')
-            });
+            xw.alert("网关超时。502");
         }
     }
 });

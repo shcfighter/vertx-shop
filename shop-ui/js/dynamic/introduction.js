@@ -52,7 +52,7 @@ $(function(){
             }
         });
     } else {
-        $.Pop("获取商品信息失败！", "alert", function(){});
+        xw.alert("获取商品信息失败")
     }
 
     $("#LikBuy").click(function () {
@@ -71,7 +71,7 @@ $(function(){
                 if(result.status == 0){
                     window.location.href = "/pay.html?order_id=" + result.items;
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {

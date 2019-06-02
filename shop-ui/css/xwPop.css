@@ -10,7 +10,7 @@
 
 /*modal*/
 .xw-pop-modalbox,.xw-pop-modalbox *{margin:0;padding:0;box-sizing:border-box;font-size:14px;}
-.xw-pop-modalbox{position:fixed;opacity:0;left:0;top:0;bottom:0;right:0;background:rgba(0,0,0,.6);z-index:1000;text-align:center}
+.xw-pop-modalbox{position:fixed;opacity:0;left:0;top:0;bottom:0;right:0;background:rgba(0,0,0,.6);z-index:10003;text-align:center}
 .xw-pop-modalbox:after{content:'';height:100%;display:inline-block;vertical-align:middle;width:0;}
 .xw-pop-modalbox .xw-pop-modal-section{display:inline-block;width:420px;background:#fff;text-align:left;vertical-align:middle;border-radius:5px;overflow:hidden;box-shadow:0 0 5px rgba(0,0,0,.3)}
 .xw-pop-modalbox .xw-pop-modal-header{padding:20px 20px 0;font-size:16px;font-weight:700;position:relative}

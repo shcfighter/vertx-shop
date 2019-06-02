@@ -171,7 +171,7 @@ $(function () {
                             "</div>");
                     });
                 } else {
-                    $.Pop(result.message, "alert", function(){});
+                    xw.alert(result.message)
                 }
             },
             error: function () {
