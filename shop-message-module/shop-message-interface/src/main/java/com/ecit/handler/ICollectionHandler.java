@@ -28,4 +28,6 @@ public interface ICollectionHandler {
     @Fluent
     ICollectionHandler updateCollection(long userId, String id, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);
 
+    @Fluent
+    ICollectionHandler removeCollection(String token, String id, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);
 }

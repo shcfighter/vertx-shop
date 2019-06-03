@@ -36,7 +36,8 @@ public class RestCollectionRxVerticle extends RestAPIRxVerticle{
 
         // API route handler
         router.post("/insertCollection").handler(this::insertCollectionHandler);
-        router.get("/findCollection").handler(this::findMessageHandler);
+        router.get("/findCollection").handler(this::findCollectionHandler);
+        router.delete("/removeCollection/:id").handler(this::removeCollectionHandler);
         //全局异常处理
         this.globalVerticle(router);
 
@@ -73,7 +74,7 @@ public class RestCollectionRxVerticle extends RestAPIRxVerticle{
         });
     }
 
-    private void findMessageHandler(RoutingContext context){
+    private void findCollectionHandler(RoutingContext context){
         final String token = context.request().getHeader(Constants.TOKEN);
         collectionHandler.findCollection(token, Integer.parseInt(context.request().getParam("pageNum")), handler ->{
             if(handler.succeeded()){
@@ -81,6 +82,18 @@ public class RestCollectionRxVerticle extends RestAPIRxVerticle{
             } else {
                 LOGGER.info("查询收藏失败", handler.cause());
                 this.returnWithFailureMessage(context, "查询收藏失败");
+            }
+        });
+    }
+
+    private void removeCollectionHandler(RoutingContext context){
+        final String token = context.request().getHeader(Constants.TOKEN);
+        collectionHandler.removeCollection(token, context.request().getParam("id"), handler ->{
+            if(handler.succeeded() && handler.result().getDocModified() > 0){
+                this.returnWithSuccessMessage(context, "取消收藏成功", handler.result());
+            } else {
+                LOGGER.info("取消收藏失败", handler.cause());
+                this.returnWithFailureMessage(context, "取消收藏失败");
             }
         });
     }

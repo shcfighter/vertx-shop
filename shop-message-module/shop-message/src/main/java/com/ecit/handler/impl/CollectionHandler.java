@@ -1,15 +1,18 @@
 package com.ecit.handler.impl;
 
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
+import com.ecit.common.id.IdWorker;
 import com.ecit.common.utils.JsonUtils;
 import com.ecit.handler.ICollectionHandler;
 import com.ecit.handler.ICommodityHandler;
+import com.ecit.handler.IdBuilder;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
+import io.vertx.ext.mongo.UpdateOptions;
 import io.vertx.rabbitmq.RabbitMQOptions;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.mongo.MongoClient;
@@ -136,6 +139,28 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
 
     @Override
     public ICollectionHandler updateCollection(long userId, String id, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
+        return this;
+    }
+
+    @Override
+    public ICollectionHandler removeCollection(String token, String id, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            final long userId = session.getLong("userId");
+            Future<MongoClientUpdateResult> future = Future.future();
+            JsonObject query = new JsonObject()
+                    .put("_id", id)
+                    .put("user_id", userId)
+                    .put("is_deleted", 0);
+            JsonObject update = new JsonObject().put("$set", new JsonObject().put("is_deleted", 1));
+            mongoClient.rxUpdateCollectionWithOptions(MONGODB_COLLECTION, query, update, new UpdateOptions().setMulti(true))
+                    .subscribe(future::complete, future::fail);
+            return future;
+        }).setHandler(resultHandler);
         return this;
     }
 }

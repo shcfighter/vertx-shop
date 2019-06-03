@@ -52,9 +52,10 @@ color:#fff ;text-align: center;vertical-align: middle;padding-top:15px;}
 .s-history-price{display: inline;}	
 /*操作*/
 .s-tp {position: absolute;right:0px;bottom:90px;width:100% ;left:0px ;}
-.ui-btn-loading-before {cursor: pointer;width:50%;border: none;text-align: center;background: rgba(0, 0, 0, 0.5) none repeat scroll 0% 0%;
+.ui-btn-loading-before {cursor: pointer;width:33%;border: none;text-align: center;background: rgba(0, 0, 0, 0.5) none repeat scroll 0% 0%;
 color: #FFF;}
 .ui-btn-loading-before.buy{display:inline-block;position: absolute;right:-1px;}
+.ui-btn-loading-before.collection{display:inline-block;position: absolute;right:79px;}
 .s-tp i{display: none;}
 	
 }	
@@ -65,7 +66,7 @@ color: #FFF;}
 
 @media only screen and (min-width:1200px) 
 {
-.s-item-wrap{width:20%; float:left;}
+.s-item-wrap{width:25%; float:left;}
 }
 
 

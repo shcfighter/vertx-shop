@@ -140,7 +140,7 @@ $(function(){
             data: JSON.stringify(data),
             success: function(result){
                 if(result.status == 0){
-                    console.log(result);
+                    xw.alert(result.message);
                 }
             },
             error: function () {
