@@ -107,7 +107,6 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
               LOGGER.error("redis hget : ", re.cause());
               future.fail(re.cause());
           } else {
-              LOGGER.info("redis info: ", re.result());
               future.complete(re.result());
           }
         });

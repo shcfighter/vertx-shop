@@ -65,7 +65,8 @@ $(function(){
             success: function(result){
                 if(result.status == 0){
                     sessionStorage.removeItem("loginUser");
-                    $(".login_user").html("<a href=\"/login.html\" target=\"_top\" class=\"h\">亲，请登录</a>  <a href=\"/register.html\" target=\"_top\">免费注册</a>");
+                    //$(".login_user").html("<a href=\"/login.html\" target=\"_top\" class=\"h\">亲，请登录</a>  <a href=\"/register.html\" target=\"_top\">免费注册</a>");
+                    window.location.href = "/login.html";
                 }
             },
             error: function () {

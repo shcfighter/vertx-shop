@@ -12,6 +12,10 @@ $(function () {
             url: domain + "api/collection/findCollection?pageNum=" + page,
             success: function(result){
                 if(result.status == 0) {
+                    if (1 != page && result.items.length <= 0) {
+                        xw.alert("没有更多了！");
+                        return ;
+                    }
                     $(".s-more-btn").attr("data-screen", page);
                     $.each(result.items, function (index, value) {
                         $(".s-content").append("<div class=\"s-item-wrap\">\n" +
@@ -24,7 +28,7 @@ $(function () {
                             "                                    </a>\n" +
                             "                                </div>\n" +
                             "                                <div class=\"s-info\">\n" +
-                            "                                    <div class=\"s-title\"><a href=\"#\" title=\"" + value.commodity_name + "\">" + value.commodity_name + "</a>\n" +
+                            "                                    <div class=\"s-title\"><a href=\"/introduction.html?commodity_id=" + value.commodity_id + "\" title=\"" + value.commodity_name + "\">" + value.commodity_name + "</a>\n" +
                             "                                    </div>\n" +
                             "                                    <div class=\"s-price-box\">\n" +
                             "                                        <span class=\"s-price\"><em class=\"s-price-sign\">¥</em><em\n" +
@@ -38,7 +42,7 @@ $(function () {
                             "                                    </div>\n" +
                             "                                </div>\n" +
                             "                                <div class=\"s-tp\">\n" +
-                            "                                    <span class=\"ui-btn-loading-before\">找相似</span>\n" +
+                            "                                    <span class=\"ui-btn-loading-before search_like\">找相似</span>\n" +
                             "                                    <i class=\"am-icon-shopping-cart\"></i>\n" +
                             "                                    <span class=\"ui-btn-loading-before buy\" commodity_id=\"" + value.commodity_id + "\">加入购物车</span>\n" +
                             "                                    <i class=\"am-icon-shopping-cart\"></i>\n" +
@@ -56,6 +60,20 @@ $(function () {
             }
         });
     }
+    
+    $(".you-like").on("mouseover", ".s-item", function () {
+        $(this).find(".s-tp").css("display", "block")
+    });
+
+    $(".you-like").on("mouseout", ".s-item", function () {
+        $(this).find(".s-tp").css("display", "none")
+    });
+
+    $(".s-content").on("click", ".search_like", function () {
+        var search = $(this).closest(".s-item ").find(".s-title").find("a").text();
+        //console.log(search.replace(/\(.*?\)/g,'').replace(/（.*?）/g,''))
+        window.location.href = "/search.html?keyword=" + search.replace(/\(.*?\)/g,'').replace(/（.*?）/g,'');
+    });
 
     /**
      * 加入购物车
@@ -101,6 +119,9 @@ $(function () {
         });
     });
 
+    /**
+     * 更多
+     */
     $(".s-more-btn").click(function () {
         var page = $(this).attr("data-screen");
         loadCollection(parseInt(page) + 1);

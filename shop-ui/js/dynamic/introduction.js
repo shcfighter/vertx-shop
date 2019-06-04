@@ -45,6 +45,39 @@ $(function(){
                     $.each(items.detail_image_url, function(index, detail_image_url) {
                         $(".twlistNews").append("<img src=\"" + detail_image_url + "\">");
                     });
+
+                    var data = {
+                        keyword: items.brand_name + " " + items.category_name,
+                        pageSize: 5,
+                        page: 1
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        contentType: "application/json;",
+                        url: domain + "api/search/search",
+                        data: JSON.stringify(data),
+                        success: function(result){
+                            if(result.status == 0){
+                                var commoditys = result.items.items;
+                                for (var index in commoditys) {
+                                    commodity = commoditys[index];
+                                    $(".mc ul").append("<li>\n" +
+                                        "                    <div class=\"p-img\">\n" +
+                                        "                        <a href=\"/introduction.html?commodity_id=" + commodity.commodity_id + "\"> <img class=\"\" src=\"" + commodity.image_url[0] + "\"> </a>\n" +
+                                        "                    </div>\n" +
+                                        "                    <div class=\"p-name\"><a href=\"introduction.html?commodity_id=" + commodity.commodity_id + "\">\n" + commodity.commodity_name +
+                                        "                    </a>\n" +
+                                        "                    </div>\n" +
+                                        "                    <div class=\"p-price\"><strong>￥" + commodity.price + "</strong></div>\n" +
+                                        "                </li>");
+                                    $(".mc ul").find("li:first").attr("class", "first");
+                                }
+                            }
+                        },
+                        error: function () {
+                            console.log("网络异常");
+                        }
+                    });
                 }
             },
             error: function () {

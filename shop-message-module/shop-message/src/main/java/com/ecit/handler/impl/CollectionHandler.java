@@ -116,7 +116,7 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
 
     @Override
     public ICollectionHandler findCollection(String token, int page, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
-        final int pageSize = 10;
+        final int pageSize = 8;
         Future<JsonObject> sessionFuture = this.getSession(token);
         Future<List<JsonObject>> resultFuture = sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {

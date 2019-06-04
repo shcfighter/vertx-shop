@@ -51,7 +51,7 @@ color:#fff ;text-align: center;vertical-align: middle;padding-top:15px;}
 .s-info .s-title{font-size:14px ;}
 .s-history-price{display: inline;}	
 /*操作*/
-.s-tp {position: absolute;right:0px;bottom:90px;width:100% ;left:0px ;}
+.s-tp {position: absolute;right:0px;bottom:90px;width:100% ;left:0px ;display: none;}
 .ui-btn-loading-before {cursor: pointer;width:33%;border: none;text-align: center;background: rgba(0, 0, 0, 0.5) none repeat scroll 0% 0%;
 color: #FFF;}
 .ui-btn-loading-before.buy{display:inline-block;position: absolute;right:-1px;}
