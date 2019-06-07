@@ -141,4 +141,7 @@ $(function() {
         search();
     });
 
+    $("#shopCart").click(function () {
+        window.location.href = "/shopcart.html";
+    });
 });

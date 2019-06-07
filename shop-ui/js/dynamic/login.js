@@ -20,7 +20,6 @@ $(function() {
                     sessionStorage.setItem("loginUser", JSON.stringify(result.items));
                     window.location.href = "/index.html";
                 } else {
-                    //alert(result.message);
                     xw.alert(result.message)
                 }
             },

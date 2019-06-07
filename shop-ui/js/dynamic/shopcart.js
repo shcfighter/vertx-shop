@@ -14,7 +14,6 @@ $(function () {
             arr[i] = $(this).val();
         });
         var id = arr.join(",");
-        console.log(id);
         var data = {
             ids: id
         }
