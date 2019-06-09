@@ -95,20 +95,45 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             LOGGER.debug("Got collection message: {}", json);
             JsonObject collection = new JsonObject(json.getString("body"));
             if (!JsonUtils.isNull(collection) && collection.containsKey("user_id")) {
-                mongoClient.rxFindOne()
-                commodityHandler.findCommodityById(collection.getLong("commodity_id"), handler -> {
-                   if (handler.failed()) {
-                       LOGGER.error("collection fail, get commodity error: ", handler.cause());
-                       return ;
-                   }
-                   JsonObject commodity = handler.result();
-                   mongoClient.rxInsert(MONGODB_COLLECTION, collection
-                           .put("brand_name", commodity.getString("brand_name"))
-                           .put("category_name", commodity.getString("category_name"))
-                           .put("commodity_name", commodity.getString("commodity_name"))
-                           .put("price", commodity.getString("price"))
-                           .put("original_price", commodity.getString("original_price"))
-                           .put("image_url", commodity.getString("image_url"))).subscribe();
+                Future<JsonObject> future = Future.future();
+                mongoClient.rxFindOne(MONGODB_COLLECTION, new JsonObject()
+                                .put("user_id", collection.getLong("user_id"))
+                                .put("commodity_id", collection.getLong("commodity_id")), null).subscribe(future::complete, future::fail);
+                future.compose(o -> {
+                    LOGGER.info("1111: {}", o);
+                    if (JsonUtils.isNull(o)) {
+                        LOGGER.info("商品不存在！");
+                    } else {
+                        LOGGER.info("123456789: {}", o);
+                    }
+                    return Future.succeededFuture();
+                });
+                mongoClient.findOne(MONGODB_COLLECTION, new JsonObject()
+                        .put("user_id", collection.getLong("user_id"))
+                        .put("commodity_id", collection.getLong("commodity_id")), null, collectionHandler -> {
+                    if (collectionHandler.failed()) {
+                        LOGGER.error(collectionHandler.cause());
+                        return ;
+                    }
+                    JsonObject collectionJson = collectionHandler.result();
+                    if(JsonUtils.isNull(collectionJson)){
+                        commodityHandler.findCommodityById(collection.getLong("commodity_id"), handler -> {
+                            if (handler.failed()) {
+                                LOGGER.error("collection fail, get commodity error: ", handler.cause());
+                                return ;
+                            }
+                            JsonObject commodity = handler.result();
+                            mongoClient.rxInsert(MONGODB_COLLECTION, collection
+                                    .put("brand_name", commodity.getString("brand_name"))
+                                    .put("category_name", commodity.getString("category_name"))
+                                    .put("commodity_name", commodity.getString("commodity_name"))
+                                    .put("price", commodity.getString("price"))
+                                    .put("original_price", commodity.getString("original_price"))
+                                    .put("image_url", commodity.getString("image_url"))).subscribe();
+                        });
+                    } else {
+                        LOGGER.info("商品已经被收藏！");
+                    }
                 });
             }
         });
