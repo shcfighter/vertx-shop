@@ -1,11 +1,9 @@
 package com.ecit.handler.impl;
 
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
-import com.ecit.common.id.IdWorker;
 import com.ecit.common.utils.JsonUtils;
 import com.ecit.handler.ICollectionHandler;
 import com.ecit.handler.ICommodityHandler;
-import com.ecit.handler.IdBuilder;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -24,10 +22,18 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public class CollectionHandler extends JdbcRxRepositoryWrapper implements ICollectionHandler {
+    private final static Logger LOGGER = LogManager.getLogger(CollectionHandler.class);
 
+    /**
+     * 收藏商品 mongodb key
+     */
     static final String MONGODB_COLLECTION = "collection";
 
-    private final static Logger LOGGER = LogManager.getLogger(CollectionHandler.class);
+    /**
+     * 浏览商品历史记录 mongodb key
+     */
+    static final String MONGODB_BROWSE = "browse";
+
     /**
      * rabbitmq 路由器
      */
@@ -37,13 +43,25 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
      */
     private static final String ROUTINGKEY = "collection";
     /**
+     * rabbitmq routingkey
+     */
+    private static final String BROWSE_ROUTINGKEY = "browse";
+    /**
      * rabbitmq 队列
      */
     private static final String QUEUES = "vertx.shop.collection.queues";
     /**
+     * rabbitmq 队列
+     */
+    private static final String BROWSE_QUEUES = "vertx.shop.browse.queues";
+    /**
      * eventbus 地址
      */
     private static final String EVENTBUS_QUEUES = "eventbus.collection.queues";
+    /**
+     * browse eventbus 地址
+     */
+    private static final String BROWSE_EVENTBUS_QUEUES = "eventbus.browse.queues";
 
     final RabbitMQClient rabbitMQClient;
     final MongoClient mongoClient;
@@ -64,6 +82,7 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             if (startMQ.succeeded()) {
                 LOGGER.info("rabbitmq start success !");
                 this.saveCollection();
+                this.saveBrowsingHistory();
             } else {
                 LOGGER.error("rabbitmq start failed !");
             }
@@ -76,6 +95,7 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             LOGGER.debug("Got collection message: {}", json);
             JsonObject collection = new JsonObject(json.getString("body"));
             if (!JsonUtils.isNull(collection) && collection.containsKey("user_id")) {
+                mongoClient.rxFindOne()
                 commodityHandler.findCommodityById(collection.getLong("commodity_id"), handler -> {
                    if (handler.failed()) {
                        LOGGER.error("collection fail, get commodity error: ", handler.cause());
@@ -93,7 +113,23 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             }
         });
         rabbitMQClient.rxBasicConsume(QUEUES, EVENTBUS_QUEUES).subscribe();
+    }
 
+    private void saveBrowsingHistory() {
+        vertx.eventBus().consumer(BROWSE_EVENTBUS_QUEUES,  msg -> {
+            JsonObject json = (JsonObject) msg.body();
+            LOGGER.debug("Got browse message: {}", json);
+            JsonObject browseJson = new JsonObject(json.getString("body"));
+            Long userId = browseJson.getLong("user_id");
+            if (!JsonUtils.isNull(browseJson) && browseJson.containsKey("user_id")) {
+                JsonObject document = new JsonObject().put("commodity", browseJson)
+                        .put("commodity_id", browseJson.getLong("commodity_id"))
+                        .put("user_id", userId).put("is_deleted", 0)
+                        .put("create_time", System.currentTimeMillis());
+                mongoClient.rxInsert(MONGODB_BROWSE, document).subscribe();
+            }
+        });
+        rabbitMQClient.rxBasicConsume(BROWSE_QUEUES, BROWSE_EVENTBUS_QUEUES).subscribe();
     }
 
     @Override
@@ -104,10 +140,28 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
             }
-            params.put("user_id", session.getLong("userId"));
+            params.put("type", MONGODB_COLLECTION).put("user_id", session.getLong("userId"));
             Future<String> future = Future.future();
             JsonObject message = new JsonObject().put("body", params.encodePrettily());
             rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, message)
+                    .subscribe(future::complete, future::fail);
+            return future;
+        }).setHandler(resultHandler);
+        return this;
+    }
+
+    @Override
+    public ICollectionHandler sendBrowse(String token, JsonObject params, Handler<AsyncResult<String>> resultHandler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        sessionFuture.compose(session -> {
+            if (JsonUtils.isNull(session)) {
+                LOGGER.info("无法获取session信息");
+                return Future.failedFuture("can not get session");
+            }
+            params.put("type", MONGODB_BROWSE).put("user_id", session.getLong("userId"));
+            Future<String> future = Future.future();
+            JsonObject message = new JsonObject().put("body", params.encodePrettily());
+            rabbitMQClient.rxBasicPublish(EXCHANGE, BROWSE_ROUTINGKEY, message)
                     .subscribe(future::complete, future::fail);
             return future;
         }).setHandler(resultHandler);
@@ -161,6 +215,34 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
                     .subscribe(future::complete, future::fail);
             return future;
         }).setHandler(resultHandler);
+        return this;
+    }
+
+    @Override
+    public ICollectionHandler findBrowsingHistory(String token, int page, int pageSize, Handler<AsyncResult<List<JsonObject>>> handler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        sessionFuture.compose(session -> {
+            long userId = session.getLong("user_id");
+            Future<List<JsonObject>> future = Future.future();
+            JsonObject query = new JsonObject().put("user_id", userId).put("is_deleted", 0);
+            mongoClient.rxFindWithOptions(MONGODB_BROWSE, query, new FindOptions().setLimit(pageSize).setSkip(((page - 1) * pageSize))
+                    .setSort(new JsonObject().put("create_time", -1)))
+                    .subscribe(future::complete, future::fail);
+            return future;
+        }).setHandler(handler);
+        return this;
+    }
+
+    @Override
+    public ICollectionHandler rowNumBrowsingHistory(String token, Handler<AsyncResult<Long>> handler) {
+        Future<JsonObject> sessionFuture = this.getSession(token);
+        sessionFuture.compose(session -> {
+            long userId = session.getLong("user_id");
+            Future<Long> future = Future.future();
+            mongoClient.rxCount(MONGODB_BROWSE, new JsonObject().put("user_id", userId))
+                    .subscribe(future::complete, future::fail);
+            return future;
+        }).setHandler(handler);
         return this;
     }
 }

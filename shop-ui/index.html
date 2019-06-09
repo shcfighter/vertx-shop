@@ -18,7 +18,7 @@
     <script src="js/dynamic/search.input.js"></script>
     <link href="css/xwPop.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="js/xwPop.js"></script>
-    <script src="js/aTpl.min.js"></script>
+    <script type="text/javascript" src="js/aTpl.min.js"></script>
     <script src="js/dynamic/index.js"></script>
 </head>
 <body>
@@ -2081,20 +2081,21 @@
                 <a href="javascript:void(0);">
                     <span class="setting "></span>
                 </a>
-                <div class="ibar_login_box status_login ">
+                <div class="ibar_login_box status_login"></div>
+                <script id="ibar_login_box" type="text/aTpl">
                     <div class="avatar_box ">
                         <p class="avatar_imgbox "><img src="images/no-img_mid_.jpg "/></p>
                         <ul class="user_info ">
-                            <li>用户名sl1903</li>
+                            <li>用户名{{aTpl.loginName}}</li>
                             <li>级&nbsp;别普通会员</li>
                         </ul>
                     </div>
                     <div class="login_btnbox ">
-                        <a href="# " class="login_order ">我的订单</a>
+                        <a href="/shopcart.html" class="login_order ">我的订单</a>
                         <a href="/person/collection.html" class="login_favorite ">我的收藏</a>
                     </div>
                     <i class="icon_arrow_white "></i>
-                </div>
+                </script>
             </div>
             <div id="shopCart" class="item ">
                 <a href="javascript:void(0);">

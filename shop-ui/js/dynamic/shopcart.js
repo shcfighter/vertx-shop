@@ -140,13 +140,13 @@ function loadCart(page){
                         "\t</li>\n" +
                         "\t<li class=\"td td-item\">\n" +
                         "\t    <div class=\"item-pic\">\n" +
-                        "\t\t<a href=\"#\" target=\"_blank\" data-title=\"" + value.commodity_name + "\"\n" +
+                        "\t\t<a href=\"/introduction.html?commodity_id=" + value.commodity_id + "\" target=\"_blank\" data-title=\"" + value.commodity_name + "\"\n" +
                         "\t\t   class=\"J_MakePoint\" data-point=\"tbcart.8.12\">\n" +
                         "\t\t    <img src=\"" + value.image_url + "\" class=\"itempic J_ItemImg\"></a>\n" +
                         "\t    </div>\n" +
                         "\t    <div class=\"item-info\">\n" +
                         "\t\t<div class=\"item-basic-info\">\n" +
-                        "\t\t    <a href=\"#\" target=\"_blank\" title=\"" + value.commodity_name + "\n" +
+                        "\t\t    <a href=\"/introduction.html?commodity_id=" + value.commodity_id + "\" target=\"_blank\" title=\"" + value.commodity_name + "\n" +
                         "\t\t       class=\"item-title J_MakePoint\" data-point=\"tbcart.8.11\">" + value.commodity_name + "</a>\n" +
                         "\t\t</div>\n" +
                         "\t    </div>\n" +

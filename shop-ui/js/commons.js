@@ -5,11 +5,17 @@ var domain = "http://localhost/";
 //var domain = "http://111.231.132.168/";
 
 var token = null;
-var sessionLoginUser = sessionStorage.getItem("loginUser");
-if(undefined != sessionLoginUser && null != sessionLoginUser && "" != sessionLoginUser){
-    var loginUser = jQuery.parseJSON(sessionLoginUser);
+var loginUser = {};
+var sessionLoginUser = localStorage.getItem("loginUser");
+var tokenExpire = getCookie("token_expire");
+if(undefined != sessionLoginUser && null != sessionLoginUser && "" != sessionLoginUser && tokenExpire){
+    loginUser = jQuery.parseJSON(sessionLoginUser);
     token = loginUser.token;
 }
+if (!tokenExpire) {
+    localStorage.removeItem("loginUser");
+}
+
 console.log("token: " + token);
 
 //全局ajax拦截处理
@@ -44,7 +50,7 @@ $.ajaxSetup({
 });
 
 $(function(){
-    var sessionLoginUser = sessionStorage.getItem("loginUser");
+    var sessionLoginUser = localStorage.getItem("loginUser");
     if(undefined == sessionLoginUser ||
         null == sessionLoginUser ||
         "" == sessionLoginUser){
@@ -64,7 +70,8 @@ $(function(){
             url: domain + "api/user/logout",
             success: function(result){
                 if(result.status == 0){
-                    sessionStorage.removeItem("loginUser");
+                    localStorage.removeItem("loginUser");
+                    delCookie("token_expire");
                     //$(".login_user").html("<a href=\"/login.html\" target=\"_top\" class=\"h\">亲，请登录</a>  <a href=\"/register.html\" target=\"_top\">免费注册</a>");
                     window.location.href = "/login.html";
                 }
@@ -111,4 +118,64 @@ function loadCartNum() {
             console.log("网络异常");
         }
     });
+}
+
+//写cookies
+function setCookie(name,value)
+{
+    var Days = 30;
+    var exp = new Date();
+    exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+}
+//读取cookies
+function getCookie(name)
+{
+    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+
+    if(arr=document.cookie.match(reg))
+
+        return unescape(arr[2]);
+    else
+        return null;
+}
+//删除cookies
+function delCookie(name)
+{
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    var cval=getCookie(name);
+    if(cval!=null)
+        document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+}
+function setCookie(name,value,time)
+{
+    var strsec = getsec(time);
+    var exp = new Date();
+    exp.setTime(exp.getTime() + strsec*1);
+    document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+}
+/**
+ * s20是代表20秒
+ * h是指小时，如12小时则是：h12
+ * d是天数，30天则：d30
+ * @param str
+ * @returns {number}
+ */
+function getsec(str)
+{
+    var str1=str.substring(1,str.length)*1;
+    var str2=str.substring(0,1);
+    if (str2=="s")
+    {
+        return str1*1000;
+    }
+    else if (str2=="h")
+    {
+        return str1*60*60*1000;
+    }
+    else if (str2=="d")
+    {
+        return str1*24*60*60*1000;
+    }
 }

@@ -30,4 +30,13 @@ public interface ICollectionHandler {
 
     @Fluent
     ICollectionHandler removeCollection(String token, String id, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler);
+
+    @Fluent
+    ICollectionHandler sendBrowse(String token, JsonObject params, Handler<AsyncResult<String>> resultHandler);
+
+    @Fluent
+    ICollectionHandler findBrowsingHistory(String token, int page, int pageSize, Handler<AsyncResult<List<JsonObject>>> handler);
+
+    @Fluent
+    ICollectionHandler rowNumBrowsingHistory(String token, Handler<AsyncResult<Long>> handler);
 }

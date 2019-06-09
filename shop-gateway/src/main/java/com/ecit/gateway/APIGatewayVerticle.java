@@ -233,7 +233,6 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
                 .put("loginName", loginName).put("password", params.getString("pwd")), handler -> {
             if (handler.succeeded()) {
                 JsonObject userSession = handler.result();
-
                 if(Objects.isNull(userSession)){
                     LOGGER.info("用户【{}】登录，用户不存在", loginName);
                     this.returnWithFailureMessage(context, "用户名或密码错误");

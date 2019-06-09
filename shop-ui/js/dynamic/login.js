@@ -16,8 +16,10 @@ $(function() {
             url: domain + "api/user/login",
             data: JSON.stringify(data),
             success: function(result){
+                console.log(result);
                 if(result.status == 0){
-                    sessionStorage.setItem("loginUser", JSON.stringify(result.items));
+                    localStorage.setItem("loginUser", JSON.stringify(result.items));
+                    setCookie("token_expire", result.items.expire, "s" + result.items.expire);
                     window.location.href = "/index.html";
                 } else {
                     xw.alert(result.message)

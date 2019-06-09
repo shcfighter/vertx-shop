@@ -65,6 +65,7 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
                                         final String token = MD5Util.toMD5String(StringUtils.join(user.getString("userid"), Constants.UNDERLINE, user.getString("loginname"), Constants.UNDERLINE, System.currentTimeMillis()));
                                         this.setSession(token, user);
                                         user.put(Constants.TOKEN, token);
+                                        user.put("expire", Constants.SESSION_EXPIRE_TIME);
                                         resultHandler.handle(Future.succeededFuture(user));
                                         break;
                                     }

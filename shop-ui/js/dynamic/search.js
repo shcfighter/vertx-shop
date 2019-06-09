@@ -144,4 +144,17 @@ $(function() {
     $("#shopCart").click(function () {
         window.location.href = "/shopcart.html";
     });
+    var temp = document.getElementById("ibar_login_box");
+    if (token && temp) {
+        aTpl.template(temp).render(loginUser, function(html){
+            $(".ibar_login_box").html(html);
+        });
+    }
+    $("#prof").click(function () {
+        if (token) {
+            $(".ibar_login_box").show();
+        } else {
+            window.location.href = "/login.html";
+        }
+    });
 });

@@ -5,9 +5,11 @@ jQuery(function($){
 	//鼠标悬停信息
 
 	$("#wrap .item").mouseenter(function(){
-		$(this).children(".mp_tooltip").animate({left:-92,queue:true});
-		$(this).children(".mp_tooltip").css("visibility","visible");
-		$(this).children(".ibar_login_box").css("display","block");
+		if (token) {
+			$(this).children(".mp_tooltip").animate({left:-92,queue:true});
+			$(this).children(".mp_tooltip").css("visibility","visible");
+			$(this).children(".ibar_login_box").css("display","block");
+		}
 	});
 	$("#wrap .item").mouseleave(function(){
 		$(this).children(".mp_tooltip").css("visibility","hidden");

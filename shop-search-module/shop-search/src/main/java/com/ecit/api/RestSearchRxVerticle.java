@@ -4,6 +4,7 @@ import com.ecit.SearchType;
 import com.ecit.common.constants.Constants;
 import com.ecit.common.result.ResultItems;
 import com.ecit.common.rx.RestAPIRxVerticle;
+import com.ecit.handler.ICollectionHandler;
 import com.ecit.handler.ICommodityHandler;
 import com.ecit.handler.IPreferencesHandler;
 import com.google.common.collect.Lists;
@@ -38,6 +39,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
     private static final String HTTP_SEARCH_SERVICE = "http_search_service_api";
     private ICommodityHandler commodityHandler;
     private IPreferencesHandler preferencesHandler;
+    private ICollectionHandler collectionHandler;
     private RedisClient redis;
 
     @Override
@@ -45,6 +47,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         super.start();
         this.commodityHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
         this.preferencesHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).build(IPreferencesHandler.class);
+        this.collectionHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICollectionHandler.COLLECTION_SERVICE_ADDRESS).build(ICollectionHandler.class);
         JsonObject redisObject = this.config().getJsonObject("redis", new JsonObject());
         RedisOptions config = new RedisOptions()
                 .setHost(redisObject.getString("host", "localhost"))
@@ -199,7 +202,10 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                 this.returnWithFailureMessage(context, "查询失败");
             } else {
                 final Hits hits = handler.result().getHits();
-                this.Ok(context, ResultItems.getReturnItemsSuccess(hits.getTotal().intValue(), hits.getHits().get(0).getSource()));
+                JsonObject commodity = hits.getHits().get(0).getSource();
+                //记录浏览记录
+                collectionHandler.sendBrowse(getHeader(context, Constants.TOKEN), commodity, h -> {});
+                this.Ok(context, ResultItems.getReturnItemsSuccess(hits.getTotal().intValue(), commodity));
             }
         });
     }
