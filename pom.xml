@@ -28,7 +28,7 @@
         <java-version>11</java-version>
         <vertx-version>3.6.0</vertx-version>
         <mysql-version>6.0.6</mysql-version>
-        <log4j-version>2.10.0</log4j-version>
+        <log4j-version>2.16.0</log4j-version>
         <slf4j-log4j12-version>1.7.25</slf4j-log4j12-version>
         <commons-lang3.version>3.7</commons-lang3.version>
         <guava-version>24.0-jre</guava-version>
