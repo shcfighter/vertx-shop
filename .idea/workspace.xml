@@ -5,25 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b87a96f5-9f66-412e-b409-b8b4bce6104a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/db/JdbcRxRepositoryWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/db/JdbcRxRepositoryWrapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/BaseMicroserviceRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/BaseMicroserviceRxVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/src/main/java/com/ecit/common/rx/RestAPIRxVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/GatewayVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/GatewayVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthHandlerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthHandlerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/CollectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/CollectionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/MessageHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/api/RestCartRxVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/handler/impl/CartHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/handler/impl/CartHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/AccountHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/AccountHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/model/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

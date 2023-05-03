@@ -20,6 +20,7 @@ import io.vertx.reactivex.redis.RedisClient;
 import io.vertx.reactivex.redis.client.Redis;
 import io.vertx.reactivex.redis.client.RedisAPI;
 import io.vertx.reactivex.redis.client.RedisConnection;
+import io.vertx.reactivex.redis.client.Response;
 import io.vertx.reactivex.sqlclient.SqlConnection;
 import io.vertx.reactivex.sqlclient.Tuple;
 import io.vertx.redis.RedisOptions;
@@ -45,7 +46,8 @@ public class JdbcRxRepositoryWrapper {
 
   private final RedisOptions options = new RedisOptions().addConnectionString("redis://127.0.0.1:6379");
   private final AtomicBoolean CONNECTING = new AtomicBoolean();
-  protected RedisConnection redisClient;
+  protected RedisConnection redisConnection;
+  protected RedisAPI redisClient;
   protected final PgPool pool;
 
   public JdbcRxRepositoryWrapper(Vertx vertx, JsonObject config) {
@@ -71,11 +73,11 @@ public class JdbcRxRepositoryWrapper {
 
     pool = PgPool.pool(vertx, connectOptions, poolOptions);
 
-    createRedisClient()
+    createRedisClient(vertx)
             .onSuccess(conn -> {
               // connected to redis!
-              this.redisClient = conn;
-
+              this.redisConnection = conn;
+              redisClient = RedisAPI.api(redisConnection);
             }).onFailure(err -> {
               LOGGER.info("redis ");
             });
@@ -122,7 +124,8 @@ public class JdbcRxRepositoryWrapper {
     return size * (page - 1);
   }
 
-  protected Single<List<JsonObject>> retrieveByPage(JsonArray param, int size, int page, String sql) {
+  protected Single<List<JsonObject>> retrieveByPage(Tuple param, int size, int page, String sql) {
+    param.addInteger(size).addInteger(calcPage(page, size));
     return this.getConnection()
             .flatMap(conn -> conn.rxQueryWithParams(sql, param.add(size).add(calcPage(page, size)))
                     .map(ResultSet::getRows).doAfterTerminate(conn::close));
@@ -207,13 +210,14 @@ public class JdbcRxRepositoryWrapper {
     if(StringUtils.isEmpty(token)){
       return Future.failedFuture("token empty!");
     }
-    Future<JsonObject> redisResult = Future.future();
+    Promise<JsonObject> redisResult = Promise.promise();
     redisClient.hget(Constants.VERTX_WEB_SESSION, token, re -> {
       if (re.failed()) {
         LOGGER.error("redis hget : ", re.cause());
         redisResult.fail(re.cause());
       } else {
-        String user = re.result();
+        Response response = re.result();
+        String user = response.toString();
         if(StringUtils.isEmpty(user)){
           redisResult.fail("user session empty!");
           return ;
@@ -221,7 +225,7 @@ public class JdbcRxRepositoryWrapper {
         redisResult.complete(new JsonObject(user));
       }
     });
-    return redisResult;
+    return redisResult.future();
   }
 
   /**
@@ -230,7 +234,7 @@ public class JdbcRxRepositoryWrapper {
    * @param jsonObject
    */
   protected void setSession(String token, JsonObject jsonObject){
-    redisClient.rxHset(Constants.VERTX_WEB_SESSION, token, jsonObject.toString()).subscribe();
+    redisClient.rxHset(Arrays.asList(Constants.VERTX_WEB_SESSION, token, jsonObject.toString())).subscribe();
     redisClient.rxExpire(Constants.VERTX_WEB_SESSION, Constants.SESSION_EXPIRE_TIME).subscribe();
   }
 
@@ -238,22 +242,22 @@ public class JdbcRxRepositoryWrapper {
    * Will create a redis client and setup a reconnect handler when there is
    * an exception in the connection.
    */
-  private Future<RedisConnection> createRedisClient() {
+  private Future<RedisConnection> createRedisClient(Vertx vertx) {
     Promise<RedisConnection> promise = Promise.promise();
 
     if (CONNECTING.compareAndSet(false, true)) {
       Redis.createClient(vertx, options)
               .rxConnect().subscribe(conn -> {
                 // make sure to invalidate old connection if present
-                if (client != null) {
-                  client.close();
+                if (this.redisConnection != null) {
+                  this.redisConnection.close();
                 }
 
                 // make sure the client is reconnected on error
                 conn.exceptionHandler(e -> {
                   // attempt to reconnect,
                   // if there is an unrecoverable error
-                  attemptReconnect(0);
+                  attemptReconnect(vertx, 0);
                 });
 
                 // allow further processing
@@ -273,7 +277,7 @@ public class JdbcRxRepositoryWrapper {
   /**
    * Attempt to reconnect up to MAX_RECONNECT_RETRIES
    */
-  private void attemptReconnect(int retry) {
+  private void attemptReconnect(Vertx vertx, int retry) {
     if (retry > MAX_RECONNECT_RETRIES) {
       // we should stop now, as there's nothing we can do.
       CONNECTING.set(false);
@@ -282,8 +286,8 @@ public class JdbcRxRepositoryWrapper {
       long backoff = (long) (Math.pow(2, Math.min(retry, 10)) * 10);
 
       vertx.setTimer(backoff, timer -> {
-        createRedisClient()
-                .onFailure(t -> attemptReconnect(retry + 1));
+        createRedisClient(vertx)
+                .onFailure(t -> attemptReconnect(vertx, retry + 1));
       });
     }
   }
