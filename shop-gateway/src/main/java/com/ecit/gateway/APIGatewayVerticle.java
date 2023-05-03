@@ -79,7 +79,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
 
         // create http server
         vertx.createHttpServer(/*httpServerOptions*/)
-                .requestHandler(router::accept)
+                .requestHandler(router)
                 .listen(port, host, ar -> {
                     if (ar.succeeded()) {
                         future.complete();

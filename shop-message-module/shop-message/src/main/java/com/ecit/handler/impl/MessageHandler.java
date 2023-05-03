@@ -9,7 +9,7 @@ import io.vertx.ext.mail.MailConfig;
 import io.vertx.ext.mail.MailMessage;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.ext.mongo.UpdateOptions;
-import io.vertx.reactivex.core.Future;
+import io.vertx.reactivex.core.Promise;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.mail.MailClient;
 import io.vertx.reactivex.ext.mongo.MongoClient;
@@ -46,17 +46,17 @@ public class MessageHandler implements IMessageHandler {
                 .put("status", 0)
                 .put("createTime", new Date().getTime());
 
-        Future<String> future = Future.future();
+        Promise<String> promise = Promise.promise();
         //mongoClient.rxInsert(MONGODB_COLLECTION, document).subscribe(future::complete, future::fail);
         mongoClient.insert(MONGODB_COLLECTION, document, handler -> {
             if(handler.succeeded()){
-                future.complete(code);
+                promise.complete(code);
             } else {
                 LOGGER.error("发送目标【{}】验证码【{}】保存失败", destination, code, handler.cause());
-                future.fail(handler.cause());
+                promise.fail(handler.cause());
             }
         });
-        future.setHandler(resultHandler);
+        promise.future().andThen(resultHandler);
         return this;
     }
 
@@ -69,9 +69,9 @@ public class MessageHandler implements IMessageHandler {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) - 5);
         query.put("createTime", new JsonObject().put("$gte", calendar.getTime().getTime()));
-        Future<JsonObject> future = Future.future();
-        mongoClient.rxFindOne(MONGODB_COLLECTION, query, null).subscribe(future::complete, future::fail);
-        future.setHandler(resultHandler);
+        Promise<JsonObject> promise = Promise.promise();
+        mongoClient.rxFindOne(MONGODB_COLLECTION, query, null).subscribe(promise::complete, promise::fail);
+        promise.future().andThen(resultHandler);
         return this;
     }
 
@@ -84,17 +84,17 @@ public class MessageHandler implements IMessageHandler {
                 .put("$set", new JsonObject()
                         .put("status", 1)
                         .put("updateTime", new Date().getTime()));
-        Future<MongoClientUpdateResult> future = Future.future();
+        Promise<MongoClientUpdateResult> promise = Promise.promise();
         mongoClient.rxUpdateCollectionWithOptions(MONGODB_COLLECTION, query, update, new UpdateOptions()
                 .setMulti(true))
-                .subscribe(future::complete, future::fail);
-        future.setHandler(resultHandler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().andThen(resultHandler);
         return this;
     }
 
     @Override
     public IMessageHandler registerEmailMessage(String destination, Handler<AsyncResult<String>> resultHandler) {
-        Future future = Future.future();
+        Promise<String> promise = Promise.promise();
         this.saveMessage(destination, RegisterType.email, handler -> {
             if(handler.succeeded()){
                 final String code = handler.result();
@@ -106,38 +106,38 @@ public class MessageHandler implements IMessageHandler {
                 mailClient.sendMail(message, result -> {
                     if (result.succeeded()) {
                         LOGGER.info("邮件【{}】发送成功！", destination);
-                        future.complete(handler.result());
+                        promise.complete(handler.result());
                     } else {
                         LOGGER.error("邮件【{}】发送失败", destination, result.cause());
-                        future.fail(result.cause());
+                        promise.fail(result.cause());
                     }
                 });
             } else {
                 LOGGER.info("生成邮件验证code失败！", handler.cause());
-                future.fail(handler.cause());
+                promise.fail(handler.cause());
             }
         });
-        future.setHandler(resultHandler);
+        promise.future().andThen(resultHandler);
         return this;
     }
 
     @Override
     public IMessageHandler registerMobileMessage(String destination, Handler<AsyncResult<String>> resultHandler) {
-        Future future = Future.future();
+        Promise<String> promise = Promise.promise();
         this.saveMessage(destination, RegisterType.mobile, handler -> {
             if(handler.succeeded()){
                 final String code = handler.result();
                 LOGGER.info("短信【{}】发送成功！", destination);
                 //todo 调用短信发送平台
-                future.complete(code);
+                promise.complete(code);
 
 
             } else {
                 LOGGER.info("生成验证code失败！", handler.cause());
-                future.fail(handler.cause());
+                promise.fail(handler.cause());
             }
         });
-        future.setHandler(resultHandler);
+        promise.future().andThen(resultHandler);
         return this;
     }
 }

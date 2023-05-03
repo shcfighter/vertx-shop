@@ -3,7 +3,6 @@ package com.ecit;
 import com.ecit.common.rx.BaseMicroserviceRxVerticle;
 import com.ecit.gateway.APIGatewayVerticle;
 import com.hazelcast.config.Config;
-import com.hazelcast.config.GroupConfig;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonObject;
@@ -23,10 +22,6 @@ public class GatewayVerticle extends BaseMicroserviceRxVerticle{
 
     public static void main(String[] args) {
         Config cfg = new Config();
-        GroupConfig group = new GroupConfig();
-        group.setName("p-dev");
-        group.setPassword("p-dev");
-        cfg.setGroupConfig(group);
         // 申明集群管理器
         ClusterManager mgr = new HazelcastClusterManager(cfg);
         VertxOptions options = new VertxOptions().setClusterManager(mgr);

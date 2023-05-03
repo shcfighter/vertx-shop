@@ -7,12 +7,14 @@ import com.ecit.handler.ICommodityHandler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.ext.mongo.UpdateOptions;
 import io.vertx.rabbitmq.RabbitMQOptions;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import io.vertx.reactivex.rabbitmq.RabbitMQClient;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
@@ -95,19 +97,18 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             LOGGER.debug("Got collection message: {}", json);
             JsonObject collection = new JsonObject(json.getString("body"));
             if (!JsonUtils.isNull(collection) && collection.containsKey("user_id")) {
-                Future<JsonObject> future = Future.future();
+                Promise<JsonObject> promise = Promise.promise();
                 mongoClient.rxFindOne(MONGODB_COLLECTION, new JsonObject()
                                 .put("user_id", collection.getLong("user_id"))
-                                .put("commodity_id", collection.getLong("commodity_id")), null).subscribe(future::complete, future::fail);
-                future.compose(o -> {
-                    LOGGER.info("1111: {}", o);
+                                .put("commodity_id", collection.getLong("commodity_id")), null).subscribe(promise::complete, promise::fail);
+                /*promise.compose(o -> {
                     if (JsonUtils.isNull(o)) {
                         LOGGER.info("商品不存在！");
                     } else {
                         LOGGER.info("123456789: {}", o);
                     }
                     return Future.succeededFuture();
-                });
+                });*/
                 mongoClient.findOne(MONGODB_COLLECTION, new JsonObject()
                         .put("user_id", collection.getLong("user_id"))
                         .put("commodity_id", collection.getLong("commodity_id")), null, collectionHandler -> {
@@ -137,7 +138,7 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
                 });
             }
         });
-        rabbitMQClient.rxBasicConsume(QUEUES, EVENTBUS_QUEUES).subscribe();
+        rabbitMQClient.rxBasicConsumer(QUEUES).subscribe();
     }
 
     private void saveBrowsingHistory() {
@@ -154,42 +155,46 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
                 mongoClient.rxInsert(MONGODB_BROWSE, document).subscribe();
             }
         });
-        rabbitMQClient.rxBasicConsume(BROWSE_QUEUES, BROWSE_EVENTBUS_QUEUES).subscribe();
+        rabbitMQClient.rxBasicConsumer(BROWSE_QUEUES).subscribe();
     }
 
     @Override
     public ICollectionHandler sendCollection(String token, JsonObject params, Handler<AsyncResult<String>> resultHandler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        sessionFuture.compose(session -> {
+        Promise<String> promise = Promise.promise();
+        sessionFuture.andThen(sessionResult -> {
+            JsonObject session = sessionResult.result();
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
-                return Future.failedFuture("can not get session");
+                promise.fail("can not get session");
             }
             params.put("type", MONGODB_COLLECTION).put("user_id", session.getLong("userId"));
-            Future<String> future = Future.future();
+
             JsonObject message = new JsonObject().put("body", params.encodePrettily());
-            rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, message)
-                    .subscribe(future::complete, future::fail);
-            return future;
-        }).setHandler(resultHandler);
+            rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, Buffer.buffer(message.encodePrettily()))
+                    .subscribe(promise::complete, promise::fail);
+        });
+        promise.future().andThen(resultHandler);
         return this;
     }
 
     @Override
     public ICollectionHandler sendBrowse(String token, JsonObject params, Handler<AsyncResult<String>> resultHandler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        sessionFuture.compose(session -> {
+        Promise<String> promise = Promise.promise();
+        sessionFuture.andThen(sessionResult -> {
+            JsonObject session = sessionResult.result();
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
-                return Future.failedFuture("can not get session");
+                promise.fail("can not get session");
             }
             params.put("type", MONGODB_BROWSE).put("user_id", session.getLong("userId"));
-            Future<String> future = Future.future();
+
             JsonObject message = new JsonObject().put("body", params.encodePrettily());
-            rabbitMQClient.rxBasicPublish(EXCHANGE, BROWSE_ROUTINGKEY, message)
-                    .subscribe(future::complete, future::fail);
-            return future;
-        }).setHandler(resultHandler);
+            rabbitMQClient.rxBasicPublish(EXCHANGE, BROWSE_ROUTINGKEY, Buffer.buffer(message.encodePrettily()))
+                    .subscribe(promise::complete, promise::fail);
+        });
+        promise.future().andThen(resultHandler);
         return this;
     }
 
@@ -197,22 +202,23 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
     public ICollectionHandler findCollection(String token, int page, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
         final int pageSize = 8;
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<List<JsonObject>> resultFuture = sessionFuture.compose(session -> {
+        Promise<List<JsonObject>> promise = Promise.promise();
+        sessionFuture.andThen(sessionResult -> {
+            JsonObject session = sessionResult.result();
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
-                return Future.failedFuture("can not get session");
+                promise.fail("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<List<JsonObject>> future = Future.future();
+
             JsonObject query = new JsonObject()
                     .put("user_id", userId)
                     .put("is_deleted", 0);
             mongoClient.rxFindWithOptions(MONGODB_COLLECTION, query, new FindOptions().setLimit(pageSize).setSkip(((page - 1) * pageSize))
                     .setSort(new JsonObject().put("create_time", -1)))
-                    .subscribe(future::complete, future::fail);
-            return future;
+                    .subscribe(promise::complete, promise::fail);
         });
-        resultFuture.setHandler(resultHandler);
+        promise.future().andThen(resultHandler);
         return this;
     }
 
@@ -224,50 +230,52 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
     @Override
     public ICollectionHandler removeCollection(String token, String id, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        sessionFuture.compose(session -> {
+        Promise<MongoClientUpdateResult> promise = Promise.promise();
+        sessionFuture.andThen(sessionResult -> {
+            JsonObject session = sessionResult.result();
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
-                return Future.failedFuture("can not get session");
+                promise.fail("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<MongoClientUpdateResult> future = Future.future();
+
             JsonObject query = new JsonObject()
                     .put("_id", id)
                     .put("user_id", userId)
                     .put("is_deleted", 0);
             JsonObject update = new JsonObject().put("$set", new JsonObject().put("is_deleted", 1));
             mongoClient.rxUpdateCollectionWithOptions(MONGODB_COLLECTION, query, update, new UpdateOptions().setMulti(true))
-                    .subscribe(future::complete, future::fail);
-            return future;
-        }).setHandler(resultHandler);
+                    .subscribe(promise::complete, promise::fail);
+        });
+        promise.future().andThen(resultHandler);
         return this;
     }
 
     @Override
     public ICollectionHandler findBrowsingHistory(String token, int page, int pageSize, Handler<AsyncResult<List<JsonObject>>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        sessionFuture.compose(session -> {
-            long userId = session.getLong("user_id");
-            Future<List<JsonObject>> future = Future.future();
+        Promise<List<JsonObject>> promise = Promise.promise();
+        sessionFuture.andThen(sessionResult -> {
+            long userId = sessionResult.result().getLong("user_id");
             JsonObject query = new JsonObject().put("user_id", userId).put("is_deleted", 0);
             mongoClient.rxFindWithOptions(MONGODB_BROWSE, query, new FindOptions().setLimit(pageSize).setSkip(((page - 1) * pageSize))
                     .setSort(new JsonObject().put("create_time", -1)))
-                    .subscribe(future::complete, future::fail);
-            return future;
-        }).setHandler(handler);
+                    .subscribe(promise::complete, promise::fail);
+        });
+        promise.future().andThen(handler);
         return this;
     }
 
     @Override
     public ICollectionHandler rowNumBrowsingHistory(String token, Handler<AsyncResult<Long>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        sessionFuture.compose(session -> {
-            long userId = session.getLong("user_id");
-            Future<Long> future = Future.future();
+        Promise<Long> promise = Promise.promise();
+        sessionFuture.andThen(session -> {
+            long userId = session.result().getLong("user_id");
             mongoClient.rxCount(MONGODB_BROWSE, new JsonObject().put("user_id", userId))
-                    .subscribe(future::complete, future::fail);
-            return future;
-        }).setHandler(handler);
+                    .subscribe(promise::complete, promise::fail);
+        });
+        promise.future().andThen(handler);
         return this;
     }
 }

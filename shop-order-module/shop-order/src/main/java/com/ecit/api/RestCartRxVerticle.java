@@ -5,6 +5,7 @@ import com.ecit.common.constants.Constants;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.handler.ICartHandler;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.reactivex.ext.web.Router;
@@ -94,19 +95,22 @@ public class RestCartRxVerticle extends RestAPIRxVerticle {
         final String token = context.request().getHeader(Constants.TOKEN);
         final int pageSize = Integer.parseInt(Optional.ofNullable(context.request().getParam("pageSize")).orElse("0"));
         final int page = Integer.parseInt(Optional.ofNullable(context.request().getParam("page")).orElse("0"));
-        Future<Long> future = Future.future();
-        cartHandler.findCartRowNum(token, future);
-        future.compose(rowNum -> {
+        Promise<Long> promise = Promise.promise();
+        Promise<Void> cartPromise = Promise.promise();
+        cartHandler.findCartRowNum(token, promise);
+        promise.future().andThen(rowNum -> {
             cartHandler.findCartPage(token, pageSize, page, handler -> {
                 if (handler.failed()) {
                     LOGGER.error("查询购物信息失败：", handler.cause());
                     this.returnWithFailureMessage(context, "查询购物车失败");
                     return;
                 }
-                this.returnWithSuccessMessage(context, "查询购物车成功", rowNum.intValue(), handler.result(), page);
+                this.returnWithSuccessMessage(context, "查询购物车成功", rowNum.result().intValue(), handler.result(), page);
             });
-            return Future.succeededFuture();
-        }).setHandler(handler -> {
+            cartPromise.complete();
+            //return Future.succeededFuture();
+        });
+        cartPromise.future().andThen(handler -> {
             if (handler.failed()) {
                 LOGGER.error("查询购物信息失败：", handler.cause());
                 this.returnWithFailureMessage(context, "查询购物车失败");

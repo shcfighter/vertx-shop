@@ -16,6 +16,7 @@ import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
@@ -53,10 +54,10 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
      */
     @Override
     public IAccountHandler insertAccount(long userId, Handler<AsyncResult<Integer>> handler) {
-        Future<Integer> future = Future.future();
+        Promise<Integer> promise = Promise.promise();
         this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId), AccountSql.INSERT_ACCOUNT_SQL)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().andThen(handler);
         return this;
     }
 
@@ -68,27 +69,28 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
      */
     @Override
     public IAccountHandler findAccount(long userId, Handler<AsyncResult<JsonObject>> handler) {
-        Future<JsonObject> future = Future.future();
+        Promise<JsonObject> promise = Promise.promise();
         this.retrieveOne(new JsonArray().add(userId), AccountSql.FIND_ACCOUNT_BY_USERID_SQL)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().andThen(handler);
         return this;
     }
 
     @Override
     public IAccountHandler findAccountHandler(String token, Handler<AsyncResult<JsonObject>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<JsonObject> resultFuture = sessionFuture.compose(session -> {
+        Promise<JsonObject> promise = Promise.promise();
+        sessionFuture.andThen(sessionResult -> {
+            JsonObject session = sessionResult.result();
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
-                return Future.failedFuture("can not get session");
+                promise.fail("can not get session");
             }
-            Future<JsonObject> future = Future.future();
             this.retrieveOne(new JsonArray().add(session.getLong("userId")), AccountSql.FIND_ACCOUNT_BY_USERID_SQL)
-                    .subscribe(future::complete, future::fail);
-            return future;
+                    .subscribe(promise::complete, promise::fail);
+
         });
-        resultFuture.setHandler(handler);
+        promise.future().andThen(handler);
         return this;
     }
 
@@ -109,9 +111,10 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<JsonObject> orderFuture = Future.future();
-            orderService.getOrderById(orderId, userId, orderFuture);
-            return orderFuture.compose(order -> {
+            //Future<JsonObject> orderFuture = Future.future();
+            Promise<JsonObject> orderPromise = Promise.promise();
+            orderService.getOrderById(orderId, userId, orderPromise);
+            return orderPromise.compose(order -> {
                 //检查库存；检查账户余额；扣款；
                 if(Objects.isNull(order)){
                     LOGGER.error("用户【{}】支付订单【{}】不存在！", userId, orderId);
@@ -122,6 +125,7 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                     return Future.failedFuture("订单状态不正确！");
                 }
                 Future<JsonObject> accountFuture = Future.future();
+
                 this.findAccount(userId, accountFuture);
                 Future updateAccountFuture = accountFuture.compose(account -> {
                     if(Objects.isNull(account)){

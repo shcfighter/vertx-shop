@@ -123,9 +123,9 @@ public class User implements Serializable{
     public User() {
     }
 
-    public User(JsonObject jsonObject) {
+    /*public User(JsonObject jsonObject) {
         UserConverter.fromJson(jsonObject, this);
-    }
+    }*/
 
     public User jsonToObject(JsonObject jsonObject){
         return jsonObject.mapTo(User.class);

@@ -3,7 +3,7 @@ package com.ecit.common.rx;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.vertx.circuitbreaker.CircuitBreakerOptions;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.impl.ConcurrentHashSet;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -35,6 +35,7 @@ public class BaseMicroserviceRxVerticle extends AbstractVerticle {
 
   @Override
   public void start() throws Exception {
+
     discovery = ServiceDiscovery.create(vertx, new ServiceDiscoveryOptions().setBackendConfiguration(config()));
     JsonObject cbOptions = config().getJsonObject("circuit-breaker") != null ?
       config().getJsonObject("circuit-breaker") : new JsonObject();
@@ -87,11 +88,11 @@ public class BaseMicroserviceRxVerticle extends AbstractVerticle {
   }
 
   @Override
-  public void stop(Future<Void> future) throws Exception {
+  public void stop(Promise<Void> startFuture) throws Exception {
     // TODO: to optimize.
     Observable.fromIterable(registeredRecords)
             .flatMap(record -> discovery.rxUnpublish(record.getRegistration()).toObservable())
             .reduce((Void) null, (a, b) -> null)
-            .subscribe(future::complete, future::fail);
+            .subscribe(startFuture::complete, startFuture::fail);
   }
 }

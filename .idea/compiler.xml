@@ -81,19 +81,19 @@
         <module name="shop-order-interface" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="11">
-      <module name="shop-common" target="11" />
-      <module name="shop-elasticsearch-service" target="11" />
-      <module name="shop-gateway" target="11" />
-      <module name="shop-message" target="11" />
-      <module name="shop-message-interface" target="11" />
-      <module name="shop-order" target="11" />
-      <module name="shop-order-interface" target="11" />
-      <module name="shop-pay" target="11" />
-      <module name="shop-search" target="11" />
-      <module name="shop-search-interface" target="11" />
-      <module name="shop-user" target="11" />
-      <module name="shop-user-interface" target="11" />
+    <bytecodeTargetLevel target="17">
+      <module name="shop-common" target="17" />
+      <module name="shop-elasticsearch-service" target="17" />
+      <module name="shop-gateway" target="17" />
+      <module name="shop-message" target="17" />
+      <module name="shop-message-interface" target="17" />
+      <module name="shop-order" target="17" />
+      <module name="shop-order-interface" target="17" />
+      <module name="shop-pay" target="17" />
+      <module name="shop-search" target="17" />
+      <module name="shop-search-interface" target="17" />
+      <module name="shop-user" target="17" />
+      <module name="shop-user-interface" target="17" />
       <module name="vertx-shop" target="1.5" />
     </bytecodeTargetLevel>
   </component>

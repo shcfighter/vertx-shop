@@ -9,6 +9,7 @@ import io.reactivex.disposables.Disposable;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
@@ -163,20 +164,20 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
     @Override
     public ICartHandler findCartRowNum(String token, Handler<AsyncResult<Long>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<Long> resultFuture = sessionFuture.compose(session -> {
+        Promise<Long> promise = Promise.promise();
+        sessionFuture.andThen(sessionResult -> {
+            JsonObject session = sessionResult.result();
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
-                return Future.succeededFuture(0L);
+                promise.complete(0L);
             }
             final long userId = session.getLong("userId");
-            Future<Long> future = Future.future();
             mongoClient.rxCount(CART_COLLECTION, new JsonObject()
                     .put("user_id", userId)
                     .put("is_deleted", 0))
-                    .subscribe(future::complete, future::fail);
-            return future;
+                    .subscribe(promise::complete, promise::fail);
         });
-        resultFuture.setHandler(handler);
+        promise.future().andThen(handler);
         return this;
     }
 

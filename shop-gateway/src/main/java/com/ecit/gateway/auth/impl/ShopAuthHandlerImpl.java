@@ -8,7 +8,7 @@ import com.ecit.common.utils.salt.DefaultHashStrategy;
 import com.ecit.common.utils.salt.ShopHashStrategy;
 import com.ecit.constants.UserSql;
 import com.ecit.gateway.auth.ShopAuthHandler;
-import com.hazelcast.util.MD5Util;
+import com.hazelcast.internal.util.MD5Util;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
