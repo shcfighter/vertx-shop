@@ -10,10 +10,12 @@ import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.sqlclient.Tuple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,28 +37,29 @@ public class AddressHandler extends JdbcRxRepositoryWrapper implements IAddressH
                 return Future.failedFuture("can not get session");
             }
             long userId = session.getLong("userId");
-            Future<Integer> future = Future.future();
-            this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId)
-                            .add(params.getString("receiver")).add(params.getString("mobile")).add(params.getString("province_code"))
-                            .add(params.getString("city_code")).add(params.getString("county_code"))
-                            .add(params.getString("address")).add(params.getString("address_details"))
+            Promise<Integer> promise = Promise.promise();
+            this.execute(Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(userId)
+                            .addString(params.getString("receiver")).addString(params.getString("mobile")).addString(params.getString("province_code"))
+                            .addString(params.getString("city_code")).addString(params.getString("county_code"))
+                            .addString(params.getString("address")).addString(params.getString("address_details"))
                     , UserSql.INSERT_ADDRESS_SQL)
-                    .subscribe(future::complete, future::fail);
-            return future;
+                    .subscribe(promise::complete, promise::fail);
+            return promise.future();
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
     @Override
     public IAddressHandler updateAddressHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler) {
-        Future<Integer> future = Future.future();
-        this.execute(new JsonArray().add(params.getString("receiver")).add(params.getString("mobile")).add(params.getString("province_code"))
-                        .add(params.getString("city_code")).add(params.getString("county_code"))
-                        .add(params.getString("address")).add(params.getString("address_details")).add(params.getLong("address_id"))
+        Promise<Integer> promise = Promise.promise();
+        this.execute(Tuple.tuple().addString(params.getString("receiver")).addString(params.getString("mobile"))
+                                .addString(params.getString("province_code")).addString(params.getString("city_code"))
+                                .addString(params.getString("county_code")).addString(params.getString("address"))
+                                .addString(params.getString("address_details")).addLong(params.getLong("address_id"))
                 , UserSql.UPDATE_ADDRESS_BY_ID_SQL)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -96,30 +99,30 @@ public class AddressHandler extends JdbcRxRepositoryWrapper implements IAddressH
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
             }
-            Future<List<JsonObject>> future = Future.future();
-            this.retrieveMany(new JsonArray().add(session.getLong("userId")), UserSql.FIND_ADDRESS_SQL)
-                    .subscribe(future::complete, future::fail);
-            return future;
+            Promise<List<JsonObject>> promise = Promise.promise();
+            this.retrieveMany(Tuple.tuple().addLong(session.getLong("userId")), UserSql.FIND_ADDRESS_SQL)
+                    .subscribe(promise::complete, promise::fail);
+            return promise.future();
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
     @Override
     public IAddressHandler deleteAddress(long addressId, Handler<AsyncResult<Integer>> handler) {
-        Future<Integer> future = Future.future();
-        this.execute(new JsonArray().add(addressId), UserSql.DELETE_ADDRESS_BY_ID_SQL)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+        Promise<Integer> promise = Promise.promise();
+        this.execute(Tuple.tuple().addLong(addressId), UserSql.DELETE_ADDRESS_BY_ID_SQL)
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public IAddressHandler getAddressById(long addressId, Handler<AsyncResult<JsonObject>> handler) {
-        Future<JsonObject> future = Future.future();
-        this.retrieveOne(new JsonArray().add(addressId), UserSql.GET_ADDRESS_BY_ID_SQL)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+        Promise<JsonObject> promise = Promise.promise();
+        this.retrieveOne(Tuple.tuple().addLong(addressId), UserSql.GET_ADDRESS_BY_ID_SQL)
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 }

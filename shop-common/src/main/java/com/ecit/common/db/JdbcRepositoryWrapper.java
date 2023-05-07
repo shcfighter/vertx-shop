@@ -1,51 +1,76 @@
 package com.ecit.common.db;
 
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.asyncsql.PostgreSQLClient;
-import io.vertx.ext.sql.SQLClient;
-import io.vertx.ext.sql.SQLConnection;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Helper and wrapper class for JDBC repository services.
  */
 public class JdbcRepositoryWrapper {
 
-  protected final SQLClient postgreSQLClient;
+  protected final PgPool pgPool;
 
   public JdbcRepositoryWrapper(Vertx vertx, JsonObject config) {
-    this.postgreSQLClient = PostgreSQLClient.createShared(vertx, config);
+    //this.postgreSQLClient = PostgreSQLClient.createShared(vertx, config);
+    JsonObject postgresqlConfig = config.getJsonObject("postgresql", new JsonObject());
+    PgConnectOptions connectOptions = new PgConnectOptions()
+            .setPort(5432)
+            .setHost(postgresqlConfig.getString("host"))
+            .setDatabase(postgresqlConfig.getString("database"))
+            .setUser(postgresqlConfig.getString("username"))
+            .setPassword(postgresqlConfig.getString("password"))
+            .setReconnectAttempts(2)
+            .setReconnectInterval(1000);;
+
+    // Pool options
+    PoolOptions poolOptions = new PoolOptions()
+            .setMaxSize(5)
+            .setShared(true);
+
+    pgPool = PgPool.pool(vertx, connectOptions, poolOptions);
   }
 
-  protected void execute(JsonArray params, String sql, Future<Integer> future) {
-    postgreSQLClient.getConnection(connHandler -> {
-      final SQLConnection conn = connHandler.result();
-      conn.updateWithParams(sql, params, res -> {
+  protected void execute(Tuple params, String sql, Promise<Integer> promise) {
+    pgPool.getConnection(connHandler -> {
+      final SqlConnection conn = connHandler.result();
+      conn.preparedQuery(sql).execute(params).onComplete(res -> {
         if (res.failed()) {
-          future.fail(res.cause());
+          promise.fail(res.cause());
+        } else {
+          promise.complete(res.result().size());
         }
-        future.complete(res.result().getUpdated());
         conn.close();
       });
     });
   }
 
-  protected void retrieveOne(JsonArray params, String sql, Future<JsonObject> future) {
-    postgreSQLClient.getConnection(connHandler -> {
-      final SQLConnection conn = connHandler.result();
-      conn.queryWithParams(sql, params, res -> {
+  protected void retrieveOne(Tuple params, String sql, Promise<JsonObject> promise) {
+    pgPool.getConnection(connHandler -> {
+      final SqlConnection conn = connHandler.result();
+      conn.preparedQuery(sql).execute(params).onComplete(res -> {
         if (res.failed()) {
-          future.fail(res.cause());
-        }
-        List<JsonObject> resList = res.result().getRows();
-        if (resList == null || resList.isEmpty()) {
-          future.complete(new JsonObject());
+          promise.fail(res.cause());
         } else {
-          future.complete(resList.get(0));
+          RowSet<Row> rs = res.result();
+          List<JsonObject> resList = new ArrayList<>();
+          if (Objects.nonNull(rs) && rs.size() != 0) {
+            rs.forEach(row -> {
+              resList.add(row.toJson());
+            });
+          }
+          if (resList == null || resList.isEmpty()) {
+            promise.complete(new JsonObject());
+          } else {
+            promise.complete(resList.get(0));
+          }
         }
         conn.close();
       });
@@ -58,66 +83,103 @@ public class JdbcRepositoryWrapper {
     return size * (page - 1);
   }
 
-  protected void retrieveByPage(JsonArray params, int size, int page, String sql, Future<List<JsonObject>> future) {
-    postgreSQLClient.getConnection(connHandler -> {
-      final SQLConnection conn = connHandler.result();
-      conn.queryWithParams(sql, params.add(size).add(calcPage(page, size)), res -> {
+  protected void retrieveByPage(Tuple params, int size, int page, String sql, Promise<List<JsonObject>> promise) {
+    pgPool.getConnection(connHandler -> {
+      final SqlConnection conn = connHandler.result();
+      params.addInteger(size).addInteger(calcPage(page, size));
+      conn.preparedQuery(sql).execute(params).onComplete(res -> {
         if (res.failed()) {
-          future.fail(res.cause());
+          promise.fail(res.cause());
+        } else {
+          RowSet<Row> rs = res.result();
+          List<JsonObject> resList = new ArrayList<>();
+          if (Objects.nonNull(rs) && rs.size() != 0) {
+            rs.forEach(row -> {
+              resList.add(row.toJson());
+            });
+          }
+          if (resList == null || resList.isEmpty()) {
+            promise.complete(new ArrayList<>());
+          } else {
+            promise.complete(resList);
+          }
         }
-        future.complete(res.result().getRows());
         conn.close();
       });
     });
   }
 
-  protected void retrieveMany(JsonArray params, String sql, Future<List<JsonObject>> future) {
-    postgreSQLClient.getConnection(connHandler -> {
-      final SQLConnection conn = connHandler.result();
-      conn.queryWithParams(sql, params, res -> {
+  protected void retrieveMany(Tuple params, String sql, Promise<List<JsonObject>> promise) {
+    pgPool.getConnection(connHandler -> {
+      final SqlConnection conn = connHandler.result();
+      conn.preparedQuery(sql).execute(params).onComplete(res -> {
         if (res.failed()) {
-          future.fail(res.cause());
+          promise.fail(res.cause());
+        } else {
+          RowSet<Row> rs = res.result();
+          List<JsonObject> resList = new ArrayList<>();
+          if (Objects.nonNull(rs) && rs.size() != 0) {
+            rs.forEach(row -> {
+              resList.add(row.toJson());
+            });
+          }
+          if (resList == null || resList.isEmpty()) {
+            promise.complete(new ArrayList<>());
+          } else {
+            promise.complete(resList);
+          }
         }
-        future.complete(res.result().getRows());
         conn.close();
       });
     });
   }
 
-  protected void retrieveAll(String sql, Future<List<JsonObject>> future) {
-    postgreSQLClient.getConnection(connHandler -> {
-      final SQLConnection conn = connHandler.result();
-      conn.query(sql, res -> {
+  protected void retrieveAll(String sql, Promise<List<JsonObject>> promise) {
+    pgPool.getConnection(connHandler -> {
+      final SqlConnection conn = connHandler.result();
+      conn.preparedQuery(sql).execute().onComplete(res -> {
         if (res.failed()) {
-          future.fail(res.cause());
+          promise.fail(res.cause());
+        } else {
+          RowSet<Row> rs = res.result();
+          List<JsonObject> resList = new ArrayList<>();
+          if (Objects.nonNull(rs) && rs.size() != 0) {
+            rs.forEach(row -> {
+              resList.add(row.toJson());
+            });
+          }
+          if (resList == null || resList.isEmpty()) {
+            promise.complete(new ArrayList<>());
+          } else {
+            promise.complete(resList);
+          }
         }
-        future.complete(res.result().getRows());
         conn.close();
       });
     });
   }
 
-  protected void removeOne(Object id, String sql, Future<Integer> future) {
-    postgreSQLClient.getConnection(connHandler -> {
-      final SQLConnection conn = connHandler.result();
-      conn.updateWithParams(sql, new JsonArray().add(id), res -> {
+  protected void removeOne(Object id, String sql, Promise<Integer> promise) {
+    pgPool.getConnection(connHandler -> {
+      final SqlConnection conn = connHandler.result();
+      conn.preparedQuery(sql).execute(Tuple.of(id)).onComplete(res -> {
         if (res.failed()) {
-          future.fail(res.cause());
+          promise.fail(res.cause());
         }
-        future.complete(res.result().getUpdated());
+        promise.complete(res.result().size());
         conn.close();
       });
     });
   }
 
-  protected void removeAll(String sql, Future<Integer> future) {
-    postgreSQLClient.getConnection(connHandler -> {
-      final SQLConnection conn = connHandler.result();
-      conn.update(sql, res -> {
+  protected void removeAll(String sql, Promise<Integer> promise) {
+    pgPool.getConnection(connHandler -> {
+      final SqlConnection conn = connHandler.result();
+      conn.preparedQuery(sql).execute().onComplete(res -> {
         if (res.failed()) {
-          future.fail(res.cause());
+          promise.fail(res.cause());
         }
-        future.complete(res.result().getUpdated());
+        promise.complete(res.result().size());
         conn.close();
       });
     });

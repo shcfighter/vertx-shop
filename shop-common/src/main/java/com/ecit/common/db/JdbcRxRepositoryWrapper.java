@@ -2,28 +2,18 @@ package com.ecit.common.db;
 
 import com.ecit.common.constants.Constants;
 import io.reactivex.Single;
-import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.Future;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.ResultSet;
-import io.vertx.ext.sql.UpdateResult;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.reactivex.core.Promise;
 import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.ext.asyncsql.PostgreSQLClient;
-import io.vertx.reactivex.ext.mongo.MongoClient;
-import io.vertx.reactivex.ext.sql.SQLClient;
-import io.vertx.reactivex.ext.sql.SQLConnection;
 import io.vertx.reactivex.pgclient.PgPool;
-import io.vertx.reactivex.redis.RedisClient;
 import io.vertx.reactivex.redis.client.Redis;
 import io.vertx.reactivex.redis.client.RedisAPI;
 import io.vertx.reactivex.redis.client.RedisConnection;
 import io.vertx.reactivex.redis.client.Response;
 import io.vertx.reactivex.sqlclient.SqlConnection;
 import io.vertx.reactivex.sqlclient.Tuple;
-import io.vertx.redis.RedisOptions;
 import io.vertx.redis.client.RedisOptions;
 import io.vertx.sqlclient.PoolOptions;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +38,7 @@ public class JdbcRxRepositoryWrapper {
   private final AtomicBoolean CONNECTING = new AtomicBoolean();
   protected RedisConnection redisConnection;
   protected RedisAPI redisClient;
-  protected final PgPool pool;
+  protected final PgPool pgPool;
 
   public JdbcRxRepositoryWrapper(Vertx vertx, JsonObject config) {
     JsonObject postgresqlConfig = config.getJsonObject("postgresql", new JsonObject());
@@ -59,10 +49,10 @@ public class JdbcRxRepositoryWrapper {
 */
     PgConnectOptions connectOptions = new PgConnectOptions()
             .setPort(5432)
-            .setHost(config.getString("host"))
-            .setDatabase(config.getString("database"))
-            .setUser(config.getString("username"))
-            .setPassword(config.getString("password"))
+            .setHost(postgresqlConfig.getString("host"))
+            .setDatabase(postgresqlConfig.getString("database"))
+            .setUser(postgresqlConfig.getString("username"))
+            .setPassword(postgresqlConfig.getString("password"))
             .setReconnectAttempts(2)
             .setReconnectInterval(1000);;
 
@@ -71,7 +61,7 @@ public class JdbcRxRepositoryWrapper {
             .setMaxSize(5)
             .setShared(true);
 
-    pool = PgPool.pool(vertx, connectOptions, poolOptions);
+    pgPool = PgPool.pool(vertx, connectOptions, poolOptions);
 
     createRedisClient(vertx)
             .onSuccess(conn -> {
@@ -104,7 +94,6 @@ public class JdbcRxRepositoryWrapper {
   protected Single<JsonObject> retrieveOne(Tuple params, String sql) {
     return this.getConnection()
             .flatMap(conn -> conn.preparedQuery(sql).rxExecute(params).map(rs -> {
-
               if (rs == null || 0 == rs.size()) {
                 return new JsonObject();
               } else {
@@ -124,42 +113,112 @@ public class JdbcRxRepositoryWrapper {
     return size * (page - 1);
   }
 
-  protected Single<List<JsonObject>> retrieveByPage(Tuple param, int size, int page, String sql) {
-    param.addInteger(size).addInteger(calcPage(page, size));
+  protected Single<List<JsonObject>> retrieveByPage(Tuple params, int size, int page, String sql) {
+    params.addInteger(size).addInteger(calcPage(page, size));
     return this.getConnection()
-            .flatMap(conn -> conn.rxQueryWithParams(sql, param.add(size).add(calcPage(page, size)))
-                    .map(ResultSet::getRows).doAfterTerminate(conn::close));
+            .flatMap(conn -> conn.preparedQuery(sql).rxExecute(params)
+                    .map(rs -> {
+                      if (rs == null || 0 == rs.size()) {
+                        return new ArrayList<JsonObject>();
+                      } else {
+                        List<JsonObject> resList = new ArrayList<>();
+                        rs.forEach(row -> {
+                          resList.add(row.toJson());
+                        });
+                        return resList;
+                      }
+                    }).doAfterTerminate(conn::close));
   }
 
-  protected Single<List<JsonObject>> retrieveMany(JsonArray param, String sql) {
+  protected Single<List<JsonObject>> retrieveMany(Tuple params, String sql) {
     return this.getConnection()
-            .flatMap(conn -> conn.rxQueryWithParams(sql, param)
-                    .map(ResultSet::getRows).doAfterTerminate(conn::close));
+            .flatMap(conn -> conn.preparedQuery(sql).rxExecute(params)
+                    .map(rs -> {
+                      if (rs == null || 0 == rs.size()) {
+                        return new ArrayList<JsonObject>();
+                      } else {
+                        List<JsonObject> resList = new ArrayList<>();
+                        rs.forEach(row -> {
+                          resList.add(row.toJson());
+                        });
+                        return resList;
+                      }
+                    }).doAfterTerminate(conn::close));
   }
 
   protected Single<List<JsonObject>> retrieveAll(String sql) {
     return this.getConnection()
-            .flatMap(conn -> conn.rxQuery(sql)
-                    .map(ResultSet::getRows).doAfterTerminate(conn::close));
+            .flatMap(conn -> conn.preparedQuery(sql).rxExecute()
+                    .map(rs -> {
+                      if (rs == null || 0 == rs.size()) {
+                        return new ArrayList<JsonObject>();
+                      } else {
+                        List<JsonObject> resList = new ArrayList<>();
+                        rs.forEach(row -> {
+                          resList.add(row.toJson());
+                        });
+                        return resList;
+                      }
+                    }).doAfterTerminate(conn::close));
   }
 
   protected Single<Integer> removeOne(Object id, String sql) {
+    Tuple params = Tuple.of(id);
     return this.getConnection()
-            .flatMap(conn -> conn.rxUpdateWithParams(sql, new JsonArray().add(id))
-                    .map(UpdateResult::getUpdated).doAfterTerminate(conn::close));
+            .flatMap(conn -> conn.preparedQuery(sql).rxExecute(params)
+                    .map(rows -> rows.size()).doAfterTerminate(conn::close));
   }
 
   protected Single<Integer> removeAll(String sql) {
     return this.getConnection()
-            .flatMap(conn -> conn.rxUpdate(sql).map(UpdateResult::getUpdated)
-                    .doAfterTerminate(conn::close));
+            .flatMap(conn -> conn.preparedQuery(sql).rxExecute()
+                    .map(rows -> rows.size()).doAfterTerminate(conn::close));
   }
 
   protected Single<SqlConnection> getConnection() {
-    return pool.rxGetConnection();
+    return pgPool.rxGetConnection();
   }
 
-  protected Single<UpdateResult> executeTransaction(List<JsonObject> arrays){
+  /*protected Maybe<RowSet<Row>> withTransaction(Function<SqlConnection, Maybe<RowSet<Row>>> function) {
+    *//*pool.rxWithTransaction((Function<SqlConnection, Maybe<RowSet<Row>>>) client -> client
+                    // Create table
+                    .query("select * from user").rxExecute()
+                    // Insert colors
+                    .flatMap(r -> client
+                            .preparedQuery("INSERT INTO colors (name) VALUES (?)")
+                            .rxExecuteBatch(Arrays.asList(Tuple.of("BLACK"), Tuple.of("PURPLE"))))
+                    // Get colors if all succeeded
+                    .flatMap(r -> client.query("SELECT * FROM colors").rxExecute())
+                    .toMaybe())// Subscribe to get the final result
+            .subscribe(rowSet -> {
+              System.out.println("Results:");
+              rowSet.forEach(row -> {
+                System.out.println(row.toJson());
+              });
+            }, Throwable::printStackTrace);
+  };*//*
+    return pool.rxWithTransaction(function);
+  }*/
+
+  /*protected Single<UpdateResult> executeTransaction(List<JsonObject> arrays){
+    *//*this.withTransaction((Function<SqlConnection, Maybe<RowSet<Row>>>) client -> {
+      for (JsonObject json : arrays) {
+        if (!json.containsKey("type")) {
+          continue;
+        }
+        switch (json.getString("type")) {
+          case "execute": {
+            result = client.flatMap(updateResult -> conn.rxExecute(json.getString("sql")));
+          }
+          case "update": {
+            result = result.flatMap(updateResult -> conn.rxUpdateWithParams(json.getString("sql"),
+                    json.getJsonArray("params")));
+          }
+          default: {
+          }
+        }
+      }
+    })*//*
     return this.getConnection()
             .flatMap(conn -> {
               Single result = conn
@@ -195,11 +254,11 @@ public class JdbcRxRepositoryWrapper {
                       .doAfterTerminate(conn::close);
               return resultSingle;
             });
-  }
+  }*/
 
-  protected Single executeTransaction(JsonObject... arrays){
+  /*protected Single executeTransaction(JsonObject... arrays){
     return this.executeTransaction(Arrays.asList(arrays));
-  }
+  }*/
 
   /**
    * 缓存获取token
@@ -235,7 +294,7 @@ public class JdbcRxRepositoryWrapper {
    */
   protected void setSession(String token, JsonObject jsonObject){
     redisClient.rxHset(Arrays.asList(Constants.VERTX_WEB_SESSION, token, jsonObject.toString())).subscribe();
-    redisClient.rxExpire(Constants.VERTX_WEB_SESSION, Constants.SESSION_EXPIRE_TIME).subscribe();
+    redisClient.rxExpire(List.of(Constants.VERTX_WEB_SESSION, String.valueOf(Constants.SESSION_EXPIRE_TIME))).subscribe();
   }
 
   /**

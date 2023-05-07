@@ -1,9 +1,7 @@
 package com.ecit.common.result;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.vertx.core.json.JsonObject;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ResultItems<T> {
 
 	/**

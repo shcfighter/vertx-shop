@@ -4,12 +4,12 @@ import com.ecit.common.result.ResultItems;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.CookieHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
@@ -46,11 +46,11 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
    * @return async result of the procedure
    */
   protected Future<Void> createHttpServer(Router router, String host, int port) {
-    Future<HttpServer> httpServerFuture = Future.future();
+    Promise<HttpServer> httpServerPromise = Promise.promise();
     vertx.createHttpServer()
-      .requestHandler(router::accept)
-      .listen(port, host, httpServerFuture.completer());
-    return httpServerFuture.map(r -> null);
+      .requestHandler(router)
+      .listen(port, host, httpServerPromise);
+    return httpServerPromise.future().map(r -> null);
   }
 
   /**
@@ -84,7 +84,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
    * @param router router instance
    */
   protected void enableLocalSession(Router router) {
-    router.route().handler(CookieHandler.create());
+    //router.route().handler(CookieHandler.create());
     router.route().handler(SessionHandler.create(
       LocalSessionStore.create(vertx, "shopping.user.session"))
             .setSessionTimeout(5 * 60 * 60 * 1000L));
@@ -96,7 +96,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
    * @param router router instance
    */
   protected void enableClusteredSession(Router router) {
-    router.route().handler(CookieHandler.create());
+    //router.route().handler(CookieHandler.create());
     router.route().handler(SessionHandler.create(
       ClusteredSessionStore.create(vertx, "shopping.user.session"))
             .setSessionTimeout(5 * 60 * 60 * 1000L));

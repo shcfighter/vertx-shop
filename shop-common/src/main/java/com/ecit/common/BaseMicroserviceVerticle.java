@@ -5,6 +5,7 @@ import io.vertx.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.impl.ConcurrentHashSet;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -102,15 +103,15 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
       }
     }
 
-    Future<Void> future = Future.future();
+    Promise<Void> promise = Promise.promise();
     // publish the handler
     discovery.publish(record, ar -> {
       if (ar.succeeded()) {
         registeredRecords.add(record);
         LOGGER.info("Service <" + ar.result().getName() + "> published");
-        future.complete();
+        promise.complete();
       } else {
-        future.fail(ar.cause());
+        promise.fail(ar.cause());
       }
     });
 
@@ -127,7 +128,7 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
       }
 
     });*/
-    return future;
+    return promise.future();
   }
 
   /**
@@ -150,26 +151,26 @@ public abstract class BaseMicroserviceVerticle extends AbstractVerticle {
   }
 
   @Override
-  public void stop(Future<Void> future) throws Exception {
+  public void stop(Promise<Void> promise) throws Exception {
     // In current design, the publisher is responsible for removing the handler
     List<Future> futures = new ArrayList<>();
     registeredRecords.forEach(record -> {
-      Future<Void> cleanupFuture = Future.future();
-      futures.add(cleanupFuture);
-      discovery.unpublish(record.getRegistration(), cleanupFuture.completer());
+      Promise<Void> cleanupPromise = Promise.promise();
+      futures.add(cleanupPromise.future());
+      discovery.unpublish(record.getRegistration(), cleanupPromise);
     });
 
     if (futures.isEmpty()) {
       discovery.close();
-      future.complete();
+      promise.complete();
     } else {
       CompositeFuture.all(futures)
-        .setHandler(ar -> {
+        .onComplete(ar -> {
           discovery.close();
           if (ar.failed()) {
-            future.fail(ar.cause());
+            promise.fail(ar.cause());
           } else {
-            future.complete();
+            promise.complete();
           }
         });
     }

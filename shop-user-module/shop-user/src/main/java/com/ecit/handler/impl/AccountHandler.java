@@ -11,15 +11,13 @@ import com.ecit.enmu.PayStatus;
 import com.ecit.enmu.PayType;
 import com.ecit.enums.OrderStatus;
 import com.ecit.handler.*;
-import io.reactivex.Single;
-import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.sqlclient.Tuple;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -55,9 +53,9 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
     @Override
     public IAccountHandler insertAccount(long userId, Handler<AsyncResult<Integer>> handler) {
         Promise<Integer> promise = Promise.promise();
-        this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId), AccountSql.INSERT_ACCOUNT_SQL)
+        this.execute(Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(userId), AccountSql.INSERT_ACCOUNT_SQL)
                 .subscribe(promise::complete, promise::fail);
-        promise.future().andThen(handler);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -70,9 +68,9 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
     @Override
     public IAccountHandler findAccount(long userId, Handler<AsyncResult<JsonObject>> handler) {
         Promise<JsonObject> promise = Promise.promise();
-        this.retrieveOne(new JsonArray().add(userId), AccountSql.FIND_ACCOUNT_BY_USERID_SQL)
+        this.retrieveOne(Tuple.tuple().addLong(userId), AccountSql.FIND_ACCOUNT_BY_USERID_SQL)
                 .subscribe(promise::complete, promise::fail);
-        promise.future().andThen(handler);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -86,11 +84,11 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                 LOGGER.info("无法获取session信息");
                 promise.fail("can not get session");
             }
-            this.retrieveOne(new JsonArray().add(session.getLong("userId")), AccountSql.FIND_ACCOUNT_BY_USERID_SQL)
+            this.retrieveOne(Tuple.tuple().addLong(session.getLong("userId")), AccountSql.FIND_ACCOUNT_BY_USERID_SQL)
                     .subscribe(promise::complete, promise::fail);
 
         });
-        promise.future().andThen(handler);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -114,7 +112,7 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
             //Future<JsonObject> orderFuture = Future.future();
             Promise<JsonObject> orderPromise = Promise.promise();
             orderService.getOrderById(orderId, userId, orderPromise);
-            return orderPromise.compose(order -> {
+            return orderPromise.future().compose(order -> {
                 //检查库存；检查账户余额；扣款；
                 if(Objects.isNull(order)){
                     LOGGER.error("用户【{}】支付订单【{}】不存在！", userId, orderId);
@@ -124,10 +122,10 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                     LOGGER.error("订单【{}】状态【{}】不正确！", orderId, order.getInteger("order_status"));
                     return Future.failedFuture("订单状态不正确！");
                 }
-                Future<JsonObject> accountFuture = Future.future();
+                Promise<JsonObject> accountPromise = Promise.promise();
 
-                this.findAccount(userId, accountFuture);
-                Future updateAccountFuture = accountFuture.compose(account -> {
+                this.findAccount(userId, accountPromise);
+                Future updateAccountFuture = accountPromise.future().compose(account -> {
                     if(Objects.isNull(account)){
                         LOGGER.error("账户信息不存在！");
                         return Future.failedFuture("账户信息异常！");
@@ -147,36 +145,28 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                     if(new BigDecimal(account.getString("amount")).compareTo(new BigDecimal(totalPrice)) < 0){
                         return Future.failedFuture("账户余额不足！");
                     }
-                    Future updateFuture = Future.future();
-                    postgreSQLClient.rxGetConnection().flatMap(conn ->
-                            conn.rxSetAutoCommit(false).toSingleDefault(false)
-                                    .flatMap(autoCommit -> conn.rxUpdateWithParams(AccountSql.LESS_ACCOUNT_SQL,
-                                            new JsonArray().add(totalPrice).add(totalPrice).add(userId).add(account.getInteger("versions"))))
-                                    .flatMap(updateResult -> conn.rxUpdateWithParams(AccountSql.INSERT_PAY_LOG_SQL,
-                                            new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(orderId).add(PayType.ACCOUNT.getKey())
-                                                    .add(totalPrice).add(new BigDecimal(account.getString("amount")).subtract(new BigDecimal(totalPrice)).toString())
-                                                    .add(PayStatus.FINISHED.getKey())))
-                                    // Rollback if any failed with exception propagation
-                                    .onErrorResumeNext(ex -> conn.rxRollback()
-                                            .toSingleDefault(true)
-                                            .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
-                                            .flatMap(ignore -> Single.error(ex))
-                                    )
-                                    // close the connection regardless succeeded or failed
+                    Promise updatePromise = Promise.promise();
+                    pgPool.rxGetConnection().flatMap(conn ->
+                            conn.preparedQuery(AccountSql.LESS_ACCOUNT_SQL).rxExecute(
+                                            Tuple.tuple().addString(totalPrice).addString(totalPrice).addLong(userId).addInteger(account.getInteger("versions")))
+                                    .flatMap(updateResult -> conn.preparedQuery(AccountSql.INSERT_PAY_LOG_SQL).rxExecute(
+                                            Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(userId).addLong(orderId).addInteger(PayType.ACCOUNT.getKey())
+                                                    .addString(totalPrice).addString(new BigDecimal(account.getString("amount")).subtract(new BigDecimal(totalPrice)).toString())
+                                                    .addInteger(PayStatus.FINISHED.getKey())))
                                     .doAfterTerminate(conn::close)
-                    ).subscribe(updateFuture::complete, updateFuture::fail);
-                    return updateFuture;
+                    ).subscribe(updatePromise::complete, updatePromise::fail);
+                    return updatePromise.future();
                 });
                 return updateAccountFuture;
             }).compose(updateAccount -> {
                 //更改订单状态
-                JsonObject orderJson = orderFuture.result();
-                Future<Integer> future = Future.future();
-                orderService.payOrder(orderId, orderJson.getInteger("versions"), future);
-                return future;
+                JsonObject orderJson = orderPromise.future().result();
+                Promise<Integer> promise = Promise.promise();
+                orderService.payOrder(orderId, orderJson.getInteger("versions"), promise);
+                return promise.future();
             });
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
@@ -191,40 +181,40 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<JsonObject> userFuture = Future.future();
-            userService.getMemberById(userId, userFuture);
-            return userFuture.compose(user -> {
+            Promise<JsonObject> userPromise = Promise.promise();
+            userService.getMemberById(userId, userPromise);
+            return userPromise.future().compose(user -> {
                 if(Objects.isNull(user) || user.isEmpty()){
                     return Future.failedFuture("用户不存在！");
                 }
                 final String mobile = user.getString("mobile");
-                Future<JsonObject> messageFuture = Future.future();
-                messageService.findMessage(mobile, RegisterType.mobile, messageFuture);
-                return messageFuture.compose(message ->{
+                Promise<JsonObject> messagePromise = Promise.promise();
+                messageService.findMessage(mobile, RegisterType.mobile, messagePromise);
+                return messagePromise.future().compose(message ->{
                     if(Objects.isNull(message) || message.isEmpty()){
                         return Future.failedFuture("手机验证码不存在！");
                     }
                     if (!StringUtils.equals(message.getString("code"), params.getString("code"))) {
                         return Future.failedFuture("手机验证码不正确！");
                     }
-                    Future<JsonObject> accountFuture = Future.future();
-                    this.findAccount(userId, accountFuture);
-                    return accountFuture;
+                    Promise<JsonObject> accountPromise = Promise.promise();
+                    this.findAccount(userId, accountPromise);
+                    return accountPromise.future();
                 }).compose(account -> {
                     if(Objects.isNull(account) || account.isEmpty()){
                         return Future.failedFuture("账户【" + userId + "】不存在！");
                     }
                     final String pwd = this.hashStrategy.computeHash(params.getString("pay_pwd"), account.getInteger("account_id").toString(), -1);
-                    Future<Integer> future = Future.future();
-                    this.execute(new JsonArray().add(pwd).add(userId).add(account.getInteger("versions")), AccountSql.CHANGE_PAY_PWD_SQL)
-                            .subscribe(future::complete, future::fail);
+                    Promise<Integer> promise = Promise.promise();
+                    this.execute(Tuple.tuple().addString(pwd).addLong(userId).addInteger(account.getInteger("versions")), AccountSql.CHANGE_PAY_PWD_SQL)
+                            .subscribe(promise::complete, promise::fail);
                     certifiedService.sendUserCertified(userId, CertifiedType.PAY_CERTIFIED.getKey(), mobile, certifiedHandler -> {});
                     messageService.updateMessage(mobile, RegisterType.mobile, messageHandler -> {});
-                    return future;
+                    return promise.future();
                 });
             });
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 }

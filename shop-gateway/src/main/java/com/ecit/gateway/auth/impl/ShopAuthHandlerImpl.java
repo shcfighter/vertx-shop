@@ -14,10 +14,14 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.reactivex.core.Promise;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.sqlclient.Tuple;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements ShopAuthHandler {
     private static final Logger LOGGER = LogManager.getLogger(ShopAuthHandlerImpl.class);
@@ -38,7 +42,7 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
             if (password == null) {
                 resultHandler.handle(Future.failedFuture("authInfo must contain password in 'password' field"));
             } else {
-                this.retrieveMany(new JsonArray().add(username).add(username).add(username).add(Integer.valueOf(IsDeleted.NO.getValue())), UserSql.LOGIN_SQL)
+                this.retrieveMany(Tuple.tuple().addString(username).addString(username).addString(username).addInteger(Integer.valueOf(IsDeleted.NO.getValue())), UserSql.LOGIN_SQL)
                         .subscribe(rs -> {
                             switch (rs.size()) {
                                 case 0: {
@@ -90,9 +94,11 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
             handler.handle(Future.failedFuture("token empty"));
             return this;
         }
-        Future<Long> future = Future.future();
-        redisClient.rxHdel(Constants.VERTX_WEB_SESSION, token).subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+        Promise<Long> promise = Promise.promise();
+        redisClient.rxHdel(List.of(Constants.VERTX_WEB_SESSION, token)).subscribe(rs -> {
+            promise.complete(rs.toLong());
+        }, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -102,16 +108,16 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
             handler.handle(Future.failedFuture("token empty!"));
             return this;
         }
-        Future<String> future = Future.future();
+        Promise<String> promise = Promise.promise();
         redisClient.hget(Constants.VERTX_WEB_SESSION, token, re -> {
           if (re.failed()) {
               LOGGER.error("redis hget : ", re.cause());
-              future.fail(re.cause());
+              promise.fail(re.cause());
           } else {
-              future.complete(re.result());
+              promise.complete(re.result().toString());
           }
         });
-        future.setHandler(handler);
+        promise.future().andThen(handler);
         return this;
     }
 

@@ -34,7 +34,7 @@ public class ShopUserSessionHandlerImpl extends JdbcRxRepositoryWrapper implemen
                 return Future.failedFuture("can not get session");
             }
             return Future.succeededFuture();
-        }).setHandler(handler -> {
+        }).andThen(handler -> {
             if(handler.failed()){
                 this.noAuth(routingContext);
                 return ;

@@ -5,9 +5,12 @@ import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.IpUtils;
 import com.ecit.enmu.UserStatus;
 import com.ecit.gateway.auth.ShopAuthHandler;
+import com.hazelcast.internal.util.CollectionUtil;
+import com.hazelcast.internal.util.UuidUtil;
 import com.hazelcast.util.CollectionUtil;
 import com.hazelcast.util.UuidUtil;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
@@ -43,7 +46,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
     private ShopAuthHandler authHandler;
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start(Promise<Void> promise) throws Exception {
         super.start();
 
         authHandler = ShopAuthHandler.create(vertx, this.config());
@@ -82,10 +85,10 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
                 .requestHandler(router)
                 .listen(port, host, ar -> {
                     if (ar.succeeded()) {
-                        future.complete();
+                        promise.complete();
                         LOGGER.info("shop-gateway server started!");
                     } else {
-                        future.fail(ar.cause());
+                        promise.fail(ar.cause());
                         LOGGER.info("shop-gateway server fail!", ar.cause());
                     }
                 });
@@ -104,20 +107,20 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         String newPath = path.substring(initialOffset + prefix.length());
 
         // run with circuit breaker in order to deal with failure
-        circuitBreaker.execute(future -> {
-            getAllEndpoints(prefix).setHandler(ar -> {
+        circuitBreaker.execute(promise -> {
+            getAllEndpoints(prefix).onComplete(ar -> {
                 if (ar.succeeded()) {
                     List<Record> records = ar.result();
                     //负载均衡策略：随机
                     Optional<Record> client = Optional.ofNullable(CollectionUtil.isEmpty(records) ? null : records.get(new Random().nextInt(records.size())));
                     if (client.isPresent()) {
-                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(HttpClient.class), future);
+                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(HttpClient.class), promise.getDelegate());
                     } else {
                         notFound(context);
-                        future.complete();
+                        promise.complete();
                     }
                 } else {
-                    future.fail(ar.cause());
+                    promise.fail(ar.cause());
                 }
             });
         }).setHandler(ar -> {
@@ -135,7 +138,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
      * @param path    relative path
      * @param client  relevant HTTP client
      */
-    private void doDispatch(RoutingContext context, String path, HttpClient client, io.vertx.reactivex.core.Future<Object> cbFuture) {
+    private void doDispatch(RoutingContext context, String path, HttpClient client, Promise<Object> cbFuture) {
         HttpClientRequest toReq = client
                 .request(context.request().method(), path, response -> {
                     response.bodyHandler(body -> {
@@ -158,7 +161,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         context.request().getDelegate().headers().forEach(header -> {
             toReq.putHeader(header.getKey(), header.getValue());
         });
-        context.cookies().forEach(cookie -> {
+        context.request().cookies().forEach(cookie -> {
             toReq.putHeader(cookie.getName(), cookie.getValue());
         });
         //set ip
@@ -177,11 +180,11 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
      * @return async result
      */
     private Future<List<Record>> getAllEndpoints(String prefix) {
-        Future<List<Record>> future = Future.future();
+        io.vertx.reactivex.core.Promise<List<Record>> promise = io.vertx.reactivex.core.Promise.promise();
         discovery.getRecords(record -> record.getType().equals(HttpEndpoint.TYPE)
                         && StringUtils.equals(record.getMetadata().getString("api.name"), prefix),
-                future.completer());
-        return future;
+                promise.completer());
+        return promise.future();
     }
 
     private void apiVersion(RoutingContext context) {
@@ -194,8 +197,8 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
      * @param context
      */
     private void formatContentTypeHandler(RoutingContext context) {
-        if((context.request().method().compareTo(HttpMethod.POST) == 0
-                || context.request().method().compareTo(HttpMethod.PUT) == 0)
+        if((context.request().method().equals(HttpMethod.POST)
+                || context.request().method().equals(HttpMethod.PUT))
                 && !StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
             LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
             badRequest(context, new Throwable("请求方式【Content-Type】错误"));
@@ -259,7 +262,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
             this.noAuth(context);
             return;
         }
-        Set<FileUpload> fileUploads = context.fileUploads();
+        List<FileUpload> fileUploads = context.fileUploads();
         if(CollectionUtil.isEmpty(fileUploads)){
             LOGGER.error("头像上传失败，文件为空！");
             this.returnWithFailureMessage(context, "上传失败！");
@@ -268,7 +271,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         for (FileUpload avatar : fileUploads) {
             FileSystem fs = vertx.fileSystem();
             final String[] images = StringUtils.split(avatar.fileName(), ".");
-            String fileName = UuidUtil.createClusterUuid() + "." + images[images.length - 1];
+            String fileName = UuidUtil.newSecureUuidString() + "." + images[images.length - 1];
             fs.copy(avatar.uploadedFileName(), "/data/shop/images/avatar/" + fileName, res -> {
                 if (res.succeeded()) {
                     this.returnWithSuccessMessage(context, "上传成功！", "http://111.231.132.168:8080/images/avatar/" + fileName);

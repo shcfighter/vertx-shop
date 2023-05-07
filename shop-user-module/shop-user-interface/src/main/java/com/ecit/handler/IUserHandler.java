@@ -1,11 +1,13 @@
 package com.ecit.handler;
 
-import com.ecit.common.utils.salt.ShopHashStrategy;
-import io.vertx.codegen.annotations.*;
+import io.vertx.codegen.annotations.Fluent;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
+import io.vertx.reactivex.sqlclient.Row;
+import io.vertx.reactivex.sqlclient.RowSet;
 
 /**
  * Created by shwang on 2018/2/2.
@@ -38,7 +40,7 @@ public interface IUserHandler {
     IUserHandler getUserInfoHandler(String token, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent
-    IUserHandler saveUserInfoHandler(String token, JsonObject params, Handler<AsyncResult<UpdateResult>> resultHandler);
+    IUserHandler saveUserInfoHandler(String token, JsonObject params, Handler<AsyncResult<RowSet<Row>>> resultHandler);
 
     @Fluent
     IUserHandler updateEmail(long userId, String email, long versions, Handler<AsyncResult<Integer>> handler);
