@@ -9,11 +9,14 @@ import com.ecit.handler.IdBuilder;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQOptions;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.rabbitmq.RabbitMQClient;
+import io.vertx.reactivex.sqlclient.Tuple;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,18 +70,18 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
             LOGGER.debug("Got certified message: {}", json);
             JsonObject certified = new JsonObject(json.getString("body"));
             if (certified.containsKey("user_id")) {
-                Future<JsonObject> oneCertifiedFuture = Future.future();
-                this.findUserCertifiedByUserIdAndType(certified.getLong("user_id"), certified.getInteger("certified_type"), oneCertifiedFuture);
-                oneCertifiedFuture.compose(oneCertified -> {
-                    Future<Integer> certifiedFuture = Future.future();
+                Promise<JsonObject> oneCertifiedPromise = Promise.promise();
+                this.findUserCertifiedByUserIdAndType(certified.getLong("user_id"), certified.getInteger("certified_type"), oneCertifiedPromise);
+                oneCertifiedPromise.future().compose(oneCertified -> {
+                    Promise<Integer> certifiedPromise = Promise.promise();
                     if (oneCertified.size() > 0) {
-                        this.updateUserCertified(oneCertified.getLong("certified_id"), certified.getString("remarks"), certified.getLong("time"), certifiedFuture);
+                        this.updateUserCertified(oneCertified.getLong("certified_id"), certified.getString("remarks"), certified.getLong("time"), certifiedPromise);
                     } else {
                         this.saveUserCertified(certified.getLong("user_id"), certified.getInteger("certified_type"), certified.getString("remarks"),
-                                certified.getLong("time"), certifiedFuture);
+                                certified.getLong("time"), certifiedPromise);
                     }
-                    return certifiedFuture;
-                }).setHandler(handler -> {
+                    return certifiedPromise.future();
+                }).onComplete(handler -> {
                     if (handler.succeeded()) {
                         // ack
                         rabbitMQClient.basicAck(json.getLong("deliveryTag"), false, asyncResult -> {
@@ -95,6 +98,7 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
 
         // Setup the link between rabbitmq consumer and event bus address
         rabbitMQClient.rxBasicConsume(QUEUES, EVENTBUS_QUEUES, false).subscribe();
+        rabbitMQClient.rxBasicConsumer(QUEUES, EVENTBUS_QUEUES, false).subscribe();
         return ;
     }
 
@@ -109,55 +113,55 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
     public ICertifiedHandler sendUserCertified(long userId, int certifiedType, String remarks, Handler<AsyncResult<Void>> resultHandler) {
         JsonObject message = new JsonObject().put("body", new JsonObject().put("user_id", userId).put("certified_type", certifiedType)
                 .put("time", System.currentTimeMillis()).put("remarks", remarks).encodePrettily());
-        Future future = Future.future();
+        Promise promise = Promise.promise();
         // Put the channel in confirm mode. This can be done once at init.
         rabbitMQClient.confirmSelect(confirmResult -> {
             if(confirmResult.succeeded()) {
-                rabbitMQClient.basicPublish(EXCHANGE, ROUTINGKEY, message, pubResult -> {
+                rabbitMQClient.basicPublish(EXCHANGE, ROUTINGKEY, Buffer.buffer(message), pubResult -> {
                     if (pubResult.succeeded()) {
                         // Check the message got confirmed by the broker.
                         rabbitMQClient.waitForConfirms(waitResult -> {
                             if(waitResult.succeeded()){
-                                future.complete();
+                                promise.complete();
                                 LOGGER.info("Message published ! {}", message);
                             }
                             else{
-                                future.failed();
+                                promise.fail(waitResult.cause());
                                 LOGGER.error("rabbitmq 确认发送异常", waitResult.cause());
                             }
                         });
                     } else {
-                        future.failed();
+                        promise.fail(pubResult.cause());
                         LOGGER.error("rabbitmq 发送异常!", pubResult.cause());
                     }
                 });
             } else {
-                future.failed();
+                promise.fail(confirmResult.cause());
                 LOGGER.error("rabbitmq 连接异常", confirmResult.cause());
             }
         });
-        future.setHandler(resultHandler);
+        promise.future().onComplete(resultHandler);
         return this;
     }
 
     @Override
     public ICertifiedHandler saveUserCertified(long userId, int certifiedType, String remarks, long certifiedTime, Handler<AsyncResult<Integer>> resultHandler) {
-        Future<Integer> userFuture = Future.future();
-        this.execute(new JsonArray().add(IdBuilder.getUniqueId()).add(userId).add(certifiedType)
-                .add(DateFormatUtils.format(new Date(certifiedTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT)).add(remarks),
+        Promise<Integer> userPromise = Promise.promise();
+        this.execute(Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(userId).addInteger(certifiedType)
+                .addString(DateFormatUtils.format(new Date(certifiedTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT)).addString(remarks),
                 UserSql.INSERT_USER_CERTIFIED_SQL)
-                .subscribe(userFuture::complete, userFuture::fail);
-        userFuture.setHandler(resultHandler);
+                .subscribe(userPromise::complete, userPromise::fail);
+        userPromise..future().onComplete(resultHandler);
         return this;
     }
 
     @Override
     public ICertifiedHandler updateUserCertified(long certifiedId, String remarks, long updateTime, Handler<AsyncResult<Integer>> resultHandler) {
-        Future<Integer> userFuture = Future.future();
-        this.execute(new JsonArray().add(DateFormatUtils.format(new Date(updateTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT))
-                .add(remarks).add(certifiedId), UserSql.UPDATE_USER_CERTIFIED_SQL)
-                .subscribe(userFuture::complete, userFuture::fail);
-        userFuture.setHandler(resultHandler);
+        Promise<Integer> userPromise = Promise.promise();
+        this.execute(Tuple.tuple().addString(DateFormatUtils.format(new Date(updateTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT))
+                .addString(remarks).addLong(certifiedId), UserSql.UPDATE_USER_CERTIFIED_SQL)
+                .subscribe(userPromise::complete, userPromise::fail);
+        userPromise.future().onComplete(resultHandler);
         return this;
     }
 
@@ -170,21 +174,21 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
                 return Future.failedFuture("can not get session");
             }
             long userId = session.getLong("userId");
-            Future<List<JsonObject>> userFuture = Future.future();
-            this.retrieveMany(new JsonArray().add(userId), UserSql.SELECT_USER_CERTIFIED_SQL)
-                    .subscribe(userFuture::complete, userFuture::fail);
-            return userFuture;
+            Promise<List<JsonObject>> userPromise = Promise.promise();
+            this.retrieveMany(Tuple.tuple().addLong(userId), UserSql.SELECT_USER_CERTIFIED_SQL)
+                    .subscribe(userPromise::complete, userPromise::fail);
+            return userPromise.future();
         });
-        resultFuture.setHandler(resultHandler);
+        resultFuture.onComplete(resultHandler);
         return this;
     }
 
     @Override
     public ICertifiedHandler findUserCertifiedByUserIdAndType(long userId, int certifiedType, Handler<AsyncResult<JsonObject>> resultHandler) {
-        Future<JsonObject> userFuture = Future.future();
-        this.retrieveOne(new JsonArray().add(userId).add(certifiedType), UserSql.SELECT_USER_CERTIFIED_BY_TYPE_SQL)
-                .subscribe(userFuture::complete, userFuture::fail);
-        userFuture.setHandler(resultHandler);
+        Promise<JsonObject> userPromise = Promise.promise();
+        this.retrieveOne(Tuple.tuple().addLong(userId).addInteger(certifiedType), UserSql.SELECT_USER_CERTIFIED_BY_TYPE_SQL)
+                .subscribe(userPromise::complete, userPromise::fail);
+        userPromise.future().onComplete(resultHandler);
         return this;
     }
 }

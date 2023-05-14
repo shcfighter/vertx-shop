@@ -1,23 +1,18 @@
 package com.ecit.gateway;
 
-import com.ecit.common.auth.ShopUserSessionHandler;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.IpUtils;
 import com.ecit.enmu.UserStatus;
 import com.ecit.gateway.auth.ShopAuthHandler;
 import com.hazelcast.internal.util.CollectionUtil;
 import com.hazelcast.internal.util.UuidUtil;
-import com.hazelcast.util.CollectionUtil;
-import com.hazelcast.util.UuidUtil;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
+import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.net.JksOptions;
 import io.vertx.reactivex.core.file.FileSystem;
 import io.vertx.reactivex.core.http.HttpClient;
-import io.vertx.reactivex.core.http.HttpClientRequest;
 import io.vertx.reactivex.core.http.HttpServerResponse;
 import io.vertx.reactivex.ext.web.FileUpload;
 import io.vertx.reactivex.ext.web.Router;
@@ -30,7 +25,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * A verticle for global API gateway.
@@ -107,14 +105,14 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         String newPath = path.substring(initialOffset + prefix.length());
 
         // run with circuit breaker in order to deal with failure
-        circuitBreaker.execute(promise -> {
+        circuitBreaker.getDelegate().execute(promise -> {
             getAllEndpoints(prefix).onComplete(ar -> {
                 if (ar.succeeded()) {
                     List<Record> records = ar.result();
                     //负载均衡策略：随机
                     Optional<Record> client = Optional.ofNullable(CollectionUtil.isEmpty(records) ? null : records.get(new Random().nextInt(records.size())));
                     if (client.isPresent()) {
-                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(HttpClient.class), promise.getDelegate());
+                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(HttpClient.class), promise);
                     } else {
                         notFound(context);
                         promise.complete();
@@ -123,7 +121,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
                     promise.fail(ar.cause());
                 }
             });
-        }).setHandler(ar -> {
+        }).onComplete(ar -> {
             if (ar.failed()) {
                 LOGGER.error("gateway调用失败！", ar.cause());
                 badGateway(ar.cause(), context);
@@ -131,6 +129,17 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         });
     }
 
+    private Future<io.vertx.core.http.HttpClientRequest> putHeaders(io.vertx.reactivex.core.http.HttpServerRequest serverRequest, io.vertx.core.http.HttpClientRequest clientRequest) {
+        serverRequest.headers().forEach(header -> {
+            clientRequest.putHeader(header.getKey(), header.getValue());
+        });
+        serverRequest.cookies().forEach(cookie -> {
+            clientRequest.putHeader(cookie.getName(), cookie.getValue());
+        });
+        //set ip
+        clientRequest.putHeader("ip", IpUtils.getIpAddr(serverRequest));
+        return Future.succeededFuture(clientRequest);
+    }
     /**
      * Dispatch the request to the downstream REST layers.
      *
@@ -139,39 +148,37 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
      * @param client  relevant HTTP client
      */
     private void doDispatch(RoutingContext context, String path, HttpClient client, Promise<Object> cbFuture) {
-        HttpClientRequest toReq = client
-                .request(context.request().method(), path, response -> {
-                    response.bodyHandler(body -> {
-                        if (response.statusCode() >= 500) { // api endpoint server error, circuit breaker should fail
-                            cbFuture.fail(response.statusCode() + ": " + body.toString());
-                        } else {
-                            HttpServerResponse toRsp = context.response()
-                                    .setStatusCode(response.statusCode());
-                            response.getDelegate().headers().forEach(header -> {
-                                toRsp.putHeader(header.getKey(), header.getValue());
-                            });
-                            // send response
-                            toRsp.end(body);
-                            cbFuture.complete();
-                        }
-                        ServiceDiscovery.releaseServiceObject(discovery, client);
-                    });
-                });
-        // set headers
-        context.request().getDelegate().headers().forEach(header -> {
-            toReq.putHeader(header.getKey(), header.getValue());
-        });
-        context.request().cookies().forEach(cookie -> {
-            toReq.putHeader(cookie.getName(), cookie.getValue());
-        });
-        //set ip
-        toReq.putHeader("ip", IpUtils.getIpAddr(context.request()));
-        // send request
-        if (context.getBody() == null) {
-            toReq.end();
-        } else {
-            toReq.end(context.getBody());
-        }
+        io.vertx.reactivex.core.http.HttpServerRequest request = context.request();
+        HttpServerResponse toRsp = context.response();
+
+        Future.succeededFuture(context.getDelegate().body().buffer()).compose(msg -> {
+            Promise<Object> promise = Promise.promise();
+            client.getDelegate().request(request.method(), path)
+                    .compose(req -> this.putHeaders(request, req)
+                            .compose(toReq -> toReq.send(msg)
+                            .onComplete(handler -> {
+                                if (handler.succeeded()) {
+                                    HttpClientResponse response = handler.result();
+                                    toRsp.setStatusCode(response.statusCode());
+                                    response.headers().forEach(header -> {
+                                        toRsp.putHeader(header.getKey(), header.getValue());
+                                    });
+                                    response.body().compose(body -> {
+                                        toRsp.end(body.toString());
+                                        return Future.succeededFuture();
+                                    }).onComplete(promise);
+                                } else {
+                                    toRsp.setStatusCode(500);
+                                    toRsp.end("内部服务错误");
+                                    promise.fail(handler.cause());
+                                }
+                            })).onComplete(ar -> {
+                //release the service
+                ServiceDiscovery.releaseServiceObject(discovery, client);
+            }));
+            return promise.future();
+        }).onComplete(cbFuture);
+
     }
 
     /**
@@ -181,9 +188,14 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
      */
     private Future<List<Record>> getAllEndpoints(String prefix) {
         io.vertx.reactivex.core.Promise<List<Record>> promise = io.vertx.reactivex.core.Promise.promise();
-        discovery.getRecords(record -> record.getType().equals(HttpEndpoint.TYPE)
-                        && StringUtils.equals(record.getMetadata().getString("api.name"), prefix),
-                promise.completer());
+        discovery.getDelegate().getRecords(record -> record.getType().equals(HttpEndpoint.TYPE)
+                        && StringUtils.equals(record.getMetadata().getString("api.name"), prefix)).onComplete(handler -> {
+                            if (handler.succeeded()) {
+                                promise.complete(handler.result());
+                            } else {
+                                promise.fail(handler.cause());
+                            }
+        });
         return promise.future();
     }
 

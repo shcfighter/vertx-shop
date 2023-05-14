@@ -58,17 +58,17 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<Void> future = Future.future();
+            Promise<Void> promise = Promise.promise();
             commodityHandler.findCommodityById(params.getLong("commodity_id"), commodityHandler -> {
                 if (commodityHandler.failed()) {
                     LOGGER.error("insert cart fail, find commodity error: ", commodityHandler.cause());
-                    future.fail(commodityHandler.cause());
+                    promise.fail(commodityHandler.cause());
                     return ;
                 }
                 JsonObject commodity = commodityHandler.result();
                 if (JsonUtils.isNull(commodity)) {
                     LOGGER.error("insert cart fail, find commodity[{}] error: ", params.getLong("commodity_id"));
-                    future.fail("commodity empty!");
+                    promise.fail("commodity empty!");
                     return ;
                 }
                 mongoClient.findOne(CART_COLLECTION, new JsonObject()
@@ -77,7 +77,7 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
                         .put("is_deleted", 0), null, cartHandler -> {
                     if (cartHandler.failed()) {
                         LOGGER.error("find cart failed: ", cartHandler.cause());
-                        future.fail(cartHandler.cause());
+                        promise.fail(cartHandler.cause());
                         return ;
                     }
                     JsonObject cart = cartHandler.result();
@@ -96,11 +96,9 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
                                 .put("is_deleted", 0), h -> {
                             if (h.failed()) {
                                 LOGGER.error("insert cart fail: ", h.cause());
-                                future.fail(h.cause());
-                                return ;
+                                promise.fail(h.cause());
                             } else {
-                                future.complete();
-                                return ;
+                                promise.complete();
                             }
                         });
                     } else {
@@ -110,18 +108,16 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
                                 new UpdateOptions().setMulti(true), h -> {
                             if (h.failed()) {
                                 LOGGER.error("update cart failed: ", h.cause());
-                                future.fail(h.cause());
-                                return ;
+                                promise.fail(h.cause());
                             } else {
-                                future.complete();
-                                return ;
+                                promise.complete();
                             }
                         });
                     }
                 });
             });
-            return future;
-        }).setHandler(handler);
+            return promise.future();
+        }).onComplete(handler);
         return this;
     }
 
@@ -142,16 +138,16 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<List<JsonObject>> future = Future.future();
+            Promise<List<JsonObject>> promise = Promise.promise();
             mongoClient.rxFindWithOptions(CART_COLLECTION, new JsonObject()
                             .put("user_id", userId)
                             .put("is_deleted", 0),
                     new FindOptions().setLimit(pageSize).setSkip(((page - 1) * pageSize))
                             .setSort(new JsonObject().put("create_time", -1)))
-                    .subscribe(future::complete, future::fail);
-            return future;
+                    .subscribe(promise::complete, promise::fail);
+            return promise.future();
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
@@ -196,31 +192,31 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<MongoClientUpdateResult> future = Future.future();
+            Promise<MongoClientUpdateResult> promise = Promise.promise();
             mongoClient.rxUpdateCollectionWithOptions(CART_COLLECTION, new JsonObject()
                             .put("user_id", userId)
                             .put("_id", new JsonObject().put("$in", new JsonArray(ids)))
                             .put("is_deleted", 0),
                     new JsonObject().put("$set", new JsonObject().put("is_deleted", 1)),
                     new UpdateOptions().setMulti(true))
-                    .subscribe(future::complete, future::fail);
-            return future;
+                    .subscribe(promise::complete, promise::fail);
+            return promise.future();
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
     @Override
     public ICartHandler removeCartByCommodityId(long userId, List<Long> ids, Handler<AsyncResult<MongoClientUpdateResult>> handler) {
-        Future<MongoClientUpdateResult> future = Future.future();
+        Promise<MongoClientUpdateResult> promise = Promise.promise();
         mongoClient.rxUpdateCollectionWithOptions(CART_COLLECTION, new JsonObject()
                         .put("user_id", userId)
                         .put("commodity_id", new JsonObject().put("$in", new JsonArray(ids)))
                         .put("is_deleted", 0),
                 new JsonObject().put("$set", new JsonObject().put("is_deleted", 1)),
                 new UpdateOptions().setMulti(true))
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 }
