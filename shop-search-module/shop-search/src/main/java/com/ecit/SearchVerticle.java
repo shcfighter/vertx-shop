@@ -7,7 +7,6 @@ import com.ecit.handler.IPreferencesHandler;
 import com.ecit.handler.impl.CommodityHandler;
 import com.ecit.handler.impl.PreferencesHandler;
 import com.hazelcast.config.Config;
-import com.hazelcast.config.GroupConfig;
 import com.hubrick.vertx.elasticsearch.ElasticSearchServiceVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.VertxOptions;
@@ -39,10 +38,6 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
 
     public static void main(String[] args) {
         Config cfg = new Config();
-        GroupConfig group = new GroupConfig();
-        group.setName("p-dev");
-        group.setPassword("p-dev");
-        cfg.setGroupConfig(group);
         // 申明集群管理器
         ClusterManager mgr = new HazelcastClusterManager(cfg);
         VertxOptions options = new VertxOptions().setClusterManager(mgr);

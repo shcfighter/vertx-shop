@@ -7,7 +7,6 @@ import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
 
 import java.util.List;
 
@@ -45,5 +44,5 @@ public interface ICommodityHandler {
     ICommodityHandler findBrandCategory(String keyword, Handler<AsyncResult<SearchResponse>> handler);
 
     @Fluent
-    ICommodityHandler preparedCommodity(long id, long orderId, int num, String ip, String logistics, String payWay, Handler<AsyncResult<UpdateResult>> handler);
+    ICommodityHandler preparedCommodity(long id, long orderId, int num, String ip, String logistics, String payWay, Handler<AsyncResult<Integer>> handler);
 }

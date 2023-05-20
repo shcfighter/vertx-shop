@@ -5,25 +5,19 @@ import com.ecit.common.constants.Constants;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.IpUtils;
 import com.ecit.common.utils.JsonUtils;
-import com.ecit.handler.*;
+import com.ecit.handler.IOrderHandler;
 import com.google.common.collect.Lists;
-import com.hazelcast.util.CollectionUtil;
-import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
-import io.vertx.reactivex.ext.web.handler.CookieHandler;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -134,10 +128,10 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
             return;
         }
 
-        Future<JsonObject> future = Future.future();
-        orderHandler.findOrderRowNum(token, params, future);
+        Promise<JsonObject> promise = Promise.promise();
+        orderHandler.findOrderRowNum(token, params, promise);
         final int page = Optional.ofNullable(params.getInteger("page")).orElse(1);
-        future.compose(rowNum -> {
+        promise.future().compose(rowNum -> {
             if(JsonUtils.isNull(rowNum) || rowNum.getInteger("rownum") <= 0){
                 this.returnWithSuccessMessage(context, "查询订单信息成功！", rowNum.getInteger("rownum"), Lists.newArrayList(), page);
                 return Future.succeededFuture();
@@ -151,7 +145,7 @@ public class RestOrderRxVerticle extends RestAPIRxVerticle {
                 }
             });
             return Future.succeededFuture();
-        }).setHandler(end -> {
+        }).onComplete(end -> {
             if (end.failed()) {
                 LOGGER.error("查询订单信息失败: ", end.cause());
                 this.returnWithFailureMessage(context, "查询订单信息失败！");

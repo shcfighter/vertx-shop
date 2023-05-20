@@ -12,13 +12,10 @@ import com.hubrick.vertx.elasticsearch.model.Hits;
 import com.hubrick.vertx.elasticsearch.model.SearchResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.core.Future;
+import io.vertx.reactivex.core.Promise;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
-import io.vertx.reactivex.ext.web.handler.CookieHandler;
-import io.vertx.reactivex.redis.RedisClient;
-import io.vertx.redis.RedisOptions;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +37,6 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
     private ICommodityHandler commodityHandler;
     private IPreferencesHandler preferencesHandler;
     private ICollectionHandler collectionHandler;
-    private RedisClient redis;
 
     @Override
     public void start() throws Exception {
@@ -48,16 +44,11 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         this.commodityHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
         this.preferencesHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).build(IPreferencesHandler.class);
         this.collectionHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICollectionHandler.COLLECTION_SERVICE_ADDRESS).build(ICollectionHandler.class);
-        JsonObject redisObject = this.config().getJsonObject("redis", new JsonObject());
-        RedisOptions config = new RedisOptions()
-                .setHost(redisObject.getString("host", "localhost"))
-                .setPort(redisObject.getInteger("port", 6379))
-                .setAuth(redisObject.getString("auth", "h123456"));
-        this.redis = RedisClient.create(vertx, config);
+
         final Router router = Router.router(vertx);
         // body handler
         router.route().handler(BodyHandler.create());
-        router.route().handler(CookieHandler.create());
+        //router.route().handler(CookieHandler.create());
         // API route handler
         router.post("/search").handler(this::searchHandler);
         router.post("/searchLargeClass").handler(this::searchLargeClassHandler);
@@ -147,32 +138,6 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                 this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultList);
             }
         });
-        /*redis.get("search_large_class_key_" + key, redisHandler -> {
-            if(redisHandler.succeeded() && Objects.nonNull(redisHandler.result())){
-                List<JsonObject> resultList = Json.decodeValue(redisHandler.result(), List.class);
-                LOGGER.info("redis cache: {}", Thread.currentThread().getName());
-                this.returnWithSuccessMessage(context, "查询成功", resultList.size(), resultList);
-            }else {
-                commodityService.searchLargeClassCommodity(key, handler -> {
-                    if(handler.failed()){
-                        this.returnWithFailureMessage(context, "暂无该商品！");
-                        LOGGER.error("搜索商品异常：", handler.cause());
-                        return ;
-                    } else {
-                        if(Objects.isNull(handler.result())){
-                            this.returnWithFailureMessage(context, "暂无该商品！");
-                            return ;
-                        }
-                        final SearchResponse result = handler.result();
-                        final List<JsonObject> resultList = result.getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList());
-                        //redis.rxSet("search_large_class_key_" + key, Json.encodePrettily(resultList));
-                        redis.set("search_large_class_key_" + key, Json.encodePrettily(resultList), handler2 -> {});
-                        redis.expire("search_large_class_key_" + key, 24 * 60 * 60L, handler3 -> {});
-                        this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultList);
-                    }
-                });
-            }
-        });*/
 
     }
 
@@ -218,9 +183,9 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
         if(StringUtils.isEmpty(cookie)){
             //查询默认的
-            Future<SearchResponse> commodityFuture = Future.future();
-            commodityHandler.findCommodityBySalesVolume(commodityFuture.completer());
-            commodityFuture.setHandler(res -> {
+            Promise<SearchResponse> commodityPromise = Promise.promise();
+            commodityHandler.findCommodityBySalesVolume(commodityPromise.getDelegate());
+            commodityPromise.future().onComplete(res -> {
                 if (res.failed()) {
                     LOGGER.error("查询偏好产品失败！", res.cause());
                     this.returnWithFailureMessage(context, "查询失败！");
@@ -231,13 +196,13 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
             });
             return ;
         }
-        Future<List<String>> future = Future.future();
-        preferencesHandler.findPreferences(cookie, future.completer());
-        future.compose(list -> {
-            Future<SearchResponse> commodityFuture = Future.future();
-            commodityHandler.preferencesCommodity(list, commodityFuture.completer());
-            return commodityFuture;
-        }).setHandler(res -> {
+        Promise<List<String>> promise = Promise.promise();
+        preferencesHandler.findPreferences(cookie, promise.getDelegate());
+        promise.future().compose(list -> {
+            Promise<SearchResponse> commodityPromise = Promise.promise();
+            commodityHandler.preferencesCommodity(list, commodityPromise.getDelegate());
+            return commodityPromise.future();
+        }).onComplete(res -> {
             if (res.failed()) {
                 LOGGER.error("查询偏好产品失败！", res.cause());
                 this.returnWithFailureMessage(context, "查询失败！");

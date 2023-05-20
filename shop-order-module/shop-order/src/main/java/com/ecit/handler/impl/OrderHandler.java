@@ -1,25 +1,22 @@
 package com.ecit.handler.impl;
 
 import com.ecit.common.db.JdbcRxRepositoryWrapper;
-import com.ecit.common.utils.IpUtils;
 import com.ecit.common.utils.JsonUtils;
-import com.ecit.constants.AccountSql;
 import com.ecit.constants.OrderSql;
 import com.ecit.enums.OrderStatus;
 import com.ecit.handler.*;
 import com.google.common.collect.Lists;
-import com.hazelcast.util.CollectionUtil;
-import io.reactivex.Single;
-import io.reactivex.exceptions.CompositeException;
+import com.hazelcast.internal.util.CollectionUtil;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
+import io.vertx.reactivex.core.Promise;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.mongo.MongoClient;
+import io.vertx.reactivex.sqlclient.Tuple;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -64,17 +61,17 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
     @Override
     public IOrderHandler insertOrder(long orderId, long userId, String price, String freight, long shippingInformationId, String leaveMessage,
                                      JsonArray orderDetails, Handler<AsyncResult<Integer>> handler) {
-        Future<Integer> future = Future.future();
-        this.execute(new JsonArray().add(orderId)
-                .add(userId)
-                .add(shippingInformationId)
-                .add(OrderStatus.VALID.getValue())
-                .add(leaveMessage)
-                .add(orderDetails.encodePrettily())
-                .add(price)
-                .add(freight)
-                , OrderSql.INSERT_ORDER_SQL).subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+        Promise<Integer> promise = Promise.promise();
+        this.execute(Tuple.tuple().addLong(orderId)
+                .addLong(userId)
+                .addLong(shippingInformationId)
+                .addInteger(OrderStatus.VALID.getValue())
+                .addString(leaveMessage)
+                .addString(orderDetails.encodePrettily())
+                .addString(price)
+                .addString(freight)
+                , OrderSql.INSERT_ORDER_SQL).subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -109,11 +106,11 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
                                 , params.getString("ip"),
                                 params.getString("logistics"), params.getString("pay_way")));
                     }).compose(msg ->{
-                        Future<Integer> orderFuture = Future.future();
+                        Promise<Integer> orderPromise = Promise.promise();
                         orderHandler.insertOrder(orderId, userId, totalPrice.stream().reduce(BigDecimal::add).orElse(new BigDecimal("0.00")).toString(),
                                 CollectionUtil.isEmpty(totalFreight) ? "0.00" : totalFreight.get(0).toString(), Long.parseLong(params.getString("shipping_information_id")),
-                                params.getString("leave_message"), orderDetails, orderFuture);
-                        return orderFuture;
+                                params.getString("leave_message"), orderDetails, orderPromise.getDelegate());
+                        return orderPromise.future();
                     }).compose(order -> {
                         if(Objects.isNull(order) || order <= 0){
                             return Future.failedFuture("订单创建失败");
@@ -131,7 +128,7 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
                         return Future.succeededFuture(orderId);
                     });
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
@@ -152,13 +149,13 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
             final Integer status = params.containsKey("status") ? params.getInteger("status") : null;
             final int page = Optional.ofNullable(params.getInteger("page")).orElse(1);
             final int pageSize = Optional.ofNullable(params.getInteger("pageSize")).orElse(10);
-            Future<List<JsonObject>> future = Future.future();
-            this.retrieveByPage(Objects.nonNull(status) ? new JsonArray().add(userId).add(status) : new JsonArray().add(userId), pageSize, page,
+            Promise<List<JsonObject>> promise = Promise.promise();
+            this.retrieveByPage(Objects.nonNull(status) ? Tuple.tuple().addLong(userId).addInteger(status) : Tuple.tuple().addLong(userId), pageSize, page,
                     Objects.nonNull(status) ? OrderSql.FIND_PAGE_ORDER_SQL : OrderSql.FIND_ALL_PAGE_ORDER_SQL)
-                    .subscribe(future::complete, future::fail);
-            return future;
+                    .subscribe(promise::complete, promise::fail);
+            return promise.future();
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
@@ -172,22 +169,22 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
             }
             final long userId = session.getLong("userId");
             Integer status = params.containsKey("status") ? params.getInteger("status") : null;
-            Future<JsonObject> future = Future.future();
-            this.retrieveOne(Objects.nonNull(status) ? new JsonArray().add(userId).add(status) : new JsonArray().add(userId),
+            Promise<JsonObject> promise = Promise.promise();
+            this.retrieveOne(Objects.nonNull(status) ? Tuple.tuple().addLong(userId).addInteger(status) : Tuple.tuple().addLong(userId),
                     Objects.nonNull(status) ? OrderSql.FIND_ORDER_ROWNUM_SQL : OrderSql.FIND_ALL_ORDER_ROWNUM_SQL)
-                    .subscribe(future::complete, future::fail);
-            return future;
+                    .subscribe(promise::complete, promise::fail);
+            return promise.future();
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
     @Override
     public IOrderHandler preparedInsertOrder(String token, JsonArray params, Handler<AsyncResult<String>> handler) {
-        Future<String> future = Future.future();
+        Promise<String> promise = Promise.promise();
         mongoClient.rxInsert(ORDER_COLLECTION, new JsonObject().put("order", params))
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -199,20 +196,20 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
      */
     @Override
     public IOrderHandler findPreparedOrder(String id, Handler<AsyncResult<List<JsonObject>>> handler) {
-        Future<JsonObject> future = Future.future();
-        mongoClient.rxFindOne(ORDER_COLLECTION, new JsonObject().put("_id", id), null).subscribe(future::complete, future::fail);
-        future.compose(preparedOrder -> {
-            Future<List<JsonObject>> commodifyFuture = Future.future();
+        Promise<JsonObject> promise = Promise.promise();
+        mongoClient.rxFindOne(ORDER_COLLECTION, new JsonObject().put("_id", id), null).subscribe(promise::complete, promise::fail);
+        promise.future().compose(preparedOrder -> {
+
             final JsonArray orderArray = preparedOrder.getJsonArray("order");
             List<Long> ids = Lists.newArrayList();
             for (int i = 0; i < orderArray.size(); i++) {
                 JsonObject order = orderArray.getJsonObject(i);
                 ids.add(Long.parseLong(order.getString("order_id")));
             }
-            Future<List<JsonObject>> commodityFuture = Future.future();
+            Promise<List<JsonObject>> commodifyPromise = Promise.promise();
             commodityHandler.findCommodityByIds(ids, commodifyHandler -> {
-                if (commodifyFuture.failed()){
-                    commodityFuture.fail(commodifyFuture.cause());
+                if (commodifyHandler.failed()){
+                    commodifyPromise.fail(commodifyHandler.cause());
                 }
                 List<JsonObject> commodityList = commodifyHandler.result();
                 commodityList.stream().forEach(commodity -> {
@@ -224,10 +221,10 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
                         }
                     }
                 });
-                commodityFuture.complete(commodityList);
+                commodifyPromise.complete(commodityList);
             });
-            return commodityFuture;
-        }).setHandler(handler);
+            return commodifyPromise.future();
+        }).onComplete(handler);
         return this;
     }
 
@@ -240,10 +237,10 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
      */
     @Override
     public IOrderHandler getOrderById(long orderId, long userId, Handler<AsyncResult<JsonObject>> handler) {
-        Future<JsonObject> future = Future.future();
-        this.retrieveOne(new JsonArray().add(orderId).add(userId), OrderSql.FIND_ORDER_BY_ID)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+        Promise<JsonObject> promise = Promise.promise();
+        this.retrieveOne(Tuple.tuple().addLong(orderId).addLong(userId), OrderSql.FIND_ORDER_BY_ID)
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -255,10 +252,11 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
             }
-            Future<JsonObject> orderFuture = Future.future();
-            orderHandler.getOrderByIdHandler(token, orderId, orderFuture);
-            return orderFuture;
+            Promise<JsonObject> orderPromise = Promise.promise();
+            orderHandler.getOrderByIdHandler(token, orderId, orderPromise.getDelegate());
+            return orderPromise.future();
         });
+        resultFuture.onComplete(handler);
         return this;
     }
 
@@ -270,10 +268,10 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
      */
     @Override
     public IOrderHandler payOrder(long orderId, int versions, Handler<AsyncResult<Integer>> handler) {
-        Future<Integer> future = Future.future();
-        this.execute(new JsonArray().add(OrderStatus.PAY.getValue()).add(orderId).add(versions), OrderSql.PAY_ORDER_SQL)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+        Promise<Integer> promise = Promise.promise();
+        this.execute(Tuple.tuple().addInteger(OrderStatus.PAY.getValue()).addLong(orderId).addInteger(versions), OrderSql.PAY_ORDER_SQL)
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -284,17 +282,17 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
      * @return
      */
     @Override
-    public IOrderHandler refundHandler(String token, long orderId, JsonObject params, Handler<AsyncResult<UpdateResult>> handler) {
+    public IOrderHandler refundHandler(String token, long orderId, JsonObject params, Handler<AsyncResult<Integer>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<UpdateResult> resultFuture = sessionFuture.compose(session -> {
+        Future<Integer> resultFuture = sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<JsonObject> orderFuture = Future.future();
-            this.getOrderById(orderId, userId, orderFuture);
-            return orderFuture.compose(order -> {
+            Promise<JsonObject> orderPromise = Promise.promise();
+            this.getOrderById(orderId, userId, orderPromise.getDelegate());
+            return orderPromise.future().compose(order -> {
                 if(Objects.isNull(order)){
                     return Future.failedFuture("order_not_found");
                 }
@@ -302,85 +300,66 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
                         order.getInteger("order_status").intValue() != OrderStatus.SHIP.getValue()){
                     return Future.failedFuture("order_status_error");
                 }
-                Future<UpdateResult> future = Future.future();
-                postgreSQLClient.rxGetConnection().flatMap(conn ->
-                        conn.rxSetAutoCommit(false).toSingleDefault(false)
-                                .flatMap(autoCommit -> conn.rxUpdateWithParams(OrderSql.CANCEL_ORDER_SQL,
-                                        new JsonArray().add(OrderStatus.AUDIT_REFUND.getValue()).add(orderId).add(order.getInteger("versions"))))
-                                .flatMap(updateResult -> conn.rxUpdateWithParams(OrderSql.REFUND_SQL,
-                                        new JsonArray().add(IdBuilder.getUniqueId()).add(orderId).add(params.getInteger("refund_type"))
-                                                .add(params.getString("refund_reason"))
-                                                .add(params.getString("refund_money")).add(params.getString("refund_description")).add(userId)))
-                                // Rollback if any failed with exception propagation
-                                .onErrorResumeNext(ex -> conn.rxRollback()
-                                        .toSingleDefault(true)
-                                        .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
-                                        .flatMap(ignore -> Single.error(ex))
-                                )
-                                // close the connection regardless succeeded or failed
+                Promise<Integer> promise = Promise.promise();
+                pgPool.rxGetConnection().flatMap(conn -> conn.preparedQuery(OrderSql.CANCEL_ORDER_SQL)
+                                .rxExecute(Tuple.tuple().addInteger(OrderStatus.AUDIT_REFUND.getValue()).addLong(orderId).addInteger(order.getInteger("versions")))
+                                .flatMap(updateResult -> conn.preparedQuery(OrderSql.REFUND_SQL)
+                                        .rxExecute(Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(orderId).addInteger(params.getInteger("refund_type"))
+                                                .addString(params.getString("refund_reason"))
+                                                .addString(params.getString("refund_money")).addString(params.getString("refund_description")).addLong(userId)))
                                 .doAfterTerminate(conn::close)
-                ).subscribe(future::complete, future::fail);
-                return future;
+                ).subscribe(rs -> promise.complete(rs.rowCount()), promise::fail);
+                return promise.future();
             });
         });
-        resultFuture.setHandler(handler);
+        resultFuture.onComplete(handler);
         return this;
     }
 
     @Override
-    public IOrderHandler undoRefund(long orderId, long userId, Handler<AsyncResult<UpdateResult>> handler) {
-        Future<JsonObject> orderFuture = Future.future();
-        this.getOrderById(orderId, userId, orderFuture);
-        orderFuture.compose(order -> {
+    public IOrderHandler undoRefund(long orderId, long userId, Handler<AsyncResult<Integer>> handler) {
+        Promise<JsonObject> orderPromise = Promise.promise();
+        this.getOrderById(orderId, userId, orderPromise.getDelegate());
+        orderPromise.future().compose(order -> {
             if(Objects.isNull(order)){
                 return Future.failedFuture("order_not_found");
             }
             if(order.getInteger("order_status").intValue() != OrderStatus.AUDIT_REFUND.getValue()){
                 return Future.failedFuture("order_status_error");
             }
-            Future<UpdateResult> future = Future.future();
-            postgreSQLClient.rxGetConnection().flatMap(conn ->
-                    conn.rxSetAutoCommit(false).toSingleDefault(false)
-                            .flatMap(autoCommit -> conn.rxUpdateWithParams(OrderSql.CANCEL_REFUND_SQL,
-                                    new JsonArray().add(OrderStatus.AUDIT_REFUND.getValue()).add(orderId).add(order.getInteger("versions"))))
-                            .flatMap(updateResult -> conn.rxUpdateWithParams(OrderSql.DELETE_REFUND_SQL,
-                                    new JsonArray().add(orderId)))
-                            // Rollback if any failed with exception propagation
-                            .onErrorResumeNext(ex -> conn.rxRollback()
-                                    .toSingleDefault(true)
-                                    .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
-                                    .flatMap(ignore -> Single.error(ex))
-                            )
-                            // close the connection regardless succeeded or failed
+            Promise<Integer> promise = Promise.promise();
+            pgPool.rxGetConnection().flatMap(conn -> conn.preparedQuery(OrderSql.CANCEL_REFUND_SQL)
+                            .rxExecute(Tuple.tuple().addInteger(OrderStatus.AUDIT_REFUND.getValue()).addLong(orderId).addInteger(order.getInteger("versions")))
+                            .flatMap(updateResult -> conn.preparedQuery(OrderSql.DELETE_REFUND_SQL)
+                                            .rxExecute(Tuple.tuple().addLong(orderId)))
                             .doAfterTerminate(conn::close)
-            ).subscribe(future::complete, future::fail);
-            return future;
-        }).setHandler(handler);
+            ).subscribe(rs -> promise.complete(rs.rowCount()), promise::fail);
+            return promise.future();
+        }).onComplete(handler);
         return this;
     }
 
     @Override
     public IOrderHandler getAddressHandler(String token, long orderId, Handler<AsyncResult<JsonObject>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<JsonObject> resultFuture = sessionFuture.compose(session -> {
+        sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            Future<JsonObject> orderFuture = Future.future();
-            orderHandler.getOrderById(orderId, userId, orderFuture);
-            return orderFuture.compose(order -> {
+            Promise<JsonObject> orderFuture = Promise.promise();
+            orderHandler.getOrderById(orderId, userId, orderFuture.getDelegate());
+            return orderFuture.future().compose(order -> {
                 if(Objects.isNull(order)){
                     LOGGER.error("获取订单【{}】信息失败！", orderId);
                     return Future.failedFuture("获取订单信息失败！");
                 }
-                Future<JsonObject> addressFuture = Future.future();
-                addressHandler.getAddressById(order.getLong("shipping_information_id"), addressFuture);
-                return addressFuture.compose(address -> Future.succeededFuture(orderFuture.result().put("information", address)));
+                Promise<JsonObject> addressPromise = Promise.promise();
+                addressHandler.getAddressById(order.getLong("shipping_information_id"), addressPromise.getDelegate());
+                return addressPromise.future().compose(address -> Future.succeededFuture(orderFuture.future().result().put("information", address)));
             });
-        });
-        resultFuture.setHandler(handler);
+        }).onComplete(handler);
         return this;
     }
 
@@ -393,23 +372,23 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
     private List<Future> checkCommodity(ICommodityHandler commodityService, JsonArray orderDetails){
         final List<Future> isOk = new ArrayList<>(orderDetails.size());
         for (int i = 0; i < orderDetails.size(); i++) {
-            Future future = Future.future();
-            isOk.add(future);
+            Promise promise = Promise.promise();
+            isOk.add(promise.future());
             JsonObject order = orderDetails.getJsonObject(i);
             commodityService.findCommodityById(order.getLong("id"), orderHandler -> {
                 if(orderHandler.succeeded()){
                     JsonObject commodity = orderHandler.result();
                     if(order.getInteger("order_num") > commodity.getInteger("num")){
-                        future.fail("订单数量大于库存数据量");
+                        promise.fail("订单数量大于库存数据量");
                         return ;
                     }
                     order.put("commodity_name", commodity.getString("commodity_name"));
                     order.put("price", commodity.getString("price"));
                     order.put("image_url", commodity.getString("image_url"));
-                    future.complete(commodity);
+                    promise.complete(commodity);
                 } else {
                     LOGGER.info("调用商品【{}】详情接口失败", order.getLong("id"));
-                    future.fail(orderHandler.cause());
+                    promise.fail(orderHandler.cause());
                 }
             });
         }
@@ -426,17 +405,17 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
     private List<Future> preparedDecrCommodity(ICommodityHandler commodityService, long orderId, JsonArray orderDetails, String ip, String logistics, String payWay) {
         final List<Future> isOk = new ArrayList<>(orderDetails.size());
         for (int i = 0; i < orderDetails.size(); i++) {
-            Future future = Future.future();
-            isOk.add(future);
+            Promise promise = Promise.promise();
+            isOk.add(promise.future());
             JsonObject order = orderDetails.getJsonObject(i);
             commodityService.preparedCommodity(order.getLong("id"), orderId, order.getInteger("order_num"), ip, logistics, payWay,
                     hander -> {
                         if(hander.succeeded()){
                             LOGGER.info("商品【{}】预扣商品库存成功", order.getLong("id"));
-                            future.complete();
+                            promise.complete();
                         } else {
                             LOGGER.info("调用商品【{}】预处理接口失败", order.getLong("id"));
-                            future.fail(hander.cause());
+                            promise.fail(hander.cause());
                         }
                     });
         }

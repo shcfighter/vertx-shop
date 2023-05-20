@@ -7,7 +7,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
 
 import java.util.List;
 
@@ -48,10 +47,10 @@ public interface IOrderHandler {
     IOrderHandler payOrder(long orderId, int versions, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IOrderHandler refundHandler(String token, long orderId, JsonObject params, Handler<AsyncResult<UpdateResult>> handler);
+    IOrderHandler refundHandler(String token, long orderId, JsonObject params, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IOrderHandler undoRefund(long orderId, long userId, Handler<AsyncResult<UpdateResult>> handler);
+    IOrderHandler undoRefund(long orderId, long userId, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
     IOrderHandler getAddressHandler(String token, long orderId, Handler<AsyncResult<JsonObject>> handler);

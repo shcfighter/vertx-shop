@@ -5,15 +5,11 @@ import com.ecit.common.utils.JsonUtils;
 import com.ecit.constants.UserSql;
 import com.ecit.handler.IAddressHandler;
 import com.ecit.handler.IdBuilder;
-import io.reactivex.Single;
-import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.sqlclient.Tuple;
 import org.apache.logging.log4j.LogManager;
@@ -64,30 +60,24 @@ public class AddressHandler extends JdbcRxRepositoryWrapper implements IAddressH
     }
 
     @Override
-    public IAddressHandler updateDefaultAddress(String token, long addressId, Handler<AsyncResult<UpdateResult>> handler) {
+    public IAddressHandler updateDefaultAddress(String token, long addressId, Handler<AsyncResult<Integer>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<UpdateResult> resultFuture = sessionFuture.compose(session -> {
+        sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
             }
-            Future<UpdateResult> future = Future.future();
-            this.getConnection().flatMap(conn ->
-                    conn.rxSetAutoCommit(false).toSingleDefault(false)
-                            .flatMap(autoCommit -> conn.rxUpdateWithParams(UserSql.UPDATE_ADDRESS_BY_NOT_DEFAULT_SQL
-                                    , new JsonArray().add(session.getLong("userId"))))
-                            .flatMap(update -> conn.rxUpdateWithParams(UserSql.UPDATE_ADDRESS_BY_DEFAULT_SQL
-                                    , new JsonArray().add(addressId)))
-                            .onErrorResumeNext(ex -> conn.rxRollback()
-                                    .toSingleDefault(true)
-                                    .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
-                                    .flatMap(ignore -> Single.error(ex))
+            Promise<Integer> promise = Promise.promise();
+            pgPool.rxGetConnection()
+                    .flatMap(conn -> conn.preparedQuery(UserSql.UPDATE_ADDRESS_BY_NOT_DEFAULT_SQL)
+                            .rxExecute(Tuple.tuple().addLong(session.getLong("userId")))
+                            .flatMap(update -> conn.preparedQuery(UserSql.UPDATE_ADDRESS_BY_DEFAULT_SQL)
+                                    .rxExecute(Tuple.tuple().addLong(addressId))
                             )
                             .doAfterTerminate(conn::close)
-            ).subscribe(future::complete, future::fail);
-            return future;
-        });
-        resultFuture.setHandler(handler);
+            ).subscribe(rs -> promise.complete(rs.rowCount()), promise::fail);
+            return promise.future();
+        }).onComplete(handler);
         return this;
     }
 

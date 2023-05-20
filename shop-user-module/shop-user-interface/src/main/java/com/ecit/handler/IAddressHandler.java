@@ -6,7 +6,6 @@ import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public interface IAddressHandler {
     IAddressHandler updateAddressHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
-    IAddressHandler updateDefaultAddress(String token, long addressId, Handler<AsyncResult<UpdateResult>> handler);
+    IAddressHandler updateDefaultAddress(String token, long addressId, Handler<AsyncResult<Integer>> handler);
 
     @Fluent
     IAddressHandler findAddress(String token, Handler<AsyncResult<List<JsonObject>>> handler);

@@ -4,11 +4,13 @@ import com.ecit.SearchType;
 import com.ecit.handler.IPreferencesHandler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.rabbitmq.RabbitMQOptions;
 import io.vertx.reactivex.core.Future;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import io.vertx.reactivex.rabbitmq.RabbitMQClient;
 import org.apache.commons.lang3.StringUtils;
@@ -94,11 +96,11 @@ public class PreferencesHandler implements IPreferencesHandler {
      */
     @Override
     public IPreferencesHandler findPreferences(String cookies, Handler<AsyncResult<List<String>>> handler) {
-        Future<List<String>> future = Future.future();
+        Promise<List<String>> promise = Promise.promise();
         mongoClient.rxFindWithOptions(PREFERENCES_COLLECTION, new JsonObject().put("cookies", cookies),
                 new FindOptions().setLimit(3).setSort(new JsonObject().put("create_time", -1)))
-                .subscribe(res -> future.complete(res.stream().map(jsonObject -> jsonObject.getString("keyword")).collect(Collectors.toList())), future::fail);
-        future.setHandler(handler);
+                .subscribe(res -> promise.complete(res.stream().map(jsonObject -> jsonObject.getString("keyword")).collect(Collectors.toList())), promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -112,10 +114,10 @@ public class PreferencesHandler implements IPreferencesHandler {
      */
     @Override
     public IPreferencesHandler sendMqPreferences(String cookies, String keyword, SearchType searchType, Handler<AsyncResult<String>> handler) {
-        Future<String> future = Future.future();
+        Promise<String> promise = Promise.promise();
         if(StringUtils.isEmpty(cookies)){
-            future = Future.failedFuture(new NullPointerException("cookies 为null"));
-            future.setHandler(handler);
+            promise.fail("cookies 为null");
+            promise.future().onComplete(handler);
             return this;
         }
         JsonObject message = new JsonObject()
@@ -123,8 +125,8 @@ public class PreferencesHandler implements IPreferencesHandler {
                                             .put("keyword", keyword)
                                             .put("search_type", searchType.name())
                                             .put("create_time", new Date().getTime()).encodePrettily());
-        rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, message).subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+        rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, Buffer.buffer(message.encodePrettily())).subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 }

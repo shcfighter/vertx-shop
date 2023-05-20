@@ -151,7 +151,7 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
                 .addString(DateFormatUtils.format(new Date(certifiedTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT)).addString(remarks),
                 UserSql.INSERT_USER_CERTIFIED_SQL)
                 .subscribe(userPromise::complete, userPromise::fail);
-        userPromise..future().onComplete(resultHandler);
+        userPromise.future().onComplete(resultHandler);
         return this;
     }
 

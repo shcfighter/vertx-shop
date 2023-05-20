@@ -8,15 +8,12 @@ import com.ecit.handler.IdBuilder;
 import com.google.common.collect.Lists;
 import com.hubrick.vertx.elasticsearch.RxElasticSearchService;
 import com.hubrick.vertx.elasticsearch.model.*;
-import io.reactivex.Single;
-import io.reactivex.exceptions.CompositeException;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.json.JsonArray;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.sqlclient.Tuple;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +49,7 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
      */
     @Override
     public ICommodityHandler searchCommodity(String keyword, int pageSize, int page, Handler<AsyncResult<SearchResponse>> handler) {
-        Future<SearchResponse> future = Future.future();
+        Promise<SearchResponse> promise = Promise.promise();
         JsonObject searchJson = null;
         if (StringUtils.isBlank(keyword)) {
             searchJson = new JsonObject("{\"match_all\": {}}");
@@ -77,14 +74,14 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
                 //.addFieldSort("commodity_id", SortOrder.DESC)
                 .addScripSort("Math.random()", ScriptSortOption.Type.NUMBER, new JsonObject(), SortOrder.DESC); //随机排序
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public ICommodityHandler searchLargeClassCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler) {
-        Future<SearchResponse> future = Future.future();
+        Promise<SearchResponse> promise = Promise.promise();
         JsonObject searchJson = null;
         if (StringUtils.isBlank(keyword)) {
             searchJson = new JsonObject("{\"match_all\": {}}");
@@ -103,8 +100,8 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
                 //.addFieldSort("commodity_id", SortOrder.DESC)
                 .addScripSort("Math.random()", ScriptSortOption.Type.NUMBER, new JsonObject(), SortOrder.DESC); //随机排序
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -116,32 +113,32 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
      */
     @Override
     public ICommodityHandler findCommodityById(long id, Handler<AsyncResult<JsonObject>> handler) {
-        Future<JsonObject> future = Future.future();
-        this.retrieveOne(new JsonArray().add(id), CommoditySql.FIND_COMMODITY_BY_ID)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+        Promise<JsonObject> promise = Promise.promise();
+        this.retrieveOne(Tuple.tuple().addLong(id), CommoditySql.FIND_COMMODITY_BY_ID)
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public ICommodityHandler findCommodityByIds(List<Long> ids, Handler<AsyncResult<List<JsonObject>>> handler) {
-        Future<List<JsonObject>> future = Future.future();
-        JsonArray params = new JsonArray();
+        Promise<List<JsonObject>> promise = Promise.promise();
+        Tuple params = Tuple.tuple();
         List<String> buffer = Lists.newArrayList();
         ids.forEach(id -> {
             buffer.add("?");
-            params.add(id);
+            params.addLong(id);
         });
         this.retrieveMany(params,
                 MustacheUtils.mustacheString(CommoditySql.FIND_COMMODITY_BY_IDS, Map.of("ids",buffer.stream().collect(Collectors.joining(",")))))
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public ICommodityHandler findCommodityFromEsById(long id, Handler<AsyncResult<SearchResponse>> handler) {
-        Future<SearchResponse> future = Future.future();
+        Promise<SearchResponse> promise = Promise.promise();
         final SearchOptions searchOptions = new SearchOptions()
                 .setQuery(new JsonObject("{" +
                         "       \"match\":{" +
@@ -152,8 +149,8 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
                 .setFetchSource(true)
                 .setSize(1);
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -164,7 +161,7 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
      */
     @Override
     public ICommodityHandler preferencesCommodity(List<String> keywords, Handler<AsyncResult<SearchResponse>> handler) {
-        Future<SearchResponse> future = Future.future();
+        Promise<SearchResponse> promise = Promise.promise();
         final SearchOptions searchOptions = new SearchOptions()
                 .setQuery(new JsonObject("{\n" +
                         "      \"bool\": {\n" +
@@ -179,14 +176,14 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
                 .setFetchSource(true)
                 .setSize(3);
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public ICommodityHandler findCommodityBySalesVolume(Handler<AsyncResult<SearchResponse>> handler) {
-        Future<SearchResponse> future = Future.future();
+        Promise<SearchResponse> promise = Promise.promise();
         final SearchOptions searchOptions = new SearchOptions()
                 .setQuery(new JsonObject("{\"match_all\":{}}"))
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
@@ -194,14 +191,14 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
                 .setSize(3)
                 .addFieldSort("month_sales_volume", SortOrder.DESC);
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public ICommodityHandler findBrandCategory(String keyword, Handler<AsyncResult<SearchResponse>> handler) {
-        Future<SearchResponse> future = Future.future();
+        Promise<SearchResponse> promise = Promise.promise();
         JsonObject searchJson = null;
         if (StringUtils.isBlank(keyword)) {
             searchJson = new JsonObject("{\"match_all\": {}}");
@@ -224,8 +221,8 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
                         .setType(AggregationOption.AggregationType.TERMS)
                         .setDefinition(new JsonObject().put("field", "category_name").put("size", 10)));
         rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+                .subscribe(promise::complete, promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 
@@ -238,24 +235,15 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
      * @return
      */
     @Override
-    public ICommodityHandler preparedCommodity(long id, long orderId, int num, String ip, String logistics, String payWay, Handler<AsyncResult<UpdateResult>> handler) {
-        Future<UpdateResult> future = Future.future();
-        postgreSQLClient.rxGetConnection()
-            .flatMap(conn ->
-                conn.rxSetAutoCommit(false).toSingleDefault(false)
-                    .flatMap(autoCommit -> conn.rxUpdateWithParams(CommoditySql.ORDER_COMMODITY_BY_ID, new JsonArray().add(num). add(num).add(id)))
-                    .flatMap(updateResult -> conn.rxUpdateWithParams(CommoditySql.ORDER_LOG_SQL, new JsonArray()
-                        .add(IdBuilder.getUniqueId()).add(orderId).add(id).add(ip).add(num).add(logistics).add(payWay)))
-                    // Rollback if any failed with exception propagation
-                    .onErrorResumeNext(ex -> conn.rxRollback()
-                        .toSingleDefault(true)
-                        .onErrorResumeNext(ex2 -> Single.error(new CompositeException(ex, ex2)))
-                        .flatMap(ignore -> Single.error(ex))
-                    )
-                    // close the connection regardless succeeded or failed
+    public ICommodityHandler preparedCommodity(long id, long orderId, int num, String ip, String logistics, String payWay, Handler<AsyncResult<Integer>> handler) {
+        Promise<Integer> promise = Promise.promise();
+        pgPool.rxGetConnection()
+            .flatMap(conn -> conn.preparedQuery(CommoditySql.ORDER_COMMODITY_BY_ID).rxExecute(Tuple.tuple().addInteger(num). addInteger(num).addLong(id))
+                    .flatMap(updateResult -> conn.preparedQuery(CommoditySql.ORDER_LOG_SQL)
+                            .rxExecute(Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(orderId).addLong(id).addString(ip).addInteger(num).addString(logistics).addString(payWay)))
                     .doAfterTerminate(conn::close)
-            ).subscribe(future::complete, future::fail);
-        future.setHandler(handler);
+            ).subscribe(rs -> promise.complete(rs.rowCount()), promise::fail);
+        promise.future().onComplete(handler);
         return this;
     }
 }
