@@ -10,8 +10,8 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.rabbitmq.RabbitMQConsumer;
 import io.vertx.rabbitmq.RabbitMQOptions;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.core.buffer.Buffer;
@@ -97,8 +97,19 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
         });
 
         // Setup the link between rabbitmq consumer and event bus address
-        rabbitMQClient.rxBasicConsume(QUEUES, EVENTBUS_QUEUES, false).subscribe();
-        rabbitMQClient.rxBasicConsumer(QUEUES, EVENTBUS_QUEUES, false).subscribe();
+        rabbitMQClient.getDelegate().basicConsumer(QUEUES, rabbitMQConsumerAsyncResult -> {
+            if (rabbitMQConsumerAsyncResult.succeeded()) {
+                System.out.println("RabbitMQ consumer created !");
+                RabbitMQConsumer mqConsumer = rabbitMQConsumerAsyncResult.result();
+                mqConsumer.handler(message -> {
+                    System.out.println("Got message: " + message.body().toString());
+                }).exceptionHandler(err -> {
+                    System.out.println("consume error " + err.getMessage());
+                });
+            } else {
+                rabbitMQConsumerAsyncResult.cause().printStackTrace();
+            }
+        });
         return ;
     }
 
@@ -117,7 +128,7 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
         // Put the channel in confirm mode. This can be done once at init.
         rabbitMQClient.confirmSelect(confirmResult -> {
             if(confirmResult.succeeded()) {
-                rabbitMQClient.basicPublish(EXCHANGE, ROUTINGKEY, Buffer.buffer(message), pubResult -> {
+                rabbitMQClient.basicPublish(EXCHANGE, ROUTINGKEY, Buffer.buffer(message.encodePrettily()), pubResult -> {
                     if (pubResult.succeeded()) {
                         // Check the message got confirmed by the broker.
                         rabbitMQClient.waitForConfirms(waitResult -> {

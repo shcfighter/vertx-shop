@@ -7,18 +7,17 @@ import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
-import io.vertx.rabbitmq.RabbitMQOptions;
-import io.vertx.reactivex.core.Future;
+import io.vertx.kafka.client.consumer.KafkaConsumer;
+import io.vertx.kafka.client.producer.KafkaProducer;
+import io.vertx.kafka.client.producer.KafkaProducerRecord;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.mongo.MongoClient;
-import io.vertx.reactivex.rabbitmq.RabbitMQClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +26,8 @@ import java.util.stream.Collectors;
 public class PreferencesHandler implements IPreferencesHandler {
 
     final MongoClient mongoClient;
-    final RabbitMQClient rabbitMQClient;
+    final KafkaConsumer<String, String> consumer;
+    final KafkaProducer<String, String> producer;
     final Vertx vertx;
     private final static Logger LOGGER = LogManager.getLogger(PreferencesHandler.class);
     /**
@@ -50,23 +50,37 @@ public class PreferencesHandler implements IPreferencesHandler {
      * eventbus 地址
      */
     private static final String EVENTBUS_QUEUES = "eventbus.preferences.queues";
+    private static final String PREFERENCES_TOPIC = "preferences-topic";
 
 
     public PreferencesHandler(Vertx vertx, JsonObject config) {
         this.vertx = vertx;
         mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
-        rabbitMQClient = RabbitMQClient.create(vertx, new RabbitMQOptions(config.getJsonObject("rabbitmq")));
-        /**
-         * 创建rabbitmq连接
-         */
-        rabbitMQClient.start(startMQ -> {
-            if (startMQ.succeeded()) {
-                LOGGER.info("rabbitmq start success !");
-                this.savePreferences(handler -> {});
-            } else {
-                LOGGER.error("rabbitmq start failed !");
-            }
-        });
+
+        Map<String, String> producerConfig = new HashMap<>();
+        producerConfig.put("bootstrap.servers", "127.0.0.1:9092");
+        producerConfig.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        producerConfig.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        producerConfig.put("acks", "1");
+        producer = KafkaProducer.createShared(vertx.getDelegate(), "the-producer", producerConfig);
+
+        Map<String, String> consumerConfig = new HashMap<>();
+        consumerConfig.put("bootstrap.servers", "127.0.0.1:9092");
+        consumerConfig.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        consumerConfig.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        consumerConfig.put("group.id", "ttttt");
+        consumerConfig.put("auto.offset.reset", "earliest");
+        consumerConfig.put("enable.auto.commit", "true");
+
+// use consumer for interacting with Apache Kafka
+        this.consumer = KafkaConsumer.create(vertx.getDelegate(), consumerConfig);
+
+        consumer.subscribe(Set.of(PREFERENCES_TOPIC))
+            .onSuccess(v ->{
+                System.out.println("subscribed");
+            }).onFailure(cause ->
+                    System.out.println("Could not subscribe " + cause.getMessage())
+            );
     }
 
     /**
@@ -84,7 +98,10 @@ public class PreferencesHandler implements IPreferencesHandler {
         });
 
         // Setup the link between rabbitmq consumer and event bus address
-        rabbitMQClient.rxBasicConsume(QUEUES, EVENTBUS_QUEUES).subscribe();
+        rabbitMQClient.rxBasicConsumer(QUEUES, EVENTBUS_QUEUES).subscribe();
+
+
+
         return this;
     }
 
@@ -120,12 +137,14 @@ public class PreferencesHandler implements IPreferencesHandler {
             promise.future().onComplete(handler);
             return this;
         }
-        JsonObject message = new JsonObject()
-                .put("body", new JsonObject().put("cookies", cookies)
-                                            .put("keyword", keyword)
-                                            .put("search_type", searchType.name())
-                                            .put("create_time", new Date().getTime()).encodePrettily());
-        rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, Buffer.buffer(message.encodePrettily())).subscribe(promise::complete, promise::fail);
+        KafkaProducerRecord<String, String> record =
+                KafkaProducerRecord.create(PREFERENCES_TOPIC, new JsonObject().put("cookies", cookies)
+                        .put("keyword", keyword)
+                        .put("search_type", searchType.name())
+                        .put("create_time", new Date().getTime()).encodePrettily());
+
+        producer.send(record).onSuccess(recordMetadata -> promise.complete()).onFailure(promise::fail);
+
         promise.future().onComplete(handler);
         return this;
     }

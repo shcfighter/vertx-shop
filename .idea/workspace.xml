@@ -5,20 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b87a96f5-9f66-412e-b409-b8b4bce6104a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order-interface/src/main/java/com/ecit/handler/IOrderHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order-interface/src/main/java/com/ecit/handler/IOrderHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/OrderVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/OrderVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/api/RestOrderRxVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/api/RestRefundRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/api/RestRefundRxVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/handler/impl/OrderHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/handler/impl/OrderHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/handler/ICommodityHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search-interface/src/main/java/com/ecit/handler/ICommodityHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/api/RestSearchRxVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/CommodityHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/CommodityHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search-interface/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search-interface/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/PreferencesHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/PreferencesHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IAddressHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IAddressHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/AddressHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/AddressHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/CertifiedHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/CertifiedHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -321,15 +312,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/home/shc_fighter/data/workspace/java/hello-world&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "last_opened_file_path": "/home/shc_fighter/data/workspace/java/starter",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.ecit.handler" />
