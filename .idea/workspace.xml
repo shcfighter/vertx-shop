@@ -6,11 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="b87a96f5-9f66-412e-b409-b8b4bce6104a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/GatewayVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/GatewayVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthHandlerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthHandlerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message-interface/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message-interface/dependency-reduced-pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/CollectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/CollectionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order-interface/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order-interface/dependency-reduced-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search-interface/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search-interface/dependency-reduced-pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search-interface/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search-interface/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/PreferencesHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/PreferencesHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/CertifiedHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/CertifiedHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,8 +95,13 @@
     </replaceStrings>
   </component>
   <component name="Git.Settings">
-    <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -169,6 +185,9 @@
       </expand>
       <select />
     </treeState>
+  </component>
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
@@ -312,15 +331,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "last_opened_file_path": "/home/shc_fighter/data/workspace/java/starter",
-    "project.structure.last.edited": "Problems",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;last_opened_file_path&quot;: &quot;/home/shc_fighter/data/workspace/java/starter&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.ecit.handler" />
@@ -340,7 +359,7 @@
       <recent name="D:\IdeaProjects\vertx-shop\shop-ui\js\dynamic\person" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MessageVerticle">
+  <component name="RunManager" selected="Application.GatewayVerticle">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -494,11 +513,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.GatewayVerticle" />
         <item itemvalue="Application.MessageVerticle" />
         <item itemvalue="Application.UserVerticle" />
         <item itemvalue="Application.SearchVerticle" />
         <item itemvalue="Application.OrderVerticle" />
-        <item itemvalue="Application.GatewayVerticle" />
       </list>
     </recent_temporary>
   </component>
@@ -659,6 +678,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

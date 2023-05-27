@@ -12,7 +12,6 @@ import com.hazelcast.internal.util.MD5Util;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Promise;
 import io.vertx.reactivex.core.Vertx;

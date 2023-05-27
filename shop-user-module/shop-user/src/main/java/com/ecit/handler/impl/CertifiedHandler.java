@@ -11,64 +11,63 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
-import io.vertx.rabbitmq.RabbitMQConsumer;
-import io.vertx.rabbitmq.RabbitMQOptions;
+import io.vertx.kafka.client.consumer.KafkaConsumer;
+import io.vertx.kafka.client.producer.KafkaProducer;
+import io.vertx.kafka.client.producer.KafkaProducerRecord;
 import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.core.buffer.Buffer;
-import io.vertx.reactivex.rabbitmq.RabbitMQClient;
 import io.vertx.reactivex.sqlclient.Tuple;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertifiedHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(CertifiedHandler.class);
-    /**
-     * rabbitmq 路由器
-     */
-    private static final String EXCHANGE = "vertx.shop.exchange";
-    /**
-     * rabbitmq routingkey
-     */
-    private static final String ROUTINGKEY = "certified";
-    /**
-     * rabbitmq 队列
-     */
-    private static final String QUEUES = "vertx.shop.certified.queues";
-    /**
-     * eventbus 地址
-     */
-    private static final String EVENTBUS_QUEUES = "eventbus.certified.queues";
 
-    final RabbitMQClient rabbitMQClient;
+    /**
+     * kafka topic
+     */
+    private static final String CERTIFIED_TOPIC = "certified-topic";
+
+    final KafkaConsumer<String, JsonObject> consumer;
+    final KafkaProducer<String, JsonObject> producer;
     final Vertx vertx;
 
     public CertifiedHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
         this.vertx = vertx;
-        rabbitMQClient = RabbitMQClient.create(vertx, new RabbitMQOptions(config.getJsonObject("rabbitmq")));
-        /**
-         * 创建rabbitmq连接
-         */
-        rabbitMQClient.start(startMQ -> {
-            if (startMQ.succeeded()) {
-                LOGGER.info("rabbitmq start success !");
-                this.saveCertified();
-            } else {
-                LOGGER.error("rabbitmq start failed !");
-            }
-        });
+
+        Map<String, String> producerConfig = new HashMap<>();
+        producerConfig.put("bootstrap.servers", "127.0.0.1:9092");
+        producerConfig.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        producerConfig.put("value.serializer", "io.vertx.kafka.client.serialization.JsonObjectSerializer");
+        producerConfig.put("acks", "1");
+        producer = KafkaProducer.createShared(vertx.getDelegate(), "the-producer", producerConfig);
+
+        Map<String, String> consumerConfig = new HashMap<>();
+        consumerConfig.put("bootstrap.servers", "127.0.0.1:9092");
+        consumerConfig.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        consumerConfig.put("value.deserializer", "io.vertx.kafka.client.serialization.JsonObjectDeserializer");
+        consumerConfig.put("group.id", "preferences");
+        consumerConfig.put("auto.offset.reset", "earliest");
+        consumerConfig.put("enable.auto.commit", "true");
+        this.consumer = KafkaConsumer.create(vertx.getDelegate(), consumerConfig);
+
+        consumer.subscribe(Set.of(CERTIFIED_TOPIC))
+                .onSuccess(v ->{
+                    this.saveCertified();
+                    System.out.println("subscribed");
+                }).onFailure(cause ->
+                        System.out.println("Could not subscribe " + cause.getMessage())
+                );
     }
 
     public void saveCertified() {
-        vertx.eventBus().consumer(EVENTBUS_QUEUES,  msg -> {
-            JsonObject json = (JsonObject) msg.body();
-            LOGGER.debug("Got certified message: {}", json);
-            JsonObject certified = new JsonObject(json.getString("body"));
+        this.consumer.handler(msg -> {
+            JsonObject certified = msg.value();
+            LOGGER.debug("Got certified message: {}", certified);
             if (certified.containsKey("user_id")) {
                 Promise<JsonObject> oneCertifiedPromise = Promise.promise();
                 this.findUserCertifiedByUserIdAndType(certified.getLong("user_id"), certified.getInteger("certified_type"), oneCertifiedPromise);
@@ -83,34 +82,13 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
                     return certifiedPromise.future();
                 }).onComplete(handler -> {
                     if (handler.succeeded()) {
-                        // ack
-                        rabbitMQClient.basicAck(json.getLong("deliveryTag"), false, asyncResult -> {
-                            if (asyncResult.failed()) {
-                                LOGGER.error("rabbitmq接收确认失败", asyncResult.cause());
-                            }
-                        });
+
                     } else {
                         LOGGER.error("rabbitmq接收处理失败", handler.cause());
                     }
                 });
             }
         });
-
-        // Setup the link between rabbitmq consumer and event bus address
-        rabbitMQClient.getDelegate().basicConsumer(QUEUES, rabbitMQConsumerAsyncResult -> {
-            if (rabbitMQConsumerAsyncResult.succeeded()) {
-                System.out.println("RabbitMQ consumer created !");
-                RabbitMQConsumer mqConsumer = rabbitMQConsumerAsyncResult.result();
-                mqConsumer.handler(message -> {
-                    System.out.println("Got message: " + message.body().toString());
-                }).exceptionHandler(err -> {
-                    System.out.println("consume error " + err.getMessage());
-                });
-            } else {
-                rabbitMQConsumerAsyncResult.cause().printStackTrace();
-            }
-        });
-        return ;
     }
 
     /**
@@ -122,35 +100,15 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
      */
     @Override
     public ICertifiedHandler sendUserCertified(long userId, int certifiedType, String remarks, Handler<AsyncResult<Void>> resultHandler) {
-        JsonObject message = new JsonObject().put("body", new JsonObject().put("user_id", userId).put("certified_type", certifiedType)
-                .put("time", System.currentTimeMillis()).put("remarks", remarks).encodePrettily());
+        JsonObject message = new JsonObject().put("user_id", userId).put("certified_type", certifiedType)
+                .put("time", System.currentTimeMillis()).put("remarks", remarks);
         Promise promise = Promise.promise();
-        // Put the channel in confirm mode. This can be done once at init.
-        rabbitMQClient.confirmSelect(confirmResult -> {
-            if(confirmResult.succeeded()) {
-                rabbitMQClient.basicPublish(EXCHANGE, ROUTINGKEY, Buffer.buffer(message.encodePrettily()), pubResult -> {
-                    if (pubResult.succeeded()) {
-                        // Check the message got confirmed by the broker.
-                        rabbitMQClient.waitForConfirms(waitResult -> {
-                            if(waitResult.succeeded()){
-                                promise.complete();
-                                LOGGER.info("Message published ! {}", message);
-                            }
-                            else{
-                                promise.fail(waitResult.cause());
-                                LOGGER.error("rabbitmq 确认发送异常", waitResult.cause());
-                            }
-                        });
-                    } else {
-                        promise.fail(pubResult.cause());
-                        LOGGER.error("rabbitmq 发送异常!", pubResult.cause());
-                    }
-                });
-            } else {
-                promise.fail(confirmResult.cause());
-                LOGGER.error("rabbitmq 连接异常", confirmResult.cause());
-            }
-        });
+
+        KafkaProducerRecord<String, JsonObject> record =
+                KafkaProducerRecord.create(CERTIFIED_TOPIC, message);
+
+        producer.send(record).onSuccess(recordMetadata -> promise.complete()).onFailure(promise::fail);
+
         promise.future().onComplete(resultHandler);
         return this;
     }

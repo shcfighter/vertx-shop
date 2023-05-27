@@ -6,8 +6,6 @@ import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.sqlclient.Row;
-import io.vertx.reactivex.sqlclient.RowSet;
 
 /**
  * Created by shwang on 2018/2/2.
@@ -40,7 +38,7 @@ public interface IUserHandler {
     IUserHandler getUserInfoHandler(String token, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent
-    IUserHandler saveUserInfoHandler(String token, JsonObject params, Handler<AsyncResult<RowSet<Row>>> resultHandler);
+    IUserHandler saveUserInfoHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> resultHandler);
 
     @Fluent
     IUserHandler updateEmail(long userId, String email, long versions, Handler<AsyncResult<Integer>> handler);

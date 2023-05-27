@@ -11,7 +11,6 @@ import io.vertx.kafka.client.consumer.KafkaConsumer;
 import io.vertx.kafka.client.producer.KafkaProducer;
 import io.vertx.kafka.client.producer.KafkaProducerRecord;
 import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -26,8 +25,8 @@ import java.util.stream.Collectors;
 public class PreferencesHandler implements IPreferencesHandler {
 
     final MongoClient mongoClient;
-    final KafkaConsumer<String, String> consumer;
-    final KafkaProducer<String, String> producer;
+    final KafkaConsumer<String, JsonObject> consumer;
+    final KafkaProducer<String, JsonObject> producer;
     final Vertx vertx;
     private final static Logger LOGGER = LogManager.getLogger(PreferencesHandler.class);
     /**
@@ -35,48 +34,34 @@ public class PreferencesHandler implements IPreferencesHandler {
      */
     private static final String PREFERENCES_COLLECTION = "preferences";
     /**
-     * rabbitmq 路由器
+     * kafka topic
      */
-    private static final String EXCHANGE = "vertx.shop.exchange";
-    /**
-     * rabbitmq routingkey
-     */
-    private static final String ROUTINGKEY = "preferences";
-    /**
-     * rabbitmq 队列
-     */
-    private static final String QUEUES = "vertx.shop.preferences.queues";
-    /**
-     * eventbus 地址
-     */
-    private static final String EVENTBUS_QUEUES = "eventbus.preferences.queues";
     private static final String PREFERENCES_TOPIC = "preferences-topic";
 
 
     public PreferencesHandler(Vertx vertx, JsonObject config) {
         this.vertx = vertx;
-        mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
+        this.mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
 
         Map<String, String> producerConfig = new HashMap<>();
         producerConfig.put("bootstrap.servers", "127.0.0.1:9092");
         producerConfig.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        producerConfig.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        producerConfig.put("value.serializer", "io.vertx.kafka.client.serialization.JsonObjectSerializer");
         producerConfig.put("acks", "1");
-        producer = KafkaProducer.createShared(vertx.getDelegate(), "the-producer", producerConfig);
+        this.producer = KafkaProducer.createShared(vertx.getDelegate(), "the-producer", producerConfig);
 
         Map<String, String> consumerConfig = new HashMap<>();
         consumerConfig.put("bootstrap.servers", "127.0.0.1:9092");
         consumerConfig.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        consumerConfig.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        consumerConfig.put("group.id", "ttttt");
+        consumerConfig.put("value.deserializer", "io.vertx.kafka.client.serialization.JsonObjectDeserializer");
+        consumerConfig.put("group.id", "preferences");
         consumerConfig.put("auto.offset.reset", "earliest");
         consumerConfig.put("enable.auto.commit", "true");
-
-// use consumer for interacting with Apache Kafka
         this.consumer = KafkaConsumer.create(vertx.getDelegate(), consumerConfig);
 
         consumer.subscribe(Set.of(PREFERENCES_TOPIC))
             .onSuccess(v ->{
+                this.savePreferences(handler -> {});
                 System.out.println("subscribed");
             }).onFailure(cause ->
                     System.out.println("Could not subscribe " + cause.getMessage())
@@ -89,19 +74,12 @@ public class PreferencesHandler implements IPreferencesHandler {
      */
     @Override
     public IPreferencesHandler savePreferences(Handler<AsyncResult<Void>> handler) {
-        vertx.eventBus().consumer(EVENTBUS_QUEUES, msg -> {
-            JsonObject json = (JsonObject) msg.body();
-            JsonObject perferences = new JsonObject(json.getString("body"));
+        this.consumer.handler(record -> {
+            JsonObject perferences = record.value();
             LOGGER.debug("Got perferences message: {}", perferences);
-            mongoClient.rxInsert(PREFERENCES_COLLECTION, new JsonObject(json.getString("body")))
+            mongoClient.rxInsert(PREFERENCES_COLLECTION, perferences)
                     .subscribe();
         });
-
-        // Setup the link between rabbitmq consumer and event bus address
-        rabbitMQClient.rxBasicConsumer(QUEUES, EVENTBUS_QUEUES).subscribe();
-
-
-
         return this;
     }
 
@@ -137,11 +115,11 @@ public class PreferencesHandler implements IPreferencesHandler {
             promise.future().onComplete(handler);
             return this;
         }
-        KafkaProducerRecord<String, String> record =
+        KafkaProducerRecord<String, JsonObject> record =
                 KafkaProducerRecord.create(PREFERENCES_TOPIC, new JsonObject().put("cookies", cookies)
                         .put("keyword", keyword)
                         .put("search_type", searchType.name())
-                        .put("create_time", new Date().getTime()).encodePrettily());
+                        .put("create_time", new Date().getTime()));
 
         producer.send(record).onSuccess(recordMetadata -> promise.complete()).onFailure(promise::fail);
 

@@ -12,16 +12,20 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.ext.mongo.UpdateOptions;
-import io.vertx.rabbitmq.RabbitMQOptions;
+import io.vertx.kafka.client.consumer.KafkaConsumer;
+import io.vertx.kafka.client.producer.KafkaProducer;
+import io.vertx.kafka.client.producer.KafkaProducerRecord;
 import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.mongo.MongoClient;
-import io.vertx.reactivex.rabbitmq.RabbitMQClient;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CollectionHandler extends JdbcRxRepositoryWrapper implements ICollectionHandler {
     private final static Logger LOGGER = LogManager.getLogger(CollectionHandler.class);
@@ -37,35 +41,13 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
     static final String MONGODB_BROWSE = "browse";
 
     /**
-     * rabbitmq 路由器
+     * kafka topic
      */
-    private static final String EXCHANGE = "vertx.shop.exchange";
-    /**
-     * rabbitmq routingkey
-     */
-    private static final String ROUTINGKEY = "collection";
-    /**
-     * rabbitmq routingkey
-     */
-    private static final String BROWSE_ROUTINGKEY = "browse";
-    /**
-     * rabbitmq 队列
-     */
-    private static final String QUEUES = "vertx.shop.collection.queues";
-    /**
-     * rabbitmq 队列
-     */
-    private static final String BROWSE_QUEUES = "vertx.shop.browse.queues";
-    /**
-     * eventbus 地址
-     */
-    private static final String EVENTBUS_QUEUES = "eventbus.collection.queues";
-    /**
-     * browse eventbus 地址
-     */
-    private static final String BROWSE_EVENTBUS_QUEUES = "eventbus.browse.queues";
+    private static final String BROWSE_TOPIC = "browse-topic";
+    private static final String COLLECTION_TOPIC = "collection-topic";
 
-    final RabbitMQClient rabbitMQClient;
+    final KafkaConsumer<String, JsonObject> consumer;
+    final KafkaProducer<String, JsonObject> producer;
     final MongoClient mongoClient;
     final Vertx vertx;
 
@@ -75,87 +57,93 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
         super(vertx, config);
         this.vertx = vertx;
         this.mongoClient = MongoClient.createShared(vertx, config.getJsonObject("mongodb"));
-        this.rabbitMQClient = RabbitMQClient.create(vertx, new RabbitMQOptions(config.getJsonObject("rabbitmq")));
         this.commodityHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
-        /**
-         * 创建rabbitmq连接
-         */
-        rabbitMQClient.start(startMQ -> {
-            if (startMQ.succeeded()) {
-                LOGGER.info("rabbitmq start success !");
-                this.saveCollection();
-                this.saveBrowsingHistory();
-            } else {
-                LOGGER.error("rabbitmq start failed !");
+
+        Map<String, String> producerConfig = new HashMap<>();
+        producerConfig.put("bootstrap.servers", "127.0.0.1:9092");
+        producerConfig.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        producerConfig.put("value.serializer", "io.vertx.kafka.client.serialization.JsonObjectSerializer");
+        producerConfig.put("acks", "1");
+        this.producer = KafkaProducer.createShared(vertx.getDelegate(), "the-producer", producerConfig);
+
+        Map<String, String> consumerConfig = new HashMap<>();
+        consumerConfig.put("bootstrap.servers", "127.0.0.1:9092");
+        consumerConfig.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        consumerConfig.put("value.deserializer", "io.vertx.kafka.client.serialization.JsonObjectDeserializer");
+        consumerConfig.put("group.id", "preferences");
+        consumerConfig.put("auto.offset.reset", "earliest");
+        consumerConfig.put("enable.auto.commit", "true");
+        this.consumer = KafkaConsumer.create(vertx.getDelegate(), consumerConfig);
+
+        consumer.subscribe(Set.of(BROWSE_TOPIC, COLLECTION_TOPIC))
+                .onSuccess(v ->{
+                    this.consume();
+                    System.out.println("subscribed");
+                }).onFailure(cause ->
+                        System.out.println("Could not subscribe " + cause.getMessage())
+                );
+    }
+
+    private void consume() {
+        consumer.handler(record -> {
+            String topic = record.topic();
+            JsonObject message = record.value();
+            if (StringUtils.equals(topic, BROWSE_TOPIC)) {
+
+            } else if (StringUtils.equals(topic, COLLECTION_TOPIC)) {
+
             }
         });
     }
 
-    private void saveCollection() {
-        vertx.eventBus().consumer(EVENTBUS_QUEUES,  msg -> {
-            JsonObject json = (JsonObject) msg.body();
-            LOGGER.debug("Got collection message: {}", json);
-            JsonObject collection = new JsonObject(json.getString("body"));
-            if (!JsonUtils.isNull(collection) && collection.containsKey("user_id")) {
-                Promise<JsonObject> promise = Promise.promise();
-                mongoClient.rxFindOne(MONGODB_COLLECTION, new JsonObject()
-                                .put("user_id", collection.getLong("user_id"))
-                                .put("commodity_id", collection.getLong("commodity_id")), null).subscribe(promise::complete, promise::fail);
-                /*promise.compose(o -> {
-                    if (JsonUtils.isNull(o)) {
-                        LOGGER.info("商品不存在！");
-                    } else {
-                        LOGGER.info("123456789: {}", o);
-                    }
-                    return Future.succeededFuture();
-                });*/
-                mongoClient.findOne(MONGODB_COLLECTION, new JsonObject()
-                        .put("user_id", collection.getLong("user_id"))
-                        .put("commodity_id", collection.getLong("commodity_id")), null, collectionHandler -> {
-                    if (collectionHandler.failed()) {
-                        LOGGER.error(collectionHandler.cause());
-                        return ;
-                    }
-                    JsonObject collectionJson = collectionHandler.result();
-                    if(JsonUtils.isNull(collectionJson)){
-                        commodityHandler.findCommodityById(collection.getLong("commodity_id"), handler -> {
-                            if (handler.failed()) {
-                                LOGGER.error("collection fail, get commodity error: ", handler.cause());
-                                return ;
-                            }
-                            JsonObject commodity = handler.result();
-                            mongoClient.rxInsert(MONGODB_COLLECTION, collection
-                                    .put("brand_name", commodity.getString("brand_name"))
-                                    .put("category_name", commodity.getString("category_name"))
-                                    .put("commodity_name", commodity.getString("commodity_name"))
-                                    .put("price", commodity.getString("price"))
-                                    .put("original_price", commodity.getString("original_price"))
-                                    .put("image_url", commodity.getString("image_url"))).subscribe();
-                        });
-                    } else {
-                        LOGGER.info("商品已经被收藏！");
-                    }
-                });
-            }
-        });
-        rabbitMQClient.rxBasicConsumer(QUEUES).subscribe();
+    private void saveCollection(JsonObject collection) {
+        LOGGER.debug("Got collection message: {}", collection);
+        if (!JsonUtils.isNull(collection) && collection.containsKey("user_id")) {
+            Promise<JsonObject> promise = Promise.promise();
+            mongoClient.rxFindOne(MONGODB_COLLECTION, new JsonObject()
+                            .put("user_id", collection.getLong("user_id"))
+                            .put("commodity_id", collection.getLong("commodity_id")), null).subscribe(promise::complete, promise::fail);
+
+            mongoClient.findOne(MONGODB_COLLECTION, new JsonObject()
+                    .put("user_id", collection.getLong("user_id"))
+                    .put("commodity_id", collection.getLong("commodity_id")), null, collectionHandler -> {
+                if (collectionHandler.failed()) {
+                    LOGGER.error(collectionHandler.cause());
+                    return ;
+                }
+                JsonObject collectionJson = collectionHandler.result();
+                if(JsonUtils.isNull(collectionJson)){
+                    commodityHandler.findCommodityById(collection.getLong("commodity_id"), handler -> {
+                        if (handler.failed()) {
+                            LOGGER.error("collection fail, get commodity error: ", handler.cause());
+                            return ;
+                        }
+                        JsonObject commodity = handler.result();
+                        mongoClient.rxInsert(MONGODB_COLLECTION, collection
+                                .put("brand_name", commodity.getString("brand_name"))
+                                .put("category_name", commodity.getString("category_name"))
+                                .put("commodity_name", commodity.getString("commodity_name"))
+                                .put("price", commodity.getString("price"))
+                                .put("original_price", commodity.getString("original_price"))
+                                .put("image_url", commodity.getString("image_url"))).subscribe();
+                    });
+                } else {
+                    LOGGER.info("商品已经被收藏！");
+                }
+            });
+        }
     }
 
-    private void saveBrowsingHistory() {
-        vertx.eventBus().consumer(BROWSE_EVENTBUS_QUEUES,  msg -> {
-            JsonObject json = (JsonObject) msg.body();
-            LOGGER.debug("Got browse message: {}", json);
-            JsonObject browseJson = new JsonObject(json.getString("body"));
-            Long userId = browseJson.getLong("user_id");
-            if (!JsonUtils.isNull(browseJson) && browseJson.containsKey("user_id")) {
-                JsonObject document = new JsonObject().put("commodity", browseJson)
-                        .put("commodity_id", browseJson.getLong("commodity_id"))
-                        .put("user_id", userId).put("is_deleted", 0)
-                        .put("create_time", System.currentTimeMillis());
-                mongoClient.rxInsert(MONGODB_BROWSE, document).subscribe();
-            }
-        });
-        rabbitMQClient.rxBasicConsumer(BROWSE_QUEUES).subscribe();
+    private void saveBrowsingHistory(JsonObject browseJson) {
+        LOGGER.debug("Got browse message: {}", browseJson);
+        Long userId = browseJson.getLong("user_id");
+        if (!JsonUtils.isNull(browseJson) && browseJson.containsKey("user_id")) {
+            JsonObject document = new JsonObject().put("commodity", browseJson)
+                    .put("commodity_id", browseJson.getLong("commodity_id"))
+                    .put("user_id", userId).put("is_deleted", 0)
+                    .put("create_time", System.currentTimeMillis());
+            mongoClient.rxInsert(MONGODB_BROWSE, document).subscribe();
+        }
     }
 
     @Override
@@ -170,9 +158,9 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             }
             params.put("type", MONGODB_COLLECTION).put("user_id", session.getLong("userId"));
 
-            JsonObject message = new JsonObject().put("body", params.encodePrettily());
-            rabbitMQClient.rxBasicPublish(EXCHANGE, ROUTINGKEY, Buffer.buffer(message.encodePrettily()))
-                    .subscribe(promise::complete, promise::fail);
+            KafkaProducerRecord<String, JsonObject> record =
+                    KafkaProducerRecord.create(COLLECTION_TOPIC, params);
+            producer.send(record).onSuccess(recordMetadata -> promise.complete()).onFailure(promise::fail);
         });
         promise.future().andThen(resultHandler);
         return this;
@@ -190,9 +178,9 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             }
             params.put("type", MONGODB_BROWSE).put("user_id", session.getLong("userId"));
 
-            JsonObject message = new JsonObject().put("body", params.encodePrettily());
-            rabbitMQClient.rxBasicPublish(EXCHANGE, BROWSE_ROUTINGKEY, Buffer.buffer(message.encodePrettily()))
-                    .subscribe(promise::complete, promise::fail);
+            KafkaProducerRecord<String, JsonObject> record =
+                    KafkaProducerRecord.create(BROWSE_TOPIC, params);
+            producer.send(record).onSuccess(recordMetadata -> promise.complete()).onFailure(promise::fail);
         });
         promise.future().andThen(resultHandler);
         return this;

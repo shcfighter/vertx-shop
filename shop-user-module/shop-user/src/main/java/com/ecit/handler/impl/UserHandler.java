@@ -17,8 +17,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.sqlclient.Row;
-import io.vertx.reactivex.sqlclient.RowSet;
 import io.vertx.reactivex.sqlclient.Tuple;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -136,9 +134,9 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
     }
 
     @Override
-    public IUserHandler saveUserInfoHandler(String token, JsonObject params, Handler<AsyncResult<RowSet<Row>>> resultHandler) {
+    public IUserHandler saveUserInfoHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> resultHandler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        Future<RowSet<Row>> resultFuture = sessionFuture.compose(session -> {
+        Future<Integer> resultFuture = sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
@@ -148,7 +146,7 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
             this.retrieveOne(Tuple.tuple().addLong(userId), UserSql.GET_USER_INFO_SQL)
                     .subscribe(userPromise::complete, userPromise::fail);
             return userPromise.future().compose(user -> {
-                Promise<RowSet<Row>> updatePromise = Promise.promise();
+                Promise<Integer> updatePromise = Promise.promise();
                 pgPool.rxGetConnection()
                     .flatMap(conn ->
                         conn.preparedQuery(UserSql.UPDATE_USER_SQL)
@@ -168,7 +166,7 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
                                             .addString(params.getString("photo_url")).addLong(userId).addLong(user.getLong("info_versions")));
                                 }
                             }).doAfterTerminate(conn::close)
-                    ).subscribe(updatePromise::complete, updatePromise::fail);
+                    ).subscribe(update -> updatePromise.complete(update.rowCount()), updatePromise::fail);
                 return updatePromise.future();
             });
         });
