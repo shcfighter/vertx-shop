@@ -39,20 +39,11 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
         super(vertx, config);
         this.vertx = vertx;
 
-        Map<String, String> producerConfig = new HashMap<>();
-        producerConfig.put("bootstrap.servers", "127.0.0.1:9092");
-        producerConfig.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        producerConfig.put("value.serializer", "io.vertx.kafka.client.serialization.JsonObjectSerializer");
-        producerConfig.put("acks", "1");
-        producer = KafkaProducer.createShared(vertx.getDelegate(), "the-producer", producerConfig);
+        JsonObject kafkaConfig = config.getJsonObject("kafka");
+        Map<String, String> producerConfig = (Map<String, String>) kafkaConfig.getJsonObject("producer.config");
+        this.producer = KafkaProducer.createShared(vertx.getDelegate(), "the-producer", producerConfig);
 
-        Map<String, String> consumerConfig = new HashMap<>();
-        consumerConfig.put("bootstrap.servers", "127.0.0.1:9092");
-        consumerConfig.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        consumerConfig.put("value.deserializer", "io.vertx.kafka.client.serialization.JsonObjectDeserializer");
-        consumerConfig.put("group.id", "preferences");
-        consumerConfig.put("auto.offset.reset", "earliest");
-        consumerConfig.put("enable.auto.commit", "true");
+        Map<String, String> consumerConfig = (Map<String, String>) kafkaConfig.getJsonObject("consumer.config");
         this.consumer = KafkaConsumer.create(vertx.getDelegate(), consumerConfig);
 
         consumer.subscribe(Set.of(CERTIFIED_TOPIC))

@@ -6,22 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="b87a96f5-9f66-412e-b409-b8b4bce6104a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-common/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/GatewayVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/GatewayVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthHandlerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/auth/impl/ShopAuthHandlerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message-interface/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message-interface/dependency-reduced-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/CollectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/CollectionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order-interface/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order-interface/dependency-reduced-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search-interface/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search-interface/dependency-reduced-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search-interface/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search-interface/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/PreferencesHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/PreferencesHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user-interface/src/main/java/com/ecit/handler/IUserHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/resources/search-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/resources/search-config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/CertifiedHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/CertifiedHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/UserHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

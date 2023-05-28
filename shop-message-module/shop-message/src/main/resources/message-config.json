@@ -7,58 +7,34 @@
   "collection.http.port": 8086,
   "collection.http.address": "0.0.0.0",
   "mongodb": {
-    // Single Cluster Settings
-    "host" : "111.231.132.168", // string
-    "port" : 27017,      // int
+    "host" : "111.231.132.168",
+    "port" : 27017,
+    "serverSelectionTimeoutMS" : 30000,
+    "maxPoolSize" : 50,
+    "minPoolSize" : 25,
+    "maxIdleTimeMS" : 300000,
+    "maxLifeTimeMS" : 3600000,
+    "waitQueueMultiple"  : 10,
+    "waitQueueTimeoutMS" : 10000,
+    "maintenanceFrequencyMS" : 2000,
+    "maintenanceInitialDelayMS" : 500,
 
-    // Multiple Cluster Settings
-    /*"hosts" : [
-      {
-        "host" : "cluster1", // string
-        "port" : 27000       // int
-      },
-      {
-        "host" : "cluster2", // string
-        "port" : 28000       // int
-      }
-    ],*/
-    //"replicaSet" :  "foo",    // string
-    "serverSelectionTimeoutMS" : 30000, // long
-
-    // Connection Pool Settings
-    "maxPoolSize" : 50,                // int
-    "minPoolSize" : 25,                // int
-    "maxIdleTimeMS" : 300000,          // long
-    "maxLifeTimeMS" : 3600000,         // long
-    "waitQueueMultiple"  : 10,         // int
-    "waitQueueTimeoutMS" : 10000,      // long
-    "maintenanceFrequencyMS" : 2000,   // long
-    "maintenanceInitialDelayMS" : 500, // long
-
-    // Credentials / Auth
-    "username"   : "shop_user",     // string
-    "password"   : "h123456", // string
+    "username"   : "shop_user",
+    "password"   : "h123456",
     "db_name": "vertx_shop",
-    //"authSource" : "shop_message",   // string
-    // Auth mechanism
-    //"authMechanism"     : "GSSAPI",        // string
-    //"gssapiServiceName" : "myservicename", // string
-
-    // Socket Settings
-    "connectTimeoutMS" : 300000, // int
-    "socketTimeoutMS"  : 100000, // int
-    "sendBufferSize"    : 8192,  // int
-    "receiveBufferSize" : 8192,  // int
-    "keepAlive" : true           // boolean
+    "connectTimeoutMS" : 300000,
+    "socketTimeoutMS"  : 100000,
+    "sendBufferSize"    : 8192,
+    "receiveBufferSize" : 8192,
+    "keepAlive" : true
   },
 
-  // Heartbeat socket settings
   "heartbeat.socket" : {
-    "connectTimeoutMS" : 300000, // int
-    "socketTimeoutMS"  : 100000, // int
-    "sendBufferSize"    : 8192,  // int
-    "receiveBufferSize" : 8192,  // int
-    "keepAlive" : true           // boolean
+    "connectTimeoutMS" : 300000,
+    "socketTimeoutMS"  : 100000,
+    "sendBufferSize"    : 8192,
+    "receiveBufferSize" : 8192,
+    "keepAlive" : true
   },
   "mail" : {
     "hostname" : "smtp-mail.outlook.com",
@@ -68,16 +44,23 @@
     "password" : "Hh123456",
     "fromUser" : "shcfighter@hotmail.com"
   },
-
-  // Server Settings
-  "heartbeatFrequencyMS" :    1000, // long
-  "minHeartbeatFrequencyMS" : 500, // long,
-  "rabbitmq": {
-    "host": "111.231.132.168",
-    "port": 5672,
-    "username": "guest",
-    "password": "guest",
-    "virtualHost": "/"
+  "heartbeatFrequencyMS" :    1000,
+  "minHeartbeatFrequencyMS" : 500,
+  "kafka": {
+    "producer.config": {
+      "bootstrap.servers": "127.0.0.1:9092",
+      "key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+      "value.serializer": "io.vertx.kafka.client.serialization.JsonObjectSerializer",
+      "acks": "1"
+    },
+    "consumer.config": {
+      "bootstrap.servers": "127.0.0.1:9092",
+      "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+      "value.deserializer": "io.vertx.kafka.client.serialization.JsonObjectDeserializer",
+      "group.id": "preferences",
+      "auto.offset.reset": "earliest",
+      "enable.auto.commit": "true"
+    }
   },
   "redis": {
     "host": "111.231.132.168",

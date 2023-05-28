@@ -29,12 +29,21 @@
     "password":"h123456",
     "db_name":"vertx_shop"
   },
-  "rabbitmq": {
-    "host": "111.231.132.168",
-    "port": 5672,
-    "username": "guest",
-    "password": "guest",
-    "virtualHost": "/"
+  "kafka": {
+    "producer.config": {
+      "bootstrap.servers": "127.0.0.1:9092",
+      "key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+      "value.serializer": "io.vertx.kafka.client.serialization.JsonObjectSerializer",
+      "acks": "1"
+    },
+    "consumer.config": {
+      "bootstrap.servers": "127.0.0.1:9092",
+      "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+      "value.deserializer": "io.vertx.kafka.client.serialization.JsonObjectDeserializer",
+      "group.id": "preferences",
+      "auto.offset.reset": "earliest",
+      "enable.auto.commit": "true"
+    }
   },
   "redis": {
     "host": "111.231.132.168",
