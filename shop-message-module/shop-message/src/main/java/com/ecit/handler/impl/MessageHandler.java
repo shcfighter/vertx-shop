@@ -102,7 +102,7 @@ public class MessageHandler implements IMessageHandler {
                 message.setFrom(fromUser);
                 message.setTo(destination);
                 message.setText("注册激活");
-                message.setHtml("<a href=\"http://111.231.132.168/api/user/activate/" + destination + "/" + code + "\">验证码：" + code + "</a>");
+                message.setHtml("<a href=\"http://127.0.0.1/api/user/activate/" + destination + "/" + code + "\">验证码：" + code + "</a>");
                 mailClient.sendMail(message, result -> {
                     if (result.succeeded()) {
                         LOGGER.info("邮件【{}】发送成功！", destination);

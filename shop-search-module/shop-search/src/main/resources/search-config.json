@@ -13,7 +13,7 @@
   "cluster_name":"vertx_shop",
   "client_transport_sniff":false,
   "postgresql": {
-    "host" : "111.231.132.168",
+    "host" : "127.0.0.1",
     "port" : 5432,
     "maxPoolSize" : 50,
     "username" : "postgres",
@@ -23,7 +23,7 @@
     "queryTimeout" : 10000
   },
   "mongodb":{
-    "host":"111.231.132.168",
+    "host":"127.0.0.1",
     "port":27017,
     "username":"shop_user",
     "password":"h123456",
@@ -46,7 +46,7 @@
     }
   },
   "redis": {
-    "host": "111.231.132.168",
+    "host": "127.0.0.1",
     "port": 6379,
     "auth": "h123456"
   }

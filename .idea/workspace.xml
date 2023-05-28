@@ -6,12 +6,24 @@
   <component name="ChangeListManager">
     <list default="true" id="b87a96f5-9f66-412e-b409-b8b4bce6104a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/CollectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/CollectionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jd_details.py" beforeDir="false" afterPath="$PROJECT_DIR$/jd_details.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/nginx.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/java/com/ecit/gateway/APIGatewayVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-gateway/src/main/resources/gateway-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-gateway/src/main/resources/gateway-config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/MessageVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/java/com/ecit/handler/impl/MessageHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-message-module/shop-message/src/main/resources/message-config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/PreferencesHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/handler/impl/PreferencesHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/OrderVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/java/com/ecit/OrderVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/resources/order-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-order-module/shop-order/src/main/resources/order-config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/java/com/ecit/SearchVerticle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/resources/search-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-search-module/shop-search/src/main/resources/search-config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/CertifiedHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/handler/impl/CertifiedHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-ui/js/commons.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-ui/js/commons.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/java/com/ecit/UserVerticle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-user-module/shop-user/src/main/resources/user-config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop.sql" beforeDir="false" afterPath="$PROJECT_DIR$/shop.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

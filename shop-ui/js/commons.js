@@ -2,7 +2,7 @@
  * Created by shwang on 2018/2/27.
  */
 var domain = "http://localhost/";
-//var domain = "http://111.231.132.168/";
+//var domain = "http://127.0.0.1/";
 
 var token = null;
 var loginUser = {};

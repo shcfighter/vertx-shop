@@ -65,7 +65,7 @@ def jd_detail_fun(weburl):
         image_name = re.split(r"\/", image)
         image = r"http://img14.360buyimg.com/n0/" + image
         urllib.request.urlretrieve(image, "D:\data\images\\" + image_name[-1])
-        image_url_es.append( "http://111.231.132.168:8080/images/" + image_name[-1])
+        image_url_es.append( "http://127.0.0.1:8080/images/" + image_name[-1])
 
     images = data.find_all("style")
     image_url = []
@@ -77,7 +77,7 @@ def jd_detail_fun(weburl):
         #print(image)
         image_name = re.split(r"\/", image)
         urllib.request.urlretrieve(image, "D:\data\images\\" + image_name[-1]);
-        detail_image_url.append("http://111.231.132.168:8080/images/" + image_name[-1])
+        detail_image_url.append("http://127.0.0.1:8080/images/" + image_name[-1])
 
     commodity_id = re.findall(r"\d+", weburl)[0]
     price_url = "https://p.3.cn/prices/mgets?skuIds=J_" + commodity_id

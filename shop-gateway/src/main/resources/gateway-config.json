@@ -8,7 +8,7 @@
     "max-failures": 5
   },
   "postgresql": {
-    "host" : "111.231.132.168",
+    "host" : "127.0.0.1",
     "port" : 5432,
     "maxPoolSize" : 50,
     "username" : "postgres",
@@ -18,7 +18,7 @@
     "queryTimeout" : 10000
   },
   "redis": {
-    "host": "111.231.132.168",
+    "host": "127.0.0.1",
     "port": 6379,
     "auth": "h123456"
   }

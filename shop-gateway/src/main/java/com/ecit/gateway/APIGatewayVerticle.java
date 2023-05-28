@@ -18,6 +18,7 @@ import io.vertx.reactivex.ext.web.FileUpload;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
+import io.vertx.reactivex.ext.web.handler.LoggerHandler;
 import io.vertx.reactivex.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.Record;
 import io.vertx.servicediscovery.types.HttpEndpoint;
@@ -39,13 +40,13 @@ import java.util.Random;
  */
 public class APIGatewayVerticle extends RestAPIRxVerticle {
 
+
     private static final Logger LOGGER = LogManager.getLogger(APIGatewayVerticle.class);
     private static final int DEFAULT_PORT = 8787;
     private ShopAuthHandler authHandler;
 
     @Override
     public void start(Promise<Void> promise) throws Exception {
-        super.start();
 
         authHandler = ShopAuthHandler.create(vertx, this.config());
 
@@ -54,11 +55,13 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         int port = config().getInteger("api.gateway.http.port", DEFAULT_PORT);
 
         Router router = Router.router(vertx);
+
         // cookie and session handler
         this.enableLocalSession(router, "shop_session");
         //this.enableCorsSupport(router);
         // body handler
         router.route().handler(BodyHandler.create());
+        router.route().handler(LoggerHandler.create());
 
         // version handler
         router.get("/api/v").handler(this::apiVersion);
@@ -286,7 +289,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
             String fileName = UuidUtil.newSecureUuidString() + "." + images[images.length - 1];
             fs.copy(avatar.uploadedFileName(), "/data/shop/images/avatar/" + fileName, res -> {
                 if (res.succeeded()) {
-                    this.returnWithSuccessMessage(context, "上传成功！", "http://111.231.132.168:8080/images/avatar/" + fileName);
+                    this.returnWithSuccessMessage(context, "上传成功！", "http://127.0.0.1:8080/images/avatar/" + fileName);
                 } else {
                     LOGGER.error("头像上传失败！", res.cause());
                     this.returnWithFailureMessage(context, "上传失败，请重试！");

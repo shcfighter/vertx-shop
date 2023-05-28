@@ -7,7 +7,7 @@
   "collection.http.port": 8086,
   "collection.http.address": "0.0.0.0",
   "mongodb": {
-    "host" : "111.231.132.168",
+    "host" : "127.0.0.1",
     "port" : 27017,
     "serverSelectionTimeoutMS" : 30000,
     "maxPoolSize" : 50,
@@ -63,7 +63,7 @@
     }
   },
   "redis": {
-    "host": "111.231.132.168",
+    "host": "127.0.0.1",
     "port": 6379,
     "auth": "h123456"
   }
