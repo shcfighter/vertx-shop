@@ -28,7 +28,7 @@ import java.util.Objects;
 
 public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(AccountHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountHandler.class);
     static Vertx vertx;
     private static ShopHashStrategy hashStrategy;
     private IOrderHandler orderService;
