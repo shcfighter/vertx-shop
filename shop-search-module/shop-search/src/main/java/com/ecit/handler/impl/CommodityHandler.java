@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommodityHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(CommodityHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommodityHandler.class);
     /**
      * es商品索引indeces
      */
