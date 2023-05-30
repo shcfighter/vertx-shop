@@ -5,8 +5,8 @@ import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.handler.IOrderHandler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.web.RoutingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by shwang on 2018/4/5.
