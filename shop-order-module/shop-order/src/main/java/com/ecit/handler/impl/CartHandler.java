@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(CartHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CartHandler.class);
     /**
      * mongodb collection
      */
