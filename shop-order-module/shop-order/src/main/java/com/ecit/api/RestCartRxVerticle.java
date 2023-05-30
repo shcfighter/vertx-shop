@@ -26,7 +26,7 @@ import java.util.stream.Stream;
  */
 public class RestCartRxVerticle extends RestAPIRxVerticle {
 
-    private static final Logger LOGGER = LogManager.getLogger(RestCartRxVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestCartRxVerticle.class);
     private static final String HTTP_CART_SERVICE = "http_cart_service_api";
     private ICartHandler cartHandler;
 
