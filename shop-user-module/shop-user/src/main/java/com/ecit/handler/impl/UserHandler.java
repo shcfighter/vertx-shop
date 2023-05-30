@@ -32,7 +32,7 @@ import java.util.Objects;
  */
 public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(UserHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserHandler.class);
     final Vertx vertx;
     private IUserHandler userHandler;
     private ICertifiedHandler certifiedHandler;
