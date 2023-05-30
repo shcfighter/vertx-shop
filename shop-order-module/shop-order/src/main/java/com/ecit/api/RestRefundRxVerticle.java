@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RestRefundRxVerticle extends RestAPIRxVerticle {
 
-    private static final Logger LOGGER = LogManager.getLogger(RestRefundRxVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestRefundRxVerticle.class);
     private final IOrderHandler orderHandler;
 
     public RestRefundRxVerticle(IOrderHandler orderHandler) {
