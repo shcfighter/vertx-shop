@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 public class RestSearchRxVerticle extends RestAPIRxVerticle{
 
-    private static final Logger LOGGER = LogManager.getLogger(RestSearchRxVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestSearchRxVerticle.class);
     private static final String HTTP_SEARCH_SERVICE = "http_search_service_api";
     private ICommodityHandler commodityHandler;
     private IPreferencesHandler preferencesHandler;
