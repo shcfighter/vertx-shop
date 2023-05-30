@@ -24,7 +24,7 @@ import java.util.Date;
  */
 public class MessageHandler implements IMessageHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(MessageHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageHandler.class);
     private static MongoClient mongoClient;
     private static MailClient mailClient = null;
     private static String fromUser;
