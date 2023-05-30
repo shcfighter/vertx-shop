@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RestAccountRxVerticle extends RestAPIRxVerticle{
 
-    private static final Logger LOGGER = LogManager.getLogger(RestAccountRxVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestAccountRxVerticle.class);
     private static final String HTTP_ACCOUNT_SERVICE = "http_account_service_api";
     private IAccountHandler accountHandler;
 
