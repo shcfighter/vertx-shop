@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements ShopAuthHandler {
-    private static final Logger LOGGER = LogManager.getLogger(ShopAuthHandlerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShopAuthHandlerImpl.class);
     private ShopHashStrategy strategy;
 
     public ShopAuthHandlerImpl(Vertx vertx, JsonObject config) {
