@@ -26,7 +26,7 @@ import java.util.Optional;
  */
 public class RestUserRxVerticle extends RestAPIRxVerticle{
 
-    private static final Logger LOGGER = LogManager.getLogger(RestUserRxVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestUserRxVerticle.class);
     private static final String HTTP_USER_SERVICE = "http_user_service_api";
     private ShopHashStrategy hashStrategy;
     private IUserHandler userHandler;
