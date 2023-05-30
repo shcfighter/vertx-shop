@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class CollectionHandler extends JdbcRxRepositoryWrapper implements ICollectionHandler {
-    private final static Logger LOGGER = LogManager.getLogger(CollectionHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CollectionHandler.class);
 
     /**
      * 收藏商品 mongodb key
