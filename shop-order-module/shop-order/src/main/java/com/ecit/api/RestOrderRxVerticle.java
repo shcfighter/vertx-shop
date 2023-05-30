@@ -26,7 +26,7 @@ import java.util.Optional;
  */
 public class RestOrderRxVerticle extends RestAPIRxVerticle {
 
-    private static final Logger LOGGER = LogManager.getLogger(RestOrderRxVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestOrderRxVerticle.class);
     private static final String HTTP_ORDER_SERVICE = "http_order_service_api";
     private IOrderHandler orderHandler;
 
