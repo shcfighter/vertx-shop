@@ -24,7 +24,7 @@ import java.util.*;
 
 public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertifiedHandler {
 
-    private final static Logger LOGGER = LogManager.getLogger(CertifiedHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CertifiedHandler.class);
 
     /**
      * kafka topic
