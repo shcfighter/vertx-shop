@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class AddressHandler extends JdbcRxRepositoryWrapper implements IAddressHandler {
-    private static final Logger LOGGER = LogManager.getLogger(AddressHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddressHandler.class);
 
     public AddressHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
