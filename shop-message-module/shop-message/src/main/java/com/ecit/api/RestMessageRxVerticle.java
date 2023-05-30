@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RestMessageRxVerticle extends RestAPIRxVerticle{
 
-    private static final Logger LOGGER = LogManager.getLogger(RestMessageRxVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestMessageRxVerticle.class);
     private static final String HTTP_MESSAGE_SERVICE = "http_message_service_api";
     private IMessageHandler messageHandler;
 
