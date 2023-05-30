@@ -33,7 +33,7 @@ import java.util.Optional;
  */
 public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(OrderHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderHandler.class);
     private static final String ORDER_COLLECTION = "order";
     private final MongoClient mongoClient;
     private ICommodityHandler commodityHandler;
