@@ -28,7 +28,7 @@ public class PreferencesHandler implements IPreferencesHandler {
     final KafkaConsumer<String, JsonObject> consumer;
     final KafkaProducer<String, JsonObject> producer;
     final Vertx vertx;
-    private final static Logger LOGGER = LogManager.getLogger(PreferencesHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(PreferencesHandler.class);
     /**
      * mongodb的collection名称
      */
