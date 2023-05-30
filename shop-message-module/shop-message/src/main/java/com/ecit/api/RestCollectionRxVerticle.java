@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RestCollectionRxVerticle extends RestAPIRxVerticle{
 
-    private static final Logger LOGGER = LogManager.getLogger(RestCollectionRxVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestCollectionRxVerticle.class);
     private static final String HTTP_COLLECTION_SERVICE = "http_collection_service_api";
     private ICollectionHandler collectionHandler;
 
