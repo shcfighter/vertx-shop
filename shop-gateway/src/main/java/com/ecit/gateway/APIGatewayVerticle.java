@@ -41,7 +41,7 @@ import java.util.Random;
 public class APIGatewayVerticle extends RestAPIRxVerticle {
 
 
-    private static final Logger LOGGER = LogManager.getLogger(APIGatewayVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(APIGatewayVerticle.class);
     private static final int DEFAULT_PORT = 8787;
     private ShopAuthHandler authHandler;
 
