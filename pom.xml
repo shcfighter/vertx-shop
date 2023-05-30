@@ -27,8 +27,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-version>17</java-version>
         <vertx-version>4.4.1</vertx-version>
-        <log4j-version>2.10.0</log4j-version>
-        <slf4j-log4j12-version>1.7.25</slf4j-log4j12-version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <logback.version>1.2.12</logback.version>
         <commons-lang3.version>3.7</commons-lang3.version>
         <guava-version>24.0-jre</guava-version>
         <es.version>6.2.2</es.version>
@@ -135,21 +135,23 @@
             <artifactId>vertx-mongo-client</artifactId>
             <version>${vertx-version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j-log4j12-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j-version}</version>
-        </dependency>
+        <!-- logback -->
+             <dependency>
+               <groupId>org.slf4j</groupId>
+               <artifactId>slf4j-simple</artifactId>
+               <version>${slf4j.version}</version>
+               <scope>test</scope>
+             </dependency>
+             <dependency>
+               <groupId>ch.qos.logback</groupId>
+               <artifactId>logback-core</artifactId>
+               <version>${logback.version}</version>
+             </dependency>
+             <dependency>
+               <groupId>ch.qos.logback</groupId>
+               <artifactId>logback-classic</artifactId>
+               <version>${logback.version}</version>
+             </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
