@@ -1,12 +1,12 @@
 package com.ecit.common.id;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class IdWorker {
 
-    private static final Logger LOGGER = LogManager.getLogger(IdWorker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdWorker.class);
     /**
      * 起始的时间戳
      */
