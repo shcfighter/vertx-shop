@@ -13,8 +13,8 @@ import io.vertx.reactivex.ext.web.handler.CorsHandler;
 import io.vertx.reactivex.ext.web.handler.SessionHandler;
 import io.vertx.reactivex.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.reactivex.ext.web.sstore.LocalSessionStore;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -30,7 +30,7 @@ import java.util.function.Function;
  */
 public abstract class RestAPIRxVerticle extends BaseMicroserviceRxVerticle {
 
-  private static final Logger LOGGER = LogManager.getLogger(RestAPIRxVerticle.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RestAPIRxVerticle.class);
   /**
    * 特殊url无需登录可以正常返回
    */
