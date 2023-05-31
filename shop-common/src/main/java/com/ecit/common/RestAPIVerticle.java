@@ -15,8 +15,8 @@ import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -31,7 +31,7 @@ import java.util.function.Function;
  */
 public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
 
-  private static final Logger LOGGER = LogManager.getLogger(RestAPIVerticle.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RestAPIVerticle.class);
   /**
    * 特殊url无需登录可以正常返回
    */
