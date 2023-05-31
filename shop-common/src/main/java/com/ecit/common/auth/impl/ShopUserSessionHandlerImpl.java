@@ -13,12 +13,12 @@ import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShopUserSessionHandlerImpl extends JdbcRxRepositoryWrapper implements ShopUserSessionHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(ShopUserSessionHandlerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShopUserSessionHandlerImpl.class);
 
     public ShopUserSessionHandlerImpl(Vertx vertx, JsonObject config) {
         super(io.vertx.reactivex.core.Vertx.newInstance(vertx), config);
