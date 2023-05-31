@@ -17,8 +17,8 @@ import io.vertx.reactivex.sqlclient.Tuple;
 import io.vertx.redis.client.RedisOptions;
 import io.vertx.sqlclient.PoolOptions;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class JdbcRxRepositoryWrapper {
 
-  private static final Logger LOGGER = LogManager.getLogger(JdbcRxRepositoryWrapper.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(JdbcRxRepositoryWrapper.class);
 
   private static final int MAX_RECONNECT_RETRIES = 16;
 
