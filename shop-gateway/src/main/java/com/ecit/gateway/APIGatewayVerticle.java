@@ -1,33 +1,35 @@
 package com.ecit.gateway;
 
-import com.ecit.common.auth.ShopUserSessionHandler;
 import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.common.utils.IpUtils;
 import com.ecit.enmu.UserStatus;
 import com.ecit.gateway.auth.ShopAuthHandler;
-import com.hazelcast.util.CollectionUtil;
-import com.hazelcast.util.UuidUtil;
+import com.hazelcast.internal.util.CollectionUtil;
+import com.hazelcast.internal.util.UuidUtil;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.net.JksOptions;
 import io.vertx.reactivex.core.file.FileSystem;
 import io.vertx.reactivex.core.http.HttpClient;
-import io.vertx.reactivex.core.http.HttpClientRequest;
 import io.vertx.reactivex.core.http.HttpServerResponse;
 import io.vertx.reactivex.ext.web.FileUpload;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
+import io.vertx.reactivex.ext.web.handler.LoggerHandler;
 import io.vertx.reactivex.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.Record;
 import io.vertx.servicediscovery.types.HttpEndpoint;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * A verticle for global API gateway.
@@ -38,14 +40,14 @@ import java.util.*;
  */
 public class APIGatewayVerticle extends RestAPIRxVerticle {
 
-    private static final Logger LOGGER = LogManager.getLogger(APIGatewayVerticle.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(APIGatewayVerticle.class);
     private static final int DEFAULT_PORT = 8787;
     private ShopAuthHandler authHandler;
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start(Promise<Void> promise) throws Exception {
         super.start();
-
         authHandler = ShopAuthHandler.create(vertx, this.config());
 
         // get HTTP host and port from configuration, or use default value
@@ -53,11 +55,13 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         int port = config().getInteger("api.gateway.http.port", DEFAULT_PORT);
 
         Router router = Router.router(vertx);
+
         // cookie and session handler
         this.enableLocalSession(router, "shop_session");
         //this.enableCorsSupport(router);
         // body handler
         router.route().handler(BodyHandler.create());
+        router.route().handler(LoggerHandler.create());
 
         // version handler
         router.get("/api/v").handler(this::apiVersion);
@@ -79,13 +83,13 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
 
         // create http server
         vertx.createHttpServer(/*httpServerOptions*/)
-                .requestHandler(router::accept)
+                .requestHandler(router)
                 .listen(port, host, ar -> {
                     if (ar.succeeded()) {
-                        future.complete();
+                        promise.complete();
                         LOGGER.info("shop-gateway server started!");
                     } else {
-                        future.fail(ar.cause());
+                        promise.fail(ar.cause());
                         LOGGER.info("shop-gateway server fail!", ar.cause());
                     }
                 });
@@ -104,23 +108,23 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         String newPath = path.substring(initialOffset + prefix.length());
 
         // run with circuit breaker in order to deal with failure
-        circuitBreaker.execute(future -> {
-            getAllEndpoints(prefix).setHandler(ar -> {
+        circuitBreaker.getDelegate().execute(promise -> {
+            getAllEndpoints(prefix).onComplete(ar -> {
                 if (ar.succeeded()) {
                     List<Record> records = ar.result();
                     //负载均衡策略：随机
                     Optional<Record> client = Optional.ofNullable(CollectionUtil.isEmpty(records) ? null : records.get(new Random().nextInt(records.size())));
                     if (client.isPresent()) {
-                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(HttpClient.class), future);
+                        doDispatch(context, newPath, discovery.getReference(client.get()).getAs(HttpClient.class), promise);
                     } else {
                         notFound(context);
-                        future.complete();
+                        promise.complete();
                     }
                 } else {
-                    future.fail(ar.cause());
+                    promise.fail(ar.cause());
                 }
             });
-        }).setHandler(ar -> {
+        }).onComplete(ar -> {
             if (ar.failed()) {
                 LOGGER.error("gateway调用失败！", ar.cause());
                 badGateway(ar.cause(), context);
@@ -128,6 +132,17 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         });
     }
 
+    private Future<io.vertx.core.http.HttpClientRequest> putHeaders(io.vertx.reactivex.core.http.HttpServerRequest serverRequest, io.vertx.core.http.HttpClientRequest clientRequest) {
+        serverRequest.headers().forEach(header -> {
+            clientRequest.putHeader(header.getKey(), header.getValue());
+        });
+        serverRequest.cookies().forEach(cookie -> {
+            clientRequest.putHeader(cookie.getName(), cookie.getValue());
+        });
+        //set ip
+        clientRequest.putHeader("ip", IpUtils.getIpAddr(serverRequest));
+        return Future.succeededFuture(clientRequest);
+    }
     /**
      * Dispatch the request to the downstream REST layers.
      *
@@ -135,40 +150,39 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
      * @param path    relative path
      * @param client  relevant HTTP client
      */
-    private void doDispatch(RoutingContext context, String path, HttpClient client, io.vertx.reactivex.core.Future<Object> cbFuture) {
-        HttpClientRequest toReq = client
-                .request(context.request().method(), path, response -> {
-                    response.bodyHandler(body -> {
-                        if (response.statusCode() >= 500) { // api endpoint server error, circuit breaker should fail
-                            cbFuture.fail(response.statusCode() + ": " + body.toString());
-                        } else {
-                            HttpServerResponse toRsp = context.response()
-                                    .setStatusCode(response.statusCode());
-                            response.getDelegate().headers().forEach(header -> {
-                                toRsp.putHeader(header.getKey(), header.getValue());
-                            });
-                            // send response
-                            toRsp.end(body);
-                            cbFuture.complete();
-                        }
-                        ServiceDiscovery.releaseServiceObject(discovery, client);
-                    });
-                });
-        // set headers
-        context.request().getDelegate().headers().forEach(header -> {
-            toReq.putHeader(header.getKey(), header.getValue());
-        });
-        context.cookies().forEach(cookie -> {
-            toReq.putHeader(cookie.getName(), cookie.getValue());
-        });
-        //set ip
-        toReq.putHeader("ip", IpUtils.getIpAddr(context.request()));
-        // send request
-        if (context.getBody() == null) {
-            toReq.end();
-        } else {
-            toReq.end(context.getBody());
-        }
+    private void doDispatch(RoutingContext context, String path, HttpClient client, Promise<Object> cbFuture) {
+        io.vertx.reactivex.core.http.HttpServerRequest request = context.request();
+        HttpServerResponse toRsp = context.response();
+
+        Future.succeededFuture(context.getDelegate().body().buffer()).compose(msg -> {
+            Promise<Object> promise = Promise.promise();
+            Promise<Object> promiseClient = Promise.promise();
+            client.getDelegate().request(request.method(), path)
+                    .compose(req -> this.putHeaders(request, req)
+                            .compose(toReq -> toReq.send(msg)
+                                .compose(response -> {
+                                    toRsp.setStatusCode(response.statusCode());
+                                    response.headers().forEach(header -> {
+                                        toRsp.putHeader(header.getKey(), header.getValue());
+                                    });
+
+                                    Buffer totalBuffer = Buffer.buffer();
+                                    response.handler(buffer -> {
+                                        totalBuffer.appendBuffer(buffer);
+                                    });
+                                    response.endHandler(v -> {
+                                        toRsp.end(totalBuffer.toString());
+                                        promiseClient.complete();
+                                    });
+                                    return promiseClient.future();
+                                }).onComplete(ar -> {
+                                    //release the service
+                                    ServiceDiscovery.releaseServiceObject(discovery, client);
+                                    promise.complete();
+                                }
+                            )));
+            return promise.future();
+        }).onComplete(cbFuture);
     }
 
     /**
@@ -177,11 +191,16 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
      * @return async result
      */
     private Future<List<Record>> getAllEndpoints(String prefix) {
-        Future<List<Record>> future = Future.future();
-        discovery.getRecords(record -> record.getType().equals(HttpEndpoint.TYPE)
-                        && StringUtils.equals(record.getMetadata().getString("api.name"), prefix),
-                future.completer());
-        return future;
+        io.vertx.reactivex.core.Promise<List<Record>> promise = io.vertx.reactivex.core.Promise.promise();
+        discovery.getDelegate().getRecords(record -> record.getType().equals(HttpEndpoint.TYPE)
+                        && StringUtils.equals(record.getMetadata().getString("api.name"), prefix)).onComplete(handler -> {
+                            if (handler.succeeded()) {
+                                promise.complete(handler.result());
+                            } else {
+                                promise.fail(handler.cause());
+                            }
+        });
+        return promise.future();
     }
 
     private void apiVersion(RoutingContext context) {
@@ -194,8 +213,8 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
      * @param context
      */
     private void formatContentTypeHandler(RoutingContext context) {
-        if((context.request().method().compareTo(HttpMethod.POST) == 0
-                || context.request().method().compareTo(HttpMethod.PUT) == 0)
+        if((context.request().method().equals(HttpMethod.POST)
+                || context.request().method().equals(HttpMethod.PUT))
                 && !StringUtils.startsWithIgnoreCase(context.request().getHeader("Content-Type"), "application/json")){
             LOGGER.error("请求方式不正确【{}】", context.request().getHeader("Content-Type"));
             badRequest(context, new Throwable("请求方式【Content-Type】错误"));
@@ -259,7 +278,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
             this.noAuth(context);
             return;
         }
-        Set<FileUpload> fileUploads = context.fileUploads();
+        List<FileUpload> fileUploads = context.fileUploads();
         if(CollectionUtil.isEmpty(fileUploads)){
             LOGGER.error("头像上传失败，文件为空！");
             this.returnWithFailureMessage(context, "上传失败！");
@@ -268,10 +287,10 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
         for (FileUpload avatar : fileUploads) {
             FileSystem fs = vertx.fileSystem();
             final String[] images = StringUtils.split(avatar.fileName(), ".");
-            String fileName = UuidUtil.createClusterUuid() + "." + images[images.length - 1];
+            String fileName = UuidUtil.newSecureUuidString() + "." + images[images.length - 1];
             fs.copy(avatar.uploadedFileName(), "/data/shop/images/avatar/" + fileName, res -> {
                 if (res.succeeded()) {
-                    this.returnWithSuccessMessage(context, "上传成功！", "http://111.231.132.168:8080/images/avatar/" + fileName);
+                    this.returnWithSuccessMessage(context, "上传成功！", "http://127.0.0.1:8080/images/avatar/" + fileName);
                 } else {
                     LOGGER.error("头像上传失败！", res.cause());
                     this.returnWithFailureMessage(context, "上传失败，请重试！");
