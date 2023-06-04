@@ -60,10 +60,12 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
         this.commodityHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICommodityHandler.SEARCH_SERVICE_ADDRESS).build(ICommodityHandler.class);
 
         JsonObject kafkaConfig = config.getJsonObject("kafka");
-        Map<String, String> producerConfig = (Map<String, String>) kafkaConfig.getJsonObject("producer.config");
+        Map<String, String> producerConfig = new HashMap<>();
+        kafkaConfig.getJsonObject("producer.config").stream().forEach(conf -> producerConfig.put(conf.getKey(), (String) conf.getValue()));
         this.producer = KafkaProducer.createShared(vertx.getDelegate(), "the-producer", producerConfig);
 
-        Map<String, String> consumerConfig = (Map<String, String>) kafkaConfig.getJsonObject("consumer.config");
+        Map<String, String> consumerConfig = new HashMap<>();
+        kafkaConfig.getJsonObject("consumer.config").stream().forEach(conf -> consumerConfig.put(conf.getKey(), (String) conf.getValue()));
         this.consumer = KafkaConsumer.create(vertx.getDelegate(), consumerConfig);
 
         this.consumer.subscribe(Set.of(BROWSE_TOPIC, COLLECTION_TOPIC))
