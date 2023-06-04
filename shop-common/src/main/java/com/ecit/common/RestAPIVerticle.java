@@ -132,7 +132,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
       if (res.succeeded()) {
         handler.handle(res.result());
       } else {
-        LOGGER.error(res.cause());
+        LOGGER.error("", res.cause());
         internalError(context, res.cause());
       }
     };
@@ -150,7 +150,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
           .putHeader("content-type", "application/json")
           .end(res == null ? "{}" : res.toString());
       } else {
-        LOGGER.error(ar.cause());
+        LOGGER.error("", ar.cause());
         internalError(context, ar.cause());
       }
     };
@@ -178,7 +178,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
             .end(converter.apply(res));
         }
       } else {
-        LOGGER.error(ar.cause());
+        LOGGER.error("", ar.cause());
         internalError(context, ar.cause());
       }
     };
@@ -205,7 +205,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
             .end(res.toString());
         }
       } else {
-        LOGGER.error(ar.cause());
+        LOGGER.error("", ar.cause());
         internalError(context, ar.cause());
       }
     };
@@ -226,7 +226,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
         context.response()
           .end(res == null ? "" : res.toString());
       } else {
-        LOGGER.error(ar.cause());
+        LOGGER.error("", ar.cause());
         internalError(context, ar.cause());
       }
     };
@@ -253,7 +253,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
           .putHeader("content-type", "application/json")
           .end(result.encodePrettily());
       } else {
-        LOGGER.error(ar.cause());
+        LOGGER.error("", ar.cause());
         internalError(context, ar.cause());
       }
     };
@@ -267,7 +267,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
           .putHeader("content-type", "application/json")
           .end();
       } else {
-        LOGGER.error(ar.cause());
+        LOGGER.error("", ar.cause());
         internalError(context, ar.cause());
       }
     };
@@ -290,7 +290,7 @@ public abstract class RestAPIVerticle extends BaseMicroserviceVerticle {
           .putHeader("content-type", "application/json")
           .end(new JsonObject().put("message", "delete_success").encodePrettily());
       } else {
-        LOGGER.error(res.cause());
+        LOGGER.error("", res.cause());
         internalError(context, res.cause());
       }
     };
