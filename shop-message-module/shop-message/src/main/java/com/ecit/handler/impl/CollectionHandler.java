@@ -101,7 +101,7 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
                     .put("user_id", collection.getLong("user_id"))
                     .put("commodity_id", collection.getLong("commodity_id")), null, collectionHandler -> {
                 if (collectionHandler.failed()) {
-                    LOGGER.error(collectionHandler.cause());
+                    LOGGER.error("", collectionHandler.cause());
                     return ;
                 }
                 JsonObject collectionJson = collectionHandler.result();
