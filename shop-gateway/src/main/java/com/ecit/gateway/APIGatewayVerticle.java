@@ -8,7 +8,7 @@ import com.hazelcast.internal.util.CollectionUtil;
 import com.hazelcast.internal.util.UuidUtil;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.http.HttpClientResponse;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.file.FileSystem;
@@ -47,7 +47,7 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
 
     @Override
     public void start(Promise<Void> promise) throws Exception {
-
+        super.start();
         authHandler = ShopAuthHandler.create(vertx, this.config());
 
         // get HTTP host and port from configuration, or use default value
@@ -156,32 +156,33 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
 
         Future.succeededFuture(context.getDelegate().body().buffer()).compose(msg -> {
             Promise<Object> promise = Promise.promise();
+            Promise<Object> promiseClient = Promise.promise();
             client.getDelegate().request(request.method(), path)
                     .compose(req -> this.putHeaders(request, req)
                             .compose(toReq -> toReq.send(msg)
-                            .onComplete(handler -> {
-                                if (handler.succeeded()) {
-                                    HttpClientResponse response = handler.result();
+                                .compose(response -> {
                                     toRsp.setStatusCode(response.statusCode());
                                     response.headers().forEach(header -> {
                                         toRsp.putHeader(header.getKey(), header.getValue());
                                     });
-                                    response.body().compose(body -> {
-                                        toRsp.end(body.toString());
-                                        return Future.succeededFuture();
-                                    }).onComplete(promise);
-                                } else {
-                                    toRsp.setStatusCode(500);
-                                    toRsp.end("内部服务错误");
-                                    promise.fail(handler.cause());
+
+                                    Buffer totalBuffer = Buffer.buffer();
+                                    response.handler(buffer -> {
+                                        totalBuffer.appendBuffer(buffer);
+                                    });
+                                    response.endHandler(v -> {
+                                        toRsp.end(totalBuffer.toString());
+                                        promiseClient.complete();
+                                    });
+                                    return promiseClient.future();
+                                }).onComplete(ar -> {
+                                    //release the service
+                                    ServiceDiscovery.releaseServiceObject(discovery, client);
+                                    promise.complete();
                                 }
-                            })).onComplete(ar -> {
-                //release the service
-                ServiceDiscovery.releaseServiceObject(discovery, client);
-            }));
+                            )));
             return promise.future();
         }).onComplete(cbFuture);
-
     }
 
     /**
