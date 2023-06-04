@@ -14,6 +14,16 @@
     <name>shop-order</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <main.verticle>com.ecit.OrderVerticle</main.verticle>
+        <launcher.class>io.vertx.core.Launcher</launcher.class>
+
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.ecit</groupId>
@@ -74,8 +84,8 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>io.vertx.core.Starter</Main-Class>
-                                        <Main-Verticle>com.ecit.OrderVerticle</Main-Verticle>
+                                        <Main-Class>${launcher.class}</Main-Class>
+                                        <Main-Verticle>${main.verticle}</Main-Verticle>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
@@ -85,6 +95,22 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+                <configuration>
+                    <mainClass>io.vertx.core.Launcher</mainClass>
+                    <arguments>
+                        <argument>run</argument>
+                        <argument>${main.verticle}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>-->
         </plugins>
     </build>
 </project>
