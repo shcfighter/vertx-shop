@@ -17,8 +17,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.Vertx;
-import io.vertx.ext.web.client.WebClient;
-import io.vertx.ext.web.client.WebClientOptions;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,7 +38,6 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
     private static final String SHOP_INDICES = "shop";
 
     final RxElasticSearchService rxElasticSearchService;
-    final WebClient client;
 
     public CommodityHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
