@@ -14,6 +14,9 @@ import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.sqlclient.Tuple;
+import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.client.WebClientOptions;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +38,13 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
     private static final String SHOP_INDICES = "shop";
 
     final RxElasticSearchService rxElasticSearchService;
+    final WebClient client;
 
     public CommodityHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
         rxElasticSearchService = RxElasticSearchService.createEventBusProxy(vertx.getDelegate(), config.getString("address"));
+        WebClientOptions options = new WebClientOptions().setKeepAlive(false);
+        this.client = WebClient.create(vertx, options);
     }
 
     /**
