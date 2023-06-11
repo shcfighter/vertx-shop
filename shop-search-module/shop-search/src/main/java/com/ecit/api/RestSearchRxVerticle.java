@@ -7,9 +7,9 @@ import com.ecit.common.rx.RestAPIRxVerticle;
 import com.ecit.handler.ICollectionHandler;
 import com.ecit.handler.ICommodityHandler;
 import com.ecit.handler.IPreferencesHandler;
+import com.ecit.model.Hits;
+import com.ecit.model.SearchResponse;
 import com.google.common.collect.Lists;
-import com.hubrick.vertx.elasticsearch.model.Hits;
-import com.hubrick.vertx.elasticsearch.model.SearchResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Promise;
@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,8 +65,10 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         // create HTTP server and publish REST handler
         createHttpServer(router, host, port).subscribe(server -> {
             this.publishHttpEndpoint(HTTP_SEARCH_SERVICE, host, port, "search.api.name").subscribe();
+            System.out.println("success");
             LOGGER.info("shop-search server started!");
         }, error -> {
+            System.out.println("fail");
             LOGGER.info("shop-search server start fail!", error);
         });
     }
@@ -94,6 +95,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
             if(handler.failed()){
                 this.returnWithFailureMessage(context, "暂无该商品！");
                 LOGGER.error("搜索商品异常：", handler.cause());
+                System.out.println("搜索商品线程" + handler.cause().getMessage());
                 return ;
             } else {
                 if(Objects.isNull(handler.result())){
@@ -103,13 +105,13 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                 final SearchResponse result = handler.result();
                 JsonObject resultJsonObject = new JsonObject();
                 resultJsonObject.put("items", result.getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList()));
-                JsonArray category = result.getAggregations().get("category_name").getJsonObject("category_name").getJsonArray("buckets");
+                JsonArray category = new JsonObject(result.getAggregations().get("category_name")).getJsonArray("buckets");
                 List<String> categoryList = Lists.newArrayList();
                 for (int i = 0; i < category.size(); i++) {
                     categoryList.add(category.getJsonObject(i).getString("key"));
                 }
                 resultJsonObject.put("category", categoryList);
-                JsonArray brand = result.getAggregations().get("brand_name").getJsonObject("brand_name").getJsonArray("buckets");
+                JsonArray brand = new JsonObject(result.getAggregations().get("brand_name")).getJsonArray("buckets");
                 List<String> brandList = Lists.newArrayList();
                 for (int i = 0; i < brand.size(); i++) {
                     brandList.add(brand.getJsonObject(i).getString("key"));
@@ -134,7 +136,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     return ;
                 }
                 final SearchResponse result = handler.result();
-                final List<JsonObject> resultList = result.getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList());
+                final List<JsonObject> resultList = result.getHits().getHits().stream().map(hit -> new JsonObject(hit.getSource())).collect(Collectors.toList());
                 this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultList);
             }
         });
@@ -164,10 +166,11 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
         commodityHandler.findCommodityFromEsById(Long.parseLong(context.request().getParam("id")), handler -> {
             if (handler.failed()) {
                 LOGGER.error("根据id查询产品失败！", handler.cause());
+                System.out.println("根据id查询产品失败" + handler.cause().getMessage());
                 this.returnWithFailureMessage(context, "查询失败");
             } else {
                 final Hits hits = handler.result().getHits();
-                JsonObject commodity = hits.getHits().get(0).getSource();
+                JsonObject commodity = new JsonObject(hits.getHits().get(0).getSource());
                 //记录浏览记录
                 collectionHandler.sendBrowse(getHeader(context, Constants.TOKEN), commodity, h -> {});
                 this.Ok(context, ResultItems.getReturnItemsSuccess(hits.getTotal().intValue(), commodity));
@@ -181,6 +184,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
      */
     private void findFavoriteCommodityHandler(RoutingContext context){
         String cookie = this.getHeader(context, Constants.VERTX_WEB_SESSION);
+        System.out.println(cookie);
         if(StringUtils.isEmpty(cookie)){
             //查询默认的
             Promise<SearchResponse> commodityPromise = Promise.promise();
@@ -229,7 +233,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     this.returnWithFailureMessage(context, "暂无该商品！");
                     return ;
                 }
-                Map<String, JsonObject> aggs = handler.result().getAggregations();
+                //Map<String, JsonObject> aggs = handler.result().getAggregations();
                 this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().intValue(),
                         handler.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
             }

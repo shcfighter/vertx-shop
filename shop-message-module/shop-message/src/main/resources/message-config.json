@@ -7,7 +7,7 @@
   "collection.http.port": 8086,
   "collection.http.address": "0.0.0.0",
   "mongodb": {
-    "host" : "127.0.0.1",
+    "host" : "192.168.0.103",
     "port" : 27017,
     "serverSelectionTimeoutMS" : 30000,
     "maxPoolSize" : 50,
@@ -48,13 +48,13 @@
   "minHeartbeatFrequencyMS" : 500,
   "kafka": {
     "producer.config": {
-      "bootstrap.servers": "127.0.0.1:9092",
+      "bootstrap.servers": "192.168.0.103:9092",
       "key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
       "value.serializer": "io.vertx.kafka.client.serialization.JsonObjectSerializer",
       "acks": "1"
     },
     "consumer.config": {
-      "bootstrap.servers": "127.0.0.1:9092",
+      "bootstrap.servers": "192.168.0.103:9092",
       "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
       "value.deserializer": "io.vertx.kafka.client.serialization.JsonObjectDeserializer",
       "group.id": "preferences",
@@ -63,8 +63,18 @@
     }
   },
   "redis": {
-    "host": "127.0.0.1",
+    "host": "192.168.0.103",
     "port": 6379,
     "auth": "h123456"
+  },
+  "postgresql": {
+    "host" : "192.168.0.103",
+    "port" : 5432,
+    "maxPoolSize" : 50,
+    "username" : "postgres",
+    "password" : "h123456",
+    "database" : "vertx_shop",
+    "charset" : "UTF-8",
+    "queryTimeout" : 10000
   }
 }

@@ -34,7 +34,7 @@ public class JdbcRxRepositoryWrapper {
 
   private static final int MAX_RECONNECT_RETRIES = 16;
 
-  private final RedisOptions options = new RedisOptions().addConnectionString("redis://127.0.0.1:6379");
+  private final RedisOptions options;
   private final AtomicBoolean CONNECTING = new AtomicBoolean();
   protected RedisConnection redisConnection;
   protected RedisAPI redisClient;
@@ -63,6 +63,9 @@ public class JdbcRxRepositoryWrapper {
 
     pgPool = PgPool.pool(vertx, connectOptions, poolOptions);
 
+    JsonObject redisConfig = config.getJsonObject("redis", new JsonObject());
+    String redisUri = "redis://:%s@%s:%s".formatted(redisConfig.getString("auth"), redisConfig.getString("host"), redisConfig.getInteger("port"));
+    this.options = new RedisOptions().addConnectionString(redisUri);
     createRedisClient(vertx)
             .onSuccess(conn -> {
               // connected to redis!

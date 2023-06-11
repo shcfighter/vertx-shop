@@ -1,6 +1,6 @@
 package com.ecit.handler;
 
-import com.hubrick.vertx.elasticsearch.model.SearchResponse;
+import com.ecit.model.SearchResponse;
 import io.vertx.codegen.annotations.Fluent;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;

@@ -159,28 +159,56 @@ public class APIGatewayVerticle extends RestAPIRxVerticle {
             Promise<Object> promiseClient = Promise.promise();
             client.getDelegate().request(request.method(), path)
                     .compose(req -> this.putHeaders(request, req)
-                            .compose(toReq -> toReq.send(msg)
-                                .compose(response -> {
-                                    toRsp.setStatusCode(response.statusCode());
-                                    response.headers().forEach(header -> {
-                                        toRsp.putHeader(header.getKey(), header.getValue());
-                                    });
+                            .compose(toReq -> {
+                                Promise resPromise = Promise.promise();
+                                if (Objects.isNull(msg)) {
+                                    toReq.send().compose(response -> {
+                                        toRsp.setStatusCode(response.statusCode());
+                                        response.headers().forEach(header -> {
+                                            toRsp.putHeader(header.getKey(), header.getValue());
+                                        });
 
-                                    Buffer totalBuffer = Buffer.buffer();
-                                    response.handler(buffer -> {
-                                        totalBuffer.appendBuffer(buffer);
+                                        Buffer totalBuffer = Buffer.buffer();
+                                        response.handler(buffer -> {
+                                            totalBuffer.appendBuffer(buffer);
+                                        });
+                                        response.endHandler(v -> {
+                                            toRsp.end(totalBuffer.toString());
+                                            promiseClient.complete();
+                                        });
+                                        return promiseClient.future();
+                                    }).onComplete(ar -> {
+                                        //release the service
+                                        ServiceDiscovery.releaseServiceObject(discovery, client);
+                                        resPromise.complete();
+                                        promise.complete();
                                     });
-                                    response.endHandler(v -> {
-                                        toRsp.end(totalBuffer.toString());
-                                        promiseClient.complete();
-                                    });
-                                    return promiseClient.future();
-                                }).onComplete(ar -> {
-                                    //release the service
-                                    ServiceDiscovery.releaseServiceObject(discovery, client);
-                                    promise.complete();
                                 }
-                            )));
+                                toReq.send(msg)
+                                        .compose(response -> {
+                                            toRsp.setStatusCode(response.statusCode());
+                                            response.headers().forEach(header -> {
+                                                toRsp.putHeader(header.getKey(), header.getValue());
+                                            });
+
+                                            Buffer totalBuffer = Buffer.buffer();
+                                            response.handler(buffer -> {
+                                                totalBuffer.appendBuffer(buffer);
+                                            });
+                                            response.endHandler(v -> {
+                                                toRsp.end(totalBuffer.toString());
+                                                promiseClient.complete();
+                                            });
+                                            return promiseClient.future();
+                                        }).onComplete(ar -> {
+                                            //release the service
+                                            ServiceDiscovery.releaseServiceObject(discovery, client);
+                                            resPromise.complete();
+                                            promise.complete();
+                                        });
+                                return resPromise.future();
+                                }
+                            ));
             return promise.future();
         }).onComplete(cbFuture);
     }

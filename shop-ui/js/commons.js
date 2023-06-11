@@ -1,8 +1,8 @@
 /**
  * Created by shwang on 2018/2/27.
  */
-var domain = "http://localhost/";
-//var domain = "http://127.0.0.1/";
+//var domain = "http://localhost/";
+var domain = "http://127.0.0.1:880/";
 
 var token = null;
 var loginUser = {};

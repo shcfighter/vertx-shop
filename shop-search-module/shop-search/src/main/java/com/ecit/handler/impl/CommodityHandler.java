@@ -5,18 +5,16 @@ import com.ecit.common.utils.MustacheUtils;
 import com.ecit.constants.CommoditySql;
 import com.ecit.handler.ICommodityHandler;
 import com.ecit.handler.IdBuilder;
+import com.ecit.model.SearchResponse;
 import com.google.common.collect.Lists;
-import com.hubrick.vertx.elasticsearch.RxElasticSearchService;
-import com.hubrick.vertx.elasticsearch.model.*;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.sqlclient.Tuple;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
-
+import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.sqlclient.Tuple;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +34,15 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
      * es商品索引indeces
      */
     private static final String SHOP_INDICES = "shop";
-
-    final RxElasticSearchService rxElasticSearchService;
-    final WebClient client;
+    final WebClient webClient;
+    final JsonObject elasticConfig;
 
     public CommodityHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
-        rxElasticSearchService = RxElasticSearchService.createEventBusProxy(vertx.getDelegate(), config.getString("address"));
-        WebClientOptions options = new WebClientOptions().setKeepAlive(false);
-        this.client = WebClient.create(vertx, options);
+
+        this.elasticConfig = config.getJsonObject("elasticsearch");
+        WebClientOptions options = new WebClientOptions().setKeepAlive(true);
+        this.webClient = WebClient.create(vertx.getDelegate(), options);
     }
 
     /**
@@ -55,58 +53,149 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
      */
     @Override
     public ICommodityHandler searchCommodity(String keyword, int pageSize, int page, Handler<AsyncResult<SearchResponse>> handler) {
-        Promise<SearchResponse> promise = Promise.promise();
-        JsonObject searchJson = null;
-        if (StringUtils.isBlank(keyword)) {
-            searchJson = new JsonObject("{\"match_all\": {}}");
-        } else {
-            searchJson = new JsonObject("{\n" +
-                "    \"multi_match\" : {\n" +
-                "      \"query\":    \"" + keyword + "\",\n" +
-                "      \"fields\": [ \"commodity_name\", \"brand_name\", \"category_name\", \"remarks\", \"description\", \"large_class\" ] \n" +
-                "    }\n" +
-                "}");
+        String searchQuery = """
+                {
+                    "query":{
+                        "match_all":{
+                                
+                        }
+                    },
+                    "size": %s,
+                    "from": %s,
+                    "aggs":{
+                        "brand_name":{
+                            "terms":{
+                                "field":"brand_name",
+                                "size":5
+                            }
+                        },
+                        "category_name":{
+                            "terms":{
+                                "field":"category_name",
+                                "size":5
+                            }
+                        }
+                    },
+                    "sort":{
+                        "_script":{
+                            "script":"Math.random()",
+                            "type":"number",
+                            "order":"asc"
+                        }
+                    }
+                }
+                """.formatted(pageSize, this.calcPage(page, pageSize));
+        if (StringUtils.isNotBlank(keyword)) {
+            searchQuery = """
+                    {
+                        "query":{
+                            "multi_match":{
+                                "query":"%s",
+                                "fields":[
+                                    "commodity_name",
+                                    "brand_name",
+                                    "category_name",
+                                    "remarks",
+                                    "description",
+                                    "large_class"
+                                ]
+                            }
+                        },
+                        "size": %s,
+                        "from": %s,
+                        "aggs":{
+                            "brand_name":{
+                                "terms":{
+                                    "field":"brand_name",
+                                    "size":5
+                                }
+                            },
+                            "category_name":{
+                                "terms":{
+                                    "field":"category_name",
+                                    "size":5
+                                }
+                            }
+                        },
+                        "sort":{
+                            "_script":{
+                                "script":"Math.random()",
+                                "type":"number",
+                                "order":"asc"
+                            }
+                        }
+                    }
+                    """.formatted(keyword, pageSize, this.calcPage(page, pageSize));
         }
-        final SearchOptions searchOptions = new SearchOptions()
-                .setQuery(searchJson)
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true).setSize(pageSize).setFrom(this.calcPage(page, pageSize))
-                .addAggregation(new AggregationOption().setName("brand_name")
-                        .setType(AggregationOption.AggregationType.TERMS)
-                        .setDefinition(new JsonObject().put("field", "brand_name").put("size", 5)))
-                .addAggregation(new AggregationOption().setName("category_name")
-                        .setType(AggregationOption.AggregationType.TERMS)
-                        .setDefinition(new JsonObject().put("field", "category_name").put("size", 5)))
-                //.addFieldSort("commodity_id", SortOrder.DESC)
-                .addScripSort("Math.random()", ScriptSortOption.Type.NUMBER, new JsonObject(), SortOrder.DESC); //随机排序
-        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(promise::complete, promise::fail);
+
+        Promise<SearchResponse> promise = Promise.promise();
+        this.webClient
+                .post(elasticConfig.getInteger("port", 9200), elasticConfig.getString("url", "127.0.0.1"), SHOP_INDICES + "/_search")
+                .sendJsonObject(
+                        new JsonObject(searchQuery))
+                .onSuccess(res -> {
+                    SearchResponse searchResponse = res.bodyAsJson(SearchResponse.class);
+                    promise.complete(searchResponse);
+                }).onFailure(err -> promise.fail(err));
         promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public ICommodityHandler searchLargeClassCommodity(String keyword, Handler<AsyncResult<SearchResponse>> handler) {
-        Promise<SearchResponse> promise = Promise.promise();
-        JsonObject searchJson = null;
-        if (StringUtils.isBlank(keyword)) {
-            searchJson = new JsonObject("{\"match_all\": {}}");
-        } else {
-            searchJson = new JsonObject("{\n" +
-                    "    \"multi_match\" : {\n" +
-                    "      \"query\":    \"" + keyword + "\",\n" +
-                    "      \"fields\": [ \"brand_name\", \"category_name\", \"large_class\" ] \n" +
-                    "    }\n" +
-                    "}");
+        String searchQuery = """
+                {
+                    "query":{
+                        "match_all":{
+                                
+                        }
+                    },
+                    "size": 7,
+                    "sort":{
+                        "_script":{
+                            "script":"Math.random()",
+                            "type":"number",
+                            "order":"asc"
+                        }
+                    }
+                }
+                """;
+        if (StringUtils.isNotBlank(keyword)) {
+            searchQuery = """
+                    {
+                        "query":{
+                            "multi_match":{
+                                "query":"%s",
+                                "fields":[
+                                    "commodity_name",
+                                    "brand_name",
+                                    "category_name",
+                                    "remarks",
+                                    "description",
+                                    "large_class"
+                                ]
+                            }
+                        },
+                        "size": 7,
+                        "sort":{
+                            "_script":{
+                                "script":"Math.random()",
+                                "type":"number",
+                                "order":"asc"
+                            }
+                        }
+                    }
+                    """.formatted(keyword);
         }
-        final SearchOptions searchOptions = new SearchOptions()
-                .setQuery(searchJson)
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true).setSize(7)
-                //.addFieldSort("commodity_id", SortOrder.DESC)
-                .addScripSort("Math.random()", ScriptSortOption.Type.NUMBER, new JsonObject(), SortOrder.DESC); //随机排序
-        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(promise::complete, promise::fail);
+        Promise<SearchResponse> promise = Promise.promise();
+        this.webClient
+                .post(elasticConfig.getInteger("port", 9200), elasticConfig.getString("url", "127.0.0.1"), SHOP_INDICES + "/_search")
+                .sendJsonObject(
+                        new JsonObject(searchQuery))
+                .onSuccess(res -> {
+                    SearchResponse searchResponse = res.bodyAsJson(SearchResponse.class);
+                    promise.complete(searchResponse);
+                }).onFailure(err -> promise.fail(err));
         promise.future().onComplete(handler);
         return this;
     }
@@ -144,18 +233,25 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
 
     @Override
     public ICommodityHandler findCommodityFromEsById(long id, Handler<AsyncResult<SearchResponse>> handler) {
+        final String searchQuery = """
+                {
+                    "query":{
+                        "match":{
+                            "commodity_id":%s
+                        }
+                    },
+                    "size":1
+                }
+                """.formatted(id);
         Promise<SearchResponse> promise = Promise.promise();
-        final SearchOptions searchOptions = new SearchOptions()
-                .setQuery(new JsonObject("{" +
-                        "       \"match\":{" +
-                        "           \"commodity_id\": \"" + id + "\"" +
-                        "       }" +
-                        "}"))
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true)
-                .setSize(1);
-        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(promise::complete, promise::fail);
+        this.webClient
+                .post(elasticConfig.getInteger("port", 9200), elasticConfig.getString("url", "127.0.0.1"), SHOP_INDICES + "/_search")
+                .sendJsonObject(
+                        new JsonObject(searchQuery))
+                .onSuccess(res -> {
+                    SearchResponse searchResponse = res.bodyAsJson(SearchResponse.class);
+                    promise.complete(searchResponse);
+                }).onFailure(err -> promise.fail(err));
         promise.future().onComplete(handler);
         return this;
     }
@@ -167,67 +263,150 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
      */
     @Override
     public ICommodityHandler preferencesCommodity(List<String> keywords, Handler<AsyncResult<SearchResponse>> handler) {
+
+        String keywordJson = keywords.stream().map(key -> {
+            return """
+                    {
+                                        "multi_match":{
+                                            "query":"%s",
+                                            "fields":[
+                                                "commodity_name",
+                                                "brand_name",
+                                                "category_name",
+                                                "remarks",
+                                                "description",
+                                                "large_class"
+                                            ]
+                                        }
+                                    }
+                    """.formatted(key);
+        }).collect(Collectors.joining(","));
+
+        String searchQuery = """
+                {
+                    "query":{
+                        "bool":{
+                            "should":[
+                                %s
+                            ]
+                        }
+                    },
+                    "size":3
+                }
+                """.formatted(keywordJson);
         Promise<SearchResponse> promise = Promise.promise();
-        final SearchOptions searchOptions = new SearchOptions()
-                .setQuery(new JsonObject("{\n" +
-                        "      \"bool\": {\n" +
-                        "         \"should\": [\n" +
-                        keywords.stream().map(key -> {
-                            return "{\"multi_match\":{\"query\":\"" + key + "\",\"fields\":[\"commodity_name\",\"brand_name\",\"category_name\",\"remarks\",\"description\"]}}";
-                        }).collect(Collectors.joining(",")) +
-                        "         ]\n" +
-                        "      }\n" +
-                        "}\n"))
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true)
-                .setSize(3);
-        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(promise::complete, promise::fail);
+        this.webClient
+                .post(elasticConfig.getInteger("port", 9200), elasticConfig.getString("url", "127.0.0.1"), SHOP_INDICES + "/_search")
+                .sendJsonObject(
+                        new JsonObject(searchQuery))
+                .onSuccess(res -> {
+                    SearchResponse searchResponse = res.bodyAsJson(SearchResponse.class);
+                    promise.complete(searchResponse);
+                }).onFailure(err -> promise.fail(err));
         promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public ICommodityHandler findCommodityBySalesVolume(Handler<AsyncResult<SearchResponse>> handler) {
+        String searchQuery = """
+                {
+                    "query":{
+                        "match_all":{
+                                
+                        }
+                    },
+                    "size":3,
+                    "sort":[
+                        {
+                            "month_sales_volume":{
+                                "order":"desc"
+                            }
+                        }
+                    ]
+                }
+                """;
         Promise<SearchResponse> promise = Promise.promise();
-        final SearchOptions searchOptions = new SearchOptions()
-                .setQuery(new JsonObject("{\"match_all\":{}}"))
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true)
-                .setSize(3)
-                .addFieldSort("month_sales_volume", SortOrder.DESC);
-        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(promise::complete, promise::fail);
+        this.webClient
+                .post(elasticConfig.getInteger("port", 9200), elasticConfig.getString("url", "127.0.0.1"), SHOP_INDICES + "/_search")
+                .sendJsonObject(
+                        new JsonObject(searchQuery))
+                .onSuccess(res -> {
+                    SearchResponse searchResponse = res.bodyAsJson(SearchResponse.class);
+                    promise.complete(searchResponse);
+                }).onFailure(err -> promise.fail(err));
         promise.future().onComplete(handler);
         return this;
     }
 
     @Override
     public ICommodityHandler findBrandCategory(String keyword, Handler<AsyncResult<SearchResponse>> handler) {
-        Promise<SearchResponse> promise = Promise.promise();
-        JsonObject searchJson = null;
-        if (StringUtils.isBlank(keyword)) {
-            searchJson = new JsonObject("{\"match_all\": {}}");
-        } else {
-            searchJson = new JsonObject("{\n" +
-                    "    \"multi_match\" : {\n" +
-                    "      \"query\":    \"" + keyword + "\",\n" +
-                    "      \"fields\": [ \"commodity_name\", \"brand_name\", \"category_name\", \"remarks\", \"description\" ] \n" +
-                    "    }\n" +
-                    "}");
+        String searchQuery = """
+                {
+                    "query":{
+                        "match_all":{
+                                
+                        }
+                    },
+                    "size": 0,
+                    "aggs":{
+                        "brand_name":{
+                            "terms":{
+                                "field":"brand_name",
+                                "size":10                            }
+                        },
+                        "category_name":{
+                            "terms":{
+                                "field":"category_name",
+                                "size":10
+                            }
+                        }
+                    }
+                }
+                """;
+        if (StringUtils.isNotBlank(keyword)) {
+            searchQuery = """
+                    {
+                        "query":{
+                            "multi_match":{
+                                "query":"%s",
+                                "fields":[
+                                    "commodity_name",
+                                    "brand_name",
+                                    "category_name",
+                                    "remarks",
+                                    "description"
+                                ]
+                            }
+                        },
+                        "size": 0,
+                        "aggs":{
+                            "brand_name":{
+                                "terms":{
+                                    "field":"brand_name",
+                                    "size":10
+                                }
+                            },
+                            "category_name":{
+                                "terms":{
+                                    "field":"category_name",
+                                    "size":10
+                                }
+                            }
+                        }
+                    }
+                    """.formatted(keyword);
         }
-        final SearchOptions searchOptions = new SearchOptions()
-                .setQuery(searchJson)
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setFetchSource(true).setSize(0)
-                .addAggregation(new AggregationOption().setName("brand_name")
-                        .setType(AggregationOption.AggregationType.TERMS)
-                        .setDefinition(new JsonObject().put("field", "brand_name").put("size", 10)))
-                .addAggregation(new AggregationOption().setName("category_name")
-                        .setType(AggregationOption.AggregationType.TERMS)
-                        .setDefinition(new JsonObject().put("field", "category_name").put("size", 10)));
-        rxElasticSearchService.search(SHOP_INDICES, searchOptions)
-                .subscribe(promise::complete, promise::fail);
+
+        Promise<SearchResponse> promise = Promise.promise();
+        this.webClient
+                .post(elasticConfig.getInteger("port", 9200), elasticConfig.getString("url", "127.0.0.1"), SHOP_INDICES + "/_search")
+                .sendJsonObject(
+                        new JsonObject(searchQuery))
+                .onSuccess(res -> {
+                    SearchResponse searchResponse = res.bodyAsJson(SearchResponse.class);
+                    promise.complete(searchResponse);
+                }).onFailure(err -> promise.fail(err));
         promise.future().onComplete(handler);
         return this;
     }

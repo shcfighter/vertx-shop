@@ -3,15 +3,10 @@
   "search.api.name":"search",
   "search.http.address":"0.0.0.0",
   "search.http.port":8082,
-  "address":"eb.elasticsearch",
-  "transportAddresses":[
-    {
-      "hostname":"localhost",
-      "port":9300
-    }
-  ],
-  "cluster_name":"vertx_shop",
-  "client_transport_sniff":false,
+  "elasticsearch": {
+    "url": "192.168.0.103",
+    "port": 9200
+  },
   "postgresql": {
     "host" : "127.0.0.1",
     "port" : 5432,
@@ -23,7 +18,7 @@
     "queryTimeout" : 10000
   },
   "mongodb":{
-    "host":"127.0.0.1",
+    "host":"192.168.0.103",
     "port":27017,
     "username":"shop_user",
     "password":"h123456",
@@ -31,13 +26,13 @@
   },
   "kafka": {
     "producer.config": {
-      "bootstrap.servers": "127.0.0.1:9092",
+      "bootstrap.servers": "192.168.0.103:9092",
       "key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
       "value.serializer": "io.vertx.kafka.client.serialization.JsonObjectSerializer",
       "acks": "1"
     },
     "consumer.config": {
-      "bootstrap.servers": "127.0.0.1:9092",
+      "bootstrap.servers": "192.168.0.103:9092",
       "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
       "value.deserializer": "io.vertx.kafka.client.serialization.JsonObjectDeserializer",
       "group.id": "preferences",
@@ -46,7 +41,7 @@
     }
   },
   "redis": {
-    "host": "127.0.0.1",
+    "host": "192.168.0.103",
     "port": 6379,
     "auth": "h123456"
   }

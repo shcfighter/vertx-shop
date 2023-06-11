@@ -7,7 +7,7 @@
   "cart.http.address":"0.0.0.0",
   "cart.http.port":8085,
   "postgresql": {
-    "host" : "127.0.0.1",
+    "host" : "192.168.0.103",
     "port" : 5432,
     "maxPoolSize" : 50,
     "username" : "postgres",
@@ -17,14 +17,14 @@
     "queryTimeout" : 10000
   },
   "mongodb":{
-    "host":"127.0.0.1",
+    "host":"192.168.0.103",
     "port":27017,
     "username":"shop_user",
     "password":"h123456",
     "db_name":"vertx_shop"
   },
   "redis": {
-    "host": "127.0.0.1",
+    "host": "192.168.0.103",
     "port": 6379,
     "auth": "h123456"
   }

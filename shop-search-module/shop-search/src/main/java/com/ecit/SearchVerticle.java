@@ -7,7 +7,6 @@ import com.ecit.handler.IPreferencesHandler;
 import com.ecit.handler.impl.CommodityHandler;
 import com.ecit.handler.impl.PreferencesHandler;
 import com.hazelcast.config.Config;
-import com.hubrick.vertx.elasticsearch.ElasticSearchServiceVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonArray;
@@ -33,7 +32,6 @@ public class SearchVerticle extends BaseMicroserviceRxVerticle{
         new ServiceBinder(vertx.getDelegate()).setAddress(IPreferencesHandler.SEARCH_SERVICE_PREFERENCES).register(IPreferencesHandler.class, preferencesHandler);
         this.publishEventBusService(SEARCH_SERVICE_NAME, ICommodityHandler.SEARCH_SERVICE_ADDRESS, ICommodityHandler.class).subscribe();
         vertx.getDelegate().deployVerticle(RestSearchRxVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
-        vertx.getDelegate().deployVerticle(ElasticSearchServiceVerticle.class, new DeploymentOptions().setConfig(this.config()).setInstances(this.config().getInteger("instances", 1)));
     }
 
     public static void main(String[] args) {
