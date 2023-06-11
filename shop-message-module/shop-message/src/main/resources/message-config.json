@@ -9,26 +9,11 @@
   "mongodb": {
     "host" : "192.168.0.103",
     "port" : 27017,
-    "serverSelectionTimeoutMS" : 30000,
-    "maxPoolSize" : 50,
-    "minPoolSize" : 25,
-    "maxIdleTimeMS" : 300000,
-    "maxLifeTimeMS" : 3600000,
-    "waitQueueMultiple"  : 10,
-    "waitQueueTimeoutMS" : 10000,
-    "maintenanceFrequencyMS" : 2000,
-    "maintenanceInitialDelayMS" : 500,
-
-    "username"   : "shop_user",
-    "password"   : "h123456",
+    "username"   : "root",
+    "password"   : "123456",
     "db_name": "vertx_shop",
-    "connectTimeoutMS" : 300000,
-    "socketTimeoutMS"  : 100000,
-    "sendBufferSize"    : 8192,
-    "receiveBufferSize" : 8192,
-    "keepAlive" : true
+    "authSource": "vertx_shop"
   },
-
   "heartbeat.socket" : {
     "connectTimeoutMS" : 300000,
     "socketTimeoutMS"  : 100000,
@@ -57,7 +42,7 @@
       "bootstrap.servers": "192.168.0.103:9092",
       "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
       "value.deserializer": "io.vertx.kafka.client.serialization.JsonObjectDeserializer",
-      "group.id": "preferences",
+      "group.id": "collection",
       "auto.offset.reset": "earliest",
       "enable.auto.commit": "true"
     }
@@ -65,7 +50,7 @@
   "redis": {
     "host": "192.168.0.103",
     "port": 6379,
-    "auth": "h123456"
+    "auth": "123456"
   },
   "postgresql": {
     "host" : "192.168.0.103",

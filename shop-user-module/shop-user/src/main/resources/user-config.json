@@ -27,7 +27,7 @@
       "bootstrap.servers": "192.168.0.103:9092",
       "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
       "value.deserializer": "io.vertx.kafka.client.serialization.JsonObjectDeserializer",
-      "group.id": "preferences",
+      "group.id": "certified",
       "auto.offset.reset": "earliest",
       "enable.auto.commit": "true"
     }
@@ -35,6 +35,6 @@
   "redis": {
     "host": "192.168.0.103",
     "port": 6379,
-    "auth": "h123456"
+    "auth": "123456"
   }
 }

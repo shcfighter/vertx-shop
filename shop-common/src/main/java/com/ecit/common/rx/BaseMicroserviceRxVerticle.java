@@ -37,8 +37,7 @@ public class BaseMicroserviceRxVerticle extends AbstractVerticle {
   public void start() throws Exception {
 
     discovery = ServiceDiscovery.create(vertx, new ServiceDiscoveryOptions().setBackendConfiguration(config()));
-    JsonObject cbOptions = config().getJsonObject("circuit-breaker") != null ?
-      config().getJsonObject("circuit-breaker") : new JsonObject();
+    JsonObject cbOptions = config().getJsonObject("circuit-breaker") != null ? config().getJsonObject("circuit-breaker") : new JsonObject();
     circuitBreaker = CircuitBreaker.create(cbOptions.getString("name", "circuit-breaker"), vertx,
       new CircuitBreakerOptions()
         .setMaxFailures(cbOptions.getInteger("maxFailures", 5))

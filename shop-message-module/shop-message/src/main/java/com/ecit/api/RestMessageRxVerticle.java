@@ -29,15 +29,16 @@ public class RestMessageRxVerticle extends RestAPIRxVerticle{
         // body handler
         router.route().handler(BodyHandler.create());
 
+        // API route handler
+        router.post("/sendEmailMessage").handler(this::sendEmailMessageHandler);
+        router.post("/sendMobileMessage").handler(this::sendMobileMessageHandler);
+
         /**
          * 登录拦截
          */
         router.getDelegate().route().handler(ShopUserSessionHandler.create(vertx.getDelegate(), this.config()));
 
-        // API route handler
         router.post("/insertMessage").handler(this::insertMessageHandler);
-        router.post("/sendEmailMessage").handler(this::sendEmailMessageHandler);
-        router.post("/sendMobileMessage").handler(this::sendMobileMessageHandler);
         //全局异常处理
         this.globalVerticle(router);
 

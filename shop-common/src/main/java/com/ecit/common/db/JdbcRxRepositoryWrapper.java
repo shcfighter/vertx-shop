@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -42,11 +43,6 @@ public class JdbcRxRepositoryWrapper {
 
   public JdbcRxRepositoryWrapper(Vertx vertx, JsonObject config) {
     JsonObject postgresqlConfig = config.getJsonObject("postgresql", new JsonObject());
- /*   this.postgreSQLClient = PostgreSQLClient.createShared(vertx, postgresqlConfig);
-    JsonObject redisConfig = config.getJsonObject("redis", new JsonObject());
-    this.redisClient = RedisClient.create(vertx, new RedisOptions().setHost(redisConfig.getString("host", "localhost"))
-            .setPort(redisConfig.getInteger("port", 6379)).setAuth(redisConfig.getString("auth")));
-*/
     PgConnectOptions connectOptions = new PgConnectOptions()
             .setPort(5432)
             .setHost(postgresqlConfig.getString("host"))
@@ -279,11 +275,11 @@ public class JdbcRxRepositoryWrapper {
         redisResult.fail(re.cause());
       } else {
         Response response = re.result();
-        String user = response.toString();
-        if(StringUtils.isEmpty(user)){
+        if(Objects.isNull(response)){
           redisResult.fail("user session empty!");
           return ;
         }
+        String user = response.toString();
         redisResult.complete(new JsonObject(user));
       }
     });

@@ -20,9 +20,10 @@
   "mongodb":{
     "host":"192.168.0.103",
     "port":27017,
-    "username":"shop_user",
-    "password":"h123456",
-    "db_name":"vertx_shop"
+    "username":"root",
+    "password":"123456",
+    "db_name": "vertx_shop",
+    "authSource":"vertx_shop"
   },
   "kafka": {
     "producer.config": {
@@ -43,6 +44,6 @@
   "redis": {
     "host": "192.168.0.103",
     "port": 6379,
-    "auth": "h123456"
+    "auth": "123456"
   }
 }

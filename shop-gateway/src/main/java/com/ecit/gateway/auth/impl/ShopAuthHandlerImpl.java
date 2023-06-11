@@ -116,7 +116,7 @@ public class ShopAuthHandlerImpl extends JdbcRxRepositoryWrapper implements Shop
               promise.complete(re.result().toString());
           }
         });
-        promise.future().andThen(handler);
+        promise.future().onComplete(handler);
         return this;
     }
 

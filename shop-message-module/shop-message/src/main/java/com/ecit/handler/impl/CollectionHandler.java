@@ -82,9 +82,9 @@ public class CollectionHandler extends JdbcRxRepositoryWrapper implements IColle
             String topic = record.topic();
             JsonObject message = record.value();
             if (StringUtils.equals(topic, BROWSE_TOPIC)) {
-
+                this.saveBrowsingHistory(message);
             } else if (StringUtils.equals(topic, COLLECTION_TOPIC)) {
-
+                this.saveCollection(message);
             }
         });
     }

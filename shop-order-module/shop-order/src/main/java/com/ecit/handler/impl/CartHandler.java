@@ -5,7 +5,6 @@ import com.ecit.common.utils.JsonUtils;
 import com.ecit.handler.ICartHandler;
 import com.ecit.handler.ICommodityHandler;
 import com.ecit.handler.IdBuilder;
-import io.reactivex.disposables.Disposable;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -59,6 +58,7 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
             }
             final long userId = session.getLong("userId");
             Promise<Void> promise = Promise.promise();
+            LOGGER.info("----commodityHandler: {}", commodityHandler);
             commodityHandler.findCommodityById(params.getLong("commodity_id"), commodityHandler -> {
                 if (commodityHandler.failed()) {
                     LOGGER.error("insert cart fail, find commodity error: ", commodityHandler.cause());

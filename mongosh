@@ -1,0 +1,12 @@
+./mongosh "mongodb://root:123456@127.0.0.1:27017"
+show dbs
+
+db.vertx_shop.insert({site: "knowledgedict", status: 1})
+
+db.grantRolesToUser("root", [{role:"readWrite",db:"vertx_shop"},{role:"dbAdmin", db:"vertx_shop"}])
+
+db.createUser({user:"root",pwd:"123456",roles:[{role:"dbAdmin", db:"vertx_shop"},{role:"readWrite",db:"vertx_shop"}]})
+
+
+
+db.verification_code.find({})
