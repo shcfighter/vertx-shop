@@ -11,7 +11,7 @@ public interface UserSql {
     static final String REGISTER_SQL = """
                 insert into t_user 
                 (user_id, login_name, password, status, is_deleted, mobile, email, salt,  create_time, update_time) 
-                values($1, $2, $3, $4, $5, $6, $7, $8, now(), now())
+                values($1, $2, $3, $4, $5, $6, $7, $8, now(), now()) 
             """;
 
     /**

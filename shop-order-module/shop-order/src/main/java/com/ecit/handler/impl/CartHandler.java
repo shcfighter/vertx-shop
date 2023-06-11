@@ -58,7 +58,6 @@ public class CartHandler extends JdbcRxRepositoryWrapper implements ICartHandler
             }
             final long userId = session.getLong("userId");
             Promise<Void> promise = Promise.promise();
-            LOGGER.info("----commodityHandler: {}", commodityHandler);
             commodityHandler.findCommodityById(params.getLong("commodity_id"), commodityHandler -> {
                 if (commodityHandler.failed()) {
                     LOGGER.error("insert cart fail, find commodity error: ", commodityHandler.cause());

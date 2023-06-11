@@ -220,10 +220,10 @@ public class CommodityHandler extends JdbcRxRepositoryWrapper implements ICommod
         Promise<List<JsonObject>> promise = Promise.promise();
         Tuple params = Tuple.tuple();
         List<String> buffer = Lists.newArrayList();
-        ids.forEach(id -> {
-            buffer.add("?");
-            params.addLong(id);
-        });
+        for (int i = 1; i <= ids.size(); i++) {
+            buffer.add("$" + i);
+            params.addLong(ids.get(i - 1));
+        }
         this.retrieveMany(params,
                 MustacheUtils.mustacheString(CommoditySql.FIND_COMMODITY_BY_IDS, Map.of("ids",buffer.stream().collect(Collectors.joining(",")))))
                 .subscribe(promise::complete, promise::fail);

@@ -61,6 +61,8 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
     @Override
     public IOrderHandler insertOrder(long orderId, long userId, String price, String freight, long shippingInformationId, String leaveMessage,
                                      JsonArray orderDetails, Handler<AsyncResult<Integer>> handler) {
+        LOGGER.info("-------------------------insertOrder orderId:{}, userId:{} shippingInformationId:{} OrderStatus:{} leaveMessage:{} orderDetails:{} price:{} freight:{}"
+                , orderId, userId, shippingInformationId, OrderStatus.VALID.getValue(), leaveMessage, orderDetails.encodePrettily(), price, freight);
         Promise<Integer> promise = Promise.promise();
         this.execute(Tuple.tuple().addLong(orderId)
                 .addLong(userId)
