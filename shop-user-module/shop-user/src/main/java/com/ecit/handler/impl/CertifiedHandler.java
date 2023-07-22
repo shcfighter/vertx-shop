@@ -20,6 +20,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZoneId;
 import java.util.*;
 
 public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertifiedHandler {
@@ -60,7 +61,7 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
     public void saveCertified() {
         this.consumer.handler(msg -> {
             JsonObject certified = msg.value();
-            LOGGER.debug("Got certified message: {}", certified);
+            LOGGER.info("Got certified message: {}", certified);
             if (certified.containsKey("user_id")) {
                 Promise<JsonObject> oneCertifiedPromise = Promise.promise();
                 this.findUserCertifiedByUserIdAndType(certified.getLong("user_id"), certified.getInteger("certified_type"), oneCertifiedPromise);
@@ -77,7 +78,7 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
                     if (handler.succeeded()) {
 
                     } else {
-                        LOGGER.error("rabbitmq接收处理失败", handler.cause());
+                        LOGGER.error("kafka接收处理失败", handler.cause());
                     }
                 });
             }
@@ -110,7 +111,7 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
     public ICertifiedHandler saveUserCertified(long userId, int certifiedType, String remarks, long certifiedTime, Handler<AsyncResult<Integer>> resultHandler) {
         Promise<Integer> userPromise = Promise.promise();
         this.execute(Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(userId).addInteger(certifiedType)
-                .addString(DateFormatUtils.format(new Date(certifiedTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT)).addString(remarks),
+                .addLocalDateTime(new Date(certifiedTime).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).addString(remarks),
                 UserSql.INSERT_USER_CERTIFIED_SQL)
                 .subscribe(userPromise::complete, userPromise::fail);
         userPromise.future().onComplete(resultHandler);
@@ -120,7 +121,7 @@ public class CertifiedHandler extends JdbcRxRepositoryWrapper implements ICertif
     @Override
     public ICertifiedHandler updateUserCertified(long certifiedId, String remarks, long updateTime, Handler<AsyncResult<Integer>> resultHandler) {
         Promise<Integer> userPromise = Promise.promise();
-        this.execute(Tuple.tuple().addString(DateFormatUtils.format(new Date(updateTime), FormatUtils.DATE_TIME_MILLISECOND_FORMAT))
+        this.execute(Tuple.tuple().addLocalDateTime(new Date(updateTime).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .addString(remarks).addLong(certifiedId), UserSql.UPDATE_USER_CERTIFIED_SQL)
                 .subscribe(userPromise::complete, userPromise::fail);
         userPromise.future().onComplete(resultHandler);

@@ -37,16 +37,14 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
     private IUserHandler userHandler;
     private ICertifiedHandler certifiedHandler;
     private IAddressHandler addressHandler;
-    private IMessageHandler messageService;
-    private ICertifiedHandler certifiedService;
+    private IMessageHandler messageHandler;
     public UserHandler(Vertx vertx, JsonObject config) {
         super(vertx, config);
         this.vertx = vertx;
-        this.certifiedService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICertifiedHandler.CERTIFIED_SERVICE_ADDRESS).build(ICertifiedHandler.class);
         this.userHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IUserHandler.USER_SERVICE_ADDRESS).build(IUserHandler.class);
         this.certifiedHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(ICertifiedHandler.CERTIFIED_SERVICE_ADDRESS).build(ICertifiedHandler.class);
         this.addressHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IAddressHandler.ADDRESS_SERVICE_ADDRESS).build(IAddressHandler.class);
-        this.messageService = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).build(IMessageHandler.class);
+        this.messageHandler = new ServiceProxyBuilder(vertx.getDelegate()).setAddress(IMessageHandler.MESSAGE_SERVICE_ADDRESS).build(IMessageHandler.class);
     }
 
     @Override
@@ -258,7 +256,7 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
                     return Future.failedFuture("用户信息不存在！");
                 }
                 Promise<JsonObject> messagePromise = Promise.promise();
-                messageService.findMessage(params.getString("mobile"), RegisterType.mobile, messagePromise);
+                messageHandler.findMessage(params.getString("mobile"), RegisterType.mobile, messagePromise);
                 return messagePromise.future();
             }).compose(message -> {
                 if(JsonUtils.isNull(message)){
@@ -275,8 +273,8 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
                 Promise<Integer> promise = Promise.promise();
                 this.execute(Tuple.tuple().addString(params.getString("mobile")).addLong(userId).addLong(user.getLong("versions")), UserSql.BIND_MOBILE_SQL)
                         .subscribe(promise::complete, promise::fail);
-                certifiedService.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), params.getString("mobile"), certifiedHandler -> {});
-                messageService.updateMessage(params.getString("mobile"), RegisterType.mobile, messageHandler -> {});
+                certifiedHandler.sendUserCertified(userId, CertifiedType.MOBILE_CERTIFIED.getKey(), params.getString("mobile"), certifiedHandler -> {});
+                messageHandler.updateMessage(params.getString("mobile"), RegisterType.mobile, messageHandler -> {});
                 return promise.future();
             });
         });
@@ -339,7 +337,7 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
                 final String email = params.getString("email");
                 final String code = params.getString("code");
                 Promise<JsonObject> messagePromise = Promise.promise();
-                messageService.findMessage(email, RegisterType.email, messagePromise);
+                messageHandler.findMessage(email, RegisterType.email, messagePromise);
                 return messagePromise.future().compose(message -> {
                     if(JsonUtils.isNull(message)){
                         LOGGER.info("无法获取验证码信息");
@@ -352,7 +350,7 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
                         return updatePromise.future().compose(update -> {
                             certifiedHandler.sendUserCertified(userId, CertifiedType.EMAIL_CERTIFIED.getKey(), email, certifiedHandler -> {
                             });
-                            messageService.updateMessage(email, RegisterType.email, deleteHandler -> {
+                            messageHandler.updateMessage(email, RegisterType.email, deleteHandler -> {
                             });
                             return updatePromise.future();
                         });

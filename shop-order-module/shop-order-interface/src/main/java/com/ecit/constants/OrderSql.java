@@ -6,7 +6,7 @@ public interface OrderSql {
      */
     static final String INSERT_ORDER_SQL = """
                 insert into t_order(order_id, user_id, shipping_information_id, order_status, leave_message, order_details, total_price, freight, create_time) 
-                 values ($1, $2, $3, $4, $5, $6, $7, $8, now());
+                 values ($1, $2, $3, $4, $5, $6, $7, $8, now()) returning order_id;
             """;
 
     /**

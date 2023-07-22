@@ -191,6 +191,7 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                 Promise<JsonObject> messagePromise = Promise.promise();
                 messageService.findMessage(mobile, RegisterType.mobile, messagePromise);
                 return messagePromise.future().compose(message ->{
+                    LOGGER.info("手机验证码:{}", message);
                     if(Objects.isNull(message) || message.isEmpty()){
                         return Future.failedFuture("手机验证码不存在！");
                     }
