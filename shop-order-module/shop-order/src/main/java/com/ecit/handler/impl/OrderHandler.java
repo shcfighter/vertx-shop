@@ -270,6 +270,7 @@ public class OrderHandler extends JdbcRxRepositoryWrapper implements IOrderHandl
     @Override
     public IOrderHandler payOrder(long orderId, int versions, Handler<AsyncResult<Integer>> handler) {
         Promise<Integer> promise = Promise.promise();
+        LOGGER.info("payOrder:{}", orderId);
         this.execute(Tuple.tuple().addInteger(OrderStatus.PAY.getValue()).addLong(orderId).addInteger(versions), OrderSql.PAY_ORDER_SQL)
                 .subscribe(promise::complete, promise::fail);
         promise.future().onComplete(handler);

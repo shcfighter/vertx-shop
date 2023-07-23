@@ -16,6 +16,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
+import io.vertx.pgclient.data.Money;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.sqlclient.Tuple;
 import io.vertx.serviceproxy.ServiceProxyBuilder;
@@ -103,17 +104,18 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
     @Override
     public IAccountHandler payOrderHandler(String token, long orderId, JsonObject params, Handler<AsyncResult<Integer>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
+        LOGGER.info("payOrderHandler:{}", params.encodePrettily());
         Future<Integer> resultFuture = sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
             }
             final long userId = session.getLong("userId");
-            //Future<JsonObject> orderFuture = Future.future();
             Promise<JsonObject> orderPromise = Promise.promise();
             orderService.getOrderById(orderId, userId, orderPromise);
             return orderPromise.future().compose(order -> {
                 //检查库存；检查账户余额；扣款；
+                LOGGER.info("order payOrderHandler:{}", order.encodePrettily());
                 if(Objects.isNull(order)){
                     LOGGER.error("用户【{}】支付订单【{}】不存在！", userId, orderId);
                     return Future.failedFuture("订单不存在！");
@@ -126,6 +128,7 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
 
                 this.findAccount(userId, accountPromise);
                 Future updateAccountFuture = accountPromise.future().compose(account -> {
+                    LOGGER.info("account payOrderHandler:{}", account.encodePrettily());
                     if(Objects.isNull(account)){
                         LOGGER.error("账户信息不存在！");
                         return Future.failedFuture("账户信息异常！");
@@ -145,13 +148,16 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                     if(new BigDecimal(account.getString("amount")).compareTo(new BigDecimal(totalPrice)) < 0){
                         return Future.failedFuture("账户余额不足！");
                     }
+                    LOGGER.info("==============================================");
                     Promise updatePromise = Promise.promise();
                     pgPool.rxGetConnection().flatMap(conn ->
                             conn.preparedQuery(AccountSql.LESS_ACCOUNT_SQL).rxExecute(
-                                            Tuple.tuple().addString(totalPrice).addString(totalPrice).addLong(userId).addInteger(account.getInteger("versions")))
+                                            Tuple.tuple().addValue(new Money(Double.valueOf(totalPrice))).addValue(new Money(Double.valueOf(totalPrice)))
+                                                    .addLong(userId).addInteger(account.getInteger("versions")))
                                     .flatMap(updateResult -> conn.preparedQuery(AccountSql.INSERT_PAY_LOG_SQL).rxExecute(
-                                            Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(userId).addLong(orderId).addInteger(PayType.ACCOUNT.getKey())
-                                                    .addString(totalPrice).addString(new BigDecimal(account.getString("amount")).subtract(new BigDecimal(totalPrice)).toString())
+                                            Tuple.tuple().addLong(IdBuilder.getUniqueId()).addLong(userId).addString(String.valueOf(orderId)).addInteger(PayType.ACCOUNT.getKey())
+                                                    .addValue(new Money(Double.valueOf(totalPrice)))
+                                                    .addValue(new Money(new BigDecimal(account.getLong("amount")).subtract(new BigDecimal(totalPrice)).doubleValue()))
                                                     .addInteger(PayStatus.FINISHED.getKey())))
                                     .doAfterTerminate(conn::close)
                     ).subscribe(updatePromise::complete, updatePromise::fail);
