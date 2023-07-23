@@ -117,7 +117,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     brandList.add(brand.getJsonObject(i).getString("key"));
                 }
                 resultJsonObject.put("brand", brandList);
-                this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultJsonObject, page);
+                this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().getValue().intValue(), resultJsonObject, page);
             }
         });
     }
@@ -137,7 +137,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                 }
                 final SearchResponse result = handler.result();
                 final List<JsonObject> resultList = result.getHits().getHits().stream().map(hit -> new JsonObject(hit.getSource())).collect(Collectors.toList());
-                this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().intValue(), resultList);
+                this.returnWithSuccessMessage(context, "查询成功", result.getHits().getTotal().getValue().intValue(), resultList);
             }
         });
 
@@ -173,7 +173,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                 JsonObject commodity = new JsonObject(hits.getHits().get(0).getSource());
                 //记录浏览记录
                 collectionHandler.sendBrowse(getHeader(context, Constants.TOKEN), commodity, h -> {});
-                this.Ok(context, ResultItems.getReturnItemsSuccess(hits.getTotal().intValue(), commodity));
+                this.Ok(context, ResultItems.getReturnItemsSuccess(hits.getTotal().getValue().intValue(), commodity));
             }
         });
     }
@@ -195,7 +195,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     this.returnWithFailureMessage(context, "查询失败！");
                     return;
                 }
-                this.Ok(context, ResultItems.getReturnItemsSuccess(res.result().getHits().getTotal().intValue(),
+                this.Ok(context, ResultItems.getReturnItemsSuccess(res.result().getHits().getTotal().getValue().intValue(),
                         res.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
             });
             return ;
@@ -212,7 +212,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                 this.returnWithFailureMessage(context, "查询失败！");
                 return;
             }
-            this.Ok(context, new ResultItems(0, res.result().getHits().getTotal().intValue(),
+            this.Ok(context, new ResultItems(0, res.result().getHits().getTotal().getValue().intValue(),
                     res.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
         });
     }
@@ -234,7 +234,7 @@ public class RestSearchRxVerticle extends RestAPIRxVerticle{
                     return ;
                 }
                 //Map<String, JsonObject> aggs = handler.result().getAggregations();
-                this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().intValue(),
+                this.Ok(context, new ResultItems(0, handler.result().getHits().getTotal().getValue().intValue(),
                         handler.result().getHits().getHits().stream().map(hit -> hit.getSource()).collect(Collectors.toList())));
             }
         });

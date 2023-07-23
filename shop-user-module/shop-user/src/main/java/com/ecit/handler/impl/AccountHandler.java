@@ -104,7 +104,6 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
     @Override
     public IAccountHandler payOrderHandler(String token, long orderId, JsonObject params, Handler<AsyncResult<Integer>> handler) {
         Future<JsonObject> sessionFuture = this.getSession(token);
-        LOGGER.info("payOrderHandler:{}", params.encodePrettily());
         Future<Integer> resultFuture = sessionFuture.compose(session -> {
             if (JsonUtils.isNull(session)) {
                 LOGGER.info("无法获取session信息");
@@ -115,7 +114,6 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
             orderService.getOrderById(orderId, userId, orderPromise);
             return orderPromise.future().compose(order -> {
                 //检查库存；检查账户余额；扣款；
-                LOGGER.info("order payOrderHandler:{}", order.encodePrettily());
                 if(Objects.isNull(order)){
                     LOGGER.error("用户【{}】支付订单【{}】不存在！", userId, orderId);
                     return Future.failedFuture("订单不存在！");
@@ -128,7 +126,6 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
 
                 this.findAccount(userId, accountPromise);
                 Future updateAccountFuture = accountPromise.future().compose(account -> {
-                    LOGGER.info("account payOrderHandler:{}", account.encodePrettily());
                     if(Objects.isNull(account)){
                         LOGGER.error("账户信息不存在！");
                         return Future.failedFuture("账户信息异常！");
@@ -148,7 +145,6 @@ public class AccountHandler extends JdbcRxRepositoryWrapper implements IAccountH
                     if(new BigDecimal(account.getString("amount")).compareTo(new BigDecimal(totalPrice)) < 0){
                         return Future.failedFuture("账户余额不足！");
                     }
-                    LOGGER.info("==============================================");
                     Promise updatePromise = Promise.promise();
                     pgPool.rxGetConnection().flatMap(conn ->
                             conn.preparedQuery(AccountSql.LESS_ACCOUNT_SQL).rxExecute(

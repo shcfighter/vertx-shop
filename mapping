@@ -1,98 +1,96 @@
+version:8.8.2
+
+./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v8.8.2/elasticsearch-analysis-ik-8.8.2.zip
+
+
 {
-    "settings" : {
-        "index" : {
-            "number_of_shards" : 1,
-            "number_of_replicas" : 2
+    "settings":{
+        "index":{
+            "number_of_shards":1,
+            "number_of_replicas":2
+        }
+    },
+    "mappings":{
+        "properties":{
+            "commodity_id":{
+                "type":"long"
+            },
+            "commodity_name":{
+                "analyzer":"ik_smart",
+                "type":"text"
+            },
+            "brand_id":{
+                "type":"long"
+            },
+            "brand_name":{
+                "type":"keyword"
+            },
+            "category_id":{
+                "type":"long"
+            },
+            "category_name":{
+                "type":"keyword"
+            },
+            "large_class":{
+                "analyzer":"ik_smart",
+                "type":"text"
+            },
+            "price":{
+                "type":"keyword"
+            },
+            "original_price":{
+                "type":"keyword"
+            },
+            "num":{
+                "type":"long"
+            },
+            "month_sales_volume":{
+                "type":"integer"
+            },
+            "total_sales_volume":{
+                "type":"integer"
+            },
+            "total_evaluation_num":{
+                "type":"integer"
+            },
+            "commodity_params":{
+                "analyzer":"ik_smart",
+                "type":"text"
+            },
+            "status":{
+                "type":"integer"
+            },
+            "freight":{
+                "type":"keyword"
+            },
+            "image_url":{
+                "type":"keyword"
+            },
+            "detail_image_url":{
+                "type":"keyword"
+            },
+            "is_deleted":{
+                "type":"integer"
+            },
+            "create_time":{
+                "type":"date",
+                "format":"yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+            },
+            "update_time":{
+                "type":"date",
+                "format":"yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+            },
+            "description":{
+                "analyzer":"ik_smart",
+                "type":"text"
+            },
+            "remarks":{
+                "analyzer":"ik_smart",
+                "type":"text"
+            },
+            "versions":{
+                "type":"long"
+            }
         }
     }
-}
-
-
-
-{
-   "mappings": {
-      "commodity": {
-         "properties": {
-            "commodity_id": {
-               "type": "long"
-            },
-            "commodity_name": {
-		        "analyzer": "ik_smart",
-               "type": "text"
-            },
-            "brand_id": {
-               "type": "long"
-            },
-            "brand_name": {
-               "type": "keyword"
-            },
-            "category_id": {
-               "type": "long"
-            },
-            "category_name": {
-               "type": "keyword"
-            },
-	        "large_class": {
-		        "analyzer": "ik_smart",
-               "type": "text"
-            },
-            "price": {
-               "type": "keyword"
-            },
-             "original_price": {
-               "type": "keyword"
-            },
-            "num": {
-               "type": "long"
-            },
-            "month_sales_volume": {
-               "type": "integer"
-            },
-            "total_sales_volume": {
-               "type": "integer"
-            },
-            "total_evaluation_num": {
-               "type": "integer"
-            },
-            "commodity_params": {
-		        "analyzer": "ik_smart",
-                "type": "text"
-            },
-            "status": {
-               "type": "integer"
-            },
-            "freight": {
-                "type": "keyword"
-             },
-            "image_url": {
-                "type": "keyword"
-            },
-            "detail_image_url": {
-                "type": "keyword"
-            },
-            "is_deleted": {
-               "type": "integer"
-            },
-            "create_time": {
-               "type": "date",
-               "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
-            },
-            "update_time": {
-               "type": "date",
-               "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
-            },
-            "description": {
-		        "analyzer": "ik_smart",
-               "type": "text"
-            },
-            "remarks": {
-		        "analyzer": "ik_smart",
-               "type": "text"
-            },
-            "versions": {
-               "type": "long"
-            }
-         }
-      }
-   }
 }

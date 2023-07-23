@@ -31,7 +31,8 @@ import java.util.List;
 @DataObject
 public class Hits {
 
-    private Long total;
+    @JsonProperty("total")
+    private Total total;
     @JsonProperty("max_score")
     private Float maxScore;
     private List<Hit> hits = new LinkedList<>();
@@ -49,7 +50,9 @@ public class Hits {
     }
 
     public Hits(JsonObject jsonObject) {
-        this.total = jsonObject.getLong(JSON_FIELD_TOTAL);
+        JsonObject jsonTotal = jsonObject.getJsonObject(JSON_FIELD_TOTAL);
+
+        this.total = new Total(jsonTotal);
         this.maxScore = jsonObject.getFloat(JSON_FIELD_MAX_SCORE);
 
         final JsonArray jsonHits = jsonObject.getJsonArray(JSON_FIELD_HITS);
@@ -60,11 +63,11 @@ public class Hits {
         }
     }
 
-    public Long getTotal() {
+    public Total getTotal() {
         return total;
     }
 
-    public Hits setTotal(Long total) {
+    public Hits setTotal(Total total) {
         this.total = total;
         return this;
     }
@@ -91,7 +94,7 @@ public class Hits {
 
         final JsonObject json = new JsonObject();
 
-        if (total != null) json.put(JSON_FIELD_TOTAL, total);
+        if (total != null) json.put(JSON_FIELD_TOTAL, total.toJson());
         if (maxScore != null) json.put(JSON_FIELD_MAX_SCORE, maxScore);
         if (!hits.isEmpty()) {
             final JsonArray hitsJson = new JsonArray();

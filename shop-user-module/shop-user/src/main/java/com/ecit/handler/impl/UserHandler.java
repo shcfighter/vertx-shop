@@ -284,9 +284,11 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
 
     @Override
     public IUserHandler changePwdHandler(String token, JsonObject params, Handler<AsyncResult<Integer>> handler) {
+        LOGGER.info("params:{}", params.encodePrettily());
         Future<JsonObject> sessionFuture = this.getSession(token);
         final ShopHashStrategy hashStrategy = (ShopHashStrategy) params.getValue("strategy");
         Future<Integer> resultFuture = sessionFuture.compose(session -> {
+            LOGGER.info("session:{}", session.encodePrettily());
             if(JsonUtils.isNull(session)){
                 LOGGER.info("无法获取session信息");
                 return Future.failedFuture("can not get session");
@@ -295,6 +297,7 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
             Promise<JsonObject> userPromise = Promise.promise();
             userHandler.getMemberById(userId, userPromise);
             return userPromise.future().compose(user -> {
+                LOGGER.info("user:{}", user.encodePrettily());
                 final String originalPwd = hashStrategy.computeHash(params.getString("original_pwd"), user.getString("salt"), -1);
                 if(!StringUtils.equals(originalPwd, user.getString("password"))){
                     LOGGER.error("原密码错误！");
@@ -307,10 +310,13 @@ public class UserHandler extends JdbcRxRepositoryWrapper implements IUserHandler
                 Promise<Integer> changePwdPromise = Promise.promise();
                 userHandler.changePwd(userId, password, user.getLong("versions"), changePwdPromise);
                 return changePwdPromise.future().compose(change -> {
+                    LOGGER.info("change:{}", change);
                     if(change > 0){
                         certifiedHandler.sendUserCertified(userId, CertifiedType.LOGIN_CERTIFIED.getKey(), "", handler3 -> {});
                     }
-                    return changePwdPromise.future();
+                    Promise<Integer> promise = Promise.promise();
+                    promise.complete(change);
+                    return promise.future();
                 });
             });
         });

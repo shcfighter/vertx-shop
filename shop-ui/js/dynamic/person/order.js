@@ -24,7 +24,7 @@ $(function () {
                     var $order_list = $(".am-tabs-bd").find(".order-list").get(tab_index);
                     $($order_list).html("");
                     $.each(items, function (index, value) {
-                        var orderDetails = JSON.parse(value.order_details);
+                        var orderDetails = value.order_details;
 
                         var status = "";
                         var button = "";

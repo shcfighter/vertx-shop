@@ -7,9 +7,10 @@ package com.ecit.common.utils.salt;
 
 import io.vertx.core.json.JsonObject;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface ShopHashStrategy {
+public interface ShopHashStrategy extends Serializable {
     String generateSalt();
 
     String computeHash(String var1, String var2, int var3);
